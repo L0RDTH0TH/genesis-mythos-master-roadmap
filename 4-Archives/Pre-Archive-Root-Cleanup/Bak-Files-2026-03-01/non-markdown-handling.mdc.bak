@@ -1,0 +1,50 @@
+---
+description: Non-MD file-type handling and companion note creation
+globs: "Ingest/**"
+alwaysApply: false
+---
+
+# Non-Markdown File Handling Standard
+
+When processing any non-.md file (especially from Ingest/):
+
+**Classify → Create companion .md → Embed source (target path 99 Attachments/[subtype]/) → Do not move original via MCP; leave in Ingest/ with #needs-manual-move and callout → Link back once user has moved.**
+
+## Frontmatter template (always include)
+
+```yaml
+---
+title: "Clear Descriptive Title"
+created: YYYY-MM-DD
+aliases: [original-filename.ext]
+tags: [type/pdf, source/attachment, inbox, needs-review]
+source: "![[99 Attachments/PDFs/original.pdf]]"
+---
+```
+
+Use **99 Attachments/[subtype]/original.ext** consistently (PDFs/, Images/, Audio/, Documents/, Other/ as appropriate).
+
+## File-type specifics
+
+- **Images** (.png/.jpg/...): Use vision to OCR + describe in extreme detail (layout, text, objects, insights). Target 99 Attachments/Images/. Embed with |alt text|.
+- **PDFs**: Extract text (Cursor native @file support if possible), summarize sections/tables/figures. Target 99 Attachments/PDFs/. Full embed preview.
+- **Text/code** (.txt/.csv/.json/.py/...): Embed full content in ``` block or summarize if huge. Analyze key points.
+- **.docx/.xlsx/.pptx**: Target 99 Attachments/Documents/. Suggest/attempt pandoc conversion to .md if available; else stub + "Export to PDF/text first".
+- **Audio/Video**: Target 99 Attachments/Audio/. Stub note + "Transcribe externally (Whisper/etc.) then re-ingest transcript". Tag #type/audio #needs-transcript.
+- **Archives** (.zip, etc.): Target 99 Attachments/Other/. "Extract first, then re-process contents."
+
+## Rules
+
+- NEVER modify/delete original file.
+- Create one atomic .md per original file.
+- After: "Companion [[path/to/companion.md]] created. Original remains in Ingest/ — manual move to 99 Attachments/[subtype]/ required. Ready for PARA review?"
+- If batch: process sequentially unless user says parallel.
+
+## MCP SAFETY
+
+- obsidian_move_note ONLY supports .md files reliably.
+- For non-.md files: create companion .md + embed/link, but DO NOT attempt obsidian_move_note on binaries.
+- Instead: leave original in Ingest/ and add frontmatter tag: #needs-manual-move
+- In the companion note add:
+  > **Manual action required**: Move original file from Ingest/ to [[99 Attachments/PDFs/original.pdf]] (or appropriate subfolder). After move, update this note's source: ![[99 Attachments/...]] and remove #needs-manual-move tag.
+- Never use shell mv/cp/rm (not allowed in Cursor Agent/MCP mode).

@@ -1,0 +1,150 @@
+---
+confidence: 70
+created: 2026-03-02
+status: ingest
+para-type: Archive
+tags: ['review-needed', 'decision-candidate']
+---
+────────────────────────
+### Sub-task 1 – Yellow style override (one line!)
+```gdscript
+# WedgeButton.gd → add at top
+@export var is_branch: bool = false:
+    set(v):
+        is_branch = v
+        modulate = Color.GOLD if v else Color("#1e90ff")
+```
+
+### Sub-task 2 – BranchContainer (auto-fan layout)
+```gdscript
+# BranchContainer.gd → attach to a Node2D child of every WedgeButton
+extends Node2D
+@export var host: WedgeButton
+var branches: Array[WedgeButton] = []
+
+func spawn(data: Array, depth: int) -> void:
+    clear()
+    var count = min(data.size(), 7)
+    var angle_step = PI / 2 / count
+    var base_radius = host.size.x * 0.45
+    for i in count:
+        var b = preload("res://WedgeButton.tscn").instantiate()
+        b.is_branch = true
+        b.slice_count = 1
+        b.label_text = data[i]
+        b.custom_minimum_size = Vector2(80, 80)
+        b.position = Vector2(cos(-PI/4 + i*angle_step), sin(-PI/4 + i*angle_step)) * base_radius
+        b.scale = Vector2.ZERO
+        b.rotation = -PI/4 + i*angle_step + PI/2
+        add_child(b)
+        branches.append(b)
+        
+        # pop-in tween
+        var tw = create_tween().set_parallel()
+        tw.tween_property(b, "scale", Vector2.ONE, 0.25).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+        tw.tween_property(b, "modulate:a", 1.0, 0.15)
+```
+
+### Sub-task 3 – Hover → spawn
+```gdscript
+# WedgeButton.gd → inside _input()
+signal branch_hovered(branch: WedgeButton, depth: int)
+
+var hovered_slice := -1
+@onready var branch_container = $BranchContainer
+
+func _input(event: InputEvent) -> void:
+    if event is InputEventMouseMotion and get_global_rect().has_point(event.position):
+        var local = to_local(event.position)
+        var c = size / 2
+        var angle = (local - c).angle()
+        var slice = int((angle + slice_angle/2) / slice_angle) % slice_count
+        if slice != hovered_slice:
+            hovered_slice = slice
+            queue_redraw()
+            _show_branches(slice)
+    elif event is InputEventMouseMotion and not get_global_rect().has_point(event.position):
+        _hide_branches_delayed()
+
+func _show_branches(slice_idx: int) -> void:
+    var data = _get_branch_data(slice_idx)  # ← you fill this
+    branch_container.spawn(data, depth + 1)
+```
+
+### Sub-task 4 – Hide with grace period
+```gdscript
+# WedgeButton.gd
+var hide_timer := Timer.new()
+
+func _ready() -> void:
+    add_child(hide_timer)
+    hide_timer.wait_time = 0.3
+    hide_timer.one_shot = true
+    hide_timer.timeout.connect(_hide_branches_now)
+
+func _hide_branches_delayed() -> void:
+    hide_timer.start()
+
+func _hide_branches_now() -> void:
+    if branch_container.get_child_count() > 0:
+        for b in branch_container.branches:
+            var tw = create_tween()
+            tw.tween_property(b, "scale", Vector2.ZERO, 0.15)
+            tw.tween_callback(b.queue_free)
+        branch_container.branches.clear()
+```
+
+### Sub-task 5 – Recursive hover chain
+```gdscript
+# BranchContainer.gd → after spawn()
+for b in branches:
+    b.mouse_filter = Control.MOUSE_FILTER_STOP
+    b.connect("mouse_entered", _on_child_hovered.bind(b))
+    b.branch_hovered.connect(_on_grandchild_hovered)
+
+func _on_child_hovered(branch: WedgeButton) -> void:
+    hide_timer.stop()  # cancel hide
+
+func _on_grandchild_hovered(branch: WedgeButton, depth: int) -> void:
+    if depth >= 5: return
+    emit_signal("branch_hovered", branch, depth)
+```
+
+### Sub-task 6 – Click → advance tree
+```gdscript
+# WedgeButton.gd → add
+signal branch_selected(data: Dictionary)
+
+func _gui_input(event: InputEvent) -> void:
+    if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+        if is_branch:
+            var payload = {text=label_text, depth=depth}
+            emit_signal("branch_selected", payload)
+            accept_event()
+```
+
+### Sub-task 7 – Wire to TreeRoot
+```gdscript
+# TreeRoot.gd
+func _ready() -> void:
+    for wedge in [$LeftFan/WedgeButton, $RightFan/WedgeButton]:
+        wedge.branch_selected.connect(_on_branch_selected)
+
+func _on_branch_selected(payload: Dictionary) -> void:
+    $Breadcrumbs.add_crumb(payload.text)
+    _repopulate_from(payload.text)
+    _hide_all_branches()
+
+func _hide_all_branches() -> void:
+    for w in get_tree().get_nodes_in_group("wedge"):
+        w._hide_branches_now()
+```
+
+### One-click test
+1. Add every `WedgeButton` to group `"wedge"`  
+2. Fill `_get_branch_data(slice_idx)` with dummy arrays  
+3. Press Play → hover → yellow fans → hover child → deeper fans → click → breadcrumbs grow
+
+## Review Needed
+Proposed para-type: **Archive** (confidence 70%). Do not move until reviewed.  
+→ **Decision:** [[Ingest/Decisions/cascade-branches-2026-03-03-2305|Choose location for this note]] — check one option and run EAT-QUEUE to apply.

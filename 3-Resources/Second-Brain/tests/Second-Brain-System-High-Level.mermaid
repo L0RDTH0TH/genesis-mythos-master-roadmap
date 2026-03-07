@@ -1,0 +1,154 @@
+// Second Brain System Diagrams — Level 1 (High-Level)
+// Auto-collected existing Mermaid blocks from vault documentation
+// Do not edit diagrams here — edit in source notes and re-collect if needed
+// Generated: 2026-03-05
+
+%% =============================================================================
+%% High-level collection: overviews, major components, vault structure,
+%% main pipeline flow, summary diagrams only.
+%% =============================================================================
+
+%% === Overall Architecture: System flow ===
+%% (from Backbone.md)
+flowchart LR
+  Triggers[User / Watcher triggers]
+  Triggers --> Match[Phrase or glob match]
+  Match --> Rules[Rules: always + context]
+  Rules --> Pipeline[Pipeline selection]
+  Pipeline --> Skills[Skills + MCP tools]
+  Skills --> Vault[Obsidian vault]
+  Skills -.->|before destructive| Backup[Backup / Snapshot]
+  Backup -.-> Vault
+
+%% === Safety flow ===
+%% (from Backbone.md)
+flowchart TD
+  Step[Destructive step?]
+  Step -->|Yes| Conf{Confidence ≥85%?}
+  Conf -->|Yes| CreateBackup[create_backup or ensure_backup]
+  CreateBackup --> PerChange[Per-change snapshot]
+  PerChange --> Execute[Execute move/rename/split/distill/append]
+  Conf -->|No| Manual[Manual review; no destructive]
+  Step -->|No| Proceed[Proceed]
+
+%% === PARA / CODE flow ===
+%% (from Backbone.md)
+flowchart TB
+  subgraph PARA [PARA]
+    P1[1-Projects]
+    P2[2-Areas]
+    P3[3-Resources]
+    P4[4-Archives]
+  end
+  subgraph CODE [CODE]
+    C1[Capture]
+    C2[Organize]
+    C3[Distill]
+    C4[Express]
+  end
+  Ingest[full-autonomous-ingest] --> C1
+  Ingest --> C2
+  Organize[autonomous-organize] --> C2
+  Distill[autonomous-distill] --> C3
+  Express[autonomous-express] --> C4
+  Archive[autonomous-archive] --> P4
+  C1 --> P1
+  C2 --> P1
+  C2 --> P2
+  C3 --> P3
+  C4 --> P3
+
+%% === Canonical pipeline order (summary) ===
+%% (from Pipelines.md)
+flowchart LR
+  A[INGEST MODE]
+  B[ORGANIZE MODE]
+  C[TASK-ROADMAP]
+  D[DISTILL MODE]
+  E[EXPRESS MODE]
+  F[ARCHIVE MODE]
+  G[TASK-COMPLETE]
+  H[ADD-ROADMAP-ITEM]
+  A --> B --> C --> D --> E --> F --> G --> H
+
+%% === Full folder tree (vault structure) ===
+%% (from Vault-Layout.md)
+flowchart TB
+  Root[Vault root]
+  Root --> P1[1-Projects]
+  Root --> P2[2-Areas]
+  Root --> P3[3-Resources]
+  Root --> P4[4-Archives]
+  P4 --> IngestDecisions[Ingest-Decisions]
+  IngestDecisions --> ReWrap[Re-Wrap/]
+  Root --> Ingest[Ingest]
+  Root --> Backups[Backups]
+  Root --> Templates[Templates]
+  Root --> Attachments[5-Attachments]
+  Root --> Tech[".technical (Obsidian excluded)"]
+  Backups --> PerChange[Per-Change]
+  Backups --> Batch[Batch]
+  P1 -.->|optional| VersionsNode[Versions/ under project or area]
+  P2 -.->|optional| VersionsNode
+  Attachments --> PDFs[PDFs]
+  Attachments --> Images[Images]
+  Attachments --> Audio[Audio]
+  Attachments --> Documents[Documents]
+  Attachments --> Other[Other]
+
+%% === Trigger → rule type → pipeline ===
+%% (from Rules.md)
+flowchart LR
+  subgraph triggers [Triggers]
+    T1[User phrase]
+    T2[Watcher signal]
+    T3[Glob match]
+  end
+  subgraph ruleType [Rule type]
+    A[Always applied]
+    C[Context triggered]
+  end
+  subgraph pipelines [Pipeline / flow]
+    P1[full-autonomous-ingest]
+    P2[Queue processor]
+    P3[autonomous-distill]
+    P4[autonomous-archive]
+    P5[autonomous-express]
+    P6[autonomous-organize]
+  end
+  T1 --> A
+  T2 --> C
+  T3 --> C
+  A --> P1
+  C --> P1
+  C --> P2
+  C --> P3
+  C --> P4
+  C --> P5
+  C --> P6
+
+%% === Component and data flow (Obsidian / Cursor / Watcher) ===
+%% (from Plugins.md)
+flowchart LR
+  subgraph obsidian [Obsidian]
+    Dataview[Dataview]
+    Highlightr[Highlightr]
+    REST[Local REST API]
+    Watcher[Watcher]
+    Commander[Commander toolbar/ribbon]
+  end
+  subgraph cursor [Cursor]
+    Rules[Rules]
+    Skills[Skills]
+    MCP[MCP client]
+  end
+  Watcher -->|Watcher-Signal| MCP
+  MCP -->|Watcher-Result| Watcher
+  MCP <-->|REST API| REST
+  Rules --> MCP
+  Skills --> MCP
+  subgraph protected [Watcher-protected paths]
+    P1[watched-file.md]
+    P2[Watcher-Signal.md]
+    P3[Watcher-Result.md]
+  end

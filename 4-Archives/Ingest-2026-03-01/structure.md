@@ -1,0 +1,19 @@
+---
+
+---
+# Vault Structure
+
+Recommended PARA layout used by the MCP server:
+
+- Ingest — raw capture for new notes/tools (capture = only manual step).
+- 1-Projects — active projects (PARA).
+- 2-Areas — ongoing responsibilities.
+- 3-Resources — reference material.
+- 4-Archives — completed/archived items.
+- Templates — note templates and scaffolding.
+- 5-Attachments — binary files, images. Subfolders: PDFs/, Images/, Audio/, Documents/ (.docx/.xlsx/.pptx), Other/ (fallback).
+
+The MCP server enforces PARA moves using 1-Projects/2-Areas/3-Resources/4-Archives paths.
+
+## Review Needed
+Proposed para-type: project. Assigned based on content/frontmatter (confidence ~70%). Do not move until reviewed.

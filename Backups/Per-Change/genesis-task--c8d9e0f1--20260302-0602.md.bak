@@ -1,0 +1,12 @@
+---
+original_path: Ingest/Genesis task.md
+original_title: Genesis task
+pipeline: ingest
+snapshot_type: per-change
+snapshot_created: "2026-03-02T06:02:00Z"
+confidence: 100
+immutable: true
+para-type: Archive
+status: frozen
+---
+(explicit user move: name "Genesis task" = Genesis project; prep-step roadmap item)

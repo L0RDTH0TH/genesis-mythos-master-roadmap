@@ -1,0 +1,65 @@
+---
+description: Master ingest rule — PARA + Zettel pipeline for Ingest/*.md; overrides conflicting rules
+globs: "Ingest/*.md"
+---
+
+# PARA-Zettel-Autopilot (master rule for Ingest)
+
+- **Overrides** conflicting rules when processing Ingest. When ingest-processing has run, all Ingest/*.md are candidates for this pipeline (including companion notes created from non-MD).
+- **PARA**: Projects (time-bound), Areas (ongoing), Resources (reference), Archives (inactive). Folders: 1-Projects/, 2-Areas/, 3-Resources/, 4-Archives/.
+- **Zettel**: Atomic notes, linked; CODE = Capture → Organize → Distill → Express; append to hubs (Projects/Areas/Resources Hub).
+- **Confidence gates (updated 2026-02-26):**
+  - **≥85%**: Silent execute ALL steps (move, split, distill, append_to_hub, etc.).
+  - **≥78%**: Silent execute non-destructive + safe moves: frontmatter updates, append_to_hub, **move_note only IF target folder already exists** (i.e. linking to existing project/area, not creating new top-level folder).
+  - **70–77%**: Propose only, flag #review-needed; still apply frontmatter + links if project_name present (per frontmatter-enrich fallback).
+  - **<70%**: Backup + log + full stop; no destructive actions.
+- **Pipeline**: Read → Classify PARA (CoT + %) → Split if multi-idea → Distill (TL;DR, bold, next actions) → Append to hub → Propose move/rename → Log. At ≥85% auto-execute all steps; at ≥78% execute safe moves into existing folders only; at 70–77% propose and enrich only; at <70% stop.
+
+**Skills (chain after MCP steps where applicable)**: After classify_para → frontmatter-enrich, subfolder-organize; after split_atomic → split-link-preserve; after distill → distill-highlight-color, next-action-extract. See [[3-Resources/Cursor-Skill-Pipelines-Reference]] for full pipeline order.
+
+## Confidence bands & ingest loop (supersedes older gates)
+
+- **Primary ingest signal**: `ingest_conf` — derived after `classify_para` + `frontmatter-enrich` + non-destructive `subfolder-organize` path proposal.
+- **Bands**:
+  - **High (ingest_conf ≥85)**:
+    - Silent execute ALL steps (move, split, distill, append_to_hub, etc.) after required backups and per-change snapshots.
+  - **Mid (72 ≤ ingest_conf ≤ 84)**:
+    - Run a **single, non-destructive self-critique loop** on classification/path:
+      - Use the shared template from `.cursor/rules/always/confidence-loops.mdc`.
+      - Ask `subfolder-organize` (proposal mode only) for 2–3 candidate paths + scores.
+      - Re-score to `post_loop_conf`.
+    - If `post_loop_conf ≥ 90`: early-exit → snapshot → execute full ingest pipeline (including move).
+    - If `85 ≤ post_loop_conf ≤ 89`: snapshot → execute ingest pipeline as in the high band.
+    - Else or if `post_loop_conf ≤ pre_loop_conf`: do **not** split, distill, append_to_hub, or move; keep the note in `Ingest/`, log best-guess path + `#review-needed`.
+  - **Low (ingest_conf <72)**:
+    - Backup + log + full stop; apply only safe frontmatter + links if project_name present (per frontmatter-enrich fallback); no destructive actions.
+- **Destructive actions** (split, distill, hub append, move, rename) require `ingest_conf ≥85` or `post_loop_conf ≥85` **and** a successful per-change snapshot, consistent with `Cursor-Skill-Pipelines-Reference.md`.
+
+- **Graph view**: When enriching frontmatter, optionally set graph-related frontmatter (e.g. `graph: { color: "#hex" }` or a vault-convention key) from project color so graph view can use it. Prefer reading project color from [Highlightr-Color-Key](3-Resources/Highlightr-Color-Key.md) or [Second-Brain-Config](3-Resources/Second-Brain-Config.md).
+
+## Batch and isolation
+
+- Process **one note fully** (including **obsidian_log_action**) before starting the next.
+- **Batch limit**: Up to 5 notes per run (or as configured); process sequentially.
+- **On failure**: Log the failure and note path in Ingest-Log.md with #review-needed and a short reason; then **continue with the next note**. Do not halt the entire batch for a single note failure (e.g. backup fails for one → skip that note, log, continue).
+
+## Snapshots and checkpoints
+
+- **External backup**: Every ingest run MUST start with `obsidian_create_backup` for each note, writing into `BACKUP_DIR` (see `mcp-obsidian-integration.mdc`).
+- **Per-change snapshots (in-vault)**:
+  - Before any destructive or structural step for a given note, call the `obsidian-snapshot` skill with `type: "per-change"`:
+    - Before `obsidian_split_atomic` (splitting multi-idea notes).
+    - Before `obsidian_distill_note` when it will rewrite or heavily restructure the note.
+    - Before `obsidian_append_to_hub` when appending into hub or other notes.
+    - Before `obsidian_move_note` or `obsidian_rename_note`.
+  - Take per-change snapshots when confidence for the underlying action is **≥78%** (for moves into existing folders) or **≥85%** (for split, distill, or creating new structure). If confidence is 70–77%: do not snapshot or move; apply frontmatter/links only and flag #review-needed. If <70%: do not perform destructive action; flag with `#review-needed` in Ingest-Log.md.
+  - Per-change snapshots are stored under `Backups/Per-Change/` (configured via `SNAPSHOT_DIR`) using flattened paths; they must never be edited later.
+- **Batch checkpoints**:
+  - Maintain a simple counter of processed notes in this ingest session.
+  - After every **5 notes** (or configured batch size), call `obsidian-snapshot` with `type: "batch"` and a list of the notes and snapshot paths touched in that mini-batch.
+  - Batch checkpoint notes live under `Backups/Batch/` (`BATCH_SNAPSHOT_DIR`) and summarize:
+    - Timestamp, pipeline context (e.g. “INGEST MODE – safe batch autopilot”), count of notes, and links to per-change snapshots.
+  - Log the batch checkpoint path into both `Ingest-Log.md` and `3-Resources/Backup-Log.md`.
+- **Exclusions**:
+  - Do not process or ingest notes under `Backups/` automatically; snapshots and batch notes are history only.
+  - Restore and cleanup operations are handled by dedicated context rules (e.g. `auto-restore.mdc`, `snapshot-sweep.mdc`) triggered explicitly by the user.

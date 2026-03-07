@@ -1,0 +1,120 @@
+---
+description: Master ingest rule — PARA + Zettel pipeline for Ingest/**/*.md (excluding Decisions); overrides conflicting rules
+globs: "Ingest/**/*.md"
+---
+
+# PARA-Zettel-Autopilot (master rule for Ingest)
+
+- **Overrides** conflicting rules when processing Ingest. When ingest-processing has run, all `Ingest/**/*.md` notes (excluding `Ingest/Decisions/**` and watcher/control notes) are candidates for this pipeline (including companion notes created from non-MD).
+- **PARA**: Projects (time-bound), Areas (ongoing), Resources (reference), Archives (inactive). Folders: 1-Projects/, 2-Areas/, 3-Resources/, 4-Archives/.
+- **Zettel**: Atomic notes, linked; CODE = Capture → Organize → Distill → Express; append to hubs (Projects/Areas/Resources Hub).
+- **Confidence gates (updated 2026-03-03 — Decision Wrapper universal for moves/renames):**
+  - **≥85%**: Silent execute **in-note destructive steps only** (split, distill, append_to_hub, task-reroute) after required snapshots; Phase 1 never moves/renames.
+  - **≥78%**: Silent execute non-destructive + cross-note safe writes: frontmatter updates, append_to_hub, task-reroute into existing project/area notes (per skill gates); still no move/rename in Phase 1.
+  - **70–77%**: Propose only, flag #review-needed; still apply frontmatter + links if project_name present (per frontmatter-enrich fallback).
+  - **<70%**: Backup + log + full stop; no destructive actions.
+- **Pipeline (Phase 1 — propose + Decision Wrapper)**: Read → Classify PARA (CoT + %) → Split if multi-idea (high confidence only) → Distill (TL;DR, bold, next actions) → Append to hub / task-reroute (per skill gates) → **Propose move/rename only via Decision Wrapper** → Log. At ≥85% auto-execute in-note steps; at ≥78% execute safe cross-note writes only; at 70–77% propose and enrich only; at <70% stop. When a run is **guidance-aware** (per [guidance-aware](.cursor/rules/always/guidance-aware.mdc)), include the loaded guidance as soft context for classification, path, split, and distill; do not override confidence gates or safety.
+- **Lowered-threshold runs**: When a run uses a **confidence overwrite** (e.g. "70% min this run") to relax gates for in-note work, the pipeline **must still** run **frontmatter-enrich** (title, para-type, status, project-id) and **at least minimal distill** (TL;DR, strip raw Ingest template boilerplate such as "Review Needed", empty Key insights, generic "Stray Thought" / "AI Output Capture" wrappers) before creating/refreshing a wrapper. No note may be moved into a PARA folder while still in raw Ingest form (e.g. `title: Untitled`, `status: ingest`, template sections intact), and such moves only happen in apply-mode after the user has approved a Decision Wrapper.
+
+**Skills (chain after MCP steps where applicable)**: After classify_para → frontmatter-enrich → **name-enhance** (when filename is vague/untitled; **proposes only** — never renames in Phase 1) → subfolder-organize; after split_atomic → split-link-preserve; after distill → distill-highlight-color, next-action-extract, task-reroute (when task-like and confidence ≥78%); after append_to_hub → **link-to-pmg-if-applicable** (when note has project-id, append PMG link to note's links; never edit PMG). **In ingest, name-enhance proposes; subfolder-organize commits the name via move in apply-mode ingest** (use suggested_name in path when confidence ≥85% and not protected). See [[3-Resources/Cursor-Skill-Pipelines-Reference]] for full pipeline order.
+
+## Confidence bands & ingest loop (supersedes older gates)
+
+- **Primary ingest signal**: `ingest_conf` — derived after `classify_para` + `frontmatter-enrich` + non-destructive `subfolder-organize` path proposal.
+- **Bands (Decision Wrapper-aware)**:
+  - **High (ingest_conf ≥85)**:
+    - Execute in-note destructive steps (split, distill, hub append, task-reroute) after required backups and per-change snapshots in Phase 1, but still **do not move/rename**; path decisions are expressed only via the Decision Wrapper.
+- **Destructive actions**:
+  - In **Phase 1** (initial ingest runs on `Ingest/**/*.md`), destructive actions are limited to in-note edits (split, distill, hub append, task-reroute) and require `ingest_conf ≥85` or `post_loop_conf ≥85` **and** a successful per-change snapshot, consistent with `Cursor-Skill-Pipelines-Reference.md`. **Move/rename is never executed in Phase 1.**
+  - In **apply-mode ingest** (second-phase runs driven by approved Decision Wrappers and `hard_target_path`), destructive actions include in-note edits **and** move/rename; move/rename still require `ingest_conf ≥85` or `post_loop_conf ≥85` plus a successful per-change snapshot and a valid, user-approved target path (see "Apply-mode ingest" below).
+
+
+### Decision Wrapper creation (Phase 1 — every Ingest note)
+
+After frontmatter-enrich + name-enhance (propose only) + subfolder-organize:
+
+- If ingest_conf ≥ 85% and single clear path → still create wrapper (user may want to override).
+- Else (or always, to keep user in loop):
+  - Call **`propose_para_paths`** with  
+    `path = original_path`, `para_type = classified_para_type`, `max_candidates = "7"`, `context_mode = "wrapper"`, `rationale_style = "concise"`.  
+    Use its `candidates` array to fill options A–G directly (pad as needed).
+
+- **Every wrapper must have exactly 7 options (A–G)** upon creation.
+
+- Read the **canonical template**: `Templates/Decision-Wrapper.md` (A–G version — single source of truth; deprecate or symlink the 3-Resources copy if present).
+
+- Fill placeholders:
+  - {{candidate_a_path}}, {{candidate_a_conf}}, {{candidate_a_reason}} … up to G (map candidates[0]→A … candidates[6]→G; if fewer than 7, pad to 7 using fallback options so A–G are always filled—never leave slots blank).  
+    - For each candidate (real or padded), derive a **display confidence** `conf_display` from the engine score (0–100) using a small perceptual clamp, e.g. `conf_display = max(40, min(98, round(score)))`, so mid-range proposals do not appear unnaturally "harsh" while preserving ordering. `candidate_*_conf` should use `conf_display`; for padded options use low conf (e.g. 5%) and reason_short e.g. "Direct under [root]" or "Alternative: [PARA type]".
+  - **Padding fallbacks** (when API returns fewer than 7; empty slots only; no duplicate paths): (1) classified PARA root + basename; (2) other PARA roots + basename; (3) 3-Resources/Unfiled/ + basename; (4) 4-Archives/Ingest-YYYY-MM-DD/ + basename (current date). Basename from original_path.
+  - {{original_path}}, {{original_filename}}, {{original_slug}}, {{proposal_path}}, {{date}}, {{time}}, {{priority}}
+- Write all Decision Wrappers to `Ingest/Decisions/Ingest-Decisions/Decision-for-{{original_slug}}--{{YYYY-MM-DD-HHMM}}.md`. Ensure the subfolder exists via **obsidian_ensure_structure**(folder_path: "Ingest/Decisions/Ingest-Decisions") before writing.
+
+- Set frontmatter on original note: `decision_candidate: true`, `proposal_path: "{{wrapper_path}}"` (full path where this wrapper lives), `decision_priority: high|medium` (low conf → high priority).
+
+- After wrapper creation/update, **ensure a queue entry exists to check wrappers**: read `.technical/prompt-queue.jsonl` and look for an entry with `mode: "INGEST MODE"` and a `prompt` that starts with or equals `"CHECK_WRAPPERS"`. If none exists, append  
+  `{"mode":"INGEST MODE","prompt":"CHECK_WRAPPERS","source_file":"Ingest/Decisions/","id":"check-wrappers-<timestamp>"}`  
+  so the next EAT-QUEUE run will process wrappers before other ingest work.
+
+- Log to Ingest-Log.md: "... | Flag: #decision-wrapper-created | Decision Wrapper created — up to 7 candidates from propose_para_paths (wrapper mode) | Wrapper: Ingest/Decisions/..."
+
+- Explicitly STOP all further processing related to move/rename on this note for this run (no `obsidian_move_note`, no `obsidian_rename_note`). In-note work (split, distill, hub append, task-reroute) may still have run earlier in the pipeline when confidence and snapshot rules allowed it.
+
+- Wait for EAT-QUEUE with approved: true / approved_option (A–G or 0) / approved_path to trigger an **apply-mode** ingest run for relocation/rename.
+
+<!-- Safety invariant — Watcher never approves: Watcher only syncs approved_option + approved_path when approved: true is already set by the user. Watcher never sets approved: true itself — that remains a manual user action (frontmatter edit or Commander macro). This prevents accidental auto-approval loops even if Watcher logic evolves later. -->
+
+### Apply-mode ingest (Phase 2 — run from approved Decision Wrapper)
+
+When a queue entry is injected for a Decision Wrapper under `Ingest/Decisions/` with `approved: true` (see `feedback-incorporate` and `auto-eat-queue.mdc`), the ingest pipeline runs in **apply-mode** for the original Ingest note:
+
+- `feedback-incorporate` resolves:
+  - `hard_target_path`: from `approved_path` or from the selected candidate (A–G).
+  - `guidance_text`: from the wrapper's "Thoughts / corrections / why this location?" block.
+  - Optionally `guidance_conf_boost` to reflect strong user approval.
+- The ingest run for the original note is treated as **guidance-aware** with a fixed target path:
+  - Skip Decision Wrapper creation (wrapper already exists and is approved).
+  - Re-run classify_para + frontmatter-enrich + subfolder-organize with `hard_target_path` and guidance in context; only override the user-chosen path if it is structurally invalid or conflicts with PARA/Exclusion rules.
+  - After required per-change snapshots and confidence checks (`ingest_conf ≥85` or `post_loop_conf ≥85`), execute:
+    - **obsidian_ensure_structure**(folder_path: *parent directory of hard_target_path*) so the target path exists (create if missing); then `obsidian_move_note` with `dry_run: true` then `dry_run: false` to move the note out of `Ingest/` into `hard_target_path`.
+    - After successful move: set para-type (and when under 1-Projects/ project-id) on the note at hard_target_path from the destination path per mcp-obsidian-integration.
+    - `obsidian_rename_note` when name-enhance suggested a filename and confidence ≥85% for rename, subject to snapshot triggers.
+- Update the Decision Wrapper (e.g. set `used_at`, keep `approved: true`) and log the applied decision in Ingest-Log.md (linking original path, wrapper path, and final PARA path). The queue processor (step 0 in auto-eat-queue) then **moves the wrapper to `4-Archives/Ingest-Decisions/`** so `Ingest/Decisions/` stays uncluttered; wrappers are retained for training/history and are never auto-deleted.
+
+## Batch and isolation
+
+- Process **one note fully** (including **obsidian_log_action**) before starting the next.
+- **Batch limit**: Up to 5 notes per run (or as configured); process sequentially.
+- **On failure**: Log the failure and note path in Ingest-Log.md with #review-needed and a short reason; then **continue with the next note**. Do not halt the entire batch for a single note failure (e.g. backup fails for one → skip that note, log, continue).
+
+## Error handling (ingest)
+
+On any error during ingest (backup, classify_para, frontmatter-enrich, name-enhance, subfolder-organize, split_atomic, distill_note, append_to_hub, move_note, log_action, or embedded normalization):
+
+- Follow the **Error Handling Protocol** in `mcp-obsidian-integration.mdc` (§ Error Handling Protocol).
+- Capture pipeline stage (e.g. `classify_para`, `obsidian_move_note`), affected note path(s), and sanitized error; include **error_type** in the summary and in the Errors.md entry table.
+- Append trace + summary to `3-Resources/Errors.md` using the standard entry format (heading, metadata table, #### Trace, #### Summary); append a one-line reference to `Ingest-Log.md`.
+- If severity is high or critical (e.g. backup failed): pause this note, skip destructive steps, continue to next note; do not abort entire batch for single-note failure.
+
+## Snapshots and checkpoints
+
+- **External backup**: Every ingest run MUST start with `obsidian_create_backup` for each note, writing into `BACKUP_DIR` (see `mcp-obsidian-integration.mdc`).
+- **Per-change snapshots (in-vault)**:
+  - Before any destructive or structural step for a given note, call the `obsidian-snapshot` skill with `type: "per-change"`:
+    - Before `obsidian_split_atomic` (splitting multi-idea notes).
+    - Before `obsidian_distill_note` when it will rewrite or heavily restructure the note.
+    - Before `obsidian_append_to_hub` when appending into hub or other notes.
+    - Before `obsidian_move_note` or `obsidian_rename_note`.
+  - Take per-change snapshots when confidence for the underlying action is **≥78%** (for moves into existing folders) or **≥85%** (for split, distill, or creating new structure). If confidence is 70–77%: do not snapshot or move; apply frontmatter/links only and flag #review-needed. If <70%: do not perform destructive action; flag with `#review-needed` in Ingest-Log.md.
+  - Per-change snapshots are stored under `Backups/Per-Change/` (configured via `SNAPSHOT_DIR`) using flattened paths; they must never be edited later.
+- **Batch checkpoints**:
+  - Maintain a simple counter of processed notes in this ingest session.
+  - After every **5 notes** (or configured batch size), call `obsidian-snapshot` with `type: "batch"` and a list of the notes and snapshot paths touched in that mini-batch.
+  - Batch checkpoint notes live under `Backups/Batch/` (`BATCH_SNAPSHOT_DIR`) and summarize:
+    - Timestamp, pipeline context (e.g. "INGEST MODE – safe batch autopilot"), count of notes, and links to per-change snapshots.
+  - Log the batch checkpoint path into both `Ingest-Log.md` and `3-Resources/Backup-Log.md`.
+- **Exclusions**:
+  - Do not process or ingest notes under `Backups/` automatically; snapshots and batch notes are history only.
+  - Do not treat Decision Wrappers under `Ingest/Decisions/**` as ingest inputs; these notes coordinate decisions and guidance only. The ingest pipeline should operate on the original non-wrapper ingest notes under `Ingest/**/*.md`, using wrappers via EAT-QUEUE + guidance-aware runs.
+  - **Watcher plugin**: Do not move or delete notes with path `Ingest/watched-file.md`, `3-Resources/Watcher-Signal.md`, `3-Resources/Watcher-Result.md` or frontmatter `watcher-protected: true`.
+  - Restore and cleanup operations are handled by dedicated context rules (e.g. `auto-restore.mdc`, `snapshot-sweep.mdc`) triggered explicitly by the user.

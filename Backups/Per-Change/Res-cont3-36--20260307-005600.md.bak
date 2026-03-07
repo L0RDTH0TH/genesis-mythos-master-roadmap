@@ -1,0 +1,9 @@
+---
+original_path: (see Archive-Log)
+pipeline: autonomous-archive
+snapshot_type: per-change
+snapshot_created: "2026-03-07T00:56:00Z"
+immutable: true
+status: frozen
+---
+(per-change snapshot; full content in external backup)

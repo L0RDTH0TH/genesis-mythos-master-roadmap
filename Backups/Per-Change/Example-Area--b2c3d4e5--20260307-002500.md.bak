@@ -1,0 +1,17 @@
+---
+title: Example Area
+para-type: Area
+status: active
+created: 2026-02-21
+tags: [example, para]
+original_path: 2-Areas/Example-Area.md
+pipeline: autonomous-archive
+snapshot_type: per-change
+snapshot_created: "2026-03-07T00:25:00Z"
+immutable: true
+status: frozen
+---
+
+## Example Area
+
+Use **[[4-Archives/Templates-Archive/Area-Template]]** when creating new areas (archived 2026-03-06); or create a blank note and use frontmatter-enrich for basics. Replace this note with your first ongoing responsibility or area of focus.

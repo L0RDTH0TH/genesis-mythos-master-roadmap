@@ -1,0 +1,154 @@
+---
+description: "Binds natural-language triggers and PARA-scoped notes to the autonomous-organize pipeline. Re-organizes existing notes in active PARA folders (1-Projects, 2-Areas, 3-Resources): re-evaluate classification, enrich frontmatter, suggest/create subfolders, rename for atomicity, move when confidence ≥85%."
+globs:
+  - "1-Projects/**/*.md"
+  - "2-Areas/**/*.md"
+  - "3-Resources/**/*.md"
+  - "!4-Archives/**"
+  - "!Backups/**"
+  - "!Templates/**"
+  - "!**/Log*.md"
+  - "!**/* Hub.md"
+alwaysApply: false
+---
+
+# Auto-organize (context rule)
+
+- **Pipeline**: autonomous-organize — re-organizes existing notes in active PARA folders: re-evaluate classification, enrich frontmatter, create/suggest subfolders (up to 4 levels), rename for atomicity, move when confidence ≥85%. Separate from ingest (new captures) and archive (completed → 4-Archives/).
+- **Reference**: See `[3-Resources/Cursor-Skill-Pipelines-Reference.md](3-Resources/Cursor-Skill-Pipelines-Reference.md)` for the canonical pipeline order, confidence gates, and snapshot triggers.
+- **MCP safety**: Always obey `[.cursor/rules/always/mcp-obsidian-integration.mdc](.cursor/rules/always/mcp-obsidian-integration.mdc)` for backups, snapshot directories, and MCP fallbacks.
+
+## How to activate this pipeline
+
+Use any of these natural-language triggers (case-insensitive, partial match usually works):
+
+- **ORGANIZE MODE – safe batch autopilot on [folder]** *(canonical mode trigger; e.g. "on 1-Projects/Test-Project" or "on 3-Resources")*
+- **ORGANIZE MODE – safe batch autopilot**
+- **Re-organize Projects and Resources**
+- **re-organize this note** / **reorganize current file**
+- **classify and move** / **put this note in the right folder**
+
+When these phrases appear (and the current note or batch matches the `globs` above), prefer this rule to drive the **autonomous-organize** pipeline.
+
+## Pipeline overview
+
+High-level sequence, as defined in the pipelines reference:
+
+1. **Backup**: Ensure `obsidian_create_backup` has been called for the note (handled by the always-applied MCP rule).
+2. **Classify PARA**: Run `obsidian_classify_para` to re-evaluate para-type, status, and themes.
+3. **`frontmatter-enrich` (skill)** — set/update status, confidence, para-type, created, links (hub + related); optional project-id, priority, deadline (≥85% for auto-apply).
+4. **`subfolder-organize` (skill)** or **MCP** **`obsidian_subfolder_organize`** — build target path (or 2–3 path candidates in mid-band) under active PARA roots (1-Projects, 2-Areas, 3-Resources; max 4 levels) from para-type + project-id + semantic themes. **Re-org mode**: target stays under PARA, not 4-Archives. In **mid-band (68–84% inclusive)**: optionally consult **`propose_para_paths`** (context_mode: `"organize"`) for ranked PARA candidates, then use **calibrate_confidence** → **verify_classification** → **obsidian_move_note**(..., `dry_run: true`) → then commit.
+5. **`name-enhance` (skill, context `organize`)** — run opportunistically after subfolder-organize. When filename is vague or confidence is very high, name-enhance proposes or applies a better name per its confidence tiers and protection rules (MOC/hub/index/project root require explicit request). If name-enhance returns suggested_name and confidence ≥85% for a Regular note (or protected-with-request), call **obsidian-snapshot** then `obsidian_rename_note(path, new_name)` with the suggested filename (kebab-slug-YYYY-MM-DD-HHMM per Naming-Conventions; date and time at end). If current name is already good, name-enhance returns no change or low confidence; then skip rename.
+6. **Move**: If the computed path differs from current path, call **`obsidian_ensure_structure`**(folder_path: *parent of target path*) so the target exists, then **`obsidian_move_note`** only after **dry_run first, then commit** (after per-change snapshot). After successful move: set para-type (and when under 1-Projects/ project-id) from new path per mcp-obsidian-integration. **≥85%** for execute; otherwise propose path only. On move failure or dry_run risks, use the MCP fallback table in mcp-obsidian-integration.mdc (propose_alternative_paths → calibrate → verify → dry_run again → commit; else log and pause).
+7. **Logging**: Call `obsidian_log_action` and append entries to both `3-Resources/Organize-Log.md` and `3-Resources/Backup-Log.md` when snapshots or backups are involved.
+
+**Important**: Confidence thresholds, snapshot points, and skill order must remain synchronized with the master table in `Cursor-Skill-Pipelines-Reference.md`. If conflict arises, the reference table takes precedence and this rule should be updated, not vice versa.
+
+## Batch and isolation
+
+- Process **one note fully** (including `obsidian_log_action`) before starting the next.
+- **Batch usage**: Use small, intentional batches (e.g. folder-scoped: `1-Projects/Test-Project/**` or up to ~5 notes). Batch checkpoints approximately every **3 notes**.
+- **On failure**:
+  - If backup, snapshot, or any critical organize step fails for a note, log the failure with `#review-needed` in `3-Resources/Organize-Log.md` (and `3-Resources/Backup-Log.md` when snapshots are involved).
+  - Skip rename/move for that note and continue with the next.
+
+## Error handling
+
+On failure of backup, snapshot, classify_para, frontmatter-enrich, subfolder-organize, name-enhance, rename_note, or move_note:
+
+- Follow the **Error Handling Protocol** in `mcp-obsidian-integration.mdc` (§ Error Handling Protocol). Pipeline: `autonomous-organize`; stage as appropriate. Include **error_type** in the summary and in the Errors.md entry table.
+- Log to `3-Resources/Errors.md` (standard entry format: heading, metadata table, #### Trace, #### Summary) and reference in `Organize-Log.md` and `Backup-Log.md`.
+- If backup fails: abort organize for that note; skip rename/move on snapshot or move failure, continue to next.
+
+## Snapshots and checkpoints
+
+All per-change snapshot triggers **must** follow the `Snapshot triggers (all pipelines)` table in `Cursor-Skill-Pipelines-Reference.md`.
+
+- **Per-change snapshots (in-vault)**:
+  - **Before `obsidian_rename_note`** when confidence for rename is **≥85%**. If snapshot creation fails, do not rename; log `#review-needed`.
+  - **Before `obsidian_move_note`** when confidence for move is **≥85%**. If snapshot creation fails, do not move; log `#review-needed`.
+  - If confidence is below threshold for rename or move, do **not** perform that action; propose only and log.
+- **Batch checkpoints**:
+  - After every **~3 notes** in the same organize run, call `obsidian-snapshot` with `type: "batch"` summarizing:
+    - Pipeline context (e.g. "ORGANIZE MODE – safe batch autopilot on 1-Projects/Test-Project").
+    - Count and paths of notes renamed/moved (and any skipped).
+    - Links/paths to their per-change snapshots.
+  - Batch checkpoint notes live under `Backups/Batch/` (`BATCH_SNAPSHOT_DIR`) and must be logged in both:
+    - `3-Resources/Organize-Log.md`
+    - `3-Resources/Backup-Log.md`
+
+## Logging requirements
+
+After **every note** inspected by this pipeline (whether moved, renamed, skipped, or rejected), call `obsidian_log_action` and append a canonical log line:
+
+- **Log fields** (mirror other pipeline logs):
+  - **timestamp**
+  - **pipeline**: `autonomous-organize`
+  - **note path** (and new path if moved/renamed)
+  - **confidence** (for classify and move/rename decision)
+  - **actions taken / actions skipped** (classify, frontmatter-enrich, subfolder-organize, rename, move)
+  - **backup path** (from `obsidian_create_backup` for this run)
+  - **snapshot path(s)** (per-change and batch, if created)
+  - **flag**: `#review-needed` (when applicable) plus a short reason
+- **Where to log**:
+  - Append a human-readable line to `3-Resources/Organize-Log.md`.
+  - Include backup and snapshot paths in the `changes` string of `obsidian_log_action`.
+  - For any step that created snapshots or relied on backups, also append/reflect the same information in `3-Resources/Backup-Log.md`.
+
+## Confidence bands & organize-path loop
+
+- **Primary organize signal**: `path_conf` — path fit confidence from `subfolder-organize` in re-org mode.
+- **Bands and behavior** (aligned with `Cursor-Skill-Pipelines-Reference.md` and `confidence-loops.mdc`):
+  - **High (path_conf ≥85)**:
+    - After snapshot, apply optional rename and move to the new path.
+  - **Mid (68 ≤ path_conf ≤ 84)**:
+    - Run a **single neighbor/context loop**:
+      - Compare the note against siblings in candidate folders (headings, tags, backlinks/hubs).
+      - Apply the shared self-critique template focused on path fit.
+      - Optionally propose 2–3 alternative paths with scores and compute `post_loop_conf`.
+    - If `post_loop_conf ≥ 85`: snapshot → apply rename (if any) and move.
+    - Else or if `post_loop_conf ≤ pre_loop_conf`: skip rename/move; log alternative paths + reasons and mark `#review-needed`. **Also create a Decision Wrapper** under `Ingest/Decisions/Refinements/` with `wrapper_type: mid-band-refinement`, `pipeline: organize`, `original_path` (note path), `clunk_severity: medium`; fill options A–G from the 2–3 path candidates plus "Re-queue with user_guidance", "Skip", "Ignore" (use `Templates/Decision-Wrapper.md`; ensure 7 options). Ensure `obsidian_ensure_structure`(folder_path: "Ingest/Decisions/Refinements"); ensure CHECK_WRAPPERS entry exists in queue; append Watcher-Result line `message: "created wrapper → Decisions/Refinements/<basename>"`.
+  - **Low (path_conf <68)**:
+    - No loop; treat path proposals as propose-only and do not rename/move automatically. **Create a Decision Wrapper** under `Ingest/Decisions/Low-Confidence/` with `wrapper_type: low-confidence`, `pipeline: organize`, `original_path`, `clunk_severity: high`; fill options A–G with top 3 path/classification proposals and "Try distill lens", "Seed-enhance from highlight", "Mark orphan / move to review-pending", "Ignore". Ensure `obsidian_ensure_structure`(folder_path: "Ingest/Decisions/Low-Confidence"); ensure CHECK_WRAPPERS entry exists; append Watcher-Result line `message: "created wrapper → Decisions/Low-Confidence/<basename>"`.
+- **Loop logging**:
+  - Populate `loop_attempted`, `loop_band`, `pre_loop_conf`, `post_loop_conf`, `loop_outcome`, `loop_type: "organize-path"`, and `loop_reason` in `Organize-Log.md` and the `obsidian_log_action` changes string.
+
+## Exclusions
+
+This rule:
+
+- **Includes** only markdown notes under:
+  - `1-Projects/**`
+  - `2-Areas/**`
+  - `3-Resources/**`
+- **Excludes**:
+  - `4-Archives/**` — archive notes are not re-organized by this pipeline (use autonomous-archive for archive moves).
+  - `Backups/**` (Per-Change, Batch, Versions, or other backup subtrees).
+  - `Templates/**`.
+  - Any `**/Log*.md` such as:
+    - `3-Resources/Ingest-Log.md`
+    - `3-Resources/Distill-Log.md`
+    - `3-Resources/Archive-Log.md`
+    - `3-Resources/Express-Log.md`
+    - `3-Resources/Organize-Log.md`
+    - `3-Resources/Backup-Log.md`
+  - Any `**/* Hub.md` (e.g. `Resources Hub.md`, project/area hubs) by default.
+  - **Watcher plugin**: `Ingest/watched-file.md`, `3-Resources/Watcher-Signal.md`, `3-Resources/Watcher-Result.md`; and any note with frontmatter `watcher-protected: true` (do not move or delete).
+
+This prevents reprocessing of archives, history, configuration, hub/index notes, and Watcher-protected files.
+
+## Safety
+
+- **Backups first**: If `obsidian_create_backup` fails for a note, **abort** the organize pipeline for that note; log the failure with `#review-needed` and perform no destructive actions.
+- **Per-change snapshots**: Mandatory before rename and before move when confidence ≥85%, as per the snapshot triggers table. Snapshot files under `Backups/Per-Change/` and batch notes under `Backups/Batch/` are **append-only** and must never be edited.
+- **Critical invariant**: No destructive action (rename, move) may occur unless **both**:
+  1. Confidence for that action is **≥85%**, **and**
+  2. A successful per-change snapshot was created and hashed for that note in the current run.
+  If either condition fails → **skip the destructive action**, log `#review-needed` or propose only, and continue to the next note.
+- **Fallbacks for moves and paths**: If `obsidian_move_note` fails due to missing parent directories, use `obsidian_ensure_structure` for the target parent and then retry, following the MCP fallback table. If the fallback also fails, log the error and propose that the user create the parent path manually; do not continue with the move.
+- **No shell file ops**: Never use shell `cp/mv/rm` on the vault. All re-organization goes through MCP tools.
+- **Restore is explicit**: Snapshot and backup restore is always user-triggered via dedicated restore/sweep rules; autonomous-organize never auto-restores or auto-deletes snapshots.
+
+## Rollout guidance
+
+- **Initial rollout**: Start with a single test folder, e.g. `1-Projects/Test-Project/**`. Run a few manual organize sweeps and confirm snapshots, renames, and moves match expectations and logs are complete. Then widen to broader PARA scope.

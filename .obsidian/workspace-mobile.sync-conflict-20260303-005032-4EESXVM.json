@@ -1,0 +1,222 @@
+{
+  "main": {
+    "id": "7a59a91344771350",
+    "type": "split",
+    "children": [
+      {
+        "id": "53fa7d911f6847ff",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "51ca657efe1c7731",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Ingest/Sub agents we could use.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Sub agents we could use"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "2b61d7427a2ff2cc",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "7dcc20bfdbfc8fa9",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {
+            "sortOrder": "alphabetical",
+            "autoReveal": true
+          },
+          "icon": "lucide-folder-closed",
+          "title": "Files"
+        }
+      },
+      {
+        "id": "e99305aa13b660a0",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "Biblical",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          },
+          "icon": "lucide-search",
+          "title": "Search"
+        }
+      },
+      {
+        "id": "0a789af3c1eba3e7",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true,
+            "showSearch": true,
+            "searchQuery": "ge"
+          },
+          "icon": "lucide-tags",
+          "title": "Tags"
+        }
+      },
+      {
+        "id": "fbe9a58765168a44",
+        "type": "leaf",
+        "state": {
+          "type": "all-properties",
+          "state": {
+            "sortOrder": "frequency",
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-archive",
+          "title": "All properties"
+        }
+      },
+      {
+        "id": "201f5bd1faef58d7",
+        "type": "leaf",
+        "state": {
+          "type": "bookmarks",
+          "state": {},
+          "icon": "lucide-bookmark",
+          "title": "Bookmarks"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "dc41b2b0b25a15ad",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "0e1a8c3cb300775f",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "file": "Ingest/watched-file.md",
+            "collapseAll": true,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-coming-in",
+          "title": "Backlinks"
+        }
+      },
+      {
+        "id": "d1c7b5681186e6ad",
+        "type": "leaf",
+        "state": {
+          "type": "outgoing-link",
+          "state": {
+            "file": "Ingest/watched-file.md",
+            "linksCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-going-out",
+          "title": "Outgoing links"
+        }
+      },
+      {
+        "id": "615e116424a31889",
+        "type": "leaf",
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "Ingest/watched-file.md",
+            "followCursor": false,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-list",
+          "title": "Outline"
+        }
+      }
+    ],
+    "currentTab": 1
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "templater-obsidian:Templater": false,
+      "obsidian42-brat:BRAT": false,
+      "watcher:Watcher Modal": false
+    }
+  },
+  "active": "51ca657efe1c7731",
+  "lastOpenFiles": [
+    "1-Projects/Genesis-Mythos/Roadmap/Genesis-Mythos-Roadmap-2026-03-02.md",
+    "1-Projects/Genesis-Mythos/Roadmap",
+    "Ingest/Feature request template.md",
+    "Ingest/Sub agents we could use.md",
+    "1-Projects/Genesis/genesis-roadmap-2026-03-02-0520.md",
+    "Backups/Per-Change/genesis-task--c8d9e0f1--20260302-0602.md.bak",
+    "Ingest/Genesis task.md",
+    "1-Projects/Genesis/Genesis task.md",
+    "Backups/Per-Change/why-genesis-roadmap--e5f6g7h8--20260302-0556.md.bak",
+    "Backups/Per-Change/genesis-week-one--a1b2c3d4--20260302-0556.md.bak",
+    "1-Projects/Genesis/why-genesis-roadmap-should-be-project-2026-03-02-0522.md",
+    "1-Projects/Genesis/Genesis week One.md",
+    "Ingest/genesis-ingest-classification-context-2026-03-02-0555.md",
+    "Ingest/Genesis week One.md",
+    "1-Projects/Genesis/Genesis.md",
+    "Ingest/ingest-failure-files-not-removed-2026-03-02.md",
+    "Ingest/Master goal for Genesis.md",
+    "1-Projects/Genesis/master-goal-for-genesis-2026-03-02-0520.md",
+    "Backups/Per-Change/master-goal-for-genesis--095f4f39--20260302-051937.md.bak",
+    "Backups/Per-Change/genesis-roadmap--45c0880b--20260302-051937.md.bak",
+    "Ingest/why-genesis-roadmap-should-be-project-2026-03-02-0522.md",
+    "1-Projects/Genesis",
+    "3-Resources/Watcher-Result.md",
+    "Ingest/Genesis Roadmap.sync-conflict-20260301-234943-4EESXVM.md",
+    "Ingest/Genesis Roadmap.md",
+    "4-Archives/Ingest-2026-03-01/obsidian-second-brain-auditor-2026-03-01-0205.md",
+    "4-Archives/Ingest-2026-03-01/expert-consultant-second-brain-kms-2026-03-01-0205.md",
+    "4-Archives/Ingest-2026-03-01/user-interaction-logging-watcher-2026-03-01-0205.md",
+    "4-Archives/Ingest-2026-03-01/obsidian-screenshot-2026-02-25-2026-03-01-0205.md",
+    "10 Zettelkasten",
+    "99 Templates",
+    "00 Inbox",
+    "3-Resources/Restore-Queue.md",
+    "5-Attachments/Screenshot_20251129_205112_Discord.jpg",
+    "5-Attachments/Images/Screenshot_20260225_053544_Obsidian.jpg",
+    "Templates/Ingest-template/Link-Note.md",
+    "3-Resources/2026-02-23-obsidian-list-notes.md",
+    "4-Archives/Pre-Archive-Root-Cleanup/V4 Draft Thoughts.md",
+    "99 Attachments/Screenshot_20251129_205112_Discord.jpg",
+    "99 Attachments/Images/Screenshot_20260225_053544_Obsidian.jpg",
+    "Ingest/Screenshot_20260225_053544_Obsidian.jpg",
+    "Screenshot_20260225_053544_Obsidian.jpg",
+    "mcp-server/node_modules/@modelcontextprotocol/inspector-client/dist/mcp.svg",
+    "mcp-server/node_modules/@gerrit0/mini-shiki/static/mini-shiki-dependency-tree.svg",
+    "mcp-server/node_modules/@gerrit0/mini-shiki/static/shiki-dependency-tree.svg",
+    "mcp-server-cyanheads/node_modules/@gerrit0/mini-shiki/static/mini-shiki-dependency-tree.svg"
+  ]
+}

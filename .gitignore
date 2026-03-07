@@ -1,0 +1,31 @@
+# OS and editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Syncthing
+.stfolder/
+.stversions/
+
+# Nested git repos (clones live here; track only as reference)
+.git-clones/
+# Extracted starter kit (has its own .git; use zip or add as submodule if needed)
+Second-Brain-Starter-Kit/
+
+# Trash
+.trash/
+
+# Optional: uncomment to avoid committing in-vault snapshots (can get large)
+# Backups/
+
+# Obsidian local workspace state (machine-specific)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Archives / binaries (optional: uncomment if you don’t want them in git)
+# *.zip
+
+# Logs and temp (if any are generated at repo root)
+*.log

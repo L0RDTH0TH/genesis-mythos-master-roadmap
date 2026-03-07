@@ -1,0 +1,21 @@
+---
+original_path: 1-Projects/Test-Project/2026-02-25-distill-short.md
+original_title: Distill test — short note
+pipeline: distill
+snapshot_type: per-change
+snapshot_created: 2026-02-25T21:22:46Z
+snapshot_hash: 51327d7a63fd7a0413949b97d9033c86bb4f1503fdea40131538726cf7ee761f
+confidence: 90
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+# Distill test — short note
+
+Short note for distill batch. **Main idea**: test that callout-tldr-wrap and readability-flag run correctly on minimal content.
+
+## TL;DR
+
+Short note for pipeline validation; expect highlight and callout wrap.

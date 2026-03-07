@@ -1,0 +1,3 @@
+{"mode":"DISTILL MODE","source_file":"1-Projects/MyProject/Note.md","id":"req-1"}
+{"mode":"SEEDED-ENHANCE","source_file":"2-Areas/Area/Note.md","id":"req-2"}
+{"mode":"INGEST MODE","source_file":"Ingest/Capture.md","id":"req-3"}

@@ -1,0 +1,91 @@
+---
+original_path: Ingest/Genesis Roadmap.md
+original_title: Genesis Roadmap
+pipeline: ingest
+snapshot_type: per-change
+snapshot_created: "2026-03-02T05:19:37Z"
+snapshot_hash: pre-move-70pct-run
+confidence: 70
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+# AI Output Capture
+
+## Source & prompt
+
+_Which model/app and what did you ask? Paste the key parts of your prompt here._
+
+- Source/model: Grok
+- Date/time: 2026-03-01 23:48
+- Prompt:
+
+>  
+
+## Full output
+
+_Paste the full AI response below._
+
+Godot stack—smart pick. Free, scriptable (GDScript/C#), multiplayer-ready. Terrain3D nails proc terrain; SVG plugins deliver infinite zoom; Free5e/A5E SRDs parse easy for rules (JSON/XML). No art/story means lean on placeholders + user uploads. Here's wired-up plan.
+
+### Stack Fit & Setup
+| Component | Role | Install/Notes |
+|-----------|------|---------------|
+| **Godot 4.3+** | Engine core (FP nav, MP via High-Level Multiplayer) | Download editor. Enable GDExtensions. |
+| **Terrain3D** | 3D maps/open world proc gen (noise/heightmaps, editable voxels, clipmaps for seamless zoom) | Asset Lib: Search "Terrain3D". GDExtension—drop in `addons/`, enable plugin. Tutorials: YouTube "Terrain3D Godot 4" (e.g., basic setup + foliage). |
+| **Free5e (+A5E overlay)** | D&D mechanics (chars, combat, rules engine) | Download SRDs (wyrmworks/free5e, a5esrd.com). Parse JSON to ScriptableObjects/DataResources for sheets/rolls. A5E adds depth (maneuvers, cultures)—DM toggle. |
+| **SVG Maps** | 2D maker (zoomable editor, export to 3D) | Plugins: "godot-svg" (runtime shader render) or "Scalable Vector Shapes 2D" (Asset Lib). Infinite zoom, paths-to-mesh export for Terrain3D. Godot bakes import SVG but plugins fix raster blur. |
+
+**Gotchas:** Terrain3D GPU-heavy—test low-end (integrated graphics). SVG perf: Limit paths (<10k) or chunk large maps. SRDs: No official API—script parser (JSONLoader).
+
+### Integration Flow
+1. **2D Map Maker → 3D**: SVG editor (Control nodes + SVG plugin). DM drags tiles/shapes. Export: Paths → heightmap/colliders → Terrain3D import (noise overlay for proc filler).
+2. **Proc Gen**: DM seeds (theme/prompt) → FastNoiseLite + Terrain3D textures. User-guided: Iterate previews (WFC via addon or custom).
+3. **FP Open World**: CharacterBody3D + Terrain3D collision. Seamless zones via clipmaps.
+4. **Combat/Chars**: UI (CanvasLayer): Free5e JSON → dynamic sheets. Turn queue (DM authoritative). Rolls: RPC sync.
+5. **MP (5p+DM)**: DM=dedicated server. Sync: Transforms (pos/rot), RPCs (rolls/actions), NetworkVars (HP/init).
+6. **DM Tools**: Panel: Rule sliders (A5E mods), spawn waves on Terrain3D, fog (OccluderInstance3D), lore wiki (MarkdownTexture?).
+
+```gdscript
+# Quick Terrain3D proc snippet (GDScript)
+extends Terrain3D
+func _ready():
+    var noise = FastNoiseLite.new()
+    noise.seed = dm_seed  # User-guided
+    # Paint heightmap texture from noise
+    texture_set(0, noise_texture_from_svg_export())  # Your 2D→3D bridge
+```
+
+### Tweaked Roadmap (Solo, Godot-Focused)
+| Phase | Milestones | Time |
+|-------|------------|------|
+| **Week 1: Core** | Godot proj + Terrain3D + basic FP cam. Proc hill demo. | 1w |
+| **Week 2-3: Maps** | SVG plugin + 2D editor. Export→Terrain3D test. Presets (gothic tileset JSON). | 2w |
+| **Month 1: Mechanics** | Free5e parser + char sheet UI. d20 combat loop + init queue. | 4w |
+| **Month 2: MP/DM** | 6p sync (test LAN). Fog/rules editor. Guided proc (DM sliders). | 4w |
+| **Month 3: Polish** | World saves (ResourceSaver), A5E toggles. Itch.io alpha. | 4w |
+
+**Total: ~3-4 months to playable MVP.** Fork nothing—SVG VTTs sparse, build clean.
+
+**Next Moves:**
+1. Godot 4.3 editor → New Proj → Add Terrain3D + godot-svg.
+2. Prototype: SVG square → zoom → export heightmap → walk on Terrain3D.
+3. GitHub repo—share for feedback.
+
+Hit snags? Paste error. Let's ship this before WotC notices.  
+
+## Key insights
+
+_Extract the few pieces that are actually useful or worth revisiting._
+
+-  
+-  
+-  
+
+## TL;DR
+
+_Short summary of why this output matters (or "nothing useful" if so)._
+
+-

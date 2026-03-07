@@ -1,0 +1,34 @@
+---
+created: 2026-03-02
+tags: [ingest, github-docs, documentation]
+source: "https://github.com/L0RDTH0TH/genesis-mythos/blob/main/.cursor/rules/mcp-usage.mdc"
+title: "Mcp Usage"
+---
+
+---
+alwaysApply: true
+---
+# Genesis Mythos MCP Usage Rules (Updated 2025-12-20 – Reverted to Free Coding-Solo/godot-mcp)
+
+YOU ARE STRICTLY FORBIDDEN FROM EVER USING THE "launch_editor" MCP ACTION.
+
+**Preferred Godot MCP server:** Coding-Solo/godot-mcp (free, open-source, MIT-licensed)
+
+You may ONLY use these Godot MCP actions:
+- run_project, stop_project, get_debug_output
+- create_scene, add_node, set_property, attach_script, save_scene, get_scene_tree, etc.
+- read_file, write_file, list_files
+
+You may aggressively use Godot MCP to create/modify/save scenes and scripts.
+
+After major changes you MAY call run_project to test (unless explicitly told "do not run").
+
+All other MCP servers (obsidian, github-mcp-server, memory, etc.) are available.
+
+When finishing a logical feature → auto commit + push via github-mcp-server with clear message (`feat/genesis:`, `fix:`, `refactor:`, etc.).
+
+You MUST obey 100% the folder structure, naming conventions, typed GDScript, and theme rules above.
+Never create files outside allowed paths.
+Always use the current theme path res://themes/bg3_theme.tres
+Always add the exact script header shown in rule 3.
+

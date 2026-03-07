@@ -1,0 +1,197 @@
+// Second Brain System Diagrams — Level 3 (Detailed)
+// Auto-collected existing Mermaid blocks from vault documentation
+// Do not edit diagrams here — edit in source notes and re-collect if needed
+// Generated: 2026-03-05
+
+%% =============================================================================
+%% Most granular: individual pipeline sequences with every skill,
+%% detailed MCP call sequences, error entry structure, Watcher-Result structure,
+%% highlight flow with frontmatter, confidence/safety with dry_run/snapshot.
+%% =============================================================================
+
+%% === Safety flow (dry_run / snapshot gates) ===
+%% (from Backbone.md)
+flowchart TD
+  Step[Destructive step?]
+  Step -->|Yes| Conf{Confidence ≥85%?}
+  Conf -->|Yes| CreateBackup[create_backup or ensure_backup]
+  CreateBackup --> PerChange[Per-change snapshot]
+  PerChange --> Execute[Execute move/rename/split/distill/append]
+  Conf -->|No| Manual[Manual review; no destructive]
+  Step -->|No| Proceed[Proceed]
+
+%% === Ingest pipeline (every skill step) ===
+%% (from Cursor-Skill-Pipelines-Reference.md)
+flowchart LR
+  A0[bootstrap_optional]
+  A[create_backup]
+  B[classify_para]
+  C[frontmatter_enrich]
+  N[name_enhance_propose]
+  D[subfolder_organize]
+  E[split_atomic]
+  E2[split_link_preserve]
+  F[distill_note]
+  G[distill_highlight_color]
+  H[next_action_extract]
+  I[append_to_hub]
+  J[move_note_dry_run_then_commit]
+  K[log_action]
+  A0 --> A --> B --> C --> N --> D --> E --> E2 --> F --> G --> H --> I --> J --> K
+
+%% === Ingest confidence loop (state) ===
+%% (from Cursor-Skill-Pipelines-Reference.md)
+flowchart LR
+  eval[Evaluate ingest_conf] --> high[High (>=85)]
+  eval --> mid[Mid (68-84)]
+  eval --> low[Low (<68)]
+
+  high --> snap_ingest[Per-change snapshot]
+  snap_ingest --> ingest_actions[Split / distill / hub / move]
+
+  mid --> loop_ingest[Non-destructive self-critique loop]
+  loop_ingest --> post_high[post_loop_conf >= 85]
+  loop_ingest --> post_low[post_loop_conf < 85 or <= pre_loop_conf]
+
+  post_high --> snap_ingest
+  post_low --> manual_ingest[Manual review (no destructive actions)]
+
+  low --> manual_ingest
+
+%% === Typical ingest MCP sequence (exact tool order) ===
+%% (from MCP-Tools.md)
+flowchart LR
+  A[create_backup]
+  B[classify_para]
+  C[frontmatter_enrich]
+  D[subfolder_organize]
+  E[obsidian_propose_para_paths]
+  F[split_atomic]
+  G[distill_note]
+  H[append_to_hub]
+  I[move_note dry_run]
+  J[move_note commit]
+  K[log_action]
+  A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K
+
+%% === Error entry structure ===
+%% (from Logs.md)
+flowchart TD
+  H[Heading: YYYY-MM-DD HH:MM — Title]
+  H --> M[Metadata table: pipeline, severity, approval, timestamp, error_type]
+  M --> T[#### Trace]
+  T --> S[#### Summary]
+  S --> RC[Root cause]
+  S --> Impact[Impact]
+  S --> Fix[Suggested fixes]
+  S --> Rec[Recovery]
+
+%% === Watcher-Result structure ===
+%% (from Parameters.md)
+flowchart LR
+  A[requestId]
+  B[status]
+  C[message]
+  D[trace]
+  E[completed]
+  A --> B --> C --> D --> E
+
+%% === Highlighter flow (with frontmatter) ===
+%% (from Skills.md)
+flowchart LR
+  subgraph triggers [Triggers and config]
+    T1["HIGHLIGHT PERSPECTIVE: lens"]
+    T2[Second-Brain-Config coverage 50-70%]
+    T3["SWITCH HIGHLIGHT ANGLE: angle"]
+    T4["HIGHLIGHT MULTI-ANGLE: list"]
+  end
+  subgraph skills [Skills and output]
+    S1[distill-highlight-color]
+    S2[highlight-perspective-layer]
+    S3[layer-promote]
+    S1 -->|"coverage %, perspective"| Log1[Distill-Log]
+    S2 -->|"drift levels, angles"| Log1
+  end
+  subgraph frontmatter [Frontmatter]
+    F1[highlight_perspective]
+    F2[highlight_angles]
+    F3[highlight_active_angle]
+  end
+  T1 --> S1
+  T2 --> S1
+  T3 --> F3
+  T4 --> S2
+  S1 --> S2
+  S2 --> S3
+  S1 --> F1
+  S2 --> F2
+
+%% === Ingest skill chain (full, every step) ===
+%% (from Skills.md)
+flowchart LR
+  A[backup]
+  B[classify_para]
+  C[frontmatter_enrich]
+  N[name_enhance_propose]
+  D[subfolder_organize]
+  E[split_atomic]
+  F[split_link_preserve]
+  G[distill_note]
+  H[distill_highlight_color]
+  I[next_action_extract]
+  J[task_reroute]
+  K[append_to_hub]
+  L[move_note]
+  M[log_action]
+  A --> B --> C --> N --> D --> E --> F --> G --> H --> I --> J --> K --> L --> M
+
+%% === MCP tool groups (all groups) ===
+%% (from MCP-Tools.md)
+flowchart TB
+  subgraph Core [Core]
+    read_note[read_note]
+    update_note[update_note]
+    search_replace[search_replace]
+    list_notes[list_notes]
+    global_search[global_search]
+    manage_frontmatter[manage_frontmatter]
+    manage_tags[manage_tags]
+  end
+  subgraph Backup [Backup]
+    create_backup[create_backup]
+    ensure_backup[ensure_backup]
+  end
+  subgraph Move [Move/structure]
+    move_note[move_note]
+    rename_note[rename_note]
+    ensure_structure[ensure_structure]
+  end
+  subgraph PARA [PARA/organize]
+    classify_para[classify_para]
+    subfolder_organize[subfolder_organize]
+    obsidian_propose_para_paths[obsidian_propose_para_paths]
+  end
+  subgraph Content [Content]
+    split_atomic[split_atomic]
+    distill_note[distill_note]
+    append_to_hub[append_to_hub]
+    suggest_connections[suggest_connections]
+  end
+  subgraph Tasks [Tasks]
+    create_task_note[create_task_note]
+    append_tasks[append_tasks]
+    find_parent[find_parent]
+  end
+  subgraph Confidence [Confidence]
+    calibrate_confidence[calibrate_confidence]
+    verify_classification[verify_classification]
+    propose_alternative_paths[propose_alternative_paths]
+  end
+  subgraph Batch [Batch]
+    garden_review[garden_review]
+    curate_cluster[curate_cluster]
+  end
+  subgraph MOC [MOC]
+    append_to_moc[append_to_moc]
+    generate_moc[generate_moc]
+  end

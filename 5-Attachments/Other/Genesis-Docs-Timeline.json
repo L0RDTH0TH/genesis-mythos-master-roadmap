@@ -1,0 +1,1574 @@
+[
+  {
+    "ingest_path": "genesis-mythos/audit--map_rendering_preview_investigation_2025-12-29.md",
+    "repo_path": "audit/map_rendering_preview_investigation_2025-12-29.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--README.md",
+    "repo_path": "docs/archive/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--STAT_BUY_CALCULATION_REPORT.md",
+    "repo_path": "audit/STAT_BUY_CALCULATION_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--curated_params_approach_review.md",
+    "repo_path": "audit/curated_params_approach_review.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/.cursor--rules--project-rules.md",
+    "repo_path": ".cursor/rules/project-rules.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--load_time_audit.md",
+    "repo_path": "audit/load_time_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--gui_performance_fixes_summary_2025-12-26.md",
+    "repo_path": "audit/gui_performance_fixes_summary_2025-12-26.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_azgaar_integration_investigation_2025-12-29.md",
+    "repo_path": "audit/world_builder_azgaar_integration_investigation_2025-12-29.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--VALIDATION_REPORT_ALL_CHANGES.md",
+    "repo_path": "audit/VALIDATION_REPORT_ALL_CHANGES.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--Z_INDEX_LAYERING_ANALYSIS_REPORT.md",
+    "repo_path": "audit/Z_INDEX_LAYERING_ANALYSIS_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--api--AZGAAR_FORK_API.md",
+    "repo_path": "docs/api/AZGAAR_FORK_API.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--webview_ui_migration_phase3_alternative_preparation_report.md",
+    "repo_path": "audit/webview_ui_migration_phase3_alternative_preparation_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_parameter_integration_audit.md",
+    "repo_path": "audit/azgaar_parameter_integration_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--FINAL_LAYOUT_FIX_APPLIED.md",
+    "repo_path": "docs/archive/status/FINAL_LAYOUT_FIX_APPLIED.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--CODE_OF_CONDUCT.md",
+    "repo_path": "assets/ui_web/azgaar_full/CODE_OF_CONDUCT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_serverless_issue_investigation_audit.md",
+    "repo_path": "audit/azgaar_serverless_issue_investigation_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_initial_load_report.md",
+    "repo_path": "audit/azgaar_initial_load_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--GUT_FIX_COMPATIBILITY.md",
+    "repo_path": "docs/testing/GUT_FIX_COMPATIBILITY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--RACE_TAB_ADVANCE_FIX.md",
+    "repo_path": "docs/archive/status/RACE_TAB_ADVANCE_FIX.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--MIGRATION_COMPLETE_SUMMARY.md",
+    "repo_path": "docs/archive/status/MIGRATION_COMPLETE_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--fps_cause_likelihood.md",
+    "repo_path": "audit/fps_cause_likelihood.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--SYSTEM_IMPLEMENTATIONS.md",
+    "repo_path": "docs/SYSTEM_IMPLEMENTATIONS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RACE_SELECTION_TO_APPEARANCE_ANALYSIS.md",
+    "repo_path": "audit/RACE_SELECTION_TO_APPEARANCE_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--MODEL_LOADING_FIX_SUMMARY.md",
+    "repo_path": "docs/archive/status/MODEL_LOADING_FIX_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--DOCUMENTATION_COVERAGE_REPORT.md",
+    "repo_path": "docs/DOCUMENTATION_COVERAGE_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RACE_VERBOSE_WARNINGS_REPORT.md",
+    "repo_path": "audit/RACE_VERBOSE_WARNINGS_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--FORENSIC_DEBUG_SETUP_COMPLETE.md",
+    "repo_path": "docs/archive/debug/FORENSIC_DEBUG_SETUP_COMPLETE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_dot_painting_investigation_audit_2025-01-01.md",
+    "repo_path": "audit/azgaar_dot_painting_investigation_audit_2025-01-01.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_performance_audit.md",
+    "repo_path": "audit/world_builder_performance_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--COMPREHENSIVE_TAB_TRANSITION_DIAGNOSIS.md",
+    "repo_path": "audit/COMPREHENSIVE_TAB_TRANSITION_DIAGNOSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_MONITOR_EVALUATION.md",
+    "repo_path": "audit/PERFORMANCE_MONITOR_EVALUATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--SCENE_PROPERTIES_SUMMARY.md",
+    "repo_path": "docs/archive/status/SCENE_PROPERTIES_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--GUT_IMPORT_FIX.md",
+    "repo_path": "docs/testing/GUT_IMPORT_FIX.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RACE_ENTRY_SCENE_ANALYSIS.md",
+    "repo_path": "audit/RACE_ENTRY_SCENE_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_cross_origin_report.md",
+    "repo_path": "audit/azgaar_cross_origin_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_persistent_timeout_report.md",
+    "repo_path": "audit/azgaar_persistent_timeout_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--guides--IMPLEMENTATION_PROMPT_TEMPLATE.md",
+    "repo_path": "docs/archive/guides/IMPLEMENTATION_PROMPT_TEMPLATE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--flamegraph_detail_enhancements_audit.md",
+    "repo_path": "audit/flamegraph_detail_enhancements_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_report_v3.md",
+    "repo_path": "audit/audit_report_v3.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--threadms_zero_diagnostic_report.md",
+    "repo_path": "audit/threadms_zero_diagnostic_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_rendering_investigation_2025-12-31.md",
+    "repo_path": "audit/azgaar_rendering_investigation_2025-12-31.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--performance_caching_investigation_2025-12-25.md",
+    "repo_path": "audit/performance_caching_investigation_2025-12-25.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--ui--WATERFALL_VIEW_V4_SPECIFICATION.md",
+    "repo_path": "docs/ui/WATERFALL_VIEW_V4_SPECIFICATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--diagnostic_gray_bar.md",
+    "repo_path": "audit/diagnostic_gray_bar.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_display_issue.md",
+    "repo_path": "audit/azgaar_display_issue.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_report.md",
+    "repo_path": "audit/audit_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RACE_TO_CLASS_TRANSITION_ANALYSIS.md",
+    "repo_path": "audit/RACE_TO_CLASS_TRANSITION_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PROCEDURAL_MAP_DATASOURCE_ENHANCEMENT_INVESTIGATION.md",
+    "repo_path": "audit/PROCEDURAL_MAP_DATASOURCE_ENHANCEMENT_INVESTIGATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--ui_performance_audit.md",
+    "repo_path": "audit/ui_performance_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_generate_completion_fix.md",
+    "repo_path": "audit/world_builder_generate_completion_fix.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_rendering_disconnect.md",
+    "repo_path": "audit/azgaar_rendering_disconnect.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--gui--gui_performance_rules.md",
+    "repo_path": "docs/gui/gui_performance_rules.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--LAYOUT_FIXES_APPLIED.md",
+    "repo_path": "docs/archive/status/LAYOUT_FIXES_APPLIED.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--EXACT_DEBUG_ANSWERS.md",
+    "repo_path": "docs/archive/debug/EXACT_DEBUG_ANSWERS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_svg_rendering_hang_investigation_2026-01-08.md",
+    "repo_path": "audit/azgaar_svg_rendering_hang_investigation_2026-01-08.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_idle_performance_audit_v2.md",
+    "repo_path": "audit/world_builder_idle_performance_audit_v2.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_azgaar_rendering_fix_2026-01-01--azgaar_rendering_fix_audit_2026-01-01.md",
+    "repo_path": "audit/audit_azgaar_rendering_fix_2026-01-01/azgaar_rendering_fix_audit_2026-01-01.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--GUI_update_integration_investigation_audit.md",
+    "repo_path": "audit/GUI_update_integration_investigation_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--webview_ui_migration_phase3_preparation_report.md",
+    "repo_path": "audit/webview_ui_migration_phase3_preparation_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_web_sidebar_failure_2025-12-28.md",
+    "repo_path": "audit/world_builder_web_sidebar_failure_2025-12-28.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--VERTICAL_COLLAPSE_FORENSIC_COMPLETE_ANSWERS.md",
+    "repo_path": "docs/archive/debug/VERTICAL_COLLAPSE_FORENSIC_COMPLETE_ANSWERS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--.github--copilot-instructions.md",
+    "repo_path": "assets/ui_web/azgaar_full/.github/copilot-instructions.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--CHANGELOG.md",
+    "repo_path": "docs/CHANGELOG.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--LAYOUT_INVESTIGATION_SUMMARY.md",
+    "repo_path": "audit/LAYOUT_INVESTIGATION_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--phase1_mainmenu_complete.md",
+    "repo_path": "audit/phase1_mainmenu_complete.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RULES_AUDIT_REPORT.md",
+    "repo_path": "audit/RULES_AUDIT_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--WASD_INPUT_DIAGNOSTIC_REPORT.md",
+    "repo_path": "audit/WASD_INPUT_DIAGNOSTIC_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--map_maker_audit_2025-12-25.md",
+    "repo_path": "audit/map_maker_audit_2025-12-25.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--flamegraph_display_audit.md",
+    "repo_path": "audit/flamegraph_display_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RICHTEXTLABEL_SCROLL_FAILURE_AUDIT.md",
+    "repo_path": "audit/RICHTEXTLABEL_SCROLL_FAILURE_AUDIT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--PROJECT_STRUCTURE.md",
+    "repo_path": "docs/PROJECT_STRUCTURE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--PARCHMENT_ASSETS_DOWNLOAD.md",
+    "repo_path": "docs/PARCHMENT_ASSETS_DOWNLOAD.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_sidebar_still_empty_2025-12-28.md",
+    "repo_path": "audit/world_builder_sidebar_still_empty_2025-12-28.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--.github--ISSUE_TEMPLATE--feature_request.md",
+    "repo_path": "assets/ui_web/azgaar_full/.github/ISSUE_TEMPLATE/feature_request.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/addons--gdai_mcp--README.md",
+    "repo_path": "addons/gdai_mcp/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--WORLD_BUILDER_API_REFERENCE.md",
+    "repo_path": "docs/WORLD_BUILDER_API_REFERENCE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--LAYOUT_INSPECTION_REPORT.md",
+    "repo_path": "audit/LAYOUT_INSPECTION_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--SIDEBAR_LAYERING_CONFIRMATION.md",
+    "repo_path": "docs/archive/debug/SIDEBAR_LAYERING_CONFIRMATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_azgaar_generation_pipeline_fix_2026-01-01--mythos_log_2025-12-29.txt",
+    "repo_path": "audit/audit_azgaar_generation_pipeline_fix_2026-01-01/mythos_log_2025-12-29.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--CHARACTER_CREATION_COVERAGE.md",
+    "repo_path": "docs/testing/CHARACTER_CREATION_COVERAGE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_integration_audit_2026-01-01.md",
+    "repo_path": "audit/azgaar_integration_audit_2026-01-01.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--js--azgaar--README.txt",
+    "repo_path": "assets/ui_web/js/azgaar/README.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--godot_wry_gdextension_diagnostic.md",
+    "repo_path": "audit/godot_wry_gdextension_diagnostic.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_regeneration_fix.md",
+    "repo_path": "audit/azgaar_regeneration_fix.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--heightmaps--import-rules.txt",
+    "repo_path": "assets/ui_web/azgaar_full/heightmaps/import-rules.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/.cursor--rules--godot-addon-usage-guide.md",
+    "repo_path": ".cursor/rules/godot-addon-usage-guide.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_OVERLAY_MIGRATION_NOTES.md",
+    "repo_path": "audit/PERFORMANCE_OVERLAY_MIGRATION_NOTES.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_transparency_fix_audit.md",
+    "repo_path": "audit/azgaar_transparency_fix_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--FANTASY_STYLE_PRESET_TESTS.md",
+    "repo_path": "docs/testing/FANTASY_STYLE_PRESET_TESTS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--LAYOUT_ANALYSIS.md",
+    "repo_path": "audit/LAYOUT_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--ABILITY_SCORE_PREVIEW_ANALYSIS.md",
+    "repo_path": "audit/ABILITY_SCORE_PREVIEW_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_success_gui_failure_audit.md",
+    "repo_path": "audit/azgaar_success_gui_failure_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--TAB_COMPLETED_MIGRATION_FIX.md",
+    "repo_path": "docs/archive/status/TAB_COMPLETED_MIGRATION_FIX.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--ui_sizing_positioning_audit.md",
+    "repo_path": "audit/ui_sizing_positioning_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--TAB_SWITCH_DIAGNOSIS.md",
+    "repo_path": "audit/TAB_SWITCH_DIAGNOSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--VISUAL_REFERENCE_ANALYSIS.md",
+    "repo_path": "audit/VISUAL_REFERENCE_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--diagnostic_test_results_2025-12-26.md",
+    "repo_path": "audit/diagnostic_test_results_2025-12-26.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--TESTING_PLAN_SUMMARY.md",
+    "repo_path": "docs/testing/TESTING_PLAN_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--README.md",
+    "repo_path": "docs/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--WATERFALL_VIEW_V3_EVALUATION.md",
+    "repo_path": "audit/WATERFALL_VIEW_V3_EVALUATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_parameter_integration_audit_v2.md",
+    "repo_path": "audit/azgaar_parameter_integration_audit_v2.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--full_line_by_line_audit_2025-12-25.md",
+    "repo_path": "audit/full_line_by_line_audit_2025-12-25.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_SPEC_EVALUATION.md",
+    "repo_path": "audit/PERFORMANCE_SPEC_EVALUATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--lag_investigation_create_world_button_2025-12-27.md",
+    "repo_path": "audit/lag_investigation_create_world_button_2025-12-27.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_archetype_audit.md",
+    "repo_path": "audit/world_builder_archetype_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RightControls_Modularization_Fix_Report.md",
+    "repo_path": "audit/RightControls_Modularization_Fix_Report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/.cursor--rules--gui_performance_rules.md",
+    "repo_path": ".cursor/rules/gui_performance_rules.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--MAP_PREVIEW_RESIZE_INVESTIGATION.md",
+    "repo_path": "audit/MAP_PREVIEW_RESIZE_INVESTIGATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--dev--contributing.md",
+    "repo_path": "docs/dev/contributing.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--GUT_SETUP_COMPLETE.md",
+    "repo_path": "docs/testing/GUT_SETUP_COMPLETE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--textures--README_PARCHMENT_SELECTION.md",
+    "repo_path": "assets/textures/README_PARCHMENT_SELECTION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--.github--ISSUE_TEMPLATE--bug_report.md",
+    "repo_path": "assets/ui_web/azgaar_full/.github/ISSUE_TEMPLATE/bug_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--ISSUE_TEMPLATE.md",
+    "repo_path": "assets/ui_web/azgaar_full/ISSUE_TEMPLATE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--current_state_report.md",
+    "repo_path": "audit/current_state_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_ui_migration_investigation_2025-12-27.md",
+    "repo_path": "audit/world_builder_ui_migration_investigation_2025-12-27.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--MAP_PREVIEW_SETUP_DETAILS.md",
+    "repo_path": "audit/MAP_PREVIEW_SETUP_DETAILS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--terrain3d--TERRAIN3D_INTEGRATION_GUIDE.md",
+    "repo_path": "docs/terrain3d/TERRAIN3D_INTEGRATION_GUIDE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_direct_injection_report.md",
+    "repo_path": "audit/azgaar_direct_injection_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_ui_performance_diagnostic_2025-12-26.md",
+    "repo_path": "audit/world_builder_ui_performance_diagnostic_2025-12-26.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar-genesis-integration-report-2025-12-30.md",
+    "repo_path": "audit/azgaar-genesis-integration-report-2025-12-30.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--README.md",
+    "repo_path": "assets/ui_web/azgaar_full/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--current_state_summary.md",
+    "repo_path": "docs/current_state_summary.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--PHASE_1_COMPLETE.md",
+    "repo_path": "docs/testing/PHASE_1_COMPLETE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_integration_state_audit.md",
+    "repo_path": "audit/azgaar_integration_state_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--WORLD_GENERATION_SYSTEM_AUDIT.md",
+    "repo_path": "audit/WORLD_GENERATION_SYSTEM_AUDIT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_webviewer_current_state.md",
+    "repo_path": "audit/azgaar_webviewer_current_state.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--architecture--WORLD_GENERATION_SYSTEM_ANALYSIS.md",
+    "repo_path": "docs/architecture/WORLD_GENERATION_SYSTEM_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_ui_tree_structure_investigation.md",
+    "repo_path": "audit/world_builder_ui_tree_structure_investigation.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/README.md",
+    "repo_path": "README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--persistent_grey_screen_investigation.md",
+    "repo_path": "audit/persistent_grey_screen_investigation.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--engine_pivot_audit.md",
+    "repo_path": "audit/engine_pivot_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--MESH_GENERATION_AUDIT_REPORT.md",
+    "repo_path": "audit/MESH_GENERATION_AUDIT_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--THEME_TRANSPARENCY_ANALYSIS.md",
+    "repo_path": "audit/THEME_TRANSPARENCY_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/demo--assets--textures--asset_licenses.txt",
+    "repo_path": "demo/assets/textures/asset_licenses.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--ui--GUI_SPECIFICATION.md",
+    "repo_path": "docs/ui/GUI_SPECIFICATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--DEBUG_MENU_AUDIT_REPORT.md",
+    "repo_path": "audit/DEBUG_MENU_AUDIT_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--README.md",
+    "repo_path": "docs/testing/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--LAYOUT_FIX_SUMMARY.md",
+    "repo_path": "docs/archive/status/LAYOUT_FIX_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_OVERLAY_DIAGNOSTIC_REPORT.md",
+    "repo_path": "audit/PERFORMANCE_OVERLAY_DIAGNOSTIC_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--WORLD_BUILDER_WIZARD_GUIDE.md",
+    "repo_path": "docs/WORLD_BUILDER_WIZARD_GUIDE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_initial_load_failure_report.md",
+    "repo_path": "audit/azgaar_initial_load_failure_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--URGENT_DEBUG_RESPONSE.md",
+    "repo_path": "docs/archive/debug/URGENT_DEBUG_RESPONSE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/Fantasy-archetypes-251206-024005.txt",
+    "repo_path": "Fantasy-archetypes-251206-024005.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_rendering_investigation_v2_2025-12-31.md",
+    "repo_path": "audit/azgaar_rendering_investigation_v2_2025-12-31.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--CODE_VERIFICATION_COMPLETE.md",
+    "repo_path": "docs/archive/status/CODE_VERIFICATION_COMPLETE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--grey_screen_azgaar_investigation.md",
+    "repo_path": "audit/grey_screen_azgaar_investigation.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_idle_performance_audit_v3.md",
+    "repo_path": "audit/world_builder_idle_performance_audit_v3.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--RACE_CONTAINER_DEBUG_OUTPUT.md",
+    "repo_path": "docs/archive/debug/RACE_CONTAINER_DEBUG_OUTPUT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--RACE_SELECTION_FIX_SUMMARY.md",
+    "repo_path": "docs/archive/status/RACE_SELECTION_FIX_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERF_INVESTIGATION_REPORT.md",
+    "repo_path": "audit/PERF_INVESTIGATION_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--dual_grid_modularity_leverage_report_2026-01.md",
+    "repo_path": "docs/dual_grid_modularity_leverage_report_2026-01.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--RACE_VERBOSE_WARNINGS.md",
+    "repo_path": "docs/archive/debug/RACE_VERBOSE_WARNINGS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--LOGGER_COMPARISON.md",
+    "repo_path": "docs/LOGGER_COMPARISON.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--LOG_ANALYSIS_MAP_PREVIEW.md",
+    "repo_path": "audit/LOG_ANALYSIS_MAP_PREVIEW.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--guides--WORLD_BUILDER_GENERATION_GUIDE.md",
+    "repo_path": "docs/archive/guides/WORLD_BUILDER_GENERATION_GUIDE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--flamegraph_audit.md",
+    "repo_path": "audit/flamegraph_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--architecture--overview.md",
+    "repo_path": "docs/architecture/overview.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--CONFIRM_BUTTON_FIXES_APPLIED.md",
+    "repo_path": "docs/archive/status/CONFIRM_BUTTON_FIXES_APPLIED.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--updated_test_coverage_report.md",
+    "repo_path": "audit/updated_test_coverage_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_param_comparison.md",
+    "repo_path": "audit/azgaar_param_comparison.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RightControls_Granular_Modularization_Audit.md",
+    "repo_path": "audit/RightControls_Granular_Modularization_Audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--gui_performance_audit_2025-12-26.md",
+    "repo_path": "audit/gui_performance_audit_2025-12-26.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--libs--tinymce--langs--README.md",
+    "repo_path": "assets/ui_web/azgaar_full/libs/tinymce/langs/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RACE_DISPLAY_NODES_REPORT.md",
+    "repo_path": "audit/RACE_DISPLAY_NODES_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--RACE_VISIBILITY_CODE_SEARCH.md",
+    "repo_path": "docs/archive/debug/RACE_VISIBILITY_CODE_SEARCH.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--performance_system_disconnect_audit.md",
+    "repo_path": "audit/performance_system_disconnect_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--.github--pull_request_template.md",
+    "repo_path": "assets/ui_web/azgaar_full/.github/pull_request_template.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--GUT_EXECUTE_WITH_PIPE_FIX.md",
+    "repo_path": "docs/testing/GUT_EXECUTE_WITH_PIPE_FIX.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/assets--ui_web--azgaar_full--libs--tinymce--license.md",
+    "repo_path": "assets/ui_web/azgaar_full/libs/tinymce/license.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_signal_ignore_report.md",
+    "repo_path": "audit/azgaar_signal_ignore_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--TRANSITION_IMPROVEMENTS_IMPLEMENTED.md",
+    "repo_path": "audit/TRANSITION_IMPROVEMENTS_IMPLEMENTED.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--gui_performance_rules_violations_2025-12-26.md",
+    "repo_path": "audit/gui_performance_rules_violations_2025-12-26.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--svg_generation_audit.md",
+    "repo_path": "audit/svg_generation_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--investigation_world_builder_github_bug.md",
+    "repo_path": "docs/investigation_world_builder_github_bug.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--GUI_migration_completion_report.md",
+    "repo_path": "audit/GUI_migration_completion_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--CODING_STANDARDS.md",
+    "repo_path": "docs/CODING_STANDARDS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--technical--RENDERING_APPROACH_COMPARISON.md",
+    "repo_path": "docs/technical/RENDERING_APPROACH_COMPARISON.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--FINAL_TRANSITION_TEST_CHECKLIST.md",
+    "repo_path": "audit/FINAL_TRANSITION_TEST_CHECKLIST.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--UI_TESTING_AUDIT_REPORT.md",
+    "repo_path": "audit/UI_TESTING_AUDIT_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--alpine_js_timing_investigation_report_2025-12-28.md",
+    "repo_path": "audit/alpine_js_timing_investigation_report_2025-12-28.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--STAT_BUY_SYSTEM_STATUS_REPORT.md",
+    "repo_path": "audit/STAT_BUY_SYSTEM_STATUS_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--DEBUG_OVERLAY_DUPLICATION_AUDIT.md",
+    "repo_path": "audit/DEBUG_OVERLAY_DUPLICATION_AUDIT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_MONITOR_CURRENT_IMPLEMENTATION_AUDIT.md",
+    "repo_path": "audit/PERFORMANCE_MONITOR_CURRENT_IMPLEMENTATION_AUDIT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--RightControls_Modularization_Completion_Report.md",
+    "repo_path": "audit/RightControls_Modularization_Completion_Report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/addons--godot_wry--examples--character_creator_ui_demo--ui--README.md",
+    "repo_path": "addons/godot_wry/examples/character_creator_ui_demo/ui/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--WORLD_BUILDER_AUDIT_REPORT.md",
+    "repo_path": "audit/WORLD_BUILDER_AUDIT_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_fork_migration_plan.md",
+    "repo_path": "audit/azgaar_fork_migration_plan.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_azgaar_rendering_fix_2026-01-01--mythos_log_latest.txt",
+    "repo_path": "audit/audit_azgaar_rendering_fix_2026-01-01/mythos_log_latest.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--performance_change_failure_audit.md",
+    "repo_path": "audit/performance_change_failure_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--THEME_STYLEBOX_ANALYSIS_REPORT.md",
+    "repo_path": "audit/THEME_STYLEBOX_ANALYSIS_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--STATS_TAB_FORENSIC_AUDIT.md",
+    "repo_path": "audit/STATS_TAB_FORENSIC_AUDIT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_OVERLAY_PURGE_REPORT.md",
+    "repo_path": "audit/PERFORMANCE_OVERLAY_PURGE_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_azgaar_generation_pipeline_fix_2026-01-01--AZGAAR_GENERATION_PIPELINE_FIX_SUMMARY.md",
+    "repo_path": "audit/audit_azgaar_generation_pipeline_fix_2026-01-01/AZGAAR_GENERATION_PIPELINE_FIX_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--TEST_SUITE_EXPANSION_SUMMARY.md",
+    "repo_path": "docs/archive/status/TEST_SUITE_EXPANSION_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--CHANGELOG.md",
+    "repo_path": "docs/testing/CHANGELOG.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--GUI_update_integration_investigation_audit_v2.md",
+    "repo_path": "audit/GUI_update_integration_investigation_audit_v2.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--FORENSIC_DEBUG_COMPLETE_ANSWERS.md",
+    "repo_path": "docs/archive/debug/FORENSIC_DEBUG_COMPLETE_ANSWERS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--idle_fps_investigation.md",
+    "repo_path": "audit/idle_fps_investigation.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/FORENSIC_DEBUG_SCRIPT.txt",
+    "repo_path": "FORENSIC_DEBUG_SCRIPT.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--gui_spec_evaluation.md",
+    "repo_path": "audit/gui_spec_evaluation.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--svg_canvas_rendering_audit.md",
+    "repo_path": "audit/svg_canvas_rendering_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--api--API_REFERENCE.md",
+    "repo_path": "docs/api/API_REFERENCE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/addons--terrain_3d--LICENSE.txt",
+    "repo_path": "addons/terrain_3d/LICENSE.txt",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--LATEST_LOG_ANALYSIS.md",
+    "repo_path": "audit/LATEST_LOG_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--COLUMNS_DEBUG_COMPLETE_ANSWERS.md",
+    "repo_path": "docs/archive/debug/COLUMNS_DEBUG_COMPLETE_ANSWERS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--WORLD_GENERATION_COVERAGE.md",
+    "repo_path": "docs/testing/WORLD_GENERATION_COVERAGE.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--caching_system_investigation_2025-12-27.md",
+    "repo_path": "audit/caching_system_investigation_2025-12-27.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--GUT_GIT_INSTALLATION.md",
+    "repo_path": "docs/testing/GUT_GIT_INSTALLATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--SET_PARCHMENT_IMPORT_SETTINGS.md",
+    "repo_path": "docs/SET_PARCHMENT_IMPORT_SETTINGS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--CHARACTER_CREATION_UI_INSTANTIATION_REPORT.md",
+    "repo_path": "audit/CHARACTER_CREATION_UI_INSTANTIATION_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--RUNNING_TESTS.md",
+    "repo_path": "docs/testing/RUNNING_TESTS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--TEST_COVERAGE_MATRIX.md",
+    "repo_path": "docs/testing/TEST_COVERAGE_MATRIX.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_init_audit.md",
+    "repo_path": "audit/world_builder_init_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_report_2025-12-25.md",
+    "repo_path": "audit/audit_report_2025-12-25.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--GUT_FINAL_FIX.md",
+    "repo_path": "docs/testing/GUT_FINAL_FIX.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--TAB_CONTAINER_VISIBILITY_REPORT.md",
+    "repo_path": "audit/TAB_CONTAINER_VISIBILITY_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/.cursor--rules--mcp-usage.md",
+    "repo_path": ".cursor/rules/mcp-usage.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--GRIDCONTAINER_RACE_ANALYSIS.md",
+    "repo_path": "audit/GRIDCONTAINER_RACE_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--RACE_POPULATION_CODE_BLOCKS.md",
+    "repo_path": "docs/archive/debug/RACE_POPULATION_CODE_BLOCKS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_fork_fixes_2025-12-29.md",
+    "repo_path": "audit/world_builder_fork_fixes_2025-12-29.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--flame_graph_integration_audit.md",
+    "repo_path": "audit/flame_graph_integration_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/flame_graph_freeze_audit.md",
+    "repo_path": "flame_graph_freeze_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/addons--terrain_3d--README.md",
+    "repo_path": "addons/terrain_3d/README.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_update_failure.md",
+    "repo_path": "audit/world_builder_update_failure.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--singletons_performance_audit_2025-12-26.md",
+    "repo_path": "audit/singletons_performance_audit_2025-12-26.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--azgaar_integration_report_2025-12-30.md",
+    "repo_path": "docs/azgaar_integration_report_2025-12-30.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_MONITOR_FINAL_IMPROVEMENTS.md",
+    "repo_path": "audit/PERFORMANCE_MONITOR_FINAL_IMPROVEMENTS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--phase2_worldbuilder_complete.md",
+    "repo_path": "audit/phase2_worldbuilder_complete.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--flamegraph_display_audit_2.md",
+    "repo_path": "audit/flamegraph_display_audit_2.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_MONITOR_ANALYSIS_PROMPT.md",
+    "repo_path": "audit/PERFORMANCE_MONITOR_ANALYSIS_PROMPT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--GUI_performance_audit.md",
+    "repo_path": "audit/GUI_performance_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_step0_performance_audit.md",
+    "repo_path": "audit/world_builder_step0_performance_audit.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--terrain3d--INTEGRATION_SUMMARY.md",
+    "repo_path": "docs/terrain3d/INTEGRATION_SUMMARY.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--TRANSITION_FLOW_ANALYSIS.md",
+    "repo_path": "audit/TRANSITION_FLOW_ANALYSIS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_fork_to_terrain3d_plan_v2.md",
+    "repo_path": "audit/azgaar_fork_to_terrain3d_plan_v2.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--TODO.md",
+    "repo_path": "docs/TODO.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--gui_spec_evaluation_v2.md",
+    "repo_path": "audit/gui_spec_evaluation_v2.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_fork_post_integration_report_2026-01-08.md",
+    "repo_path": "audit/azgaar_fork_post_integration_report_2026-01-08.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--performance_tools_audit_2025-12-25.md",
+    "repo_path": "audit/performance_tools_audit_2025-12-25.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--THREE_COLUMN_DIAGNOSTIC_REPORT.md",
+    "repo_path": "audit/THREE_COLUMN_DIAGNOSTIC_REPORT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--world_builder_audit_report.md",
+    "repo_path": "docs/world_builder_audit_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--gui_spec_v3.md",
+    "repo_path": "audit/gui_spec_v3.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit-ability-score-tab-logging.md",
+    "repo_path": "audit/audit-ability-score-tab-logging.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--status--RACE_TAB_RENDERING_FIX.md",
+    "repo_path": "docs/archive/status/RACE_TAB_RENDERING_FIX.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--PERFORMANCE_MONITOR_AAA_RECOMMENDATIONS_AUDIT.md",
+    "repo_path": "audit/PERFORMANCE_MONITOR_AAA_RECOMMENDATIONS_AUDIT.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--CURRENT_CODEBASE_STATE_2D_TO_3D_PARCHMENT_MAP_MAKER_INTEGRATION.md",
+    "repo_path": "docs/CURRENT_CODEBASE_STATE_2D_TO_3D_PARCHMENT_MAP_MAKER_INTEGRATION.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_map_generation_audit_2025-12-29.md",
+    "repo_path": "audit/azgaar_map_generation_audit_2025-12-29.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--testing--GUT_TROUBLESHOOTING.md",
+    "repo_path": "docs/testing/GUT_TROUBLESHOOTING.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--schemas--DATA_SCHEMAS.md",
+    "repo_path": "docs/schemas/DATA_SCHEMAS.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/docs--archive--debug--CONFIRM_BUTTON_LIFECYCLE_DEBUG.md",
+    "repo_path": "docs/archive/debug/CONFIRM_BUTTON_LIFECYCLE_DEBUG.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--world_builder_generation_diagnostic.md",
+    "repo_path": "audit/world_builder_generation_diagnostic.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--azgaar_init_timeout_report.md",
+    "repo_path": "audit/azgaar_init_timeout_report.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "genesis-mythos/audit--audit_report_v2.md",
+    "repo_path": "audit/audit_report_v2.md",
+    "repo": "L0RDTH0TH/genesis-mythos",
+    "source_last_touched_at": "2026-01-12T20:18:21Z"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/.github--copilot-instructions.md",
+    "repo_path": ".github/copilot-instructions.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2025-08-29T17:20:03+02:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/.github--pull_request_template.md",
+    "repo_path": ".github/pull_request_template.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2024-09-01T12:48:39+02:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/libs--tinymce--langs--README.md",
+    "repo_path": "libs/tinymce/langs/README.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2024-05-16T22:26:17+02:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/README.md",
+    "repo_path": "README.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2024-03-14T11:30:21+01:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/ISSUE_TEMPLATE.md",
+    "repo_path": "ISSUE_TEMPLATE.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2023-11-06T00:13:11+04:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/CODE_OF_CONDUCT.md",
+    "repo_path": "CODE_OF_CONDUCT.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2023-11-06T00:13:11+04:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/heightmaps--import-rules.txt",
+    "repo_path": "heightmaps/import-rules.txt",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2023-11-06T00:13:11+04:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/.github--ISSUE_TEMPLATE--feature_request.md",
+    "repo_path": ".github/ISSUE_TEMPLATE/feature_request.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2023-11-06T00:13:11+04:00"
+  },
+  {
+    "ingest_path": "Genesis-Azgaar/.github--ISSUE_TEMPLATE--bug_report.md",
+    "repo_path": ".github/ISSUE_TEMPLATE/bug_report.md",
+    "repo": "L0RDTH0TH/Genesis-Azgaar",
+    "source_last_touched_at": "2023-11-06T00:13:11+04:00"
+  }
+]

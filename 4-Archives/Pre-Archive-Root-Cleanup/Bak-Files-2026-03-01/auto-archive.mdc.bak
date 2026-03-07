@@ -1,0 +1,167 @@
+---
+description: "Binds natural-language triggers and PARA-scoped notes to the autonomous-archive pipeline. Applies to completed or inactive project, area, and resource content."
+globs:
+  - "1-Projects/**/*.md"
+  - "2-Areas/**/*.md"
+  - "3-Resources/**/*.md"
+  - "!4-Archives/**"
+  - "!Backups/**"
+  - "!Templates/**"
+  - "!**/Log*.md"
+  - "!**/* Hub.md"
+alwaysApply: false
+---
+
+# Auto-archive (context rule)
+
+- **Pipeline**: autonomous-archive — declutters inactive or complete items by moving them into `4-Archives/` with preserved summaries and resurface markers.
+- **Reference**: See `[3-Resources/Cursor-Skill-Pipelines-Reference.md](3-Resources/Cursor-Skill-Pipelines-Reference.md)` for the canonical pipeline order, confidence gates, and snapshot triggers.
+- **MCP safety**: Always obey `[.cursor/rules/always/mcp-obsidian-integration.mdc](.cursor/rules/always/mcp-obsidian-integration.mdc)` for backups, snapshot directories, and MCP fallbacks.
+
+## How to activate this pipeline
+
+Use any of these natural-language triggers (case-insensitive, partial match usually works):
+
+- **ARCHIVE MODE – safe batch autopilot** *(canonical mode trigger)*
+- **archive this note**
+- **send to Archives**
+- **move completed to 4-Archives**
+
+Metadata- and tag-based cues (e.g. `status: complete`, `#eaten`) should be treated as **candidates** only; the actual archive move is gated by `archive-check` confidence and the safety rules below.
+
+## Pipeline overview
+
+High-level sequence, as defined in the pipelines reference:
+
+1. **Backup**: Ensure `obsidian_create_backup` has been called for the note (handled by the always-applied MCP rule).
+2. **Classify PARA**: Confirm the note’s PARA type and status.
+3. **`archive-check` (skill)** — verify archive readiness (no open tasks, status complete, age threshold, subfolder checks). Primary archive signal: `archive_conf` (≥85% for move when not in mid-band loop).
+4. **`subfolder-organize` (skill)** — compute target path under `4-Archives/` based on PARA type, `project-id`, and semantic themes (≥85%).
+5. **`resurface-candidate-mark` (skill)** — mark high-potential notes with `resurface-candidate: true` and optionally append them to a Resurface hub (≥85% for hub append; metadata-only mark may use ≥75% per pipeline reference).
+6. **`summary-preserve` (skill)** — ensure a minimal TL;DR or summary callout exists and that project color links are preserved (≥85%).
+7. **Move note** using **`obsidian_move_note`** into the chosen `4-Archives/…` path: always **dry_run first, then commit**. In **mid-band (72–84% inclusive)** after archive-check: **calibrate_confidence** → **verify_classification** → **obsidian_move_note**(..., `dry_run: true`) → then commit after snapshot. On move failure or dry_run risks, use the MCP fallback table in mcp-obsidian-integration.mdc (same fallback chain; do not duplicate per pipeline).
+8. **Logging**: Call `obsidian_log_action` and append entries to both `3-Resources/Archive-Log.md` and `3-Resources/Backup-Log.md` when snapshots or backups are involved.
+
+**Important**: Confidence thresholds, snapshot points, and skill order must remain synchronized with the master table in `Cursor-Skill-Pipelines-Reference.md`. If conflict arises, the reference table takes precedence and this rule should be updated, not vice versa.
+
+## Batch and isolation
+
+- Process **one note fully** (including `obsidian_log_action`) before starting the next.
+- **Batch usage**:
+  - `ARCHIVE MODE – safe batch autopilot` may be run on small, intentional sets of candidates (e.g. a project folder or a filtered list by tag/status).
+- **On failure**:
+  - If backup, snapshot, or any critical archive step fails for a note, log the failure with `#review-needed` in `3-Resources/Archive-Log.md` (and `3-Resources/Backup-Log.md` when snapshots are involved).
+  - Skip `subfolder-organize`, `summary-preserve`, and `move_note` for that note and continue to the next.
+
+## Snapshots and checkpoints
+
+All per-change snapshot triggers **must** follow the `Snapshot triggers (all pipelines)` table in `Cursor-Skill-Pipelines-Reference.md`. **Do not invent new trigger points.**
+
+- **Per-change snapshots (in-vault)**:
+  - After `archive-check` recommends archive with **≥85%** confidence, but **before**:
+    - `subfolder-organize`
+    - `summary-preserve`
+    - `obsidian_move_note`
+  - Call the `obsidian-snapshot` skill with `type: "per-change"` for the target note.
+  - If confidence is below threshold, or snapshot creation fails:
+    - Do **not** perform the archive move or structural summary changes.
+    - Log the situation with `#review-needed` and continue to the next note.
+- **Batch checkpoints**:
+  - Treat each explicit archive run as a **sweep** (e.g. a single user-issued `ARCHIVE MODE…` command on a scoped set of notes).
+  - Once per sweep, call `obsidian-snapshot` with `type: "batch"` summarizing:
+    - Pipeline context.
+    - Count and paths of notes moved into `4-Archives/`.
+    - Links/paths to their per-change snapshots.
+  - Batch checkpoint notes live under `Backups/Batch/` (`BATCH_SNAPSHOT_DIR`) and must be logged in both:
+    - `3-Resources/Archive-Log.md`
+    - `3-Resources/Backup-Log.md`
+
+## Logging requirements
+
+After **every note** inspected by this pipeline (whether moved, skipped, or rejected), call `obsidian_log_action` and append a canonical log line:
+
+- **Log fields** (mirror Ingest log format):
+  - **timestamp**
+  - **pipeline**: `autonomous-archive`
+  - **note path**
+  - **confidence** (for `archive-check` and move decision)
+  - **actions taken / actions skipped**
+  - **backup path** (from `obsidian_create_backup` for this run)
+  - **snapshot path(s)** (per-change and batch, if created)
+  - **flag**: `#review-needed` (when applicable) plus a short reason
+- **Where to log**:
+  - Append a human-readable line to `3-Resources/Archive-Log.md`.
+  - Include backup and snapshot paths in the `changes` string of `obsidian_log_action`.
+  - For any step that created snapshots or relied on backups, also append/reflect the same information in `3-Resources/Backup-Log.md`.
+
+## Confidence bands & archive-refine loop
+
+- **Primary archive signal**: `archive_conf` — readiness from `archive-check`.
+- **Bands and behavior** (aligned with `Cursor-Skill-Pipelines-Reference.md` and `confidence-loops.mdc`):
+  - **High (archive_conf ≥85)**:
+    - After per-change snapshot, run subfolder-organize, resurface marking, summary preservation, and move as usual.
+  - **Mid (72 ≤ archive_conf ≤ 84)**:
+    - Run a **single archive-refine loop**:
+      - Re-scan for open tasks and recent edits.
+      - Optionally generate a TL;DR **preview** (non-destructive) to test whether the note feels “closed”.
+      - Apply the shared self-critique template with emphasis on archive readiness and neighbor notes.
+      - Compute `post_loop_conf`.
+    - If `post_loop_conf ≥ 85`: snapshot → proceed with archive move.
+    - Else or if `post_loop_conf ≤ pre_loop_conf`: skip archive move; keep the note active, log proposed archive path + reason, and mark as candidate (`#review-needed`).
+  - **Low (archive_conf <72)**:
+    - No loop; mark as archive candidate only (e.g. via frontmatter flag), keep in active PARA, and log.
+- **Loop logging**:
+  - Populate `loop_attempted`, `loop_band`, `pre_loop_conf`, `post_loop_conf`, `loop_outcome`, `loop_type: "archive-refine"`, and `loop_reason` in `Archive-Log.md` and the `obsidian_log_action` changes string.
+
+## Exclusions
+
+This rule:
+
+- **Includes** only markdown notes under:
+  - `1-Projects/**`
+  - `2-Areas/**`
+  - `3-Resources/**`
+- **Excludes**:
+  - `4-Archives/**` — archive notes are not re-archived by this pipeline.
+  - `Backups/**` (Per-Change, Batch, Versions, or other backup subtrees).
+  - `Templates/**`.
+  - Any `**/Log*.md` such as:
+    - `3-Resources/Ingest-Log.md`
+    - `3-Resources/Distill-Log.md`
+    - `3-Resources/Archive-Log.md`
+    - `3-Resources/Express-Log.md`
+    - `3-Resources/Backup-Log.md`
+  - Any `**/* Hub.md` (e.g. `Resources Hub.md`, project/area hubs) by default.
+
+This prevents reprocessing of archives, history, configuration, and hub/index notes. Hubs and archive dashboards can be handled by separate rules if needed.
+
+## Safety
+
+- **Backups first**:
+  - If `obsidian_create_backup` fails for a note, **abort** the archive pipeline for that note; log the failure with `#review-needed` and perform no destructive actions.
+- **Per-change snapshots**:
+  - Mandatory before changing structure or location when `archive-check` confidence ≥85%, as per the snapshot triggers table.
+  - Snapshot files under `Backups/Per-Change/` and batch notes under `Backups/Batch/` are **append-only** and must never be edited.
+- **Critical invariant**:
+  - No destructive action (rewrite, move, append, delete) may occur unless **both**:
+    1. Confidence for the archive decision is **≥85%**, **and**
+    2. A successful per-change snapshot was created and hashed for that note in the current run.
+  - If either condition fails → **skip the destructive action**, log `#review-needed`, and continue to the next note.
+- **Fallbacks for moves and paths**:
+  - If `obsidian_move_note` fails due to missing parent directories, use `obsidian_ensure_structure` for the target parent and then retry, following the MCP fallback table.
+  - If the fallback also fails, log the error and propose that the user create the parent path manually; do not continue with the move.
+- **No shell file ops**:
+  - Never use shell `cp/mv/rm` on the vault. All archive moves go through MCP tools.
+- **Restore is explicit**:
+  - Archive and snapshot restore is always user-triggered via dedicated restore/sweep rules; autonomous-archive never auto-restores or auto-deletes snapshots or archive notes.
+
+## Rollout guidance
+
+- **Initial rollout recommendation**:
+  - Start by running this rule only on a single test project folder, e.g. `1-Projects/Test-Project/**`, or a similarly small, well-understood scope.
+  - Run 3–5 manual archive sweeps and confirm:
+    - Only obviously complete/inactive notes are moved.
+    - Per-change and batch snapshots are created as expected.
+    - No unexpected `#review-needed` spikes appear in `3-Resources/Archive-Log.md` or `3-Resources/Backup-Log.md`.
+  - After stable behavior is observed, gradually widen usage to broader `1-Projects/**`, `2-Areas/**`, and `3-Resources/**` scopes, keeping globs and exclusions unchanged.
+

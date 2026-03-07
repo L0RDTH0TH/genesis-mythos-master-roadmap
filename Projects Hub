@@ -1,0 +1,8 @@
+- [[OG-minecraft-Master Goal v1.0]] — Minecraft Beta Clone Master Goal – recreate Beta 1.7.3 feel with modern tools (Godot/Unity).
+- [[Master Goal v4.1]] — Master Goal v4.1 — autonomous post-capture Second Brain in Obsidian with pipelines, Decision Wrappers, and mobile–laptop split.
+- [[minecraft-beta-1-7-3-overview-2026-03-06-1201]] — Overview of Minecraft Beta 1.7.3 — core survival loop, missing modern systems, and overall "beta feel" for the OG-minecraft project.
+- [[minecraft-beta-infinite-world-gen-2026-03-06-1202]] — Notes on Beta-style infinite chunked terrain, noise-based worldgen, and how to recreate it in Godot/Unity.
+- [[minecraft-beta-block-system-2026-03-06-1203]] — Block types, gravity/fluids, and a performant voxel/block system design inspired by Beta 1.7.3.
+- [[minecraft-beta-player-controls-2026-03-06-1204]] — Player movement and controls in Beta 1.7.3 and how to replicate the first-person feel.
+- [[minecraft-beta-day-night-mobs-2026-03-06-1205]] — Day/night cycle and mob behavior in Beta and how to implement similar AI/time-of-day systems.
+- [[minecraft-beta-crafting-progression-2026-03-06-1206]] — Crafting grid, furnace, and the wood→stone→iron→diamond progression loop in Beta.

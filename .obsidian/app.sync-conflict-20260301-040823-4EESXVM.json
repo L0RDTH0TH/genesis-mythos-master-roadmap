@@ -1,0 +1,22 @@
+{
+  "trashOption": "system",
+  "userIgnoreFilters": null,
+  "mobileToolbarCommands": [
+    "highlightr-plugin:highlighter-plugin-menu",
+    "editor:attach-file",
+    "editor:toggle-blockquote",
+    "editor:set-heading",
+    "editor:insert-tag",
+    "watcher:trigger-ingest",
+    "watcher:trigger-organize",
+    "watcher:trigger-distill",
+    "watcher:trigger-express",
+    "watcher:trigger-archive",
+    "watcher:open-watcher-modal",
+    "watcher:trigger-task-roadmap",
+    "watcher:trigger-task-complete",
+    "watcher:open-add-roadmap-item-modal",
+    "editor:configure-toolbar"
+  ],
+  "attachmentFolderPath": "5-Attachments"
+}

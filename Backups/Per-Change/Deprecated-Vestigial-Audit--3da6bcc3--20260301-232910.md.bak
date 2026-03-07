@@ -1,0 +1,128 @@
+---
+title: Deprecated & Vestigial Remnants Audit
+created: 2026-03-01
+tags: [pkm, second-brain, audit, cleanup, deprecated]
+para-type: Archive
+status: frozen
+links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]", "[[3-Resources/Archive-Prep-Checklist]]"]
+original_path: "3-Resources/Second-Brain/Deprecated-Vestigial-Audit.md"
+original_title: "Deprecated & Vestigial Remnants Audit"
+pipeline: "organize"
+snapshot_type: "per-change"
+snapshot_created: "2026-03-01T23:29:10Z"
+confidence: 95
+flag: "none"
+immutable: true
+---
+
+# Deprecated & Vestigial Remnants Audit
+
+Audit of the Second Brain systems for deprecated strategies, vestigial files, and inconsistent references. **Canonical current strategy**: logs and review live under **3-Resources/**; pipeline logs use `3-Resources/<Name>-Log.md`; Errors and Backup-Log in 3-Resources; no root-level logs or review hubs required. **Why here?** Cursor-generated or machine-only files (queue, Watcher signals, setup logs) → `.technical/` (excluded from Obsidian index via Settings → Excluded files; see Vault-Layout). Cursor-side queue and technical artifacts live under `.technical/`; never place human-authored notes there.
+
+---
+
+## 1. Logging — root vs 3-Resources
+
+| Item | Current / canonical | Deprecated / vestigial | Action |
+|------|---------------------|------------------------|--------|
+| **Ingest-Log** | `3-Resources/Ingest-Log.md` (Logs.md, log-rotate, Vault-Change-Monitor) | Root `Ingest-Log.md`; sync conflict copy at root | Remove root duplicate; keep only `3-Resources/Ingest-Log.md`. Resolve sync conflict; archive or delete conflict copy. See [[3-Resources/Archive-Prep-Checklist#3.1 — Root-level files (move or archive)]]. |
+| **obsidian_log_action default** | Pipelines should pass explicit `log_path` (e.g. `3-Resources/Ingest-Log.md` per pipeline). | MCP tool descriptor default: `"Ingest-Log.md"` (root-relative) | Document in MCP-Tools.md / Pipelines that callers must pass full path `3-Resources/Ingest-Log.md` (or per-pipeline log). Optionally update MCP server default to `3-Resources/Ingest-Log.md` so omitted param is safe. |
+| **mcp-setup-log.md** | Not in Logs.md or Vault-Layout as a pipeline log. | Referenced in mcp-obsidian-integration: "Append to mcp-setup-log.md or Ingest-Log.md". Used by `Logging/clone-and-install-mcp.js`. | **Vestigial**: If MCP is installed via Cursor config only, `Logging/` script and mcp-setup-log are legacy. Either (a) document mcp-setup-log as optional setup-only log and give it a path under 3-Resources (e.g. `3-Resources/mcp-setup-log.md`), or (b) remove reference from rules and keep script logging to vault root only for one-off setup. Prefer (a) for consistency. |
+| **Session-Prep (Templater)** | Should append session line to the canonical ingest log. | `Templates/Session-Prep.md` and Starter-Kit copy use `logPath = "Ingest-Log.md"` (root). | Update to `3-Resources/Ingest-Log.md` in both `Templates/Session-Prep.md` and `Second-Brain-Starter-Kit/Templates/Session-Prep.md`. |
+| **QuickAdd / ProcessIngestTrigger** | Should write trigger lines to canonical log. | Starter-Kit QuickAdd README and plugin report say "Ingest-Log.md" without path. | Document that trigger scripts must append to `3-Resources/Ingest-Log.md`; update any script that creates/appends to use that path. |
+
+---
+
+## 2. Review / inbox
+
+| Item | Current / canonical | Deprecated / vestigial | Action |
+|------|---------------------|------------------------|--------|
+| **Ingest-Review** | Review is signaled via **#review-needed** in pipeline logs (`3-Resources/Ingest-Log.md`, `3-Resources/Errors.md`). MCP rule says a dedicated "Inbox Review" hub can be added later via Dataview. | Root `Ingest-Review.md`; copy in `4-Archives/Pre-Archive-Root-Cleanup/`. Some notes say "Clear #review-needed path to Ingest-Review.md". | Root file is legacy. Either (a) move to `3-Resources/Ingest-Review.md` and use as optional manual hub, or (b) archive and rely on Dataview over Ingest-Log/Errors. Update any "path to Ingest-Review" wording to "flag in Ingest-Log/Errors" or link to `3-Resources/Ingest-Review.md` if kept. |
+
+---
+
+## 3. Rules and docs — unqualified log paths
+
+| Location | Issue | Action |
+|----------|--------|--------|
+| **.cursor/rules/always/mcp-obsidian-integration.mdc** | "Append to … Ingest-Log.md" (no path). | Use "3-Resources/Ingest-Log.md" (and specify 3-Resources path for mcp-setup-log if kept). |
+| **.cursor/sync/rules/always/mcp-obsidian-integration.md** | Same. | Sync after rule change. |
+| **.cursor/sync/rules/context/para-zettel-autopilot.md** | "Log … in Ingest-Log.md", "Log … into both Ingest-Log.md and 3-Resources/Backup-Log.md". | Use "3-Resources/Ingest-Log.md" for consistency. |
+| **3-Resources/Cursor-Project-Rules-Summary.md** | "mcp-setup-log.md or Ingest-Log.md". | Use "3-Resources/Ingest-Log.md"; clarify mcp-setup-log location if kept. |
+| **3-Resources/2026-02-23-obsidian-log-action.md** | "default Ingest-Log.md". | State that default is root-relative and pipelines should pass `3-Resources/Ingest-Log.md` (or correct per-pipeline path). |
+| **3-Resources/Autonomous-Runs-Options-Reference.md** | log_path example "Ingest-Log.md". | Use "3-Resources/Ingest-Log.md" in examples. |
+| **Second-Brain-Starter-Kit** (rules, README, Troubleshooting, Session-Prep, QuickAdd) | Multiple "Ingest-Log.md" refs. | Point all to `3-Resources/Ingest-Log.md` in Starter-Kit. |
+
+---
+
+## 4. Hubs at root vs 3-Resources
+
+| Item | Current / canonical | Vestigial | Action |
+|------|---------------------|-----------|--------|
+| **Hub placement** | Vault-Layout and Archive-Prep-Checklist: hubs can live in 3-Resources; pipeline excludes `* Hub.md` anywhere. | Checklist says "Move … Areas Hub.md, Resources Hub.md, Projects Hub.md, Resurface.md into 3-Resources/ if your layout keeps hubs there" — implies root hubs are legacy. | Canonical layout: hubs in **3-Resources/** (already true for this vault). Unit test `test_path_exclusions.py` allows both "3-Resources/Resources Hub.md" and "Projects Hub.md"; keep both for flexibility. No code change; doc only. |
+
+---
+
+## 5. Highlight format — legacy vs current
+
+| Item | Current / canonical | Deprecated / vestigial | Action |
+|------|---------------------|------------------------|--------|
+| **Highlight output** | Inline CSS only, e.g. `<mark style="background: #A3D8FFA6;">...</mark>` (Highlightr-Color-Key, express-mini-outline). | Legacy `==text==^{Color}`; documented as deprecated; Visual Health Dashboard still counts both. | Documented; optional migration. No cleanup required except optional one-time migration of notes still using legacy format. |
+
+---
+
+## 6. Frontmatter — legacy keys
+
+| Item | Current / canonical | Deprecated / vestigial | Action |
+|------|---------------------|------------------------|--------|
+| **PARA / type** | `para-type` (lowercase-hyphen). | Cursor-Project-Rules-Summary: "Migrate legacy keys (e.g. `PARA Type:`) to lowercase-hyphen schema." | No vestigial files to delete; migration is on read/enrich. Document in Parameters or Templates. |
+
+---
+
+## 7. Scripts and folders
+
+| Item | Current / canonical | Deprecated / vestigial | Action |
+|------|---------------------|------------------------|--------|
+| **Logging/** | Not in Vault-Layout or Logs.md as a standard folder. | Contains `clone-and-install-mcp.js` writing to `mcp-setup-log.md` at vault root. Starter-Kit plan says "do not include … Logging/". | Treat as optional/setup-only. Either move script (and log) under 3-Resources and document, or mark as legacy "one-off MCP setup" and leave out of main layout. |
+| **mcp-server/** | MCP typically runs from Cursor global config (~/.cursor/mcp.json), not vault-local clone. | clone-and-install-mcp.js clones into `mcp-server/`. | If no longer used, document as legacy or remove; otherwise document as optional local clone path. |
+
+---
+
+## 8. Backup and sync cruft
+
+| Item | Action |
+|------|--------|
+| **.cursor/rules/always/mcp-obsidian-integration.mdc.bak** | Remove or archive; avoid editing .bak in normal flows. |
+| **.cursor/rules/context/auto-organize.mdc.bak** | Same. |
+| **3-Resources/Cursor-Skill-Pipelines-Reference.md.bak** | Same. |
+
+---
+
+## 9. Summary — recommended order of operations
+
+1. **Log path normalization**  
+   - Update rules and sync copies to use `3-Resources/Ingest-Log.md` (and, if kept, `3-Resources/mcp-setup-log.md`).  
+   - Update Session-Prep and any QuickAdd/trigger scripts to write to `3-Resources/Ingest-Log.md`.  
+   - Optionally change MCP `obsidian_log_action` default to `3-Resources/Ingest-Log.md`.
+
+2. **Root cleanup**  
+   - Follow Archive-Prep-Checklist §3.1: remove root Ingest-Log duplicate and resolve sync conflict; move or archive Ingest-Review, other root orphans.  
+   - Keep single canonical Ingest-Log at `3-Resources/Ingest-Log.md`.
+
+3. **Ingest-Review**  
+   - Either move root Ingest-Review to `3-Resources/Ingest-Review.md` and link from docs, or archive and rely on Ingest-Log/Errors + optional Dataview "Inbox Review" view.
+
+4. **Docs and Starter-Kit**  
+   - Replace all unqualified "Ingest-Log.md" with "3-Resources/Ingest-Log.md" in rules, Logs.md references, Cursor-Project-Rules-Summary, Autonomous-Runs-Options-Reference, and Starter-Kit.
+
+5. **Optional**  
+   - Remove or archive `.mdc.bak` and `.md.bak` files.  
+   - Document or relocate Logging/ and mcp-setup-log; document MCP server default log path in MCP-Tools.md.
+
+---
+
+## References
+
+- [[3-Resources/Second-Brain/Logs]] — canonical log locations and format
+- [[3-Resources/Archive-Prep-Checklist]] — root cleanup table
+- [[.cursor/rules/always/mcp-obsidian-integration]] — logging and backup gates

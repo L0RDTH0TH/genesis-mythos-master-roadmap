@@ -1,0 +1,11 @@
+# Technical / machine-only bin — exclude from indexing and AI context
+.technical/**
+*.jsonl
+Watcher-*.md
+*.log
+
+# Exception: EAT-QUEUE must read/write the prompt queue (Watcher appends here)
+!.technical/prompt-queue.jsonl
+
+# Root-level technical files (must stay at root; Syncthing/Cursor read them here)
+.stignore

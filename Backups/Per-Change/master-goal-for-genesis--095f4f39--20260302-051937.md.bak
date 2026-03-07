@@ -1,0 +1,46 @@
+---
+original_path: Ingest/Master goal for Genesis.md
+original_title: Master goal for Genesis
+pipeline: ingest
+snapshot_type: per-change
+snapshot_created: "2026-03-02T05:19:37Z"
+snapshot_hash: pre-move-70pct-run
+confidence: 70
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+# Stray Thought
+
+## What am I thinking?
+
+_Write the single core thought or observation in 1–3 sentences._
+
+#### Master Goal
+Build a 3D first-person virtual tabletop RPG platform (heavily inspired by D&D) where:
+
+The world is primarily player- and DM-generated (lore, history, factions, locations, etc.)
+Procedural generation exists only as filler / slop / inspiration / examples — never the final authority
+DM and players collaboratively shape and edit the world in real time during play
+Core gameplay loop is first-person open-world exploration + classic D&D-style turn-based combat
+1 Dungeon Master (authoritative host) + up to 5 players
+Full support for user-guided procedural generation, world creation presets by thematic style, custom rule tweaking, character creation/customization using Free5e (optionally enhanced with A5e elements)
+2D SVG-based map maker (infinite zoom) that feeds into editable 3D maps powered by Terrain3D
+The system stays completely agnostic to art and story content — those are 100% user responsibility
+
+In one tight sentence:
+Create an open-source(-ish) Godot-based 3D first-person VTT where the living world and its lore are built and owned by the players & DM together, with procedural generation demoted to helpful background noise, using SVG → Terrain3D maps, Free5e/A5e mechanics, and authoritative DM control.
+
+## What does this seem to mean?
+
+_Quick reflection: why does this matter, how might it connect to existing notes, or what might you do with it?_
+
+-  
+
+## TL;DR
+
+_Short summary so future-you can scan quickly._
+
+-

@@ -1,0 +1,20 @@
+---
+created: 2026-03-02
+tags: [ingest, github-docs, documentation]
+source: "https://github.com/L0RDTH0TH/genesis-mythos/blob/main/demo/assets/textures/asset_licenses.txt"
+title: "Asset Licenses"
+---
+
+All ambientCG assets are provided under the
+Creative Commons CC0 1.0 Universal License.
+https://docs.ambientcg.com/license/
+
+Grass:
+https://ambientcg.com/view?id=Ground037
+
+Rock:
+https://ambientcg.com/view?id=Rock030
+
+Cliff:
+https://ambientcg.com/view?id=Rock023
+

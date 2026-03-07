@@ -1,0 +1,85 @@
+---
+description: Non-Markdown File Handling Standard
+globs: "Ingest/**"
+alwaysApply: false
+---
+
+# Non-Markdown File Handling Standard
+
+When processing any non-.md file (especially from Ingest/):
+
+**Classify → Create companion .md → Embed source (target path 5-Attachments/[subtype]/) → Attempt automatic move of original to 5-Attachments/[subtype]/ (validation, backup, move_note); on success omit #needs-manual-move; on failure leave in Ingest/ with #needs-manual-move and failure callout.**
+
+## Opt-out
+
+- If the companion note or the original file has tag **#skip-auto-move**, skip the automatic move; leave the original in Ingest/ with the manual-move callout and #needs-manual-move.
+
+## Flow after companion creation
+
+After creating the companion .md and determining **subtype** (from [Attachment-Subtype-Mapping](3-Resources/Attachment-Subtype-Mapping.md) or File-type specifics below):
+
+1. **Validate:** Confirm source file exists and path is under `Ingest/`. If destination path already exists (e.g. `5-Attachments/<subtype>/<filename>`), resolve by renaming: use timestamp suffix (e.g. `filename_YYYYMMDD_HHMMSS.ext`) as final filename. **Prior to move, check for destination conflicts; if present, rename with timestamp and adjust companion source link** to the actual moved path.
+2. Call **obsidian_ensure_structure** with `folder_path: "5-Attachments/<subtype>"`.
+3. Call **obsidian_create_backup** with `paths: [Ingest/<filename>]`. **Only if backup succeeds** proceed to step 4. If backup fails: do not move; add #needs-manual-move to companion, log the reason (e.g. "Server does not support binary backups") and suggest external vault backups; add failure callout (see below).
+4. Optionally try **obsidian_move_note**(path, new_path, dry_run: true) for the binary; if the tool errors or does not support dry_run for non-.md, skip and log, then proceed. Call **obsidian_move_note**(Ingest/<filename>, 5-Attachments/<subtype>/<final-filename>) to commit.
+5. **If move succeeds:** Set companion `source` to `![[5-Attachments/<subtype>/<final-filename>]]`. Add success callout: `> [!success] File auto-moved to [[5-Attachments/<subtype>/<final-filename>]].` Do not add #needs-manual-move.
+6. **If move fails (or backup failed):** Leave original in Ingest/. Add #needs-manual-move. Add failure callout with exact error: `> [!warning] Move failed due to [reason]. Manual move required to [[5-Attachments/<subtype>/<filename>]].` Log with categorized reason to Ingest-Log.md and, if appropriate, Errors.md (see Error handling and Refinements §4 in the auto-move plan).
+
+## Extension → subtype (reference)
+
+Use [3-Resources/Attachment-Subtype-Mapping.md](3-Resources/Attachment-Subtype-Mapping.md) when present; otherwise use the table below. **Unknown extensions default to Other/** and log a suggestion to update the mapping.
+
+| Type        | Extensions / notes                         | 5-Attachments subfolder |
+| ----------- | ------------------------------------------ | ------------------------ |
+| Images      | .png, .jpg, .jpeg, .gif, .webp, .svg, .bmp | Images/                  |
+| PDFs        | .pdf                                       | PDFs/                    |
+| Documents   | .docx, .xlsx, .pptx                        | Documents/               |
+| Audio/Video | (audio/video extensions)                   | Audio/                   |
+| Other       | .zip, .txt, .csv, .json, .py, etc.         | Other/                   |
+
+Edge cases: `.md.txt` → treat as text (Other/). Very large files (e.g. >100MB): optional warning in companion or log only; no change to move logic.
+
+## Frontmatter template (always include)
+
+```yaml
+---
+title: "Clear Descriptive Title"
+created: YYYY-MM-DD
+aliases: [original-filename.ext]
+tags: [type/pdf, source/attachment, inbox, needs-review]
+source: "![[5-Attachments/PDFs/original.pdf]]"
+---
+```
+
+Use **5-Attachments/[subtype]/original.ext** consistently (PDFs/, Images/, Audio/, Documents/, Other/ as appropriate).
+
+## File-type specifics
+
+- **Images** (.png/.jpg/...): Use vision to OCR + describe in extreme detail (layout, text, objects, insights). Target 5-Attachments/Images/. Embed with |alt text|.
+- **PDFs**: Extract text (Cursor native @file support if possible), summarize sections/tables/figures. Target 5-Attachments/PDFs/. Full embed preview.
+- **Text/code** (.txt/.csv/.json/.py/...): Embed full content in ``` block or summarize if huge. Analyze key points. Target 5-Attachments/Other/.
+- **.docx/.xlsx/.pptx**: Target 5-Attachments/Documents/. Suggest/attempt pandoc conversion to .md if available; else stub + "Export to PDF/text first".
+- **Audio/Video**: Target 5-Attachments/Audio/. Stub note + "Transcribe externally (Whisper/etc.) then re-ingest transcript". Tag #type/audio #needs-transcript.
+- **Archives** (.zip, etc.): Target 5-Attachments/Other/. "Extract first, then re-process contents."
+
+## Rules
+
+- NEVER modify/delete original file except by the sanctioned move (obsidian_move_note to 5-Attachments/ or, if configured, move-attachment skill when explicitly invoked).
+- Create one atomic .md per original file.
+- After successful auto-move: "Companion [[path/to/companion.md]] created. Original was moved to 5-Attachments/[subtype]/."
+- After failed move or backup: "Companion created. Original remains in Ingest/ — manual move to 5-Attachments/[subtype]/ required."
+- If batch: process sequentially unless user says parallel.
+
+## MCP SAFETY
+
+- For non-.md in Ingest, after companion creation, **attempt** move of original to 5-Attachments/[subtype]/ via obsidian_ensure_structure + obsidian_create_backup + obsidian_move_note. **Backup is required first;** if backup fails, do not move. If the server rejects or fails (e.g. "only markdown supported"), leave in Ingest/ with #needs-manual-move and log.
+- Do not use shell mv/cp/rm **except** when the **move-attachment-to-99** skill is explicitly invoked by the user (see skill exception in mcp-obsidian-integration.mdc). Suggest "Invoke move-attachment for [file]?" only when user is present; never auto-invoke.
+
+## Error handling
+
+If companion note creation, embed/link write, backup, or move fails:
+
+- **Categorize failures** in Ingest-Log.md / Errors.md: "Server rejection: Binary moves not supported" → suggest move-attachment skill (user-initiated); "Path error or conflict" → attempt rename and retry move; "Backup failed" → do not move; "Network/timeout" → suggest retry on next ingest run.
+- Follow the **Error Handling Protocol** in `mcp-obsidian-integration.mdc` (§ Error Handling Protocol). Pipeline: `non-markdown-handling`; stage: `companion creation`, `embed write`, `backup`, or `move`. Include **error_type** in the summary and in the Errors.md entry table.
+- Log to `3-Resources/Errors.md` (standard entry format: heading, metadata table, #### Trace, #### Summary); reference in `Ingest-Log.md` if invoked from ingest flow.
+- Do not move or delete the original file on failure; leave in Ingest/ with #needs-manual-move and failure callout.

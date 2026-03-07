@@ -1,0 +1,29 @@
+---
+title: Archive test — completed note
+created: 2026-02-20
+para-type: Archive
+status: frozen
+project-id: Test-Project
+original_path: 1-Projects/Test-Project/2026-02-25-archive-candidate.md
+original_title: Archive test — completed note
+pipeline: autonomous-archive
+snapshot_type: per-change
+snapshot_created: 2026-02-25T21:29:18Z
+snapshot_hash: 1e06bfe9ea844b08
+confidence: 88
+flag: none
+immutable: true
+---
+# Archive test — completed note
+
+Candidate for **autonomous-archive** pipeline. No open tasks; status complete; older date so it qualifies for archive sweep.
+
+> [!summary] TL;DR
+> Completed test note for archive validation; safe to move to 4-Archives/Test-Project-Archive/ when running ARCHIVE MODE.
+
+## Content
+
+This note has no `- [ ]` tasks. Use it to validate archive-check (≥85%), subfolder-organize (archive path), resurface-candidate-mark, summary-preserve, and obsidian_move_note (with optional obsidian_ensure_structure for deep path).
+
+## Why project?
+Assigned based on content/frontmatter (confidence ~70%).

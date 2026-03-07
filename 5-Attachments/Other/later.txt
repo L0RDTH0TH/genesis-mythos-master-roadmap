@@ -1,0 +1,8 @@
+We need to log everytime a user touches a file in obsidian and what they do so; text add, text change, text highlight, image add etc. And we need to log from what device
+
+The goal is to enhance the software later after captureing how users interact with the software(EX: Did they unhighlight, add a bullet point, write a section on why an ai express result was wrong, manually merge a file, etc) This will help us craft our rules, pipelines, skills, workflows, and guide prompts later. We will also be able to use them as resources in the mcp server.
+
+Any questions?
+more user data I can get my hands on the more we can improve the AI pipeline results later
+
+This may be integrated with the watcher turning it from an automation enhancer to a true watcher and auditor

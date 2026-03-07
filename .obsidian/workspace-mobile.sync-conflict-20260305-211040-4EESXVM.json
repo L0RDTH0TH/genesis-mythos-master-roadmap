@@ -1,0 +1,222 @@
+{
+  "main": {
+    "id": "7a59a91344771350",
+    "type": "split",
+    "children": [
+      {
+        "id": "53fa7d911f6847ff",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "51ca657efe1c7731",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Ingest/Decisions/Decision-for-volos-guide-to-monsters-volos--2026-03-04-1112.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Decision-for-volos-guide-to-monsters-volos--2026-03-04-1112"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "2b61d7427a2ff2cc",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "7dcc20bfdbfc8fa9",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {
+            "sortOrder": "alphabetical",
+            "autoReveal": true
+          },
+          "icon": "lucide-folder-closed",
+          "title": "Files"
+        }
+      },
+      {
+        "id": "e99305aa13b660a0",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "Biblical",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          },
+          "icon": "lucide-search",
+          "title": "Search"
+        }
+      },
+      {
+        "id": "0a789af3c1eba3e7",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true,
+            "showSearch": true,
+            "searchQuery": "ge"
+          },
+          "icon": "lucide-tags",
+          "title": "Tags"
+        }
+      },
+      {
+        "id": "fbe9a58765168a44",
+        "type": "leaf",
+        "state": {
+          "type": "all-properties",
+          "state": {
+            "sortOrder": "frequency",
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-archive",
+          "title": "All properties"
+        }
+      },
+      {
+        "id": "201f5bd1faef58d7",
+        "type": "leaf",
+        "state": {
+          "type": "bookmarks",
+          "state": {},
+          "icon": "lucide-bookmark",
+          "title": "Bookmarks"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "dc41b2b0b25a15ad",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "0e1a8c3cb300775f",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "file": "Ingest/watched-file.md",
+            "collapseAll": true,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-coming-in",
+          "title": "Backlinks"
+        }
+      },
+      {
+        "id": "d1c7b5681186e6ad",
+        "type": "leaf",
+        "state": {
+          "type": "outgoing-link",
+          "state": {
+            "file": "Ingest/Feature Request.md",
+            "linksCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-going-out",
+          "title": "Outgoing links"
+        }
+      },
+      {
+        "id": "615e116424a31889",
+        "type": "leaf",
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "Ingest/watched-file.md",
+            "followCursor": false,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-list",
+          "title": "Outline"
+        }
+      }
+    ],
+    "currentTab": 1
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "templater-obsidian:Templater": false,
+      "obsidian42-brat:BRAT": false,
+      "watcher:Watcher Modal": false
+    }
+  },
+  "active": "51ca657efe1c7731",
+  "lastOpenFiles": [
+    "Ingest/Decisions/Decision-for-mordenkainens-tome-of-foes-mtof--2026-03-04-1112.md",
+    "Ingest/Decisions/Decision-for-eberron-rising-from-the-last-war-erftlw--2026-03-04-1112.md",
+    "Ingest/Decisions/Decision-for-dnd-5e-races-and-subraces-pre-2024-core-stats-by-sourcebook--2026-03-04-1112.md",
+    "Ingest/Decisions/Decision-for-index--2026-03-04-1112.md",
+    "Ingest/Decisions/Decision-for-other-sourcebooks-scag-spelljammer-theros-moot-wbtw-etc--2026-03-04-1112.md",
+    "Ingest/Decisions/Decision-for-volos-guide-to-monsters-volos--2026-03-04-1112.md",
+    "Ingest/Decisions/Decision-for-oil-and-decay--2026-03-04-1112.md",
+    "Ingest/Decisions/Decision-for-ai-integration--2026-03-04-0851.md",
+    "Ingest/Decisions/Decision-for-cascade-breadcrumb--2026-03-04-0851.md",
+    "Ingest/Decisions/Decision-for-cascade-tree--2026-03-04-0854.md",
+    "Ingest/Decisions/Decision-for-fractal-gui-framework--2026-03-04-0859.md",
+    "Ingest/Decisions/Decision-for-eberron-rising-from-the-last-war-erftlw--2026-03-04-0857.md",
+    "Ingest/Decisions/Decision-for-crystal-tree-procedural-growth--2026-03-04-1200.md",
+    "Ingest/Oil and Decay.md",
+    "Ingest/Decisions/Decision-for-cascade-implementation--2026-03-04-1022.md",
+    "Ingest/Decisions/Decision-for-cascade-breadcrumb--2026-03-04-1021.md",
+    "Ingest/Decisions/Decision-for-blender-mcp--2026-03-04-1020.md",
+    "Ingest/Decisions/Decision-for-biome-properties--2026-03-04-1019.md",
+    "Ingest/Decisions/Decision-for-ai-integration--2026-03-04-1018.md",
+    "5-Attachments/PDFs/PlayerBasicRulesV03.pdf",
+    "5-Attachments/Images/Cascade_251106_014723.jpg",
+    "5-Attachments/Other/2d map maker.txt",
+    "5-Attachments/Other/Fantasy archetypes _251206_024005.txt",
+    "3-Resources/fantasy-archetypes-attachment-2026-03-04-0000.md",
+    "3-Resources/player-basic-rules-pdf-attachment-2026-03-04-0000.md",
+    "3-Resources/cascade-image-attachment-2026-03-04-0000.md",
+    "3-Resources/2d-map-maker-attachment-2026-03-04-0000.md",
+    "Ingest/Decison loopin batch.md",
+    "Ingest/Decisions/Decision-for-ability-score-preview-analysis--2026-03-04-0501.md",
+    "Ingest/genesis-mythos/audit--ABILITY_SCORE_PREVIEW_ANALYSIS.md",
+    "Backups/Per-Change/cascade-branches-2026-03-03-2305--faff0a50--20260303-230618.md.bak",
+    "4-Archives/Ingest-Decisions",
+    "Backups/Per-Change/Cascade-Branches--7f5b3aab--20260303-230612.md.bak",
+    "Backups/Per-Change/dnd-basic-rules--2111e760--20260303-221154.md.bak",
+    "3-Resources/TTRPGs/Rulebooks",
+    "3-Resources/TTRPGs",
+    "Genesis-Mythos MOC",
+    "5-Attachments/Screenshot_20251129_205112_Discord.jpg",
+    "5-Attachments/Images/Screenshot_20260225_053544_Obsidian.jpg",
+    "99 Attachments/Screenshot_20251129_205112_Discord.jpg",
+    "99 Attachments/Images/Screenshot_20260225_053544_Obsidian.jpg",
+    "Ingest/Screenshot_20260225_053544_Obsidian.jpg",
+    "Screenshot_20260225_053544_Obsidian.jpg",
+    "mcp-server/node_modules/@modelcontextprotocol/inspector-client/dist/mcp.svg",
+    "mcp-server/node_modules/@gerrit0/mini-shiki/static/mini-shiki-dependency-tree.svg",
+    "mcp-server/node_modules/@gerrit0/mini-shiki/static/shiki-dependency-tree.svg"
+  ]
+}

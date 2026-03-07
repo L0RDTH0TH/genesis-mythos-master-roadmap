@@ -1,0 +1,8 @@
+
+- [[2026-02-24-genesis-kjv]] — KJV Genesis — reference scripture text.
+- [[2026-02-24-exodus-kjv]] — KJV Exodus — reference scripture text.
+- [[2026-02-24-leviticus-kjv]] — KJV Leviticus — reference scripture text.
+- [[2026-02-24-cursor-ingest-pipeline-trigger-prompt]] — Ingest launch prompt reference — INGEST MODE autopilot, tool sequence, log format.
+- [[2026-02-25-ai-outputs-markdown]] — AI output in markdown breaks ingest template; workaround or accept.
+- [[2026-02-25-config-reference-obsidian-para-zettel-mcp]] — Env vars and Cursor MCP config for Obsidian PARA-Zettel Autopilot.
+- [[2026-02-25-highlighter-second-brain-pipeline]] — Use Highlightr plugin + color key to target second-brain AI pipeline runs.

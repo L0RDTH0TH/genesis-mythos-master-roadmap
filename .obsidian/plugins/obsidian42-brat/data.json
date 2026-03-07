@@ -1,0 +1,29 @@
+{
+  "pluginList": [
+    "weppos/obsidian-mermaid-view",
+    "mnaoumov/obsidian-advanced-exclude"
+  ],
+  "pluginSubListFrozenVersion": [
+    {
+      "repo": "weppos/obsidian-mermaid-view",
+      "version": ""
+    },
+    {
+      "repo": "mnaoumov/obsidian-advanced-exclude",
+      "version": "2.0.21"
+    }
+  ],
+  "themesList": [],
+  "updateAtStartup": true,
+  "updateThemesAtStartup": true,
+  "enableAfterInstall": true,
+  "loggingEnabled": false,
+  "loggingPath": "BRAT-log",
+  "loggingVerboseEnabled": false,
+  "debuggingMode": false,
+  "notificationsEnabled": true,
+  "globalTokenName": "",
+  "personalAccessToken": "",
+  "selectLatestPluginVersionByDefault": false,
+  "allowIncompatiblePlugins": false
+}

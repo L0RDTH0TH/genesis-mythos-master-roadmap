@@ -1,0 +1,9 @@
+# Minimal prompt_defaults snippet for prompt-crafter fixture tests
+prompt_defaults:
+  ingest:
+    context_mode: strict-para
+    max_candidates: 7
+    rationale_style: concise
+  organize:
+    context_mode: organize
+    max_candidates: 5

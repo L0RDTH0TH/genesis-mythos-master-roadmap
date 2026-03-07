@@ -1,0 +1,30 @@
+{
+  "trashOption": "system",
+  "userIgnoreFilters": [
+    "3-Resources/prompt-queue.jsonl",
+    "3-Resources/Watcher-Signal.md",
+    "3-Resources/Watcher-Result.md",
+    "3-Resources/*-Log.md",
+    ".cursor/",
+    "Second-Brain/.cursorignore"
+  ],
+  "mobileToolbarCommands": [
+    "highlightr-plugin:highlighter-plugin-menu",
+    "watcher:trigger-ingest",
+    "watcher:trigger-distill",
+    "watcher:trigger-express",
+    "watcher:trigger-organize",
+    "editor:set-heading",
+    "editor:attach-file",
+    "watcher:trigger-archive",
+    "editor:insert-tag",
+    "watcher:open-watcher-modal",
+    "watcher:open-add-roadmap-item-modal",
+    "watcher:trigger-task-roadmap",
+    "watcher:clear-queue",
+    "watcher:trigger-task-complete",
+    "editor:configure-toolbar"
+  ],
+  "attachmentFolderPath": "5-Attachments",
+  "alwaysUpdateLinks": true
+}

@@ -1,0 +1,31 @@
+---
+original_path: 1-Projects/Test-Project/2026-02-25-distill-messy.md
+original_title: Distill test — messy long note
+pipeline: distill
+snapshot_type: per-change
+snapshot_created: 2026-02-25T20:49:30Z
+snapshot_hash: 5c76522157cce3d156d47b74d7933ab4fdde8e6bdd853951caa208a03e2fc363
+confidence: 88
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+# Distill test — messy long note
+
+Raw capture for **autonomous-distill** pipeline validation. This note is intentionally messy and long so the distill batch can exercise highlight, layer-promote, and TL;DR callout.
+
+## What am I thinking?
+
+There are multiple competing ideas here that could be split or at least distilled. First we have the concept of progressive summarization which is really just bold then highlight then TL;DR and the idea is that you don't have to do everything at once you can do it in layers. Second there is the question of when to archive versus when to keep something active and the heuristic usually involves no open tasks and status complete and some kind of age threshold. Third we have the express pipeline which is about turning distilled notes into something shareable like an outline or a blog post or a talk and that involves related-content-pull and express-mini-outline and call-to-action-append. So really the pipelines are ingest then distill then optionally archive and optionally express.
+
+## What does this seem to mean?
+
+It means the system is designed for incremental refinement. You capture first, then you organize and classify, then you distill in layers, and only when something is ready do you archive it or express it. The key is that each step has a confidence gate and backup/snapshot so nothing gets lost.
+
+## TL;DR
+
+*(Leave for pipeline to fill or refine.)*
+
+Multi-step refinement: capture → organize → distill (bold/highlight/TL;DR) → optionally archive or express; each step gated by confidence and backed by snapshots.

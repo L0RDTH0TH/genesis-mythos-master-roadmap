@@ -1,0 +1,9 @@
+{
+  "id": "watcher",
+  "name": "Watcher",
+  "version": "0.3.0",
+  "minAppVersion": "0.15.0",
+  "description": "Watcher for Second Brain: mode-specific prompts → signal file + optional Cursor bridge (disabled by default; prioritizes URI deeplink when enabled).",
+  "author": "",
+  "isDesktopOnly": false
+}
