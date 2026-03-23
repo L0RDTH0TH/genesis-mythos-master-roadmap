@@ -1,0 +1,144 @@
+---
+title: Genesis Mythos Master Goal (restored)
+created: 2026-03-07
+tags:
+  - project
+  - genesis-mythos
+  - master-goal
+  - restored-from-unaltered-capture
+  - manual-mutilation-only
+source:
+  - - Backups/Per-Change/Source-genesis-mythos-master-goal-unaltered-capture-2026-03-07-0033-2026-03-08-0900-2026-03-11-0533-2026-03-14-1200--a8815e27--20260314-120000.md.bak
+---
+
+# AI Output Capture
+
+## Source & prompt
+
+_Which model/app and what did you ask? Paste the key parts of your prompt here._
+
+- Source/model: Grok
+- Date/time: 2026-03-07 00:33
+- Prompt:
+
+>  **One-line Master Goal (v2.0 distilled):**
+
+"Build an open-source, aggressively modular first-person 3D VTT generator that procedurally creates living, collaborative open worlds from shared DM + player intents, where players experience pure immersive first-person exploration, DMs command with fluid Sparky-style free-cam + orthographic tabletop control, player lore loops into systemic depth, major changes require intentional re-generation, and every layer is built for endless community remixing."
+
+## Full output
+
+_Paste the full AI response below._
+
+>  **Master Goal v2.0**  
+(Conceptual foundation preserved from v1.6 + new Technical Integration section)
+
+**Building a first-person open-world 3D virtual tabletop (VTT) generator that supports multiple RPG rule systems, where:**
+
+**Perspective split delivers immersion for players and commanding mastery for the DM.**  
+- **Players** live exclusively in first-person — becoming the hero in a breathing world where every vista, sound, and encounter feels immediate and personal. No escape to top-down or third-person; the campaign is experienced, not watched.  
+- **DM** commands with Sparky-inspired free-cam god-view: fluid, intuitive flight — orbiting, panning, zooming, tilting, soaring, diving — granting effortless dominion.  
+  - For surgical tactical work (token placement, measurements, fog painting, line-of-sight checks), instant seamless transition to **orthographic / top-down tabletop view** — clean, flat, ruler-precise, like commanding a physical battle map.  
+  - Mode switches use smooth interpolation (position, rotation, FOV) with natural easing, keeping flow unbroken whether narrating from the heavens or inspecting a single footprint.
+
+**Worlds emerge from shared creation — player agency loops into the living fabric.**  
+- The generator is a collaborative forge: players contribute lore intents (backstories, artifacts, faction ties, personal quests) that feed systemic hooks — becoming living elements (haunted villages, rival bloodlines, prophecy fragments) that ripple through NPCs, events, and environment.  
+- **Lore and narrative remain emergent / out-of-scope as hardcoded content**; the **systems** that enable emergence are central: modular input population pipelines, reputation & consequence graphs, dynamic event triggers, and feedback loops where player choices subtly reshape simulation state over sessions.  
+- The result: a world that feels co-authored — greater than any single vision, with player intent woven into procedural depth.
+
+**The world pulses with life, customization, and balanced agency.**  
+- Vitality through layered simulation: weather that alters mood & paths, NPCs with intersecting agendas, ambient surprises, persistent scars from play — rewarding long campaigns with meaningful evolution.  
+- **DM overwrites** respect cost & intent: live in-session tweaks for dynamic flair (move tokens, shift weather, trigger events, whisper to NPCs), while major structural changes (terrain reshaping, biome relocation) demand deliberate re-generation of regions or the full world.  
+- Extensibility invites infinite remixing: swap simulation flavors, visual styles, or rule behaviors without breaking cohesion.
+
+**Open source and aggressive modularity fuel communal growth.**  
+Built from the ground up for remixing — every system (generation stages, simulation ticks, camera controllers, input loops) is replaceable via clear interfaces, turning the tool into a living ecosystem.
+
+**Generation is collaborative dialogue between intents and machine.**  
+DM & players feed seeds; the system proposes living scaffolds, refined through choices and intent loops, birthing worlds that surprise even their creators.
+
+**Technical Integration**  
+(How the conceptual vision maps to concrete architecture — without prescribing implementation details)
+
+**Stack policy:** Contracts and patterns below are **engine- and language-agnostic** until explicitly decided; **no game engine or primary stack is selected in this vault artifact.** Roadmap links to specific engines or languages are **examples only** (canonical decision: [[Roadmap/decisions-log]] **D-027**).
+
+- **Procedural core + intent population pipeline**  
+  A modular generation graph (stages: seed parsing → terrain → biome → POI → entity → simulation bootstrap) where each node accepts overrides and intent injections. Player/DM lore inputs feed a separate intent resolver that populates systemic hooks (reputation nodes, event probability modifiers, environmental state variables) — ensuring narrative seeds become mechanical reality without hardcoding story.
+
+- **Living simulation decoupled from rendering**  
+  A tick-based simulation layer (weather, NPC schedules, faction ripples, persistent state) runs independently of the visual engine. This allows lightweight mobile previews (2D maps + sim summaries) while laptop handles full 3D + real-time sim. Re-generation only triggers on explicit structural change requests, preserving live-session fluidity.
+
+- **Perspective & control abstraction**  
+  A unified scene graph with multiple camera rigs sharing the same world state. Player rig = locked first-person (WASD + look + interaction raycasts). DM rig = free-flight controller (Halo Forge–style input mapping) + orthographic toggle. Transitions are handled by a camera interpolator module — swappable for different easing styles or future VR/AR views.
+
+- **Modularity boundaries (key seams)**  
+  - World gen pipeline: stage-by-stage, each stage replacable (noise → erosion → settlement logic → etc.)  
+  - Rule engine: core primitives only; rulesets as plugins declaring hooks & conflicts  
+  - Simulation: event bus + state graph — new behaviors plug in via script components  
+  - Input loop: intent parser + population resolver — extensible for new input types (voice, forms, chat)  
+  - Visuals & UI: overlay layers (grids, tokens, fog) as enable/disable modules; semantic highlighting as a post-process pass with lens switching
+
+- **Safety & iteration invariants baked in**  
+  Every generation run snapshots seed + overrides + current intent state. Dry-run passes estimate performance & rule validity before commit. Provenance embeds which inputs, rulesets, and modules shaped each element — traceable via in-game inspection or export metadata.
+
+- **Target prototype scope (Q3 2026 horizon)**  
+  Single-player playable world with one ruleset integrated, full perspective split, live DM overwrites, one round-trip player intent loop, basic living simulation (weather + simple NPC schedules), and clear modding seams demonstrated (e.g., swap a biome generator or add a new event type).
+
+**In short:** An open-source, aggressively modular VTT generator that procedurally crafts collaborative, living open worlds — players plunge into pure first-person immersion, DMs command with Sparky-flight and orthographic precision, shared intent loops weave player lore into systemic depth, big changes require intentional re-generation, and every layer is built for remixing and extension.
+
+
+### Phase 1: Conceptual Foundation and Core Architecture
+Establish the high-level blueprint and modular skeleton to align with the master goal's vision of immersion, collaboration, and extensibility.
+- Define key abstractions: Separate world state, simulation logic, rendering, and input handling into decoupled layers.
+- Outline the procedural generation graph and intent population pipeline, focusing on interfaces for seeds, overrides, and lore injections.
+- Identify modularity seams (e.g., generation stages, rule hooks, event bus) to ensure replaceability from the start.
+- Prototype basic safety invariants, like seed snapshots and dry-run validation, to embed iteration-friendly practices.
+
+### Phase 2: Procedural Generation and World Building
+Develop the collaborative forge for creating emergent worlds, emphasizing shared intents without hardcoded narratives.
+- Implement the generation pipeline: From seed parsing to terrain, biomes, POIs, entities, and simulation bootstrap.
+- Integrate player/DM intent loops: Parse backstories and quests into systemic hooks (e.g., reputation graphs, event triggers).
+- Enable basic collaborative dialogue: System proposes scaffolds, users refine via choices, resulting in co-authored procedural depth.
+- Test initial world emergence: Ensure player agency ripples into environment and events subtly over simulated sessions.
+
+### Phase 3: Living Simulation and Dynamic Agency
+Bring the world to life with persistent, balanced elements that reward long-term play and respect DM authority.
+- Build the tick-based simulation layer: Weather cycles, NPC agendas, faction interactions, and persistent state changes.
+- Incorporate DM overwrites: Real-time tweaks (e.g., token movement, event triggers) vs. deliberate re-generation for major changes.
+- Layer in vitality features: Ambient surprises, consequence graphs, and evolution mechanics for meaningful campaign progression.
+- Decouple simulation from visuals: Allow lightweight previews while maintaining fluidity for full sessions.
+
+### Phase 4: Perspective Split and Control Systems
+Create immersive views tailored to roles, with seamless transitions for unbroken flow.
+- Develop player perspective: Locked first-person immersion with interaction mechanics (e.g., raycasts, sensory feedback).
+- Build DM controls: Free-cam god-view (flight, orbiting) and orthographic tabletop toggle for tactical precision.
+- Implement camera abstraction and interpolator: Unified scene graph with smooth mode switches and easing.
+- Ensure role-based agency: Players experience the world personally, DMs command with effortless dominion.
+
+### Phase 5: Rule System Integration and Extensibility
+Incorporate RPG mechanics while prioritizing open-source remixing and communal growth.
+- Integrate a core rule engine with primitives; add one initial ruleset as a plugin, declaring hooks and resolving conflicts.
+- Demonstrate modularity: Swap components (e.g., biome generators, event types) without breaking cohesion.
+- Enable customization: Visual styles, simulation flavors, and input types (e.g., chat-based intents) via clear interfaces.
+- Foster ecosystem potential: Document seams for community contributions, turning the tool into a remixable platform.
+
+### Phase 6: Prototype Assembly, Testing, and Iteration
+Assemble a minimal viable prototype aligned with the Q3 2026 target, focusing on playability and validation.
+- Combine phases into a single-player world: One ruleset, perspective split, basic simulation (weather + NPC schedules), one intent loop, and DM overwrites.
+- Conduct high-level testing: Emergent lore integration, performance dry-runs, and user flow (generation to session play).
+- Embed provenance and traceability: In-game inspection of inputs and modules for debugging and export.
+- Iterate conceptually: Gather feedback on immersion, agency, and modularity to refine toward full open-world VTT.
+
+## Key insights
+
+_Extract the few pieces that are actually useful or worth revisiting._
+
+-  
+-  
+-  
+
+## TL;DR
+
+_Short summary of why this output matters (or "nothing useful" if so)._
+
+-  Master goal for new project
+
