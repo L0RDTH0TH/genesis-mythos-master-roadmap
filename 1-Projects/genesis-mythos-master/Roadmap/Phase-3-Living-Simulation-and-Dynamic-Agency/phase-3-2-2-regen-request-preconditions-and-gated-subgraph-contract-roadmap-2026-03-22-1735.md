@@ -1,0 +1,108 @@
+---
+title: Phase 3.2.2 — RegenRequest_v0 preconditions and gated subgraph contract
+roadmap-level: tertiary
+phase-number: 3
+project-id: genesis-mythos-master
+status: active
+priority: high
+progress: 0
+created: 2026-03-22
+tags: [roadmap, genesis-mythos-master, phase, regeneration, intent-plan, determinism]
+para-type: Project
+subphase-index: "3.2.2"
+handoff_readiness: 92
+handoff_readiness_scope: "Normative draft: RegenRequest_v0 field row + P1–P6 precondition table + 2.2.2 boundary coupling + ledger idempotency sketch; golden vectors + frozen registry rows TBD"
+execution_handoff_readiness: 63
+handoff_gaps:
+  - "Golden replay rows for regen subgraph happy/denial paths — TBD until D-032 header freeze + replay_row_version coordination on 3.1.1"
+  - "Split vs merge `REGEN_PRECONDITIONS_FAILED` vs `REGEN_SEED_INVALID` / `REGEN_SUBGRAPH_PARTIAL` when registry freezes — table leaves generic P2/P3 until operator review"
+links:
+  - "[[phase-3-2-dm-overwrite-regeneration-gates-roadmap-2026-03-21-2347]]"
+  - "[[phase-3-2-1-dm-override-intent-envelope-and-regeneration-gate-taxonomy-roadmap-2026-03-22-0210]]"
+  - "[[phase-2-2-2-intentplan-consumption-boundary-and-deterministic-verification-harness-roadmap-2026-03-20-0605]]"
+  - "[[phase-2-2-1-intent-canonicalization-and-denial-taxonomy-roadmap-2026-03-20-0901]]"
+  - "[[phase-3-1-1-deterministic-tick-epoch-and-hash-preimage-boundaries-roadmap-2026-03-22-0015]]"
+  - "[[phase-3-1-5-deterministic-agency-slice-outcomes-mutation-ledger-replay-roadmap-2026-03-22-0045]]"
+---
+
+## Phase 3.2.2 — RegenRequest_v0 preconditions and gated subgraph contract
+
+**Deliverables:** Normative **v0 sketch** for **`RegenRequest_v0`** (fields, idempotency key, gate version), **precondition table** P1–P6 with draft **`reason_code`** mapping, explicit **ManifestEmit / IntentPlan** coupling per **2.2.2**, and **ordering** relative to **`StableMergeKey_v0`** player+DM apply from **3.2.1**.
+
+### `RegenRequest_v0` schema row (draft)
+
+| Field | Type | Required | Role |
+|-------|------|----------|------|
+| `domain_tag` | string | yes | Literal `REGEN_REQUEST_V0` (registry row TBD with **2.2.1** master enum). |
+| `regen_request_id` | bytes32 | yes | Idempotency / dedup in **regen ledger** (parallel role to `mutation_id` / intent ids). |
+| `tick_epoch` | u64 | yes | Bind regen request to tick under evaluation (same family as **3.1.1**). |
+| `regen_seed` | bytes | yes | **Explicit** deterministic seed material — hash of operator-approved inputs + subgraph version + prior manifest / barrier refs — **no** wall-clock in preimage. |
+| `regen_scope` | closed-set id / bitset | yes | **Allow-list** of stage / facet / entity-set ids the subgraph may read or rewrite. |
+| `regen_gate_version_id` | string | yes | Bumps when outputs change **any** byte in **IntentPlan → manifest** preimage chain or **TickCommitRecord_v0** family; co-register with **`replay_row_version`** / **`deterministic_gate_version_id`** when those rows are touched. |
+| `upstream_manifest_ref` | optional ref | no | Proves regen runs **after** terminal barrier / ledger tail (align **2.1.3** / SpawnCommit narrative). |
+| `barrier_ref` | optional ref | no | Same intent — pin to async commit / reconcile tail when applicable. |
+| `expected_precondition_fingerprint` | optional bytes32 | no | Hash of world slice required before regen; mismatch → single deterministic denial. |
+
+Canonical preimage for hashing: **sorted key order** + `Domain_tag_v0` prefix per **2.2.1** shared `CanonicalIntentBytes_v0` pattern (exact formula **TBD** — must not diverge from player/DM intent rows).
+
+### Precondition table (P1–P6)
+
+| # | Precondition | Pass | Fail → `reason_code` (draft) |
+|---|----------------|------|------------------------------|
+| P1 | `regen_scope` ⊆ policy allow-list | run gated subgraph | `REGEN_SCOPE_OVERFLOW` |
+| P2 | `regen_seed` present + canonical | deterministic regen | `REGEN_PRECONDITIONS_FAILED` (split to `REGEN_SEED_INVALID` when registry frozen) |
+| P3 | No partial manifest — subgraph completes or **one** denial | safe replay | `REGEN_SUBGRAPH_PARTIAL` (registry candidate) |
+| P4 | No skip of **IntentPlan validate + hash wiring** before any `ManifestEmit` | **2.2.2** satisfied | `OVERRIDE_MANIFEST_BYPASS` |
+| P5 | Preimage change ⇒ **`regen_gate_version_id`** (+ CI registry / golden) updated | no silent drift | `REGEN_HASH_CHAIN_DRIFT` |
+| P6 | Same `regen_request_id` + inputs ⇒ same outcome; second apply **ledger-hit** | mirrors **2.2.2** idempotency | `REGEN_IDEMPOTENCY_VIOLATION` (optional row) |
+
+### Algorithm sketch (ordering vs 3.2.1)
+
+```text
+function apply_tick(world, tick_epoch, regen_requests, player_intents, dm_overrides):
+  for r in stable_sort(regen_requests, RegenStableOrder_v0):  // e.g. (tick_epoch, regen_request_id)
+    outcome := run_gated_regen_subgraph(world, r)  // checks P1–P6
+    if outcome == DENY:
+      emit exactly_one_denial(outcome.reason_code)
+      return world
+  ordered := sort_by_StableMergeKey_v0(concat(player_intents, dm_overrides))
+  return apply_ledger_then_commit(world, tick_epoch, ordered)
+```
+
+**Invariant:** Regen completes (or denies) **before** merged player+DM ledger apply so overrides observe **post-regen** committed buffers.
+
+### 2.2.2 consumption boundary (normative)
+
+- Regen **must not** side-door **`manifest_hash`**: outputs either (a) replay as **commands** consumed at the same **IntentPlan → ManifestEmit** boundary, or (b) mutate **pre-IntentPlan** buffers that are **re-derived** into a fresh validated `IntentPlan` before **`ManifestEmit`**.
+- Algorithm / schema changes: bump **`deterministic_gate_version_id`** in lockstep with **`regen_gate_version_id`** per **D-020** PR policy.
+
+### Regen ledger idempotency (sketch)
+
+`ledger_key := (stage_graph_version, boundary_id, regen_request_id, regen_gate_version_id)` — first apply **`applied`**, second **`ledger-hit`**; assert no extra world mutations on replay.
+
+### Risk register v0 (workstream 3.2.2)
+
+| Risk | Mitigation |
+|------|------------|
+| Regen bypasses **2.2.2** | P4 + `OVERRIDE_MANIFEST_BYPASS`; CI `ReplayAndVerify` on regen slice |
+| Silent preimage drift | P5 + registry row; pair **`replay_row_version`** (**3.1.1**) when tick record touched |
+| Overbroad `regen_scope` | P1 allow-list + versioned scope table in decisions-log when frozen |
+
+## Research integration
+
+### Vault-aligned synthesis (nested Research `Task`, 2026-03-22)
+
+- **[[Ingest/Agent-Research/regenrequest-v0-gated-subgraph-determinism-research-2026-03-22.md]]** — field sketch, P1–P6 table, **2.2.2** / **3.1.1** coupling, **D-027** stack-agnostic CRDT/event-sourcing analogies (non-binding).
+- **Prior:** [[Ingest/Agent-Research/phase-3-2-1-dm-override-vs-regeneration-gates-synthesis-2026-03-22]] — channel split and fail-closed taxonomy seed.
+
+## Tasks
+
+- [x] Draft `RegenRequest_v0` schema row + P1–P6 precondition table (this note)
+- [x] Document ordering vs **`StableMergeKey_v0`** + regen-before-merge policy (sketch above)
+- [ ] Freeze `reason_code` rows in **2.2.1** wiki + CI registry — **BLOCKED_ON D-020** + **D-041** reconcile; pairs with **3.2.1** registry table
+- [ ] Stub golden regen vectors — **BLOCKED_ON D-032** (replay header) + **3.1.1** **`replay_row_version`** coordination
+
+## Related
+
+- Parent secondary: [[phase-3-2-dm-overwrite-regeneration-gates-roadmap-2026-03-21-2347]]
+- Prior tertiary: [[phase-3-2-1-dm-override-intent-envelope-and-regeneration-gate-taxonomy-roadmap-2026-03-22-0210]]
