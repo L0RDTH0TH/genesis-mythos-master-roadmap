@@ -1,0 +1,11 @@
+---
+description: "PARA + Zettel ingest pipeline (Phase 1 propose + Decision Wrapper, Phase 2 apply-mode) moved to IngestSubagent. This file kept for rollback/reference."
+globs: []
+alwaysApply: false
+---
+
+# PARA-Zettel-Autopilot — superseded by IngestSubagent
+
+- **Default handler**: Full-autonomous-ingest (confidence bands, Cursor-agent direct move, Decision Wrapper creation, apply-mode) is executed by the **IngestSubagent** ([agents/ingest.mdc](.cursor/rules/agents/ingest.mdc)). Queue and direct triggers route to that rule.
+- **Rollback**: Restore full content from version control or backup to revert to this rule as handler.
+- **Reference**: [agents/ingest.mdc](.cursor/rules/agents/ingest.mdc), [Cursor-Skill-Pipelines-Reference](3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference.md).

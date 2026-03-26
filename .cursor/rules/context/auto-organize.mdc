@@ -1,0 +1,11 @@
+---
+description: "Organize behavior moved to OrganizeSubagent. ORGANIZE MODE is handled by agents/organize.mdc; this file kept for rollback/reference."
+globs: []
+alwaysApply: false
+---
+
+# Auto-organize (context rule) — superseded by OrganizeSubagent
+
+- **Default handler**: **ORGANIZE MODE**, **re-organize this note**, **classify and move**, etc. are executed by the **OrganizeSubagent** ([agents/organize.mdc](.cursor/rules/agents/organize.mdc)). Queue subagent dispatches here; FORCE-WRAPPER with source under 1/2/3 infers organize.
+- **Rollback**: Restore full content from version control to revert to this rule as handler.
+- **Reference**: [agents/organize.mdc](.cursor/rules/agents/organize.mdc), [Cursor-Skill-Pipelines-Reference](3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference.md).

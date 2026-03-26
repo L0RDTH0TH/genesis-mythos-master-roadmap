@@ -1,0 +1,9 @@
+---
+description: "DISTILL LENS handling moved to DistillSubagent. Set distill_lens and run pipeline via agents/distill.mdc; this file kept for rollback/reference."
+globs: []
+alwaysApply: false
+---
+
+# Auto-distill-perspective — superseded by DistillSubagent
+
+- **Default handler**: **DISTILL LENS: [angle]** is handled by **DistillSubagent** ([agents/distill.mdc](.cursor/rules/agents/distill.mdc)) — set distill_lens frontmatter/payload then run autonomous-distill. Rollback: restore full content from version control.

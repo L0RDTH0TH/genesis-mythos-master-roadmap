@@ -1,0 +1,159 @@
+---
+title: Nested Subagent Ledger Spec
+created: 2026-03-22
+tags: [second-brain, subagents, observability, roadmap]
+para-type: Resource
+status: active
+links:
+  - "[[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]]"
+  - "[[3-Resources/Second-Brain/Logs|Logs]]"
+---
+
+# Nested subagent ledger (spec)
+
+**Version:** `ledger_schema_version: 1`
+
+**Purpose:** Forensic, verbose trace of **Layer 2** nested `Task` calls (Validator, Internal Repair Agent, Research) and contract skips so operators can distinguish **Task tool rejection** (e.g. invalid `subagent_type`), **resource_exhausted**, **contract skip**, and **success** without inferring from missing validator files alone.
+
+**Normative for:** Every **queue-dispatched** Layer 2 pipeline subagent that may invoke nested helpers (**Validator**, **IRA**, **Research**): **`ROADMAP_MODE`**, **`RESUME_ROADMAP`**, **`INGEST_MODE`**, **`ARCHIVE MODE`**, **`ORGANIZE MODE`**, **`DISTILL_MODE`** / **`BATCH_DISTILL`**, **`EXPRESS MODE`** / **`BATCH_EXPRESS`**, **`RESEARCH_AGENT`** / **`RESEARCH_GAPS`**. On **every** final return for those modes, include a fenced YAML block **`nested_subagent_ledger:`** per this spec — **never omit** when claiming **Success** with **`little_val_ok: true`** (unless a documented exempt subcase below uses explicit **`not_applicable`** rows).
+
+**Exempt / explicit skip (still requires a ledger):** e.g. **Research** with **zero synthesized notes** — emit a single step with **`outcome: not_applicable`**, **`detail.reason_code: no_synthesis_skip_validator`**, and honest top-level flags; do **not** omit the block.
+
+**Full schema reference:** This note. **Queue / Watcher behavior:** [[.cursor/rules/agents/queue.mdc|queue.mdc]] (embed ledger in `Watcher-Result` `trace`; soft `Errors.md` when missing on gated success).
+
+---
+
+## Sanitization (`host_error_raw`)
+
+- Strip API keys, bearer tokens, long base64, and **optional** home-directory paths if your environment policy requires it.
+- Preserve **Cursor / tool verbatim text** otherwise (enum error messages, `resource_exhausted`, etc.).
+
+---
+
+## Top-level object (`nested_subagent_ledger`)
+
+| Field | Type | Required |
+|-------|------|----------|
+| `ledger_schema_version` | int | yes (currently `1`) |
+| `pipeline` | string | yes — effective queue mode string, e.g. `ROADMAP_MODE` \| `RESUME_ROADMAP` \| `INGEST_MODE` \| `ARCHIVE MODE` \| `ORGANIZE MODE` \| `DISTILL_MODE` \| `BATCH_DISTILL` \| `EXPRESS MODE` \| `BATCH_EXPRESS` \| `RESEARCH_AGENT` \| `RESEARCH_GAPS` |
+| `params_action` | string | yes — for Roadmap: effective action after smart-dispatch; for other pipelines: use **`-`** or the canonical mode / sub-action string when applicable |
+| `material_state_change_asserted` | `true` \| `false` \| `unknown` | yes |
+| `little_val_final_ok` | boolean | yes |
+| `little_val_attempts` | int | yes |
+| `ira_after_first_pass_effective` | boolean | yes |
+| `nested_cycle_applicable` | boolean | yes |
+| `steps` | array of step records | yes — ordered by execution |
+
+---
+
+## Step record (`steps[]`)
+
+| Field | Type | Required |
+|-------|------|----------|
+| `step` | string | yes — stable id (see below) |
+| `ordinal` | int | yes — 1-based |
+| `started_iso` | string | yes — UTC ISO8601 |
+| `ended_iso` | string | recommended |
+| `duration_ms` | int | optional |
+| `subagent_type` | string | yes — `research` \| `validator` \| `internal-repair-agent` \| `none` |
+| `task_tool_invoked` | boolean | yes |
+| `outcome` | string | yes — `invoked_ok` \| `skipped` \| `task_error` \| `not_applicable` \| `invoked_empty_ok` |
+| `host_error_raw` | string | when `outcome: task_error` |
+| `host_error_class` | string | when task_error — e.g. `invalid_enum`, `resource_exhausted`, `timeout`, `nested_task_unavailable`, `unknown` |
+| `handoff_summary` | object | recommended — see below |
+| `return_summary` | object | when `invoked_ok` or `invoked_empty_ok` — see below |
+| `report_path` | string | optional — `-` when none |
+| `detail` | object | yes — always; see below |
+
+### Stable `step` ids (non-exhaustive)
+
+- `research_pre_deepen` — nested Research before deepen (when applicable).
+- `chain_research_consumed` — research from chain hand-off (no separate Task).
+- `little_val_main` — structural little val for the run (skill; `subagent_type: none`).
+- `little_val_post_ira` — little val after IRA apply in nested cycle.
+- `little_val_driven_ira_N` — IRA on little-val failure path (N = 1..3 as applicable).
+- `nested_validator_first` — first nested Validator pass (e.g. `roadmap_handoff_auto`, `ingest_classification`, `distill_readability`, `research_synthesis`, etc.).
+- `ira_post_first_validator` — IRA after first nested validator when protocol runs.
+- `nested_validator_second` — second nested pass with `compare_to_report_path`.
+- `nested_cycle_exempt` — single row when entire nested Validator→IRA cycle is N/A with reason.
+- `nested_validator_skipped_material_gate` — little val ok but nested cycle skipped for material-update policy.
+
+### `handoff_summary` object
+
+- `chars` — approximate hand-off character count passed to `Task`.
+- `subagent_type_requested` — e.g. `validator`, `research`, `internal-repair-agent`.
+- `validation_type` — when validator (e.g. `roadmap_handoff_auto`).
+- `compare_to_report_path` — when second validator pass.
+- `linked_phase` — when research.
+- `model_passed_to_task` — Record what was passed to Cursor **Task**: **`omitted`** (no `model` key — parent session model), **`fast`** (`model: "fast"`), or the **explicit string** from Second-Brain-Config when supplied (e.g. validator). **Do not** use the literal `inherit` here as an API value — that string is invalid on Task calls (see Subagent-Safety-Contract § Cursor Task tool: `model` parameter).
+
+### `return_summary` object (by helper)
+
+- **Validator:** `severity`, `recommended_action`, `primary_code`, `report_path`.
+- **IRA:** `suggested_fixes_count`, `ira_report_path`, `status`.
+- **Research:** `synth_note_paths_count`, `injection_block_present` (bool).
+
+### `detail` object (always)
+
+- **`reason_code`** (machine): e.g. `contract_skip_material_gate`, `research_disabled_param`, `research_skipped_util_gate`, `legacy_clean_log_only_no_ira`, `little_val_failed_before_nested`, `task_enum_rejected`, `task_resource_exhausted`, `not_applicable_action`, `no_synthesis_skip_validator`, `ledger_invalid_invoked_ok_without_task`.
+- **`human_readable`** (1–3 sentences).
+- Optional: `contract_citation`, `inputs_considered` (paths[]), `follow_up_effect`.
+
+---
+
+## Attestation invariants (mandated nested helpers)
+
+These rules align the ledger with [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]]: Validator, IRA, and (when applicable) Research run as **nested Cursor `Task`** calls inside the pipeline subagent, not as silent “inline” simulation.
+
+**Mandated helper `step` ids** — when the row is **not** a documented skip or N/A path below, the pipeline **must** have invoked the **`Task`** tool for the matching helper (`subagent_type` on the step record should match):
+
+| `step` | Expected nested helper |
+|--------|-------------------------|
+| `nested_validator_first`, `nested_validator_second` | ValidatorSubagent (`validator`) |
+| `ira_post_first_validator` | Internal Repair Agent (`internal-repair-agent`) |
+| `research_pre_deepen` | ResearchSubagent (`research`) **only when** pre-deepen research is **attempted** this run and the run is **not** using chain hand-off consumables (use `chain_research_consumed` instead). |
+
+**Forbidden (invalid attestation):** `outcome` is `invoked_ok` or `invoked_empty_ok` **and** `task_tool_invoked: false` **for any mandated helper `step` above** when that step was **required** for the branch (e.g. top-level `nested_cycle_applicable: true` and the nested Validator→IRA cycle ran). Operators and Layer 1 strict gates must treat this as **non-compliant**, not success.
+
+**Allowed `task_tool_invoked: false` without `task_error`** for helper-shaped work only in **documented** cases:
+
+- **`chain_research_consumed`** — use this **`step` id** (not `research_pre_deepen`) when `dependency_consumables.research` from a chain hand-off was consumed without a separate Research `Task` in this run.
+- **`nested_validator_skipped_material_gate`**, **`nested_cycle_exempt`**, legacy IRA skip rows (`outcome: skipped` with e.g. `legacy_clean_log_only_no_ira`).
+- **`not_applicable`** / **`skipped`** with explicit `detail.reason_code` and optional `contract_citation`.
+
+**When nested `Task` cannot be invoked** (tool unavailable, enum rejection, timeout, etc.): use **`outcome: task_error`**, fill **`host_error_raw`** and **`host_error_class`** (e.g. `invalid_enum`, `resource_exhausted`, `nested_task_unavailable`, `unknown`). The pipeline **must not** return **Success** with **`little_val_ok: true`** if the safety contract still **required** that helper for this run and no valid exempt path applies.
+
+---
+
+## Run-Telemetry body (normative pipelines)
+
+In the **Run-Telemetry** note for the pipeline run (roadmap, ingest, archive, organize, distill, express, research), after the usual summary content, include:
+
+1. `## Nested subagent ledger`
+2. `### Summary` — bullets: counts of `task_error`, `skipped`, `invoked_ok`, `nested_cycle_applicable`.
+3. `### Steps (ordered)` — for each step, `#### {ordinal} — {step}` then bullet list of all non-empty fields (flatten nested objects).
+4. `### Raw YAML (copy-paste)` — fenced yaml with full top-level `nested_subagent_ledger` object. If body size is large, cap **only** this subsection at ~12k chars and set `truncated: true` in a footer line; **do not** truncate the `####` per-step sections first.
+
+---
+
+## Layer 1 `dispatch_ledger` (recommended)
+
+One record per Queue-initiated `Task` in the EAT-QUEUE run:
+
+- `ordinal`, `started_iso`, `ended_iso`
+- `role`: `dispatch_pipeline` \| `post_little_val_validator` \| `prompt_craft_a5b` \| `prompt_craft_a5d` \| `empty_queue_bootstrap`
+- `queue_entry_id`
+- `subagent_type_requested`
+- `outcome`: `invoked_ok` \| `task_error`
+- `host_error_raw`, `host_error_class` when failed
+- Optional: `pipeline_return_excerpt` (first ~500 chars) or `return_had_nested_ledger: true`
+
+---
+
+## Changelog
+
+| Version | Date | Change |
+|---------|------|--------|
+| 1 | 2026-03-22 | Initial schema (roadmap-first). |
+| 2 | 2026-03-21 | Normative scope extended to all queue-dispatched pipelines using nested helpers; `pipeline` / `params_action` rules; `no_synthesis_skip_validator`; Run-Telemetry for all normative pipelines. |
+| 3 | 2026-03-21 | **Attestation invariants:** forbidden `invoked_ok` / `invoked_empty_ok` with `task_tool_invoked: false` on mandated helper steps; `chain_research_consumed` vs `research_pre_deepen`; `ledger_invalid_invoked_ok_without_task`, `nested_task_unavailable`; Layer 1 semantic gate (see queue.mdc A.5 b0 iii). |

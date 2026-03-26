@@ -1,0 +1,11 @@
+---
+description: "Archive behavior moved to ArchiveSubagent. ARCHIVE MODE is handled by agents/archive.mdc; this file kept for rollback/reference."
+globs: []
+alwaysApply: false
+---
+
+# Auto-archive (context rule) — superseded by ArchiveSubagent
+
+- **Default handler**: **ARCHIVE MODE**, **archive this note**, **send to Archives**, **move completed to 4-Archives** are executed by the **ArchiveSubagent** ([agents/archive.mdc](.cursor/rules/agents/archive.mdc)). Queue subagent dispatches here.
+- **Rollback**: Restore full content from version control to revert to this rule as handler.
+- **Reference**: [agents/archive.mdc](.cursor/rules/agents/archive.mdc), [Cursor-Skill-Pipelines-Reference](3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference.md).

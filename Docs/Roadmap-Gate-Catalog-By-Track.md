@@ -1,0 +1,55 @@
+---
+title: Roadmap gate catalog by track (conceptual vs execution)
+created: 2026-03-26
+tags: [second-brain, roadmap, gates, conceptual, execution]
+para-type: Resource
+status: active
+links:
+  - "[[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]"
+  - "[[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]"
+  - "[[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Spec|Validator-Tiered-Blocks-Spec]]"
+---
+
+# Roadmap gate catalog by track
+
+## Purpose
+
+**Conceptual** and **execution** roadmaps answer different questions. Validators, Layer 1 repair policy, and anti-spin **`gate_block_signal`** must not treat **execution-only** debt as a hard failure on a **conceptual** track. This note lists gate families per track. Canonical resolution: [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § **`effective_track` resolution**.
+
+**`gate_catalog_id`:** Use string **`conceptual_v1`** or **`execution_v1`** in continuation telemetry when logging which catalog applied.
+
+---
+
+## Conceptual track (`effective_track === conceptual`)
+
+**Goal:** Coherent map, stable **design** decisions in natural language, no fatal contradictions, outline safe to resume and **ready for handoff** per [[3-Resources/Second-Brain/Docs/Conceptual-Execution-Handoff-Checklist|Conceptual-Execution-Handoff-Checklist]]. **Design authority** for *what* to build lives on conceptual + `decisions-log` conceptual sections — see [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] Definitions.
+
+| Gate family | Examples | Validator / queue treatment |
+|-------------|----------|------------------------------|
+| **Coherence** | `contradictions_detected`, `incoherence`, `state_hygiene_failure` (stale cursor vs workflow_state, narrative contradicts frontmatter) | **Hard block** allowed per Validator-Tiered-Blocks-Spec; Layer 1 may append **recal** / **handoff-audit** repair lines. |
+| **Decision hygiene** | Open critical decisions, missing decisions-log anchors for claimed picks | **`needs_work`** / **`medium`**; optional wrapper. |
+| **Execution-deferred** | `missing_roll_up_gates`, REGISTRY-CI / HR≥93 / rollup PASS / junior handoff bundle / registry row completion | **Informational only** on conceptual: report as **`needs_work`** or **`log_only`** with **`severity: medium`** or **`low`** — **do not** use these as sole drivers for **`block_destructive`** or **`high`**. Conceptual track **never** hard-fails completion solely on these. Layer 1 **must not** auto-append **A.5b** **`recal`** / **`handoff-audit`** repair lines when the post–little-val **effective primary** is only in **`conceptual_skip_auto_repair_primary_codes`** ([[3-Resources/Second-Brain-Config|Second-Brain-Config]] § **`queue.conceptual_skip_auto_repair_primary_codes`**) and no true block code fired. |
+
+### Verbose logging (conceptual)
+
+Execution-deferred and advisory signals **must** be logged verbosely for traceability: **continuation** telemetry (see [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]), **`workflow_state`** ## Log **Status / Next** (advisory text), nested **`roadmap_handoff_auto`** report paths under **`.technical/Validator/`**, and optional **Watcher-Result** / **Errors.md** lines when a consumer needs visibility. Logging **does not** imply a hard gate on conceptual.
+
+---
+
+## Execution track (`effective_track === execution`)
+
+**Goal:** Delegatable work, registry/CI-shaped evidence where applicable, handoff bundles, roll-up closure.
+
+| Gate family | Examples | Treatment |
+|-------------|----------|-----------|
+| **Roll-up / registry** | `missing_roll_up_gates`, REGISTRY-CI HOLD, HR &lt; min_handoff_conf | **`needs_work`** minimum; may escalate per Validator-Tiered-Blocks-Spec when execution claims “done”. |
+| **Handoff** | Junior handoff bundle, acceptance criteria, WBS | Standard **`roadmap_handoff_auto`** / **hand-off-audit** behavior. |
+| **Coherence** | Same as conceptual | **Hard block** when true block codes apply. |
+
+---
+
+## Cross-references
+
+- [[.cursor/rules/agents/validator.mdc|validator.mdc]] — **`roadmap_handoff_auto`** branch with **`effective_track`**.
+- [[.cursor/rules/agents/queue.mdc|queue.mdc]] — **A.5b** conceptual skip, **`layer1_resolver_hints`**, **`record-outcome`** **`blocked_track`**.
+- [[scripts/queue-gate-compute.py|queue-gate-compute.py]] — **`gate_key`** includes track when **`queue.gate_key_includes_track`** is true.
