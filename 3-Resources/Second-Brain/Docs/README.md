@@ -38,6 +38,7 @@ This folder documents the **post-migration** system: Cursor’s native subagents
 | [Safety-Invariants](Safety-Invariants.md) | Backups, snapshots, confidence bands, Watcher, Errors |
 | [Subagent-Layers-Reference](Subagent-Layers-Reference.md) | Indexed layer model (L0–L2), helper family, conditional obligation, TodoWrite |
 | [Prompt-Craft-Subagent](Prompt-Craft-Subagent.md) | Machine recovery queue crafting (`Task(prompt_craft)`); not the question-led crafter |
+| [Entire-System-Reference](Entire-System-Reference.md) | Full-system canonical contract: funnels, queues, CODE PARA, roadmap, safety, observability |
 | [CODE-PARA-System](CODE-PARA-System.md) | Canonical CODE lane: PARA mapping, queue routing, safety gates |
 | [Roadmapping-System](Roadmapping-System.md) | Canonical roadmap lane: setup/resume, dual-track, state authority |
 | [Queue-Continuation-Spec](Queue-Continuation-Spec.md) | Machine-readable `queue_continuation` + `queue-continuation.jsonl`; empty-queue bootstrap (config-gated) |
@@ -64,6 +65,7 @@ This folder documents the **post-migration** system: Cursor’s native subagents
 | User flows (EAT-QUEUE, Decision Wrappers, roadmap resume, **Prompt Crafter**) | [User-Flows/](User-Flows/) |
 | CODE automation model (PARA + queue + guardrails) | [CODE-PARA-System](CODE-PARA-System.md) |
 | Roadmap automation model (setup/resume + dual track) | [Roadmapping-System](Roadmapping-System.md) |
+| Full-system canonical model (all lanes + orchestration + safety) | [Entire-System-Reference](Entire-System-Reference.md) |
 | **Backup and restore** (BACKUP_DIR, snapshots, retention, restore) | [Operations/Backup-and-Restore](Operations/Backup-and-Restore.md) |
 | **Logs and observability** (log locations, Backup-Log, rotation) | [Operations/Logs-and-Observability](Operations/Logs-and-Observability.md) |
 | **Errors and recovery** (Error Protocol, Errors.md, recovery) | [Operations/Errors-and-Recovery](Operations/Errors-and-Recovery.md) |

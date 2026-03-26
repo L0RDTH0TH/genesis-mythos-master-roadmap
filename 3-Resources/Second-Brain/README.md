@@ -7,11 +7,80 @@ status: active
 links: ["[[Resources Hub]]"]
 ---
 
-# Second Brain Backbone
+**TL;DR** — Control center for the Second Brain automation stack. Start with **Prompt-Crafter** (“We are making a CODE/ROADMAP prompt”) or use the Quick-command section; expand the doc callouts below for Rules, Pipelines, Logs, and key references. Dashboard: [[3-Resources/Vault-Change-Monitor|Vault-Change-Monitor]]; audit: [[3-Resources/Second-Brain/System-Audit-Report-2026-03-12|System-Audit-Report-2026-03-12]].
 
-Backbone and reference for the Second Brain automation stack. This folder holds consolidated documentation for rules, skills, pipelines, plugins, MCP tools, configs, and parameters.
+---
 
-## Documentation index
+## Quick-command (copy-paste)
+
+| Trigger | What runs |
+|---------|-----------|
+| **INGEST MODE** | full-autonomous-ingest on Ingest/ |
+| **EAT-QUEUE** | Step 0 wrappers first, then prompt-queue.jsonl by mode |
+| **DISTILL MODE** | autonomous-distill |
+| **EXPRESS MODE** | autonomous-express |
+| **ARCHIVE MODE** | autonomous-archive |
+| **ORGANIZE MODE** | autonomous-organize |
+| **ROADMAP MODE** | Setup only (Phase 0 + roadmap-generate-from-outline) |
+| **Resume roadmap** / **RESUME-ROADMAP** | Single continue (deepen default) |
+| **We are making a prompt** | Question-led Prompt-Crafter (CODE or ROADMAP) |
+
+---
+
+## Major docs (expand to open)
+
+> [!abstract]- **Rules** — Trigger → rule map, always + context
+> [[3-Resources/Second-Brain/Rules|Rules]] — Always-applied and context (triggered) rules; full text in `.cursor/rules/`.
+
+> [!abstract]- **Pipelines** — Trigger → pipeline, snapshot triggers, EAT-QUEUE flow
+> [[3-Resources/Second-Brain/Pipelines|Pipelines]] — Trigger → pipeline, Decision Wrappers, confidence and safety.
+
+> [!abstract]- **Cursor-Skill-Pipelines-Reference** — Canonical pipeline order and skills
+> [[3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference|Cursor-Skill-Pipelines-Reference]] — Skill slots, snapshot triggers, apply-from-wrapper.
+
+> [!abstract]- **Logs** — Where each pipeline logs
+> [[3-Resources/Second-Brain/Logs|Logs]] — Ingest-Log, Distill-Log, Errors.md, Vault-Change-Monitor.
+
+> [!abstract]- **Parameters** — Confidence bands, RESUME-ROADMAP params
+> [[3-Resources/Second-Brain/Parameters|Parameters]] — Bands, queue defaults, context-tracking, research params.
+
+> [!abstract]- **Queue-Sources** — prompt-queue.jsonl vs Task-Queue.md
+> [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] — Mode → file, validation, remove-stale on RESUME-ROADMAP append.
+
+> [!abstract]- **Vault-Layout** — PARA folders, protected paths
+> [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] — Folder structure, Ingest/Decisions, .technical.
+
+> [!abstract]- **Backbone** — System flow and safety
+> [[3-Resources/Second-Brain/Backbone|Backbone]] — Stack, invariants, multi-run roadmap.
+
+> [!abstract]- **Subagents / post-migration docs** — Architecture, pipelines, rules, user flows
+> [[3-Resources/Second-Brain/Docs/README|Docs/README]] — Subagent architecture, delegation, Queue pipeline, EAT-QUEUE flow, Prompt Crafter flow; single entry point for post-migration docs under `Docs/`.
+
+> [!abstract]- **CODE PARA and Roadmapping systems** — Canonical system overviews
+> [[3-Resources/Second-Brain/Docs/CODE-PARA-System|Docs/CODE-PARA-System]] and [[3-Resources/Second-Brain/Docs/Roadmapping-System|Docs/Roadmapping-System]] — concise references for CODE lane PARA routing and roadmap multi-run system behavior.
+
+> [!abstract]- **Entire system reference** — Full canonical contract in one document
+> [[3-Resources/Second-Brain/Docs/Entire-System-Reference|Docs/Entire-System-Reference]] — unified documentation for funnels, queues, CODE PARA pipelines, roadmap lane, safety gates, logs, and recovery.
+
+> [!abstract]- **Backup and restore** — Single reference for backups, snapshots, retention, RESTORE MODE
+> [[3-Resources/Second-Brain/Docs/Operations/Backup-and-Restore|Docs/Operations/Backup-and-Restore]] — BACKUP_DIR, SNAPSHOT_DIR, ensure_backup vs create_backup, per-change/batch, snapshot-sweep, restore flow, Restore-Queue.
+
+> [!abstract]- **Where to find** — Index of all docs (config, MCP, queue, logs, backup, errors, triggers)
+> [[3-Resources/Second-Brain/Docs/Reference/Where-to-Find|Docs/Reference/Where-to-Find]] — One place to find any documented topic; no “missing doc” — search the haystack from here.
+
+---
+
+## Recent activity (Dataview)
+
+Use **Vault-Change-Monitor** as the live dashboard. Example queries (run in Obsidian with Dataview):
+
+- **Recent Ingest**: `TABLE file.mtime as "Time", excerpt FROM "3-Resources/Ingest-Log.md" LIMIT 10`
+- **Recent errors**: `LIST FROM "3-Resources/Errors" LIMIT 5`
+- **Pending wrappers**: `LIST FROM "Ingest/Decisions" WHERE !processed`
+
+---
+
+## Documentation index (full)
 
 - [[3-Resources/Second-Brain/Rules|Rules]] — Always-applied and context (triggered) rules map
 - [[3-Resources/Second-Brain/Skills|Skills]] — Skills by pipeline and slot
@@ -23,14 +92,29 @@ Backbone and reference for the Second Brain automation stack. This folder holds 
 - [[3-Resources/Second-Brain/Color-Coded-Highlighting|Color-Coded-Highlighting]] — How semantic highlighting links and relates ideas across projects (color key, highlight_key, color theory)
 - [[3-Resources/Second-Brain/Parameters|Parameters]] — Confidence bands, queue modes, log format
 - [[3-Resources/Second-Brain/Logs|Logs]] — Pipeline logs, Errors.md, observability
+- [[3-Resources/Second-Brain/Docs/Operations/Backup-and-Restore|Docs/Operations/Backup-and-Restore]] — Backups, snapshots, retention, RESTORE MODE, Restore-Queue
+- [[3-Resources/Second-Brain/Docs/Operations/Logs-and-Observability|Docs/Operations/Logs-and-Observability]] — Log locations, Backup-Log, rotation, Vault-Change-Monitor
+- [[3-Resources/Second-Brain/Docs/Operations/Errors-and-Recovery|Docs/Operations/Errors-and-Recovery]] — Error Handling Protocol, Errors.md structure, recovery
+- [[3-Resources/Second-Brain/Docs/Reference/Where-to-Find|Docs/Reference/Where-to-Find]] — Index: config, MCP, vault, queue, logs, backup, errors, triggers
 - [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] — Folder structure and exclusions
 - [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] — prompt-queue.jsonl vs Task-Queue.md
 - [[3-Resources/Second-Brain/Queue-Alias-Table|Queue-Alias-Table]] — command/trigger aliases → processor and mode
 - [[3-Resources/Second-Brain/Naming-Conventions|Naming-Conventions]] — Note and file naming (kebab-slug-YYYY-MM-DD-HHMM; date and time at end)
 - [[3-Resources/Second-Brain/Templates|Templates]] — Consistent formatting backbone
-- [[3-Resources/Second-Brain/Chat-Prompts|Chat-Prompts]] — Standardized Cursor chat prompt strings, templates, and validation
+- [[3-Resources/Second-Brain/Chat-Prompts|Chat-Prompts]] — Standardized Cursor chat prompt strings, question-led prompt crafting (CODE/ROADMAP kickoffs), templates, and validation
+- [[3-Resources/Second-Brain/Prompt-Crafter-Param-Table|Prompt-Crafter-Param-Table]] — Param table (question order, parentage, accepts_manual_text) for question-led prompt crafting
+- [[3-Resources/Second-Brain/Prompt-Crafter-Examples|Prompt-Crafter-Examples]] — Transcript-style question-led examples (CODE, ROADMAP, A/B/C, manual text phase)
+- [[3-Resources/Second-Brain/User-Questions-and-Options-Reference|User-Questions-and-Options-Reference]] — Every user-facing question and options in presentation order (question-led crafter, Decision Wrappers, Commander macro)
+- [[3-Resources/Second-Brain/Mobile-Migration-Spec|Mobile-Migration-Spec]] — Mobile = observe + fill Ingest only; laptop-only queue and crafting
 - [[3-Resources/Second-Brain/Testing|Testing]] — Automated tests (unit, integration, fixtures); how to run and add tests
 - [[3-Resources/Second-Brain/Backbone|Backbone]] — High-level narrative and system flow
+- [[3-Resources/Second-Brain/Docs/README|Docs/README]] — **Subagents / post-migration docs** (architecture, pipelines, rules, user flows; entry point for `Docs/`)
+- [[3-Resources/Second-Brain/Docs/CODE-PARA-System|Docs/CODE-PARA-System]] — Canonical CODE lane overview (PARA mapping, queue routing, safety gates)
+- [[3-Resources/Second-Brain/Docs/Roadmapping-System|Docs/Roadmapping-System]] — Canonical roadmap lane overview (setup/resume, dual-track, state authority)
+- [[3-Resources/Second-Brain/Docs/Entire-System-Reference|Docs/Entire-System-Reference]] — Full-system canonical reference (entry funnels, queues, CODE PARA, roadmap, safety, observability)
+- [[3-Resources/Second-Brain/Roadmap-Quality-Guide|Roadmap-Quality-Guide]] — Multi-run roadmap quality, confidence gate, RECAL-ROAD, one-shot deprecated
+- [[3-Resources/Second-Brain/Cursor-Agent-Ingest-Workflow|Cursor-Agent-Ingest-Workflow]] — Agent-output drop zone, direct move, tech_level
+- **Second-Brain-User-Flows/** — User flow diagrams (High/Mid/Detailed) and rules; Decision Wrapper, Step 0, re-try, phase-direction. question-led prompt crafter user flow and architecture diagrams (User-Flow-Prompt-Crafter-*, Prompt-Crafter-Structure-*) and related docs verified for consistency 2026-03-10.
 - **Post-process stabilizers (variance dampeners):** Low-variance post-AI steps (ingest re-rank + pad-to-7, distill short-note core bias + emoji fallback, archive confidence-floor, queue conf-conditional TASK-ROADMAP bump). See [[3-Resources/Second-Brain/Pipelines#Post-process stabilizers (variance dampeners)|Pipelines § Post-process stabilizers]] and [[3-Resources/Second-Brain/Backbone#Post-process stabilizers (variance dampeners)|Backbone]].
 - [[3-Resources/Deprecated-Vestigial-Audit|Deprecated-Vestigial-Audit]] — Audit of deprecated/vestigial logging, root files, and path references
 
@@ -45,7 +129,11 @@ Mermaid diagrams appear in **Backbone**, **Rules**, **Skills**, **Pipelines**, *
 
 ## Mental model in 60 seconds
 
-**New stuff** → put in Ingest/ → say **INGEST MODE** (or Process Ingest) → classify → enrich → distill → organize → hub/link → note lands in PARA (Projects, Areas, or Resources). **Maintenance** → open a note → say **DISTILL MODE**, **HIGHLIGHT PERSPECTIVE**, or **ARCHIVE MODE** → or run **EAT-QUEUE** to process the next queue entry.
+**Preferred path (Prompt-Crafter)** → when you want a safe, multi-step automation run, start with **“We are making a CODE prompt”** or **“We are making a ROADMAP prompt”** in Chat/Agent. The question-led Prompt-Crafter collects mode + params via Q&A, assembles a validated payload, appends it to the appropriate queue (prompt-queue.jsonl or Task-Queue.md), and EAT-QUEUE / PROCESS TASK QUEUE dispatches it through funnels and pipelines.
+
+**Direct/manual triggers (advanced)** → for quick runs, you can still say **INGEST MODE**, **DISTILL MODE**, **EXPRESS MODE**, **ARCHIVE MODE**, **EAT-QUEUE**, or **PROCESS TASK QUEUE**, but these are treated as **manual/advanced** entry points: they bypass Prompt-Crafter Q&A, assume more context, and are intended for trusted laptop usage only. They still obey core guardrails (backups, snapshots, confidence bands) and are routed via system funnels into the same pipelines.
+
+**New stuff** → put in Ingest/ → (preferred) craft an **INGEST MODE** entry via Prompt-Crafter → or say **INGEST MODE** (or Process Ingest) → classify → enrich → distill → organize → hub/link → note lands in PARA (Projects, Areas, or Resources). **Maintenance** → open a note → say **DISTILL MODE**, **HIGHLIGHT PERSPECTIVE**, or **ARCHIVE MODE** → or run **EAT-QUEUE** to process the next queue entry.
 
 ## Usage at a glance
 
@@ -66,6 +154,9 @@ Mermaid diagrams appear in **Backbone**, **Rules**, **Skills**, **Pipelines**, *
 | **EAT-QUEUE** | **Step 0:** Check approved wrappers (Ingest/Decisions/**) first — apply move, archive wrapper to 4-Archives/Ingest-Decisions/; then process prompt-queue.jsonl by mode; append Watcher-Result | Apply approved Decision Wrappers; then continue queue |
 | **ORGANIZE MODE** | autonomous-organize (re-classify and move in PARA) | Re-organize folder or note |
 | **EXPRESS MODE** | autonomous-express (related content, outline, CTA) | Prepare note for sharing |
+| **ROADMAP MODE**, **Resume roadmap** | Default: multi-run (Phase 0 bootstrap, distill per phase, conf ≥85% gate, recal when drift > 0.08). If state exists and in-progress/blocked: roadmap-resume → roadmap-generate-from-outline with resume_from. One-shot **deprecated** (use **ROADMAP-ONE-SHOT** if you must). Queue: RESUME-ROADMAP, RESUME-FROM-LAST-SAFE, RECAL-ROAD. **Mobile:** Avoid direct edits to roadmap-state.md frontmatter — use Commander macros. |
+
+> [!danger] **ROADMAP MODE is now multi-run only.** One-shot is deprecated and will not receive updates. Use **ROADMAP-ONE-SHOT** if you must. See [[3-Resources/Second-Brain/Roadmap-Quality-Guide|Roadmap-Quality-Guide]].
 
 **Roadmap seed:** Prefer the Project Master Goal note (filename contains `Master-Goal` or `MasterGoal` under `1-Projects/<project-id>/`); if multiple candidates, prefer highest `created` or `roadmap-seed: true`. See [[3-Resources/Second-Brain/Naming-Conventions|Naming-Conventions]].
 
@@ -85,6 +176,7 @@ See [[3-Resources/Second-Brain/Backbone#Key invariants / safety guarantees|Backb
 
 ## Changelog (doc updates)
 
+- **2026-03-08**: **Documentation audit (zero gaps):** Cursor-Skill-Pipelines-Reference: fixed stale `obsidian_propose_para_paths` → `propose_para_paths`. README index: added Roadmap-Quality-Guide, Cursor-Agent-Ingest-Workflow. Backbone links: same. Queue-Alias-Table: added RESUME-FROM-LAST-SAFE, NORMALIZE-MASTER-GOAL, SCOPING MODE. User flows verified current. **Follow-up audit:** Replaced remaining `obsidian_propose_para_paths` with `propose_para_paths` in Testing.md, Regression-Stability-Log.md, User-Flow-Rules-Mid-Level, Rules-Structure-Mid-Level, Prompt-Crafter-Structure-Detailed, PARA-Actionability-Rubric, System-Diagram (Mid/Detailed), Skills-Structure (High/Detailed), para-regression.md, test Mermaid files, System-Audit-Report. Added **Deprecated-Vestigial-Audit** stub at 3-Resources/Deprecated-Vestigial-Audit.md; doc covers folder blacklist, MCP naming, and where audits are recorded. **2026-03-11:** Audit reports (Flow-Graphs-Audit, Architecture-Graphs-Audit, System-Audit-Report-2026-03-06) moved to **4-Archives/Resources/Second-Brain-Audits/** — they are point-in-time audits, not evergreen documentation.
 - **2026-03-07**: **Documentation and user workflow Mermaids** updated to match current behavior: (1) **EAT-QUEUE Step 0 first** — always-check wrappers runs before reading prompt-queue.jsonl; apply approved → move note to approved_path, archive wrapper to 4-Archives/Ingest-Decisions/ (subfolders mirrored). (2) **Ingest Phase 1** — no move/rename in Phase 1; note stays in Ingest/ until user approves wrapper and runs EAT-QUEUE. (3) Pipelines.md: Queue processor summary, full ingest flowchart, and new "EAT-QUEUE flow (Step 0 before queue)" Mermaid. (4) Queue-Sources.md: Full queue processor flow Mermaid now starts with Step 0. (5) User-Flow-Diagram High/Mid/Detailed: Ingest Phase 1 vs 2, EAT-QUEUE what user gets, queue processing, and EAT-QUEUE Step 0 diagrams updated. (6) README: EAT-QUEUE trigger cheat sheet and "Note stays in Ingest" troubleshooting. (7) Backbone: Flow paragraph now states Step 0 runs first and wrapper archive path.
 - **2026-03-06**: **Second-Brain docs sync**: Fixed Cursor-Skill-Pipelines-Reference path (all links now use `3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference`). Reference doc: trigger table (ingest-processing, auto-archive, auto-garden-review, auto-curate-cluster), `propose_para_paths` (no obsidian_ prefix), new **Apply-from-wrapper (Step 0)** table including task-decision; Skill locations table extended (obsidian-snapshot, log-rotate, move-attachment-to-99, research-scope, distill/express-apply-from-wrapper, link-to-pmg-if-applicable). Parameters: added `task-decision` to wrapper_type. Backbone: added Cursor-Skill-Pipelines-Reference to links list.
 - **2026-03-07**: Integrated ghost folder sweep for archive via MCP tool. Skill **archive-ghost-folder-sweep** runs after log_action when notes were moved; uses **obsidian_remove_empty_folder** only (no shell rmdir). Folder ops group and descriptor in MCP-Tools; auto-archive Step 9 and Ghost folders subsection; Skills.md and pipeline reference updated.
