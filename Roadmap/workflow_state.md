@@ -25,6 +25,12 @@ iteration_guidance_ranges:
 chained_branch_count: 0
 last_ctx_util_pct: 89
 last_conf: 92
+roll_up_gates_checked: true
+gates_source_refs:
+  - "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Artifacts/rollup-gatechecklist-v0-evidence-index-2026-03-26.md"
+  - "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Artifacts/appendwitness-v0-outcome-matrix-2026-03-26.md"
+  - "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Artifacts/witnessrefhash-v0-registry-promotion-plan-2026-03-26.md"
+safety_gap_status: pending-verification
 workflow_log_authority: last_table_row
 ---
 
