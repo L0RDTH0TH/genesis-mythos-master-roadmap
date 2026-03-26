@@ -1,6 +1,6 @@
 ---
 title: Phase 3.1.7 — Phase 3.1 secondary closure rollup & advance readiness
-roadmap-level: tertiary
+roadmap-level: secondary
 phase-number: 3
 project-id: genesis-mythos-master
 status: active
@@ -65,6 +65,50 @@ links:
 
 - [ ] Operator: queue **`advance-phase`** (3.1 → 3.2) when accepting rollup, or **`deepen`** Phase **3.2** primary per dispatch.
 - [ ] After advance, reset `current_subphase_index` / `iterations_per_phase` semantics per **roadmap-advance-phase**.
+
+### Junior handoff — rollup evaluation interface (depth-3)
+
+**Inputs (read-only for junior):** Parent secondary [[phase-3-1-simulation-tick-scheduler-and-time-quanta-roadmap-2026-03-21-2346]] `### Tertiary roll-up (≥93 closure)` + this note’s **G-P3.1-\*** table + [[decisions-log]] rows **D-030–D-037**.
+
+**Procedure (vault-normative):**
+
+1. For each **Gate ID** row, open the **Evidence** wikilink tertiary and confirm the **named contract artifact** (section heading or fenced spec block) exists and is not contradicted by open **TODO** in that note’s normative slice.
+2. Record **PASS** only when the criterion text in this rollup matches what the tertiary actually claims; if the tertiary says **BLOCKED_ON_OPERATOR** or defers a field, the rollup row stays **PASS (contract)** but **`execution_handoff_readiness`** on this note remains the honest composite (**68** until golden rows land).
+3. **Do not** re-score **3.1.1–3.1.6** local `handoff_readiness` to 93 for advance; rollup **93** is the **vault gate** under **`handoff_gate: true`** per **D-029**.
+
+**Pseudocode — rollup consistency check (illustrative):**
+
+```text
+function verify_rollup_table(note_3_1_7, tertiaries[]) -> Report
+  for row in note_3_1_7.gates
+    doc = load(row.evidence_link)
+    assert row.criterion ⊆ doc.normative_keywords  // textual/traceability check
+    assert no_decision_conflict(doc, decisions_log.range("D-030","D-037"))
+  return Report(pass_count=6, execution_debt=note_3_1_7.execution_handoff_readiness)
+```
+
+### Advance-phase dry-run (3.1 → 3.2) — operator checklist
+
+When queueing **`RESUME_ROADMAP`** with **`action: advance-phase`** (after accepting this rollup):
+
+- Confirm **`handoff_readiness` ≥ `min_handoff_conf`** on **this** note (93) and that **`handoff_gate`** params are forwarded on the next **`deepen`** entries.
+- Ensure **roadmap-state** Phase 3 narrative lists **3.1** closure as **rollup-governed** (not per-tertiary re-score).
+- After advance, first **Phase 3.2** work should follow **`workflow_state`** / queue cursor (typically **3.2.x** tertiary or rollup per batch); do not assume **Phase 4** frontmatter without a dedicated **`advance-phase`** to macro Phase 4.
+
+### Execution debt tracker (repo/CI) — coordinated golden rows
+
+| Work stream | Owning tertiary anchors | Rollup impact if missing |
+| --- | --- | --- |
+| Replay header / **D-032** | [[phase-3-1-3-deterministic-pause-time-scale-sim-clock-coupling-roadmap-2026-03-22-0022]] + tick spine | EHR stays &lt; 93; **not** a HOLD row on **G-P3.1-\*** |
+| Merge matrix **D-036** | [[phase-3-1-5-deterministic-agency-slice-outcomes-mutation-ledger-replay-roadmap-2026-03-22-0045]] | Same |
+| Observable profile **D-037** | [[phase-3-1-6-tick-scoped-observable-bundle-post-apply-replay-bridge-roadmap-2026-03-22-0047]] | Same |
+| **G-P3.1-GOLDEN** (draft) | [[phase-3-1-1-deterministic-tick-epoch-and-hash-preimage-boundaries-roadmap-2026-03-22-0015]] vs **2.2.3** registry | Optional row until reconciled |
+
+### GMM-3317-DEEPEN — operator batch trace
+
+- **Queue:** `operator-deepen-phase3-3-1-rollup-gmm-20260323T233237Z` · **`idempotency_key`** `operator-batch-rollup-deepen-331-gmm-20260323T233237Z`
+- **Intent:** Retroactive **deepen** on rollup note while macro cursor may already sit in **Phase 4** in `workflow_state` — **does not** roll back `current_subphase_index` without an explicit **`advance-phase` / operator sync**.
+- **Snapshots:** [[Backups/Per-Change/20260323-234500-phase-3-1-7-pre-deepen-operator-3317.md.bak]] · [[Backups/Per-Change/20260323-234500-workflow-state-pre-deepen-gmm-operator-3317.md.bak]]
 
 ## Research integration
 
