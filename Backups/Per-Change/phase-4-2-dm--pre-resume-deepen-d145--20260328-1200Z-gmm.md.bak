@@ -1,0 +1,45 @@
+---
+title: Phase 4.2 — DM perspective read-model and rig contracts
+roadmap-level: secondary
+phase-number: 4
+project-id: genesis-mythos-master
+status: active
+priority: high
+progress: 0
+created: 2026-03-28
+tags: [roadmap, genesis-mythos-master, phase, perspective, dm, free-cam, orthographic]
+para-type: Project
+subphase-index: "4.2"
+links:
+  - "[[phase-4-perspective-split-and-control-systems-roadmap-2026-03-19-1101]]"
+  - "[[phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201]]"
+  - "[[decisions-log]]"
+  - "[[phase-3-4-5-living-world-to-perspective-handoff-bridge-roadmap-2026-03-22-1205]]"
+  - "[[phase-3-4-6-presentation-handoff-task-lanes-validation-harness-and-dm-promotion-roadmap-2026-03-22-1320]]"
+---
+
+## Phase 4.2 — DM perspective read-model and rig contracts (secondary)
+
+**Authority:** [[decisions-log]] **D-131** supersedes the **D-059** rule that DM shell **conceptual** work had to wait until after the **4.1** spine. **4.1** stays **player-first only**; **4.2** is the **sibling** home for DM design.
+
+**Pattern backbone:** Mirror **4.1** — committed sim observables and tick commits as the **read-model** source; presentation and rigs are **query-side**; **no** mutation path from DM presentation/tooling into **`AgencySliceApplyLedger_v0`** (same CQRS discipline as **4.1**).
+
+### Objectives (opening tranche)
+
+- Draft **DM-specific** presentation read-models for **free-cam** and **orthographic tabletop** modes (naming, inputs vs committed state, what is replay-relevant vs UX-only per **D-027**).
+- Specify **mode transition / interpolator** contract at the **presentation** boundary (aligned with master goal: smooth switches without breaking decision flow).
+- Cross-link **3.4.5** / **3.4.6** DM promotion hints (**`ToolActionQueue_v0`**, **T-DM-P01–P05**) into checkable WBS-style leaves (IDs to be assigned on deepen).
+- Explicit **non-claims:** literal replay columns, golden rows, and registry CI remain gated on **D-032** / **D-043** the same way as **4.1**.
+
+### Interface table (v0 — stub)
+
+| Artifact | Role | Notes |
+| --- | --- | --- |
+| `DmPresentationViewState_v0` (working name) | DM FOV / mode / tooling hooks | Split or facet **free-cam** vs **orthographic**; TBD on deepen |
+| `DmCameraBinding_v0` (working name) | Rig ↔ world anchor for DM modes | Replay-relevant fields TBD with **CameraBinding_v0** parity |
+| Mode transition envelope | Interpolation targets + easing profile ids | UX vs replay split per **4.1** precedent |
+
+### Next steps
+
+- Deepen this note using **[[phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201]]** section structure (objectives, WBS, risks, junior checklist).
+- Keep **primary** Phase 4 checklist and **G-P4-DM-SHELL** row on [[phase-4-perspective-split-and-control-systems-roadmap-2026-03-19-1101]] in sync with this file.

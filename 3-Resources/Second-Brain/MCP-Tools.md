@@ -7,6 +7,10 @@ status: active
 links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 ---
 
+**TL;DR** — Obsidian MCP server **obsidian-para-zettel-autopilot**; tool names and params match descriptors in `mcps/user-obsidian-para-zettel-autopilot/tools/*.json`. Core: read/update/move/classify; Backup: create_backup, ensure_backup before destructive; dry_run before move_note; para-type/project-id/status set after move.
+
+---
+
 # Second Brain MCP Tools
 
 Server: **obsidian-para-zettel-autopilot** (configured in `~/.cursor/mcp.json`; descriptors in project `mcps/user-obsidian-para-zettel-autopilot/tools/*.json`). **Tool names and parameters below match those descriptors;** for full schemas (arguments, types), read the corresponding `*.json` file.
@@ -37,6 +41,44 @@ Server: **obsidian-para-zettel-autopilot** (configured in `~/.cursor/mcp.json`; 
 - **obsidian_remove_empty_folder**: `folder_path` (required, vault-relative); `dry_run` (default true — report effects only; always dry_run first, then commit with dry_run: false if OK); `recursive` (default false). Server enforces empty-check and blacklist (PARA roots, Templates, Backups, etc.). Used by archive-ghost-folder-sweep; extensible to other pipelines.
 
 **Full parameter and return schemas:** See `mcps/user-obsidian-para-zettel-autopilot/tools/<tool_name>.json` for each tool.
+
+## Queue JSONL — pre-append validation (PromptCraft / Layer 1)
+
+**Not an MCP tool:** Shallow validation **before** Layer 1 appends lines produced by **PromptCraftSubagent** (when **Second-Brain-Config** `recovery_pre_append_lint_enabled` is true). For each suggested line:
+
+1. Parse as single-line JSON; reject if parse fails.
+2. Require string **`mode`** present and in the known mode set per [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] (after normalization).
+3. If **`params`** present, require object type; run the same param contract checks as EAT-QUEUE pre-dispatch where applicable ([[3-Resources/Second-Brain/MCP-Tools|MCP-Tools]] + Queue-Sources).
+4. Reject lines that reuse the **same `id`** as the triggering queue entry (fresh `id` required).
+
+Failures add synthetic entries to PromptCraft-equivalent **`lint_blockers`** and **must not** be appended. Full behavioral spec: [[3-Resources/Second-Brain/Docs/Prompt-Craft-Subagent|Prompt-Craft-Subagent]].
+
+**Optional queue-line keys (Layer 1 A.4c / A.5.0, not MCP tools):** Producers may set **`queue_agent_may_skip_if_stall`** (bool), **`params.queue_blocking_repair`** (bool), and **`params.stall_skip_confirmed`** (bool) on **`prompt-queue.jsonl`** lines per [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Roadmap multi-dispatch / Stall skip. These affect dispatch order and stall-skip policy only; they do not change MCP tool schemas.
+
+**Research agent (external fetch):** The **research-agent-run** skill uses a **vault-first** step (Obsidian MCP: list_notes, read_note, global_search for project-linked context), then **raw-index lookup** (read `Ingest/Agent-Research/Raw/Raw-Index.md` for vault-first at fetch), then **fetch**:
+
+- **Discovery:** web_search (Cursor built-in); **Semantic Scholar MCP** (when `semantic-scholar` in research_tools; academic or paper-suited queries); **arXiv MCP** (when `arxiv` in research_tools); **Crossref** or academic-search aggregator (when `crossref` in research_tools). Limit total discovery calls (e.g. 3–5); respect rate limits per [[3-Resources/Second-Brain/Research-Stack-Rate-Limits|Research-Stack-Rate-Limits]].
+- **Extraction:** **Firecrawl MCP (self-hosted)** when `firecrawl` in research_tools; on missing/error → **Browser MCP or browser-tools** when `browser` in research_tools; on missing/error → **mcp_web_fetch**. If all fail for a URL, keep snippet and note "full page unavailable". No BrowserAct.
+- **Academic:** When run is academic, prefer Semantic Scholar / arXiv / Crossref when in research_tools; else web_search with `site:arxiv.org` / `site:pubmed.ncbi.nlm.nih.gov` etc.
+- **Gap-fill mode:** when **params.gaps** is present (from roadmap-deepen or Commander "Queue Research: Gaps"), ~70% of queries target gaps; returns structured **gap_fills** (gap_id, filled_markdown, sources, fill_conf) for inline injection. Optional **research_verify** re-queries 1–2 sources; discard fill if confidence below 68%.
+- **Raw storage and vault-first at fetch:** When **store_raw** is true (default), the skill writes raw scraped content to `Ingest/Agent-Research/Raw/` (one note per run with sections `## Source: <url>`) and updates **Raw-Index.md** (table `| url | path | date |`). Before fetching a URL, the skill checks the index; if the URL is present, it reads the raw note via **obsidian_read_note** and uses that content instead of re-fetching. Uses **obsidian_ensure_structure**, **obsidian_update_note** / create for Raw/ and index.
+- **workflow_state:** roadmap-deepen writes **last_ctx_util_pct** to workflow_state frontmatter after each Log append; optional **injected_research_paths** persisted when RESEARCH-AGENT completes.
+
+Setup requires the MCPs below in Cursor config (`~/.cursor/mcp.json` or project MCP). See **Research stack setup** below and [[3-Resources/Second-Brain/Research-Stack-Rate-Limits|Research-Stack-Rate-Limits]]. See [[.cursor/skills/research-agent-run/SKILL]] and [[Parameters#Research (pre-deepen)]].
+
+### Research stack setup (install and configure each MCP)
+
+Document and perform setup so the new tools are available. Add each server to Cursor `~/.cursor/mcp.json` (or project MCP config).
+
+| MCP | Install | Config | Verify |
+|-----|---------|--------|--------|
+| **Semantic Scholar MCP** | Clone/install from a chosen repo (e.g. `akapet00/semantic-scholar-mcp`); run via uvx/Python/Docker per repo README. | Add server block to mcp.json with `command` (and args) or `url` if stdio/server. Optional env `SEMANTIC_SCHOLAR_API_KEY` for higher rate limit (100 req/s vs 100/5min). | Tool(s) such as `search_paper` appear in Cursor and respond. |
+| **arXiv MCP** | e.g. `andybrandt/mcp-simple-arxiv`; run via uvx/pip/npx/Docker per repo. | Add to mcp.json with repo's `command` (and working directory if needed). No API key. | Search tool returns arXiv results. |
+| **Crossref (or Academic Search MCP)** | Standalone: install Crossref MCP per repo; set polite pool (mailto in request). Aggregator: install "Academic Search MCP" that aggregates Semantic Scholar + Crossref. | Add to mcp.json; document which tools map to Crossref. | DOI lookup or list/query tools work. |
+| **Firecrawl MCP (self-hosted)** | Run Firecrawl backend locally (per Firecrawl self-host/Docker docs); install **firecrawl/firecrawl-mcp-server** (or equivalent) pointed at local instance. | Add to mcp.json with `command` (and env for Firecrawl URL if needed). No hosted credits. | Scrape (or equivalent) tool returns content for a test URL. |
+| **Browser MCP or browser-tools** | Pick one: Browser MCP (browsermcp.io / GitHub) or **AgentDeskAI/browser-tools-mcp** per README. Ensure browser runtime (e.g. Chromium) available. | Add to mcp.json with repo's `command`. | Navigate/scrape can fetch a page. Document chosen option so skill references correct tool names. |
+
+**Tool names per server:** Document in this file or in the skill the exact tool names each server exposes (e.g. `search_paper`, `scrape`, `browser_navigate`) so research-agent-run can call them. Link to [[3-Resources/Second-Brain/Research-Stack-Rate-Limits|Research-Stack-Rate-Limits]] for operator awareness.
 
 **Session continuity (git_diff_hint):** When the vault has `.git`, the agent may use **code_execution** (read-only) to run `git diff --summary` (or `git log -3 --oneline`) and inject a short summary into `params.git_diff_hint` when building re-try or TASK-TO-PLAN-PROMPT queue payloads. No new MCP tool; document in Queue-Sources and Logs. If no .git or command fails, fallback to obsidian_list_notes on Versions/ or log to Errors.md.
 

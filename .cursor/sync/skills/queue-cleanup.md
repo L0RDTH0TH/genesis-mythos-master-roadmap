@@ -19,6 +19,7 @@ description: Sweep queue entries that failed validation or dispatch; auto-mark a
 3. **Append to Errors.md**: Append a short summary to **`3-Resources/Errors.md`** (create if missing), e.g.:
    - Heading: `### YYYY-MM-DD HH:MM — Queue cleanup`
    - One line: "Queue cleanup: N failed entries marked; see queue file." Optionally list requestIds or modes.
+   - No need for full Error Handling Protocol structure; this is an informational log for review.
 
 4. **Append analytics to Feedback-Log.md**: Append a line or short block to **`3-Resources/Feedback-Log.md`** (create if missing on first write). Include: timestamp, source: queue-cleanup, failed_count (or similar), optional refinement/merge stats (e.g. "N entries merged; overlap detection"). Enables MOC aggregation and evolution monitoring. See [Logs](3-Resources/Second-Brain/Logs.md) and [Feedback-Log](3-Resources/Feedback-Log.md).
 

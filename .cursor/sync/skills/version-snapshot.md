@@ -22,7 +22,7 @@ Version files are **new-file creates** (target path does not exist yet). The MCP
 
 ## Instructions
 
-1. **Read the note**: Use `obsidian_read_note` (path) to get full content (including highlights and structure).
+1. **Read the note**: Use `obsidian_read_note`(path) to get full content (including highlights and structure).
 
 2. **Ensure Versions folder**: Ensure `Versions/` exists under the note’s parent (e.g. `1-Projects/Project-X/Versions/`). Use `obsidian_ensure_structure` for the parent path if supported; otherwise the pipeline assumes the folder was created once.
 
@@ -31,11 +31,11 @@ Version files are **new-file creates** (target path does not exist yet). The MCP
    - **timestamp**: `YYYYMMDD-HHMMSS` (e.g. `20260225-120530`).
    - **version_path**: `<note_parent>/Versions/<original_slug>--<YYYYMMDD-HHMMSS>.md` (vault-relative).
 
-4. **Confidence gate**: Only write the version file if confidence for this step is **≥85%**. If <85%, skip the version write, log the skip in `Express-Log.md`, and continue the pipeline (related-content-pull, outline, CTA still run).
+4. **Confidence gate**: Only write the version file if confidence for this step is **≥85%**. If &lt;85%, skip the version write, log the skip in Express-Log.md, and continue the pipeline (related-content-pull, outline, CTA still run).
 
 5. **Create version file**: Use `obsidian_update_note(path: version_path, content: full_note_content, mode: "create")`. Preserve the exact note body and frontmatter. The server skips destination backup for `mode: "create"` and fails if the path already exists (timestamped names avoid that). On success, expect response like "✅ Note created (new path, no destination backup required)."
 
-6. **Log**: On success, include the version path in `obsidian_log_action` and in `Backup-Log.md`. On skip (confidence <85% or create failed), log with the reason; if create failed because path existed, use a fresh timestamp and retry once or log `#review-needed`.
+6. **Log**: On success, include the version path in `obsidian_log_action` and in Backup-Log.md. On skip (confidence &lt;85% or create failed), log with the reason; if create failed because path existed, use a fresh timestamp and retry once or log `#review-needed`.
 
 ## MCP tools
 
@@ -46,4 +46,3 @@ Version files are **new-file creates** (target path does not exist yet). The MCP
 ## Confidence gate
 
 **≥85%** for the version write. If below threshold, skip the version file creation and continue the rest of the express pipeline. System-level destructive actions (appends to the **source** note) still use the ≥85% rule and `obsidian-snapshot` per the pipeline reference.
-

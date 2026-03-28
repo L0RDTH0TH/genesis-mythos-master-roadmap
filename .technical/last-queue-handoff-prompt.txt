@@ -1,0 +1,50 @@
+## Queue dispatch — RoadmapSubagent (RESUME_ROADMAP / handoff-audit)
+
+**Vault root:** /home/darth/Documents/Second-Brain
+
+### Telemetry block
+- parent_run_id: 6d523fdf-bb00-4132-bb55-49d790da6057
+- queue_entry_id: repair-handoff-audit-gmm-20260324T103500Z
+- project_id: genesis-mythos-master
+- timestamp: 2026-03-24T20:13:55.000Z
+- pipeline_task_correlation_id: 4a86aa06-0163-46a0-8f65-12bfc6dbe636
+- layer0_dispatch_reference: 12cfbc4d-3c50-429c-be55-b2449f411997
+
+### Original queue entry (JSON)
+{
+  "id": "repair-handoff-audit-gmm-20260324T103500Z",
+  "mode": "RESUME_ROADMAP",
+  "source_file": "1-Projects/genesis-mythos-master/Roadmap/workflow_state.md",
+  "queue_priority": "repair",
+  "validator_repair_followup": true,
+  "params": {
+    "action": "handoff-audit",
+    "project_id": "genesis-mythos-master",
+    "roadmap_track": "conceptual",
+    "queue_next": true,
+    "enable_context_tracking": true,
+    "user_guidance": "Fresh restart queue item 1/3. Reconcile gate contradictions and roll-up gaps without closure inflation. Keep HR 92 < 93 and REGISTRY-CI HOLD explicit."
+  }
+}
+
+### Task
+Execute RESUME_ROADMAP for project genesis-mythos-master: action **handoff-audit**, **conceptual** track. Validator repair follow-up (queue_priority repair). Run hand-off-audit / roadmap pipeline per .cursor/agents/roadmap.md and queue params.
+
+### Invariants
+- Subagent-Safety-Contract return: status, little_val_ok, validator_context (roadmap_handoff_auto when applicable), nested_subagent_ledger.
+- Dual roadmap track: conceptual; respect frozen conceptual notes per vault rules.
+- queue_next true: emit queue_followups.next_entry when appropriate.
+
+### State files
+- 1-Projects/genesis-mythos-master/Roadmap/roadmap-state.md
+- 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md
+- Execution mirrors if present: roadmap-state-execution.md, workflow_state-execution.md
+
+### Serialism
+Layer 1 deferred other RESUME_ROADMAP lines for this project to next EAT-QUEUE.
+
+### Todo-orchestrator
+RoadmapSubagent phases per agents/roadmap.md; all completed or cancelled before Success.
+
+### Resolver
+roadmap_next_need_enabled in Config; **user params lock** action=handoff-audit and roadmap_track=conceptual — honor over generic resolver pivots.

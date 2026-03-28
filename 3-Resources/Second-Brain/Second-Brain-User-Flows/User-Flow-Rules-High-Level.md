@@ -15,6 +15,20 @@ This document describes the user’s path through the Second Brain from the **ru
 
 ## User starts a run (trigger → rules)
 
+```mermaid
+flowchart TD
+  Trigger["User trigger"]
+  Trigger --> Phrase["Phrase: INGEST MODE, DISTILL MODE, EAT-QUEUE, etc."]
+  Trigger --> Watcher["Watcher plugin signal"]
+  Trigger --> Commander["Commander or mobile toolbar"]
+  Phrase --> Rules["always-ingest-bootstrap, para-zettel-autopilot, auto-distill, auto-eat-queue, etc."]
+  Watcher --> Rules
+  Commander --> Queue["Add to queue"]
+  Queue --> EAT["User runs EAT-QUEUE"]
+  EAT --> Rules
+  Rules --> Pipeline["Pipeline runs; Step 0 then dispatch"]
+```
+
 - **User says a phrase in Cursor**  
   INGEST MODE, Process Ingest, run ingests → **always-ingest-bootstrap** and **para-zettel-autopilot** run the ingest pipeline (Phase 1: classify, enrich, distill, Decision Wrapper; no move yet).  
   DISTILL MODE, ARCHIVE MODE, EXPRESS MODE, ORGANIZE MODE → the matching **auto-distill**, **auto-archive**, **auto-express**, **auto-organize** context rule runs the corresponding pipeline.  
@@ -34,6 +48,18 @@ This document describes the user’s path through the Second Brain from the **ru
 
 ## Main gate: auto vs manual review (rules that enforce it)
 
+```mermaid
+flowchart TD
+  Conf["confidence-loops + pipeline rules"]
+  Conf --> High["High ≥85%: snapshot then destructive step"]
+  Conf --> Mid["Mid 68–84%: one refinement loop; preview/proposal"]
+  Conf --> Low["Low &lt;68%: proposal only; Decision Wrapper"]
+  High --> NoChoice["No user choice required"]
+  Mid --> Approve["User may approve or add feedback; re-run"]
+  Low --> Approve
+  Approve --> Gate["Commit only if post_loop_conf ≥85%"]
+```
+
 - **confidence-loops** (always) and each pipeline rule define three bands:
   - **High (≥85%)** — No user choice required. Rules require a per-change snapshot then the destructive step (move, rename, distill rewrite, etc.). **mcp-obsidian-integration** enforces backup and dry_run before move.
   - **Mid (68–84%)** — One refinement loop; optional async preview to Mobile-Pending-Actions. User may be presented with a preview or proposal; if they add approved: true or feedback and re-run, **guidance-aware** and **feedback-incorporate** apply; commit only if post_loop_conf ≥85%.
@@ -45,6 +71,18 @@ So: the user either sees nothing (high band), or sees a preview/proposal (mid/lo
 
 ## Ingest: Phase 1 vs Phase 2 (rules and user choice)
 
+```mermaid
+flowchart TD
+  Phase1["Phase 1: para-zettel-autopilot"]
+  Phase1 --> Wrapper["Decision Wrapper A–G under Ingest/Decisions/"]
+  Wrapper --> UserChoice["User checks A–G or 0; sets approved: true or re-wrap"]
+  UserChoice --> EAT["User runs EAT-QUEUE"]
+  EAT --> Step0["auto-eat-queue Step 0"]
+  Step0 --> Apply["Apply-mode: move/rename to approved_path"]
+  Step0 --> ReWrap["Re-wrap branch or re-try branch"]
+  Apply --> Phase2Done["Phase 2 complete; note in PARA"]
+```
+
 - **Phase 1** — **para-zettel-autopilot** (and ingest pre-step rules if non-MD in Ingest). Pipeline creates/refreshes a Decision Wrapper under Ingest/Decisions/ with options A–G (and optionally 0). **User is presented with:** the wrapper note; they must check one option A–G or 0 and set approved: true, or set re-wrap: true. No move/rename in Phase 1; that is by design in the rule.
 
 - **Phase 2 (apply-mode)** — Triggered when the user runs **EAT-QUEUE**. **auto-eat-queue** Step 0 runs first (always, before reading the queue): it finds wrappers with approved: true, re-wrap: true, or re-try: true. **feedback-incorporate** (skill) resolves approved_path, re-wrap intent, or re-try intent. If path chosen → apply-mode ingest (move/rename to approved_path) or phase-direction apply (provenance + comment guidance; wrapper → 4-Archives/Ingest-Decisions/Roadmap-Decisions/). If re-wrap → re-wrap branch (archive wrapper to Re-Wrap/, create new wrapper from Thoughts). If re-try (option R; roadmap/phase-direction only) → re-try branch (re-queue EXPAND-ROAD or TASK-TO-PLAN-PROMPT with guidance; wrapper archived to Roadmap-Decisions; cap re_try_max_loops). **User sees:** note in PARA and/or new wrapper, and a Watcher-Result line.
@@ -55,6 +93,16 @@ So: the user’s “I’m done choosing” action is “run EAT-QUEUE”; the ru
 
 ## EAT-QUEUE: what the user gets (rules involved)
 
+```mermaid
+flowchart LR
+  EAT["User says EAT-QUEUE"]
+  EAT --> Step0["Step 0: approved / re-wrap / re-try wrappers"]
+  Step0 --> Queue["Read queue; validate; dedup; sort"]
+  Queue --> Dispatch["Dispatch by mode"]
+  Dispatch --> WatcherResult["watcher-result-append: one line per request"]
+  WatcherResult --> UserSees["User sees Watcher-Result.md lines"]
+```
+
 - User says EAT-QUEUE or Process queue. **auto-eat-queue** runs.
 - Step 0 processes any approved or re-wrap wrappers (apply or re-wrap); then the rest of the queue is processed by mode (INGEST MODE, DISTILL MODE, TASK-COMPLETE, etc.).
 - **watcher-result-append** (always) appends one line per request to Watcher-Result.md.
@@ -63,6 +111,18 @@ So: the user’s “I’m done choosing” action is “run EAT-QUEUE”; the ru
 ---
 
 ## Safety invariants the user can rely on (rules)
+
+```mermaid
+flowchart TD
+  Inv1["No move without backup"]
+  Inv2["No move without dry_run true then false"]
+  Inv3["No default approved path; user must set approved: true"]
+  Inv4["Watcher never approves; only syncs when user set approved"]
+  Inv1 --> mcp["mcp-obsidian-integration"]
+  Inv2 --> mcp
+  Inv3 --> Pipelines["Pipelines + template"]
+  Inv4 --> Pipelines
+```
 
 - **No move without backup** — mcp-obsidian-integration: destructive or move steps require a recent backup (ensure_backup / create_backup).
 - **No move without dry_run first** — Same rule: every move_note at ≥85% is called with dry_run: true; effects are reviewed; then dry_run: false. The user can think of this as “the system never commits a move without a dry run.”

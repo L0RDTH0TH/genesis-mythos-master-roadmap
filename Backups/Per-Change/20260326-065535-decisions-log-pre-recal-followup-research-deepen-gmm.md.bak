@@ -1,0 +1,13 @@
+---
+title: Pre-change snapshot manifest (decisions-log)
+created: 2026-03-26
+tags: [backup, per-change, decisions-log, genesis-mythos-master]
+project-id: genesis-mythos-master
+queue_entry_id: followup-recal-post-research-deepen-gmm-20260326T064229Z
+parent_run_id: 05877e8c-943e-4192-86eb-9ffb67b45473
+pipeline_task_correlation_id: 13c407bf-664e-4d39-a7d5-499b159ec0fe
+---
+
+- Snapshot intent: pre-recal decision row append guard.
+- Target: `1-Projects/genesis-mythos-master/Roadmap/decisions-log.md`
+- Mutation scope: one bounded D-082 decision bullet append near latest decision block.

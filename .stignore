@@ -1,3 +1,54 @@
+// Second-Brain vault — Syncthing ignore patterns (last matching line wins).
+// Docs: https://docs.syncthing.net/users/ignoring.html
+
+// --- Existing (large / generated tool trees under Archives) ---
 4-Archives/mcp-server/
 4-Archives/mcp-server-cyanheads/
 
+// --- Version control (sync notes via Syncthing; use git per device or one “source” machine) ---
+.git/
+.git-clones/
+
+// --- Editor / agent local state (high churn, device-specific) ---
+.cursor/
+.vscode/
+
+// --- Obsidian UI state (classic Syncthing conflict source; settings/plugins stay synced) ---
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+
+// Uncomment if graph view keeps conflicting across devices:
+// .obsidian/graph.json
+
+// --- Local trash ---
+.trash/
+
+// --- Machine-only technical dir: ignore bulk, sync small queue/config files you may want on laptop+mobile ---
+.technical/**
+!.technical/README.md
+!.technical/prompt-queue.jsonl
+!.technical/prompt-queue.sample.jsonl
+!.technical/queue-continuation.jsonl
+!.technical/queue-gate-state.json
+!.technical/Resources Hub
+
+// Optional: also sync handoff logs (comment out the next line to stop syncing them)
+!.technical/task-handoff-comms.jsonl
+
+// Heavy / noisy under .technical — explicit re-ignore after exceptions above
+.technical/Run-Telemetry/**
+.technical/Validator/**
+.technical/Internal-Repair-Agent/**
+.technical/*.txt
+.technical/_*
+
+// --- OS junk ---
+**/.DS_Store
+**/Thumbs.db
+
+// --- In-vault snapshots (often large; keep in git/backup instead of every peer) ---
+// Uncomment if you do not want Per-Change / Batch snapshots replicated:
+// Backups/Per-Change/**
+// Backups/Batch/**

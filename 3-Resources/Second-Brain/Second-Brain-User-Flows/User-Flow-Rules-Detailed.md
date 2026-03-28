@@ -15,6 +15,18 @@ This document is the full breakdown of user choices and the **rules** that gover
 
 ## Decision Wrapper: full option set (rules)
 
+```mermaid
+flowchart TD
+  ParaZettel["para-zettel-autopilot creates/refreshes wrapper"]
+  ParaZettel --> Options["A–G and optionally 0, R"]
+  Options --> User["User: check A–G or 0 or R; set approved: true / re-wrap / re-try"]
+  User --> EAT["User runs EAT-QUEUE"]
+  EAT --> Step0["auto-eat-queue Step 0"]
+  Step0 --> Apply["Apply path"]
+  Step0 --> ReWrap["Re-wrap branch"]
+  Step0 --> ReTry["Re-try branch"]
+```
+
 - **Rules:** **para-zettel-autopilot** creates/refreshes the wrapper with A–G (and optionally 0 and R). **Pipelines.md** and template: no default approved_option or approved_path. **auto-eat-queue** Step 0 processes wrappers with approved: true, re-wrap: true, or re-try: true. **feedback-incorporate** (skill) prefers approved_path from frontmatter; fallback parse body for A–G; re-wrap: true or approved_option: 0 → no path (re-wrap branch); re-try: true or approved_option: R → re-try branch (re-queue with guidance; see below).
 
 - **User is presented with:** Options A, B, C, D, E, F, G (each a ranked PARA path; order is stabilizer-adjusted: re-rank by PARA-Actionability-Rubric v1.0 → semantic fit → path depth → alphabetize; exactly 7 options via pad-to-7 when MCP returns fewer). Option 0 (reject all), and **option R** (re-try with guidance — for roadmap/phase-direction wrappers only). When the stabilizer changed the order, wrapper has `heuristic_adjusted: true` and `heuristic_reason` for audit.
@@ -29,6 +41,17 @@ This document is the full breakdown of user choices and the **rules** that gover
 
 ## Confidence bands: high / mid / low (rules that enforce)
 
+```mermaid
+flowchart TD
+  Bands["confidence-loops + pipeline rules"]
+  Bands --> High["High ≥85%: snapshot then destructive step"]
+  Bands --> Mid["Mid 68–84%: one loop; async preview or in-run proposal"]
+  Bands --> Low["Low &lt;68%: proposal + Wrapper only"]
+  High --> Commit["dry_run then commit"]
+  Mid --> Approve["User approve/feedback; commit only if post_loop_conf ≥85%"]
+  Low --> Approve
+```
+
 - **Rules:** **confidence-loops** (always) + each pipeline rule (auto-distill, auto-archive, auto-express, auto-organize, para-zettel-autopilot for ingest).
 
 - **High (≥85%):** No user choice. **mcp-obsidian-integration** and pipeline rule: per-change snapshot then destructive action (move, rename, split, distill rewrite, append). dry_run: true then dry_run: false for every move_note.
@@ -40,6 +63,16 @@ This document is the full breakdown of user choices and the **rules** that gover
 ---
 
 ## Mid-band async preview (rules)
+
+```mermaid
+flowchart LR
+  MidBand["Mid-band: pipeline rule"]
+  MidBand --> Preview["Write preview to Mobile-Pending-Actions"]
+  Preview --> User["User: set approved: true or add feedback"]
+  User --> ReRun["Re-run EAT-QUEUE"]
+  ReRun --> feedback["feedback-incorporate"]
+  feedback --> Gate["Snapshot + commit if post_loop_conf ≥85%"]
+```
 
 - **Rules:** **confidence-loops** (async mid-band option); pipeline rules that implement the loop (auto-distill, auto-archive, etc.). Preview written to Mobile-Pending-Actions; **feedback-incorporate** loads approved/feedback on re-run.
 
@@ -53,6 +86,15 @@ This document is the full breakdown of user choices and the **rules** that gover
 
 ## Guidance-aware re-run (rules)
 
+```mermaid
+flowchart TD
+  Trigger["approved: true + user_guidance or queue prompt or #guidance-aware"]
+  Trigger --> guidance["guidance-aware loads guidance"]
+  guidance --> feedback["feedback-incorporate"]
+  feedback --> Pipeline["Pass to classify_para, subfolder-organize, etc."]
+  Pipeline --> Safety["Safety gates still apply; no override"]
+```
+
 - **Rules:** **guidance-aware** (always): trigger when approved: true + user_guidance present, or queue prompt + source_file, or #guidance-aware. Load guidance (cap 500 words); pass as soft hint to classify_para, subfolder-organize, name-enhance, distill_note, split_atomic. Optional guidance_conf_boost 0–20. Never override safety (backup, snapshot, confidence ≥85%). **feedback-incorporate** (skill) loads user_guidance or queue prompt and emits guidance for the pipeline.
 
 - **User is presented with:** Proposal callout or Decision Wrapper suggesting to add user_guidance and approved: true and run EAT-QUEUE.
@@ -62,6 +104,15 @@ This document is the full breakdown of user choices and the **rules** that gover
 ---
 
 ## Dry_run review before commit (rules)
+
+```mermaid
+flowchart LR
+  Move["move_note at ≥85%"]
+  Move --> DryRunTrue["dry_run: true"]
+  DryRunTrue --> Review["Review effects: path, new_path, backup, risks"]
+  Review --> DryRunFalse["dry_run: false to commit"]
+  DryRunFalse --> ensure["ensure_structure before move"]
+```
 
 - **Rules:** **mcp-obsidian-integration** (always): before every move_note at ≥85%, call move_note with **dry_run: true**; review effects (path, new_path, backup status, risks); then call with **dry_run: false** to commit. ensure_structure(folder_path: parent of target) before move. On dry_run failure or high-risk effects: propose_alternative_paths → calibrate_confidence → verify_classification → dry_run again; if still failing, log to Errors.md and do not commit.
 
@@ -73,6 +124,17 @@ This document is the full breakdown of user choices and the **rules** that gover
 
 ## Queue modes and Step 0 (rules)
 
+```mermaid
+flowchart TD
+  EAT["User runs EAT-QUEUE"]
+  EAT --> Step0["Step 0: enumerate Ingest/Decisions/**"]
+  Step0 --> Wrappers["approved / re-wrap / re-try wrappers"]
+  Wrappers --> Apply["path-apply or re-wrap or re-try branch"]
+  Step0 --> Read["Read queue; validate; dedup; sort"]
+  Read --> Dispatch["Dispatch by mode"]
+  Dispatch --> WatcherResult["Append Watcher-Result per entry"]
+```
+
 - **Rule:** **auto-eat-queue**. Step 0 (always first): enumerate Ingest/Decisions/**; for each wrapper with approved: true, re-wrap: true, or re-try: true and not processed → feedback-incorporate → **path-apply** (apply-mode ingest, phase-direction apply, or other wrapper_type), **re-wrap branch**, or **re-try branch** (re-queue EXPAND-ROAD/TASK-TO-PLAN-PROMPT with guidance; cap re_try_max_loops; on cap hit create cap-hit wrapper); set approved_wrappers_remaining. Then read queue; validate; dedup; sort (CHECK_WRAPPERS first); dispatch each entry by mode (INGEST MODE, EXPAND-ROAD, TASK-TO-PLAN-PROMPT, DISTILL MODE, TASK-COMPLETE, ADD-ROADMAP-ITEM, SEEDED-ENHANCE, BATCH-DISTILL, etc.); append Watcher-Result per entry; clear passed only. Step 8: if approved_wrappers_remaining, re-insert one CHECK_WRAPPERS entry for next run.
 
 - **User is presented with:** Watcher-Result.md line(s) per request. For task-queue entries, pipeline/queue rules may perform banner cleanup (success &gt; failure): pending callout removed from note on success.
@@ -82,6 +144,14 @@ This document is the full breakdown of user choices and the **rules** that gover
 ---
 
 ## Decision Wrapper Watcher sync (rules and safety)
+
+```mermaid
+flowchart LR
+  User["User checks A–G and sets approved: true"]
+  User --> Watcher["Watcher plugin on modify"]
+  Watcher --> Sync["Sync checkbox → approved_option, approved_path"]
+  Sync --> Never["Watcher never sets approved: true; only syncs when user set it"]
+```
 
 - **Documented in:** **Pipelines.md**, **Cursor-Skill-Pipelines-Reference** (Watcher bridge / Decision Wrapper checkbox sync). Not a Cursor rule; Watcher plugin behavior.
 
@@ -93,6 +163,15 @@ This document is the full breakdown of user choices and the **rules** that gover
 
 ## Re-wrap branch (rules)
 
+```mermaid
+flowchart LR
+  User["User sets re-wrap: true or check option 0"]
+  User --> EAT["User runs EAT-QUEUE"]
+  EAT --> Step0["Step 0"]
+  Step0 --> feedback["feedback-incorporate returns no path"]
+  feedback --> ReWrap["Re-wrap branch: archive wrapper to Re-Wrap/; new wrapper from Thoughts"]
+```
+
 - **Rules:** **auto-eat-queue** Step 0: when feedback-incorporate returns no hard_target_path (re-wrap: true or approved_option: 0), run re-wrap branch. **feedback-incorporate** (skill) treats re-wrap: true and approved_option: 0 as “no path.”
 
 - **User is presented with:** After re-wrap: current wrapper is in 4-Archives/Ingest-Decisions/Re-Wrap/; new wrapper under Ingest/Decisions/ with same original_path, Thoughts as seed, and link to archived wrapper. New wrapper has fresh A–G; approved: false.
@@ -102,6 +181,16 @@ This document is the full breakdown of user choices and the **rules** that gover
 ---
 
 ## Phase-direction and roadmap wrappers (rules)
+
+```mermaid
+flowchart TD
+  Expand["EXPAND-ROAD or roadmap-generate-from-outline"]
+  Expand --> PhaseDir["Phase-direction wrapper under Roadmap-Decisions/"]
+  PhaseDir --> User["User: check A–G or R"]
+  User --> Step0["Step 0"]
+  Step0 --> Apply["path-apply: provenance + comment guidance"]
+  Step0 --> ReTry["re-try branch: re-queue with guidance"]
+```
 
 - **Rules:** **Phase-direction** wrappers are created after **EXPAND-ROAD** or **roadmap-generate-from-outline** when a phase implies direction choices (e.g. "Grid: fixed or dynamic?"). Optional heuristic in **expand-road-assist** (phase_fork_heuristic: strict/off) scans for "or"/"vs"/"options:" and sets phase_forks frontmatter; wrapper is created under **Ingest/Decisions/Roadmap-Decisions/** from Templates/Decision-Wrapper-Phase-Direction.md. **auto-eat-queue** Step 0: when wrapper_type is phase-direction and approved: true, **path-apply** = per-change snapshot of target roadmap/phase note → append provenance callout and inline "Comment guidance" near approved task → set processed/used_at → move wrapper to **4-Archives/Ingest-Decisions/Roadmap-Decisions/**.
 
@@ -113,6 +202,15 @@ This document is the full breakdown of user choices and the **rules** that gover
 
 ## What happens if user ignores proposal (rules)
 
+```mermaid
+flowchart TD
+  Ignore["User ignores proposal"]
+  Ignore --> Low["Low: note stays in Ingest; wrapper pending"]
+  Ignore --> Mid["Mid: no commit; loop_* logged"]
+  Low --> NoMove["No rule performs move"]
+  Mid --> NoMove
+```
+
 - **Low confidence:** **para-zettel-autopilot** (ingest) or other pipeline rule has created Decision Wrapper and/or proposal callout. **confidence-loops**: no destructive action in low band. If user ignores (does not add approved: true and run EAT-QUEUE), note stays in Ingest or current location; wrapper remains under Ingest/Decisions/ pending; log may include #review-needed. No rule performs a move.
 
 - **Mid-band preview:** If user ignores preview (does not set approved: true or add feedback and re-run), **confidence-loops** and pipeline rule: no destructive action; proposal/preview remains; loop_* fields logged. No rule commits.
@@ -120,6 +218,15 @@ This document is the full breakdown of user choices and the **rules** that gover
 ---
 
 ## Commander and mobile toolbar (rules)
+
+```mermaid
+flowchart LR
+  Toolbar["Commander macro or mobile toolbar"]
+  Toolbar --> Queue["Add entry to queue"]
+  Queue --> EAT["User runs EAT-QUEUE or Process queue"]
+  EAT --> auto["auto-eat-queue same dispatch and safety"]
+  auto --> WatcherResult["watcher-result-append per request"]
+```
 
 - **Rules:** Queue entries added by Commander/mobile are consumed by **auto-eat-queue** when the user runs EAT-QUEUE. **watcher-result-append** appends result per request. Commander macros may set commander_source, commander_macro for MOC (documented in Queue-Sources). No separate “Commander rule”; same dispatch and safety rules apply.
 

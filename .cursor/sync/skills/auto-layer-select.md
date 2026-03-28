@@ -9,6 +9,7 @@ description: Optional. Uses content complexity to suggest 1 / 2 / 3 distillation
 
 - **Optional** step before "distill layers" in the autonomous-distill pipeline when layer-selection is enabled.
 - When the user does not specify a layer count (e.g. "distill this note with 2 layers"), use this skill to suggest 1 / 2 / 3 layers from content complexity.
+- When note frontmatter **`distill_lens`** is set (e.g. "beginner/simple" vs "expert/deep"), shape the suggested layers toward that lens (e.g. beginner → fewer/simpler layers; expert → more granular). Document in pipeline reference; see [distill-perspective-refine](.cursor/skills/distill-perspective-refine/SKILL.md).
 
 ## Instructions
 
@@ -28,5 +29,4 @@ description: Optional. Uses content complexity to suggest 1 / 2 / 3 distillation
 
 ## Integration
 
-Referenced in `.cursor/rules/context/auto-distill.mdc` and `3-Resources/Cursor-Skill-Pipelines-Reference.md` as optional step before "distill layers" when enabled.
-
+Referenced in [auto-distill](.cursor/rules/context/auto-distill.mdc) and [Cursor-Skill-Pipelines-Reference](3-Resources/Cursor-Skill-Pipelines-Reference.md) as optional step before "distill layers" when enabled.

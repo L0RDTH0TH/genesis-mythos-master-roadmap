@@ -7,42 +7,129 @@ status: active
 links: ["[[Resources Hub]]", "[[Second-Brain-Automation-Recommendations]]"]
 ---
 
-# Cursor Skill Pipelines Reference
-
-**Single Pipelines-and-Rules-Reference** for the autonomous skill pipelines (full-autonomous-ingest, autonomous-distill, autonomous-archive, autonomous-express, autonomous-organize), trigger → rule mapping, and skills. Skills live in **`.cursor/skills/<skill-name>/`**; Phase 2 always-applied rules and Phase 3 context-specific rules define triggers and safety (backup-first, no shell vault ops).
-
-**Documentation map**: Summary tables and cheat sheets live in the Second-Brain folder — [[3-Resources/Second-Brain/README|README]] (trigger cheat sheet, troubleshooting, mental model), [[3-Resources/Second-Brain/Pipelines|Pipelines]] (trigger → pipeline, snapshot triggers summary, usage examples), [[3-Resources/Second-Brain/Logs|Logs]] (log destinations, example log line, log → MOC flow). This file is the **canonical** source for pipeline order, skill slots, confidence gates, and the full snapshot triggers table.
-
-**Conventions**:
-- Skills use frontmatter **`highlight_key`** for project overrides; fallback to master key in [Highlightr-Color-Key.md](Highlightr-Color-Key.md). See that note for **Project-Specific Guidelines** (when added) and color semantics.
-- Subfolder depth **≤4** levels; paths derived from **`project-id`** + semantic themes.
-- **Path before every move**: Before any **`obsidian_move_note`**, call **`obsidian_ensure_structure`**(folder_path: *parent of new_path*) so the target path exists (create if missing). Then **Move and dry_run**: for any **`obsidian_move_note`** at ≥85% confidence, move is always **"`dry_run` first, then commit"** — call with `dry_run: true`, review effects (path, new_path, backup status, risks), then call with `dry_run: false` to commit. After every successful move (dry_run: false), set **para-type** on the note at the new path from the first path segment (1-Projects→Project, 2-Areas→Area, 3-Resources→Resource, 4-Archives→Archive); when under 1-Projects/ set **project-id** from the second segment; when under 4-Archives/ set **status: archived**. Use obsidian_manage_frontmatter; see mcp-obsidian-integration. See MCP fallback table in mcp-obsidian-integration.mdc for dry_run/move-failure fallback.
-- Confidence **bands** and snapshots:
-  - **High-confidence (proceed)**: \(\ge 85\%\) — destructive actions (move, rename, split, structural distill, large appends) are allowed **only** in this band and only after a successful per-change snapshot (see `obsidian-snapshot` skill).
-  - **Mid-band (loop)**: \(68\% \le conf \le 84\%\) — triggers a single, non-destructive refinement loop (self-critique) per note per pipeline run.
-  - **Low-confidence**: \(<68\%\) — no loop; propose-only behavior that flows into **user decision loops** (Decision Wrappers for ingest, async preview + approval for other pipelines) instead of auto-applying changes.
+**TL;DR** — Canonical source for pipeline order, skill slots, confidence gates, and snapshot triggers. Skills live in `.cursor/skills/<skill-name>/`; triggers and safety (backup-first, no shell vault ops) come from always-applied and context rules. Use the Quick Reference and diagrams first; then Snapshot triggers and Apply-from-wrapper tables.
 
 ---
 
-## Trigger → rule mapping
+## Quick Reference Table
+
+| Trigger Phrase | Pipeline | Rule(s) | Confidence Gate | Safety Step First |
+|----------------|----------|---------|------------------|--------------------|
+| EAT-QUEUE, Process queue, EAT-CACHE | Queue processor | **Queue subagent** (agents/queue.mdc) via dispatcher | — | Step 0 wrappers first |
+| INGEST_MODE, process Ingest, Ingest/*.md | full-autonomous-ingest | **IngestSubagent** (agents/ingest.mdc) | ≥85% structural; Phase 1 no move | create_backup; snapshot before split/distill/hub/move |
+| DISTILL MODE, distill note/vault | autonomous-distill | auto-distill | ≥85% destructive | create_backup; snapshot before rewrite |
+| ARCHIVE MODE, archive, #eaten | autonomous-archive | auto-archive | ≥85% move | create_backup; snapshot before move |
+| ORGANIZE MODE, re-organize | autonomous-organize | auto-organize | ≥85% move/rename | create_backup; dry_run before move |
+| ROADMAP_MODE, Resume roadmap, RESUME_ROADMAP | multi-run roadmap | **RoadmapSubagent** (agents/roadmap.mdc) | conf ≥85% phase complete | snapshot roadmap-state before/after update; **`effective_track`** conceptual vs execution ([[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]], [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]). **Conceptual completion:** [[3-Resources/Second-Brain/Docs/Conceptual-Execution-Handoff-Checklist|Conceptual-Execution-Handoff-Checklist]] NL completeness + **Conceptual autopilot** authority in **`decisions-log`**. Post-freeze deltas: **`Roadmap/Conceptual-Amendments/`** companion notes (Vault-Layout). **Conceptual deepen rationale:** **`Roadmap/Conceptual-Decision-Records/`** atomized notes + **Decision record** bullets in **`decisions-log`** when **`roadmap.conceptual_decision_record_mode`** ≠ off ([[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] § Conceptual-Decision-Records). **Conceptual autopilot:** `action` **auto** / missing → smart dispatch bypasses low-confidence wrappers; logs **`Roadmap/decisions-log.md` § Conceptual autopilot**; terminal **`conceptual_target_reached`**; avoid **`recal`** **`queue_followups`** solely for execution-advisory **`needs_work`** ([[3-Resources/Second-Brain/Parameters|Parameters]] § Conceptual autopilot). |
+| ROADMAP_HANDOFF_VALIDATE (queue) | validator (roadmap_handoff) | **ValidatorSubagent** (agents/validator.mdc) | read-only except report | model from Config § validator.roadmap_handoff.model |
+
+---
+
+## Mermaid — full-autonomous-ingest (two-phase, Decision Wrapper–gated)
+
+Phase 1 never moves; Phase 2 runs when EAT-QUEUE Step 0 (always-check wrappers) finds a wrapper with `approved: true`.
+
+```mermaid
+flowchart LR
+  ingestInit[IngestInitialRun] --> classify[classify_para + frontmatter_enrich]
+  classify --> distill[split/distill/next-actions/hub (no move)]
+  distill --> wrapper[Create/refresh Decision Wrapper A–G]
+  wrapper --> userEdit[User checks option, sets approved: true]
+  userEdit --> eatStep0[EAT-QUEUE Step 0 finds approved wrapper]
+  eatStep0 --> applyRun[Apply-mode: move/rename to approved_path]
+  applyRun --> moveSnap[Snapshot + dry_run then commit; archive wrapper to 4-Archives/Ingest-Decisions/]
+  moveSnap --> done[Note in PARA; wrapper archived]
+```
+
+---
+
+## Mermaid — Ingest confidence loop
+
+```mermaid
+flowchart LR
+  eval[Evaluate ingest_conf] --> high[High (>=85)]
+  eval --> mid[Mid (68-84)]
+  eval --> low[Low (<68)]
+
+  high --> snap_ingest[Per-change snapshot]
+  snap_ingest --> ingest_actions[Split / distill / hub / move]
+
+  mid --> loop_ingest[Non-destructive self-critique loop]
+  loop_ingest --> post_high[post_loop_conf >= 85]
+  loop_ingest --> post_low[post_loop_conf < 85 or <= pre_loop_conf]
+
+  post_high --> snap_ingest
+  post_low --> manual_ingest[Manual review (no destructive actions)]
+
+  low --> manual_ingest
+```
+
+---
+
+## Safety Invariants
+
+> [!warning] **Confidence bands**
+> **High (≥85%)**: Destructive actions only after per-change snapshot. **Mid (68–84%)**: Single non-destructive refinement loop per note; proceed only if post_loop_conf ≥85%. **Low (<68%)**: No loop; propose-only; user decision flows (Decision Wrappers for ingest, async preview + approval for others).
+
+> [!warning] **Path before every move**
+> Before **`obsidian_move_note`**, call **`obsidian_ensure_structure`**(folder_path: parent of new_path). Then **dry_run first, then commit**: call with `dry_run: true`, review effects, then `dry_run: false`. After move: set **para-type** (and project-id under 1-Projects/, status: archived under 4-Archives/) on the note at new path. See mcp-obsidian-integration and MCP fallback table.
+
+> [!warning] **Snapshot before destructive steps**
+> Per-change snapshot required before: split_atomic, distill_note rewrite, append_to_hub, task-reroute target append, move_note, rename_note. See Snapshot triggers table below.
+
+**Conventions**: Skills use frontmatter **`highlight_key`** for project overrides (fallback: [Highlightr-Color-Key.md](Highlightr-Color-Key.md)). Subfolder depth **≤4** levels; paths from **`project-id`** + semantic themes. **Documentation map**: [[3-Resources/Second-Brain/README|README]] (trigger cheat sheet), [[3-Resources/Second-Brain/Pipelines|Pipelines]] (trigger → pipeline, usage), [[3-Resources/Second-Brain/Logs|Logs]] (log destinations, log → MOC flow). This file = **canonical** pipeline order, skill slots, confidence gates, snapshot triggers.
+
+---
+
+## Snapshot triggers (all pipelines)
+
+| Pipeline            | Per-change triggers                                                                                      | Batch frequency      |
+|---------------------|----------------------------------------------------------------------------------------------------------|----------------------|
+| full-autonomous-ingest | Before `split_atomic`, `distill_note` (when rewriting), `append_to_hub` (cross-note writes), **task-reroute** (per-change snapshot of **target** note before append_tasks), `move_note`, `rename_note`; name-enhance in ingest **proposes only** (subfolder-organize commits name via move) | Every 5 notes        |
+| autonomous-distill  | Before first structural rewrite (distill layers / `highlight-perspective-layer` / `layer-promote` / `distill-perspective-refine` / heavy `obsidian_update_note`)       | ~Every 3 notes       |
+| autonomous-archive  | After `archive-check` recommends archive (≥85% confidence) but before `subfolder-organize` / `summary-preserve` / move | Once per archive sweep |
+| autonomous-express  | Before large appends (`related-content-pull`, `express-mini-outline`, `express-view-layer`, `call-to-action-append`), alongside `version-snapshot` | Optional per batch   |
+| autonomous-organize | Before `obsidian_rename_note` (when name-enhance applies) and before `obsidian_move_note` (when confidence ≥85% for each)                             | ~Every 3 notes       |
+| **autonomous-roadmap (multi-run)** | Before every **roadmap-state.md** update (roadmap-resume, phase completion); before **phase-X-output** overwrite (roadmap-phase-output-sync auto_refresh) | Per phase or RECAL run |
+
+> [!tip] **Todo orchestration (todo-orchestrator)**
+> For multi-step subagents (Queue/Dispatcher, RoadmapSubagent, IngestSubagent, ArchiveSubagent, OrganizeSubagent, DistillSubagent, ExpressSubagent), runs are additionally tracked via a shared **todo-orchestrator** convention on top of Cursor `TodoWrite`:
+> - Each run initializes a **small phase set** (3–7 todos) with stable ids like `queue-eat-queue:parse-queue`, `roadmap-resume:apply-action`, `ingest-phase-1:ingest-phase-1`, `archive-mode:snapshot-and-move`.
+> - At most **one todo** per run may be `in_progress` at a time; starting a new phase requires completing or cancelling the previous phase.
+> - Before returning, a subagent must ensure that **all run-level todos are either `completed` or explicitly `cancelled`** with a short reason; returning while a todo is still `pending` or `in_progress` is treated as a pipeline violation and should not occur under normal operation.
+> - Canonical phase lists for each pipeline live in the `Todo orchestration` sections of `agents/queue.mdc`, `agents/roadmap.mdc`, `agents/ingest.mdc`, `agents/archive.mdc`, `agents/organize.mdc`, `agents/distill.mdc`, and `agents/express.mdc`.
+
+- All destructive actions: **≥85%** confidence; skip snapshot and destructive step when below threshold, log `#review-needed`. Snapshot files under `Backups/Per-Change/` and `Backups/Batch/`; never process as pipeline inputs.
+
+---
+
+## Trigger → rule mapping (full)
 
 | Trigger / phrase | Rule(s) | Pipeline |
 |------------------|---------|----------|
-| **EAT-QUEUE**, "Process queue", **eat cache** / **EAT-CACHE**, or pasted EAT-CACHE payload | auto-eat-queue | **Queue processor**: read `.technical/prompt-queue.jsonl` → validate → fast-path if single entry → dedup → sort → dispatch by mode → Watcher-Result → clear passed only; optional queue-cleanup (auto_cleanup_after_process); tag failed with `queue_failed: true` |
-| **EAT-QUEUE**, **PROCESS TASK QUEUE** (task/roadmap queue) | auto-queue-processor | Read Task-Queue.md → fast-path if single entry → dispatch by mode (TASK-ROADMAP, TASK-COMPLETE, …) → Watcher-Result + Mobile-Pending-Actions → banner cleanup (success > failure) |
-| "Ingest", "process Ingest", "run ingests" | always-ingest-bootstrap, para-zettel-autopilot | full-autonomous-ingest |
-| Ingest/*.md (open or batch) | para-zettel-autopilot | full-autonomous-ingest |
+| **EAT-QUEUE**, **EAT-QUEUE BREAK-SPIN**, "Process queue", **eat cache** / **EAT-CACHE**, or pasted EAT-CACHE payload | **Queue subagent** (agents/queue.mdc) via dispatcher | **Queue processor**: read `.technical/prompt-queue.jsonl` → Step 0 wrappers → validate → fast-path if single entry → dedup → sort → dispatch by mode → Watcher-Result → clear passed only; optional queue-cleanup; tag failed with `queue_failed: true`. **BREAK-SPIN:** optional **`## operator_break_spin`** YAML in Layer 0 hand-off; merge into **`layer1_resolver_hints`** ([[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § EAT-QUEUE BREAK-SPIN). |
+| **EAT-QUEUE**, **PROCESS TASK QUEUE** (task/roadmap queue) | **Queue subagent** (agents/queue.mdc) via dispatcher | Read Task-Queue.md → fast-path if single entry → dispatch by mode (TASK_ROADMAP, TASK_COMPLETE, …) → Watcher-Result + Mobile-Pending-Actions → banner cleanup (success > failure) |
+| "Ingest", "process Ingest", "run ingests" | **IngestSubagent** (agents/ingest.mdc) | full-autonomous-ingest (non-MD + embedded norm + Phase 1/apply-mode) |
+| Ingest/*.md (open or batch) | **IngestSubagent** (agents/ingest.mdc) | full-autonomous-ingest |
 | #raw-ingest, status: raw | ingest-processing (pre-step; propose only) | — |
-| "Distill", "distill note/vault" | auto-distill | autonomous-distill |
+| "Distill", "distill note/vault", DISTILL LENS, HIGHLIGHT PERSPECTIVE | **DistillSubagent** (agents/distill.mdc) | autonomous-distill |
+| "Express", "express this note", "generate outline", EXPRESS VIEW | **ExpressSubagent** (agents/express.mdc) | autonomous-express |
 | "Archive", #eaten, complete | auto-archive | autonomous-archive |
 | "Organize", "re-organize", "ORGANIZE MODE" | auto-organize | autonomous-organize |
 | "Resurface", "show resurface candidates" | auto-resurface | — |
 | "GARDEN REVIEW", "run garden review", "orphans and distill candidates", "garden health", "vault orphans", "distill candidates sweep" | auto-garden-review | Garden review flow: `obsidian_garden_review` → feed to distill/organize batches; queue mode **GARDEN-REVIEW** |
 | "CURATE CLUSTER #tag", "suggest gaps and merges", "cluster curate #tag", "theme gaps #tag", "merge suggestions 3-Resources/…" | auto-curate-cluster | Curate cluster flow: `obsidian_curate_cluster` → gaps/merges/synthesis → optional split/MOC/merge; queue mode **CURATE-CLUSTER** |
 | "ROADMAP MODE – generate checklist", "Generate hierarchical checklist", "roadmap checklist for this note" | (interpret by agent) | Run **roadmap-checklist** skill on current or specified note: recursive link traversal → hierarchical checklist; see `.cursor/skills/roadmap-checklist/SKILL.md` |
+| **ROADMAP MODE**, **Resume roadmap**, queue mode **RESUME_ROADMAP**, **RESUME-FROM-LAST-SAFE** | **RoadmapSubagent** (agents/roadmap.mdc) | **Multi-run roadmap:** Queue processor dispatches to RoadmapSubagent. ROADMAP_MODE = setup (Phase 0, workflow_state, roadmap-generate-from-outline). RESUME_ROADMAP = single action (deepen, recal, revert-phase, sync-outputs, handoff-audit, advance-phase, expand, etc.). Pre-deepen research when enabled (research-agent-run → Ingest/Agent-Research/, inject into roadmap-deepen). One-shot **deprecated**. See [[.cursor/rules/agents/roadmap.mdc]]. |
+| **RESUME_ROADMAP** with **`params.action: unfreeze_conceptual`** | **RoadmapSubagent** (agents/roadmap.mdc) | Explicit override: clear **`frozen: true`** on conceptual notes under `1-Projects/<project_id>/Roadmap/` **excluding** `Roadmap/Execution/**`. **params**: **project_id**, **`confirm_unfreeze: true`**, optional **paths**. Per-change snapshot + frontmatter-only MCP updates. See [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]], [[.cursor/agents/roadmap|agents/roadmap.md]] § RESUME action: unfreeze_conceptual. |
+| **RESEARCH_AGENT**, **Queue Research: Phase**, **RESEARCH-GAPS** | **ResearchSubagent** (agents/research.mdc) | research-agent-run: resolve project_id + linked_phase; load raw index (Step 0b); query → fetch with vault-first per URL → synthesize; write synthesis to Ingest/Agent-Research/, optionally raw to Ingest/Agent-Research/Raw/ and update Raw-Index; queue INGEST_MODE (and optionally DISTILL_MODE) for **synthesis notes only** (raw notes not queued); Errors backstop when 0 notes. Pre-deepen research: RoadmapSubagent calls research-agent-run directly. See [[.cursor/skills/research-agent-run/SKILL]]. |
+| **ROADMAP_HANDOFF_VALIDATE** (queue) | **ValidatorSubagent** (agents/validator.mdc) | Final validation pass on roadmap: read state + phase notes; hostile senior-engineer pass (contradictions, overconfidence, missing edges, weak sourcing); one handoff-readiness report at `1-Projects/<project_id>/Roadmap/handoff-validation-report-<date>.md`. Params: project_id (required), optional roadmap_dir, phase_range. Queue passes **model** from Second-Brain-Config § validator.roadmap_handoff.model. Read-only on inputs; only report file is written. See [[.cursor/rules/agents/validator.mdc]]. |
+| **AUDIT-CONTEXT** (queue) | Queue subagent (agents/queue.mdc) | context-vs-pipeline-audit: workflow_state vs Distill/Express logs → Audit-Context-Focus.md. See [[.cursor/skills/context-vs-pipeline-audit/SKILL]]. |
 | MCP vault operations | mcp-obsidian-integration (always) | — |
 
-always-ingest-bootstrap ensures ingest triggers apply the ingest pipeline; see `.cursor/rules/always/always-ingest-bootstrap.mdc`.
+**Queue — deterministic gate pivot (Layer 1):** When **`queue.gate_block_detection_enabled`**, **A.5f** runs **`scripts/queue-gate-compute.py record-outcome`** to update **`.technical/queue-gate-state.json`** (see [[3-Resources/Second-Brain/Docs/Queue-Gate-State-Spec|Queue-Gate-State-Spec]]). When **`queue.deterministic_gate_script_enabled`**, Layer 1 also runs **`report`** (pre–roadmap **Task**) and **`validate-line`** (pre–**A.5c** append). Roadmap hand-off includes mandatory **`## layer1_resolver_hints`** YAML per **queue.mdc**.
+
+**IngestSubagent** (agents/ingest.mdc) handles INGEST_MODE. **DistillSubagent** (agents/distill.mdc) handles DISTILL_MODE, BATCH_DISTILL, DISTILL LENS, HIGHLIGHT PERSPECTIVE. **ExpressSubagent** (agents/express.mdc) handles EXPRESS_MODE, BATCH_EXPRESS, EXPRESS VIEW. **ArchiveSubagent** (agents/archive.mdc) handles ARCHIVE_MODE; ghost-folder sweep after moves. **OrganizeSubagent** (agents/organize.mdc) handles ORGANIZE_MODE; name-enhance in organize context. **ValidatorSubagent** (agents/validator.mdc) handles ROADMAP_HANDOFF_VALIDATE; final handoff-validation report; model from Config. always-ingest-bootstrap and auto-* context rules redirect to the corresponding subagents.
 
 Rules live in `.cursor/rules/always/` (always-applied) and `.cursor/rules/context/` (globs/triggers).
 
@@ -50,10 +137,10 @@ Rules live in `.cursor/rules/always/` (always-applied) and `.cursor/rules/contex
 
 - **Exclusions (Watcher)**: Pipelines must **not** move or delete notes that (a) have frontmatter **`watcher-protected: true`**, or (b) are one of the fixed Watcher paths: `Ingest/watched-file.md`, `3-Resources/Watcher-Signal.md`, `3-Resources/Watcher-Result.md`. Context rules (ingest, organize, archive) list these in their Excludes sections.
 - **Exclusions (Decision Wrappers)**: Pipelines must **not** treat Decision Wrapper notes under `Ingest/Decisions/*.md` as primary inputs for ingest/distill/organize/express/archive. These notes coordinate user-approved moves only; the pipelines operate on the original `Ingest/*.md` notes, using wrapper decisions via EAT-QUEUE + guidance-aware runs.
-- **Watcher-Result contract**: When a run was triggered by a Watcher request (e.g. INGEST MODE, DISTILL MODE, EXPRESS MODE, ARCHIVE MODE from the Obsidian Watcher plugin) or by **EAT-QUEUE** (queue-based run), the agent must **on run finish** append one line per request to `3-Resources/Watcher-Result.md`: `requestId: <id> | status: success|failure | message: "..." | trace: "..." | completed: <ISO8601>`. See `.cursor/rules/always/watcher-result-append.mdc` for the full contract and format.
+- **Watcher-Result contract**: When a run was triggered by a Watcher request (e.g. INGEST_MODE, DISTILL_MODE, EXPRESS_MODE, ARCHIVE_MODE from the Obsidian Watcher plugin) or by **EAT-QUEUE** (queue-based run), the agent must **on run finish** append one line per request to `3-Resources/Watcher-Result.md`: `requestId: <id> | status: success|failure | message: "..." | trace: "..." | completed: <ISO8601>`. See `.cursor/rules/always/watcher-result-append.mdc` for the full contract and format.
 - **Decision Wrapper — Watcher checkbox sync**: For notes under `Ingest/Decisions/**`, the Watcher plugin (on modify) syncs the **checked** A–G option into frontmatter `approved_option` and `approved_path` **only when** the user has **already** set `approved: true` (manual only). Watcher never sets `approved: true` or `re-wrap: true`. Write-loop protection: read frontmatter before write; skip if already matching. All sync/skip/conflict decisions → `3-Resources/Wrapper-Sync-Log.md`; conflicts also to Errors.md. See Pipelines.md (Decision Wrapper), Logs.md.
 - **Decision Wrapper — re-wrap (EAT-QUEUE Step 0)**: When a wrapper has `re-wrap: true` or `approved_option: 0` (reject all), Step 0 runs the **re-wrap branch**: backup + per-change snapshot of the wrapper, move it to `4-Archives/Ingest-Decisions/Re-Wrap/<subfolder>/`, then create a **new** wrapper under `Ingest/Decisions/` with Thoughts as seed and a link to the archived wrapper. `feedback-incorporate` prefers `approved_path` from frontmatter; fallback parse body for letter; treats re-wrap/option 0 as no path. No default `approved_option`/`approved_path` in the template. See auto-eat-queue.mdc, feedback-incorporate SKILL, Vault-Layout.md (Re-Wrap).
-- **Decision Wrapper — apply-mode (Step 0 path-apply)**: For approved wrappers with `hard_target_path`, Step 0 runs apply-mode ingest only (move/rename original note to approved path). After move: set para-type (and when under 1-Projects/ project-id) from new path per mcp-obsidian-integration. Roadmap tree creation is **not** triggered from ingest; use **ROADMAP MODE – generate from outline** (or a dedicated queue mode) and the `roadmap-generate-from-outline` skill for that.
+- **Decision Wrapper — apply-mode (Step 0 path-apply)**: For approved wrappers with `hard_target_path`, Step 0 runs apply-mode ingest only (move/rename original note to approved path). After move: set para-type (and when under 1-Projects/ project-id) from new path per mcp-obsidian-integration. Roadmap tree creation is **not** triggered from ingest; use **ROADMAP_MODE – generate from outline** (or a dedicated queue mode) and the `roadmap-generate-from-outline` skill for that. When the seed note is a PMG, that skill runs **normalize-master-goal** first so the note follows [[Templates/Roadmap/Master-Goal]] (One-line, Vision, Phases, Technical Integration, TL;DR, Related); phase parsing then uses `## Phases` and `### Phase N — <Name>`. On-demand normalization: queue mode **NORMALIZE_MASTER_GOAL** with `source_file` set to the PMG path.
 
 ### New flows: Garden review and Curate cluster
 
@@ -84,21 +171,9 @@ Always call `obsidian_log_action` after processing a note; never skip logging.
 
 ---
 
-## Pipeline flowcharts
+## Pipeline flowcharts (summary)
 
-**full-autonomous-ingest** (two-phase, Decision Wrapper–gated). Phase 1 never moves; Phase 2 runs when EAT-QUEUE Step 0 (always-check wrappers) finds a wrapper with `approved: true`.
-
-```mermaid
-flowchart LR
-  ingestInit[IngestInitialRun] --> classify[classify_para + frontmatter_enrich]
-  classify --> distill[split/distill/next-actions/hub (no move)]
-  distill --> wrapper[Create/refresh Decision Wrapper A–G]
-  wrapper --> userEdit[User checks option, sets approved: true]
-  userEdit --> eatStep0[EAT-QUEUE Step 0 finds approved wrapper]
-  eatStep0 --> applyRun[Apply-mode: move/rename to approved_path]
-  applyRun --> moveSnap[Snapshot + dry_run then commit; archive wrapper to 4-Archives/Ingest-Decisions/]
-  moveSnap --> done[Note in PARA; wrapper archived]
-```
+**full-autonomous-ingest**: See Mermaid diagram at top (two-phase, Decision Wrapper–gated).
 
 **autonomous-distill**: backup → distill layers → distill-highlight-color → highlight-perspective-layer (optional) → layer-promote → callout-tldr-wrap → readability-flag.
 
@@ -108,26 +183,30 @@ flowchart LR
 
 **autonomous-organize**: backup → classify_para → frontmatter-enrich → subfolder-organize → **name-enhance** (context organize; opportunistic rename when vague or confidence ≥85%) → move_note → (after move: set para-type and when under 1-Projects/ project-id from new path) → log_action.
 
-### Ingest confidence loop (state diagram)
+**autonomous-roadmap (multi-run)**: Trigger: ROADMAP_MODE, Resume roadmap, RESUME_ROADMAP, RESUME-FROM-LAST-SAFE. **Pre-deepen research (optional):** When params.enable_research or auto-detect from phase content (#research-needed or research_auto_keywords): run **research-agent-run** before roadmap-deepen; write synthesized notes to Ingest/Agent-Research/; queue INGEST_MODE (and optionally DISTILL_MODE if params.research_distill); pass **injected_research_summary** / **injected_research_paths** into roadmap-deepen step 0. roadmap-deepen includes research in Injected context when present. Default multi-run: Phase 0 bootstrap if state missing; snapshot state before/after every update; distill per phase (lens roadmap-accuracy) → decisions-log and distilled-core; conf ≥85% before phase complete else Decision Wrapper; recal when every 3 phases or conf <88% or drift > 0.08 (drift_score_threshold); log exact drift score in consistency report; ignored_wrappers ≥ 3 → auto-revert to last safe phase. One-shot deprecated (ROADMAP-ONE-SHOT). RECAL-ROAD: roadmap-audit (drift threshold 0.08, revert option first) + optional roadmap-phase-output-sync + roadmap-validate. Snapshot roadmap-state before and after every state update. See mcp-obsidian-integration § Roadmap state invariants. **context-vs-pipeline-audit (deferred, queue-ready):** Queue mode **AUDIT-CONTEXT** runs **context-vs-pipeline-audit** skill (workflow_state vs Distill/Express logs → Audit-Context-Focus.md); run once roadmap systems are stable.
 
-```mermaid
-flowchart LR
-  eval[Evaluate ingest_conf] --> high[High (>=85)]
-  eval --> mid[Mid (68-84)]
-  eval --> low[Low (<68)]
+### Dual roadmap graph (conceptual + execution)
 
-  high --> snap_ingest[Per-change snapshot]
-  snap_ingest --> ingest_actions[Split / distill / hub / move]
+Canonical layout and flip checklist: [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]], [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] (dual track), [[.cursor/rules/context/dual-roadmap-track.mdc|dual-roadmap-track]] (always-on agent contract).
 
-  mid --> loop_ingest[Non-destructive self-critique loop]
-  loop_ingest --> post_high[post_loop_conf >= 85]
-  loop_ingest --> post_low[post_loop_conf < 85 or <= pre_loop_conf]
+| Concern | Rule |
+|--------|------|
+| **Frozen conceptual** | Notes with **`frozen: true`** and **`roadmap_track: conceptual`** under `Roadmap/` (excluding `Roadmap/Execution/**`): **no** destructive MCP (body overwrite, move, rename, split, structural distill, hub append). **Reads** unrestricted. |
+| **Execution track** | When **`roadmap_track: execution`** on `roadmap-state.md`, deepen/recal **writes** target **`Roadmap/Execution/…`** and execution state files (`workflow_state-execution.md`, `roadmap-state-execution.md`). **roadmap-deepen** sets **`conceptual_counterpart`** / **`execution_mirror`** when minting pairs. |
+| **Unfreeze override** | Use **`RESUME_ROADMAP`** with **`params.action: unfreeze_conceptual`** and **`confirm_unfreeze: true`** only. RoadmapSubagent clears **`frozen`** via frontmatter MCP after per-change snapshots. |
 
-  post_high --> snap_ingest
-  post_low --> manual_ingest[Manual review (no destructive actions)]
+### Next-Need Resolver (anti-spin)
 
-  low --> manual_ingest
-```
+- **Where:** Layer 1 queue dispatch (`queue.mdc`) before roadmap `Task` call.
+- **When:** RESUME_ROADMAP entries with `queue.roadmap_next_need_enabled: true`.
+- **What it computes:** `need_class`, `effective_action`, `effective_target`, and `delta_basis`.
+- **Policy:** Missing structure => deepen/expand; stale outputs => sync-outputs; incoherence => recal; gate-ready => advance-phase.
+- **Follow-up guard:** If structural delta is below `queue.roadmap_next_need_min_structural_delta`, Layer 1 pivots action class instead of repeating same-class recal loops.
+- **Spin detection:** Layer 1 may mark `spin_signal` (flat-delta streak) and pivot earlier when `queue.spin_detection_enabled` thresholds are met.
+- **Inter-comms audit:** `task-handoff-comms` + Run-Telemetry can be used to compute `resolver_alignment` (did Layer 2 follow Layer 1 resolver hints?).
+- **Gate-block pivot:** Repeated contract-gate failures can map to `need_class: gate_block`; in that case Layer 1 should avoid same-track deepen/recal loops and prefer cross-track pivot when allowed.
+| **Advisory diminishing returns** | Config **`diminishing_returns_*`**; roadmap-deepen may append **`advisory: diminishing-returns-suspected`** to **workflow_state** Log **Status / Next** — informational only (no auto-freeze / auto-flip). |
+| **Interlinking (symmetric)** | **Ingest / frontmatter-enrich:** normalize **`roadmap_track`**, **`project-id`**, counterpart links on execution notes. **Organize:** repair broken/missing counterpart links; moves **execution** subtree only; do not move frozen conceptual. **Distill / express:** optional “diff vs conceptual” lens; Related pulls conceptual counterpart for execution notes. **Research:** vault-first may prioritize conceptual paths; synthesis notes link both anchors. **Validator:** optional type **`roadmap_mirror_integrity`** (see Validator-Reference). **little-val / IRA:** flags such as **`missing_conceptual_counterpart`** — no silent fixes on frozen conceptual. **Garden / CURATE:** scope can include **Execution/** orphans and broken mirrors. **Hub / MOC:** two blocks (conceptual tree vs execution tree) when project uses dual track. |
 
 ---
 
@@ -168,7 +247,7 @@ Any .md in Ingest/ is scanned for image embeds pointing to root/Ingest/. Links a
 - **Mid (68 ≤ ingest_conf ≤ 84, inclusive)**:
   - Run a **single, non-destructive self-critique loop** on classification/path:
     - Use the shared self-critique template (see `.cursor/rules/always/confidence-loops.mdc`).
-    - Call **`obsidian_propose_para_paths`** with `context_mode: "midband"` (and appropriate `max_candidates`) to obtain 2–3 ranked PARA path candidates `{path, score, reason_short, rationale, confidence_breakdown}`.
+    - Call **`propose_para_paths`** with `context_mode: "midband"` (and appropriate `max_candidates`) to obtain 2–3 ranked PARA path candidates `{path, score, reason_short, rationale, confidence_breakdown}`.
     - Feed the top candidate (or top 2, when helpful) into **`calibrate_confidence`**(prior_output: classification + path proposal) then **`verify_classification`**(note_path, calibrated_output).
     - Re-score to `post_loop_conf` and adjust `decision_priority` and wrapper ordering accordingly.
   - Structural steps may be limited or skipped when confidence remains mid-band, but the outcome is still a Decision Wrapper rather than an immediate move.
@@ -327,6 +406,7 @@ Re-organize existing notes in active PARA folders (1-Projects, 2-Areas, 3-Resour
 | task-reroute | .cursor/skills/task-reroute/SKILL.md |
 | roadmap-ingest | .cursor/skills/roadmap-ingest/SKILL.md |
 | roadmap-generate-from-outline | .cursor/skills/roadmap-generate-from-outline/SKILL.md |
+| normalize-master-goal | .cursor/skills/normalize-master-goal/SKILL.md |
 | add-roadmap-append | .cursor/skills/add-roadmap-append/SKILL.md |
 | expand-road-assist | .cursor/skills/expand-road-assist/SKILL.md |
 | task-complete-validate | .cursor/skills/task-complete-validate/SKILL.md |
@@ -358,32 +438,13 @@ Triggers and globs for when to run each pipeline are defined in Phase 2/3 rules 
 
 ---
 
-## Snapshot triggers (all pipelines)
-
-Summary of when to create **per-change snapshots** and **batch checkpoints** using the `obsidian-snapshot` skill.
-
-| Pipeline            | Per-change triggers                                                                                      | Batch frequency      |
-|---------------------|----------------------------------------------------------------------------------------------------------|----------------------|
-| full-autonomous-ingest | Before `split_atomic`, `distill_note` (when rewriting), `append_to_hub` (cross-note writes), **task-reroute** (per-change snapshot of **target** note before append_tasks), `move_note`, `rename_note`; name-enhance in ingest **proposes only** (subfolder-organize commits name via move) | Every 5 notes        |
-| autonomous-distill  | Before first structural rewrite (distill layers / `highlight-perspective-layer` / `layer-promote` / `distill-perspective-refine` / heavy `obsidian_update_note`)       | ~Every 3 notes       |
-| autonomous-archive  | After `archive-check` recommends archive (≥85% confidence) but before `subfolder-organize` / `summary-preserve` / move | Once per archive sweep |
-| autonomous-express  | Before large appends (`related-content-pull`, `express-mini-outline`, `express-view-layer`, `call-to-action-append`), alongside `version-snapshot` | Optional per batch   |
-| autonomous-organize | Before `obsidian_rename_note` (when name-enhance applies) and before `obsidian_move_note` (when confidence ≥85% for each)                             | ~Every 3 notes       |
-
-- All destructive actions should also:
-  - Respect the **≥85%** confidence rule for auto-execution.
-  - Skip both snapshot and destructive step when confidence is below threshold, logging `#review-needed` instead.
-- Snapshot files live under `Backups/Per-Change/` and `Backups/Batch/` and are never processed as pipeline inputs.
-
----
-
 ## Phase-direction wrapper creation
 
 When creating a Phase Direction Wrapper (after EXPAND-ROAD or roadmap-generate-from-outline when a phase has direction choices):
 
 - **Options A–G (body)**: Fill each option with a **conceptual end-state** description only — one plain-language sentence stating *what the situation is* after that choice. No technical terms (no "CSS Grid," "breakpoints," "design tokens"). Example (phase fork = "How do we handle the grid?"): **A.** One shared grid everywhere — same behavior on every device and screen. **B.** Each surface tuned to itself — mobile, desktop, and large displays each get a layout that fits. **C.** Shared core, local tweaks — one grid system with small per-context overrides so it stays consistent but adapts. Pad to 7 options (A–G); use "Reserved" or "—" if fewer than 7 meaningful options.
 - **Technical resolution**: Store in wrapper **frontmatter** only (e.g. `technical_by_option: { "A": "single token set", "B": "per-context tokens", ... }` or per-option fields) for provenance and Step 0 apply. Do not put technical text in the main option list the user sees.
-- **Template**: [Templates/Decision-Wrapper-Phase-Direction.md](Templates/Decision-Wrapper-Phase-Direction.md). Optional: populate the collapsible "Technical resolution (for reference)" block from frontmatter for power users.
+- **Template**: [Templates/Decisions/Decision-Wrapper-Phase-Direction.md](Templates/Decisions/Decision-Wrapper-Phase-Direction.md). Optional: populate the collapsible "Technical resolution (for reference)" block from frontmatter for power users.
 
 ---
 
@@ -394,9 +455,11 @@ When EAT-QUEUE Step 0 finds a wrapper under `Ingest/Decisions/**` with `approved
 | wrapper_type | pipeline | Step 0 behavior |
 |--------------|----------|------------------|
 | ingest-decision, roadmap-decision | ingest | feedback-incorporate → resolve `approved_path` → apply-mode ingest (move/rename original note to approved path only); then move wrapper to `4-Archives/Ingest-Decisions/` (mirror subfolder). |
+| **roadmap-next-step** | roadmap | **Apply**: Resolve `approved_option` (A–G, 0) to **params.action** (e.g. A = deepen, B = recal, C = advance-phase, D = raise cap and continue, E = revert-phase, F = sync-outputs then deepen, 0 = re-wrap). When EAT-QUEUE processes RESUME_ROADMAP, Step 0 (pre-dispatch) injects this **params.action** (and params) into the queue entry so **RoadmapSubagent** runs the chosen action without smart dispatch. Set `processed: true`, `used_at` on wrapper → move wrapper to `4-Archives/Ingest-Decisions/Roadmap-Decisions/`. **Wrapper creation**: Every roadmap-next-step (and stall/pre-create) wrapper must include a short **rationale callout** in the body (e.g. `> **Why uncertain:** …` or Architect-style one-line thought) before options A–G. See Parameters § roadmap-next-step wrapper. |
 | **phase-direction** | — | **Apply**: Per-change snapshot of target roadmap/phase note → append provenance callout (`> [!provenance] Evolved from [[Master-Goal]] via [[Wrapper-1]] (re-try on <date>) → [[Wrapper-2]] (approved).`) and, near the approved task bullet, inline callout with "Comment guidance: …" (see §6.2 Comment and provenance injection) → set `processed: true`, `used_at` on wrapper → move wrapper to `4-Archives/Ingest-Decisions/Roadmap-Decisions/`. Options A–G are conceptual end-state descriptions; technical resolution stored in frontmatter (e.g. `technical_by_option`) for provenance. |
-| mid-band-refinement, force-wrapper | distill | **distill-apply-from-wrapper**: read wrapper `original_path`, `approved_option`; run autonomous-distill on original with `approved_option` as distill_lens; update/move wrapper. |
-| mid-band-refinement, force-wrapper | express | **express-apply-from-wrapper**: read wrapper `original_path`, `approved_option`; run autonomous-express on original with `approved_option` as express_view; update/move wrapper. |
+| **handoff-readiness** | — | **Apply**: Per-change snapshot of target phase note (`phase_path` or `original_path`) → apply chosen option (append pseudo-code stub, append resolution to phase, or re-queue EXPAND-ROAD with user_guidance); set `processed: true`, `used_at` on wrapper → move wrapper to `4-Archives/Ingest-Decisions/Roadmap-Decisions/`. If option is "Accept as-is", re-run hand-off-audit with override or set frontmatter flag on phase so next run skips hand-off gate for that phase. |
+| mid-band-refinement, force-wrapper | distill | **distill-apply-from-wrapper**: read wrapper `original_path`, `approved_option`; run **DistillSubagent** pipeline on original with `approved_option` as distill_lens; update/move wrapper. |
+| mid-band-refinement, force-wrapper | express | **express-apply-from-wrapper**: read wrapper `original_path`, `approved_option`; run **ExpressSubagent** pipeline on original with `approved_option` as express_view; update/move wrapper. |
 | mid-band-refinement, force-wrapper | organize, archive | Resolve `approved_path`; run path-apply (move to approved path) for that pipeline; snapshot + dry_run then commit; move wrapper to archive. |
 | low-confidence | (any) | Same as mid-band-refinement by pipeline: apply approved path or lens/view; move wrapper to archive. |
 | error | — | Link to Errors.md entry; no destructive apply; move wrapper to archive after user review. |

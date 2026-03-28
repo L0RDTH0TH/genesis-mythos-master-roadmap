@@ -1,0 +1,10 @@
+{
+  "minimal-advanced@@cursor": "default",
+  "minimal-style@@bold-modifier": 300,
+  "minimal-style@@bold-color@@dark": "#14E00E",
+  "minimal-style@@row-lines": true,
+  "minimal-style@@col-lines": true,
+  "minimal-style@@table-lines": true,
+  "minimal-style@@h1-l": false,
+  "minimal-style@@h2-l": false
+}

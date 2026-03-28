@@ -7,9 +7,13 @@ status: active
 links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 ---
 
-# Second Brain Configs
+**TL;DR** — Second-Brain-Config is the single source for hub_names, archive, highlight, depths, confidence_bands, prompt_defaults. MCP env (OBSIDIAN_VAULT_PATH, etc.) in `~/.cursor/mcp.json`. Use the tables below for who consumes what.
 
-## Vault/config note
+---
+
+## Overview
+
+## Quick Reference — Vault/config note
 
 [[3-Resources/Second-Brain-Config|Second-Brain-Config]] — single source for pipelines/skills. **Responsibilities** (who consumes what):
 

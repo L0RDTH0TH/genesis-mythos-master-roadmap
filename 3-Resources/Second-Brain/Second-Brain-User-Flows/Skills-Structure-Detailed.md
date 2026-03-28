@@ -51,7 +51,7 @@ flowchart LR
     AH[append_to_hub]
   end
   subgraph Wrapper [Wrapper]
-    PP[obsidian_propose_para_paths context_mode: wrapper max_candidates: 7]
+    PP[propose_para_paths context_mode: wrapper max_candidates: 7]
     DW[Create/refresh Decision Wrapper A–G]
   end
   subgraph Log [Log]
@@ -198,7 +198,7 @@ Documented in mcp-obsidian-integration. ensure_structure creates full path recur
 ```mermaid
 flowchart LR
   Fail[move_note fails or dry_run reports high risk]
-  Fail --> PA[propose_alternative_paths obsidian_propose_para_paths context_mode: fallback]
+  Fail --> PA[propose_alternative_paths propose_para_paths context_mode: fallback]
   PA --> Cal[calibrate_confidence prior_output: classification + path]
   Cal --> Ver[verify_classification note_path, calibrated_output]
   Ver --> Dry[obsidian_move_note dry_run: true again]

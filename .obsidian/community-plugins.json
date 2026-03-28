@@ -9,5 +9,7 @@
   "cmdr",
   "obsidian-local-rest-api",
   "watcher",
-  "mermaid-view"
+  "mermaid-view",
+  "obsidian-style-settings",
+  "obsidian-mind-map"
 ]

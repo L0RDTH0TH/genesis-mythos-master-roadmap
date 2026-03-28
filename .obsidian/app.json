@@ -23,8 +23,10 @@
     "watcher:trigger-task-roadmap",
     "watcher:clear-queue",
     "watcher:trigger-task-complete",
-    "editor:configure-toolbar"
+    "editor:configure-toolbar",
+    "editor:undo"
   ],
   "attachmentFolderPath": "5-Attachments",
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": true,
+  "promptDelete": false
 }

@@ -1,0 +1,23 @@
+---
+original_paths:
+  - 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md
+  - 1-Projects/genesis-mythos-master/Roadmap/roadmap-state.md
+  - 1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201.md
+pre_mutation_sha256:
+  workflow_state.md: 3072c045d625ab3fb65b9a0e76b230f449e04bb3f6f880bc46108328d44e4caf
+  roadmap-state.md: 6ee45b48bd7eeb8bc29e1de134da1a3ec9671fad5b1a8d8869b0e16f70592cc9
+  phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201.md: a48f28fbabf109a8e30232e47d1bffa57fb6a4cebd44c1e6e63cfe0dd84e3bbe
+pipeline: roadmap
+snapshot_type: per-change
+queue_entry_id: resume-deepen-post-cursor-repair-p4-1-gmm-20260324T052800Z
+parent_run_id: a1b2c3d4-queue-20260324-eatq-gmm-01
+snapshot_created: 2026-03-24T03:00:23Z
+snapshot_note: "Full workflow_state body not inlined (size); hash attestation only per Layer-2 host."
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+# Pre-mutation hash manifest (roadmap deepen)
+
+Attests vault state **before** `resume-deepen-post-cursor-repair-p4-1-gmm-20260324T052800Z` (Phase 4.1 secondary WBS / roll-up stub evidence pass).

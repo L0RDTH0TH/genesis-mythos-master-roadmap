@@ -25,16 +25,16 @@ description: Scans queue or Mobile-Pending-Actions for user edits (approved true
 
 ### Wrapper support (Decision Wrappers under Ingest/Decisions/)
 
-- When a queue entry's `source_file` points to a **Decision Wrapper** under `Ingest/Decisions/` (see `para-zettel-autopilot.mdc`) and the wrapper has either `approved: true` or an explicit `approved_option` / `approved_path` set in frontmatter:
+- When a queue entry’s `source_file` points to a **Decision Wrapper** under `Ingest/Decisions/` (see `para-zettel-autopilot.mdc`) and the wrapper has either `approved: true` or an explicit `approved_option` / `approved_path` set in frontmatter:
   - **Resolve target_path (letters A–G)**:
     - **Prefer `approved_path`:** If `approved_path` is present in frontmatter, use it as the **hard target path** (highest-priority). No need to map from letter.
     - **Fallback parse body:** If `approved_path` is missing but `approved_option` is one of `A`–`G`, resolve the path by: (1) using frontmatter candidate keys if present (e.g. `candidate_a_path`), or (2) parsing the wrapper body for the line that matches that letter (e.g. `**F.** path — N%`) and extracting the path from that line. Use that as `hard_target_path`.
     - **Re-wrap / no path:** If `re-wrap: true` or `approved_option` is `0` (reject all), emit **no** `hard_target_path` — the pipeline runs the re-wrap branch (archive wrapper to Re-Wrap, create new wrapper with Thoughts as seed).
   - **Extract guidance**:
-    - Read the "Thoughts / corrections / why this location?" block in the wrapper body and treat it as `user_guidance` text for the original note.
+    - Read the “Thoughts / corrections / why this location?” block in the wrapper body and treat it as `user_guidance` text for the original note.
     - Emit this text via the existing `guidance` object so `guidance-aware.mdc` can pass it into classify_para / subfolder-organize on the re-run.
   - **Emit ingest hints (hard path + boosted guidance)**:
-    - Include a recommended `guidance_conf_boost` (e.g. 18) and the resolved `target_path` / `hard_target_path` in the skill's output so the ingest pipeline can treat this as a **hard path + boosted guidance** on the next run.
+    - Include a recommended `guidance_conf_boost` (e.g. 18) and the resolved `target_path` / `hard_target_path` in the skill’s output so the ingest pipeline can treat this as a **hard path + boosted guidance** on the next run.
     - When emitting guidance for classify_para / subfolder-organize, include a short, explicit note in the prompt context such as:  
       `"User explicitly chose: {{approved_option}} → {{hard_target_path}}. User reasoning: {{user_guidance}}. Treat selected path as very high confidence."`
 - This skill remains **read-only**: it does **not** mark wrappers `approved: true` or move notes itself; the queue processor + ingest pipeline perform writes and moves using the emitted `hard_target_path` and `guidance_text`.

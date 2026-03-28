@@ -1,0 +1,157 @@
+---
+title: Phase 4.1.1.10 - Auditable path check contract and example witness appendix
+roadmap-level: task
+phase-number: 4
+project-id: genesis-mythos-master
+status: active
+priority: high
+progress: 0
+created: 2026-03-25
+tags: [roadmap, genesis-mythos-master, phase-4, perspective, adapter, task, t-p4-01]
+para-type: Project
+subphase-index: "4.1.1.10"
+handoff_readiness: 91
+handoff_readiness_scope: "IsAuditablePath_v0 + AppendWitness_v0 closure_table binding sketch + witness appendix ordering; vault-only EXAMPLE EvidenceWitnessRow_v0; does not clear rollup HR<93, REGISTRY-CI HOLD, or instantiate repo harness"
+execution_handoff_readiness: 31
+handoff_gaps:
+  - "**G-P*.*-REGISTRY-CI HOLD** remains until 2.2.3 / D-020 execution evidence."
+  - "EXAMPLE witness row is **non-normative** until operator promotes to golden / closure table row with auditable path."
+  - "Path checks are vault-relative string ops only — no substitute for Lane-C **ReplayAndVerify** (**@skipUntil(D-032)**)."
+  - "`WitnessRefHash_v0` canonical JSON preimage + ledger event schema literals remain **TBD** — binding table is vocabulary-only until those freeze."
+links:
+  - "[[distilled-core]]"
+  - "[[workflow_state]]"
+  - "[[roadmap-state]]"
+  - "[[phase-4-1-1-9-bundle-verification-witness-and-rollback-runbook-roadmap-2026-03-24-2304]]"
+  - "[[phase-4-1-1-7-adapter-registry-rollup-handoff-bundle-and-closure-map-roadmap-2026-03-24-0926]]"
+  - "[[phase-4-1-1-adapter-preimage-and-stable-column-layout-roadmap-2026-03-24-0018]]"
+  - "[[decisions-log]]"
+  - "[[genesis-mythos-master-roadmap-moc]]"
+---
+
+## Phase 4.1.1.10 - Auditable path check contract and example witness appendix
+
+**Parent chain:** [[phase-4-1-1-9-bundle-verification-witness-and-rollback-runbook-roadmap-2026-03-24-2304]] → [[phase-4-1-1-7-adapter-registry-rollup-handoff-bundle-and-closure-map-roadmap-2026-03-24-0926]] → [[phase-4-1-1-adapter-preimage-and-stable-column-layout-roadmap-2026-03-24-0018]]
+
+**Queue / validator trace:** Follow-up to nested **`roadmap_handoff_auto`** pass2 **`.technical/Validator/validator-roadmap_handoff_auto-genesis-mythos-master-20260325T013000Z-pass2-post-ira.md`** — tightens **`safety_unknown_gap`** on prose-only **`IsAuditablePath`** and uninstantiated witness machinery (**`missing_roll_up_gates`** / rollup honesty unchanged).
+
+### TL;DR
+
+- Defines **`IsAuditablePath_v0`** as a **checkable** vault-relative contract (inputs, outputs, failure classes) consumable by **4.1.1.9** rollback runbook step 1.
+- Defines **`AppendWitness_v0`** + **closure_table** binding vocabulary (events ↔ cells) — **no** rollup PASS implication.
+- Adds **Witness appendix** (ordered artifacts) + **one** **EXAMPLE** **`EvidenceWitnessRow_v0`** (vault-honest: labeled example, not CI PASS).
+- **Does not** assert **rollup HR ≥ 93**, **REGISTRY-CI PASS**, or green harness.
+
+### IsAuditablePath_v0 (checkable sketch)
+
+**Inputs:** `proposed_target: string` (Obsidian wikilink target or vault-relative `.md` path after normalizing `[[` `]]`).
+
+**Output:** `AuditablePathVerdict_v0` enum:
+
+- `OK` — path resolves to an existing note under allowed PARA roots (`1-Projects/`, `2-Areas/`, `3-Resources/`, `4-Archives/`, `Ingest/`, `5-Attachments/` as linked target only).
+- `MISSING` — normalized path has no file in vault.
+- `MOVED_OR_AMBIGUOUS` — path fragment matches multiple candidates or alias collision (operator resolution required).
+- `OUT_OF_SCOPE` — path points outside PARA / Ingest / Attachments allow-list (e.g. raw URL-only with no vault note).
+
+> [!note] Non-normative sketch — `NormalizeVaultPath` is **not** fully specified here; the placeholder below is intentional (**vault-honest uninstantiated**) until a follow-on deepen defines bracket-stripping, alias resolution, and case rules.
+
+```text
+function NormalizeVaultPath(proposed_target: string) -> string:
+  // strip [[ ]], resolve to vault-relative if possible
+  // TBD: uninstantiated — explicit algorithm required before normative use
+  return proposed_target // stub only; not production semantics
+
+function IsAuditablePath_v0(proposed_target: string) -> AuditablePathVerdict_v0:
+  p = NormalizeVaultPath(proposed_target)
+  if p == "":
+    return MISSING
+  if not FileExistsInVault(p):
+    return MISSING
+  if not UnderAllowedRoots(p):
+    return OUT_OF_SCOPE
+  return OK
+```
+
+**Coupling to 4.1.1.9:** When **`AppendWitness`** is invoked, **`proposed_target`** must satisfy **`IsAuditablePath_v0 == OK`** or the operator runbook downgrades the closure cell per **4.1.1.9** rollback §1.
+
+### AppendWitness_v0 + closure_table binding (vault-normative sketch)
+
+**Purpose:** Tighten **`safety_unknown_gap`** from nested **`roadmap_handoff_auto`** second pass (`.technical/Validator/validator-roadmap_handoff_auto-genesis-mythos-master-20260325T020500Z-post-deepen-41110-second-compare-first.md`) by **instantiating** how a witness row binds to a rollup **closure_table** cell — **without** claiming **G-P4-1-*** **PASS** or clearing **REGISTRY-CI HOLD**.
+
+**Precondition:** `IsAuditablePath_v0(proposed_target) == OK`. On any other verdict, emit **`witness_append_skipped`** (runbook / ledger taxonomy **TBD**) and apply **4.1.1.9** rollback §1 downgrade — **no** silent closure cell promotion.
+
+```text
+type ClosureTableRowKey_v0 = tuple(gate_row_id: string, bundle_id: string, evidence_status_cell: string)
+
+enum AppendWitnessOutcome_v0:
+  WITNESS_BOUND_OK
+  PATH_FAIL
+  TABLE_KEY_MISSING
+  APPEND_DUPLICATE_IDEMPOTENT
+
+function AppendWitness_v0(
+  closure_table: map<ClosureTableRowKey_v0, ClosureCellState_v0>,
+  row_key: ClosureTableRowKey_v0,
+  witness: EvidenceWitnessRow_v0
+) -> AppendWitnessOutcome_v0:
+  if not closure_table.contains(row_key):
+    return TABLE_KEY_MISSING
+  if IsAuditablePath_v0(witness.proposed_target) != OK:
+    return PATH_FAIL
+  if closure_table[row_key].witness_anchor == witness.workflow_log_anchor:
+    return APPEND_DUPLICATE_IDEMPOTENT
+  // Bind: witness_ref ← WitnessRefHash_v0(witness)  // TBD: canonical JSON + hash registry
+  closure_table[row_key].witness_ref = WitnessRefHash_v0(witness)
+  emit ledger: witness_appended.event { reason_code: WITNESS_BOUND_OK, row_key, witness.workflow_log_anchor }
+  return WITNESS_BOUND_OK
+```
+
+**Closure binding table (vocabulary — vault)**
+
+| Event / outcome | Closure cell fields touched | Implies rollup PASS? |
+| --- | --- | --- |
+| `witness_appended.event` + `WITNESS_BOUND_OK` | `witness_ref`, `evidence_bundle_ref` (from `bundle_id`) | **No** — **FAIL (stub)** until repo harness + registry row |
+| `witness_append_skipped` (path verdict ≠ OK) | Downgrade per **4.1.1.9** | **No** |
+| `APPEND_DUPLICATE_IDEMPOTENT` | None (replay-safe no-op) | **No** |
+
+> [!warning] Honesty guard: This table **binds vocabulary** between **4.1.1.9** runbook steps and closure-table columns; it **does not** satisfy **missing_roll_up_gates** or clear **HR 92 < 93**.
+
+### Witness appendix (ordered artifacts)
+
+1. **[[workflow_state]]** — last machine-advancing **`deepen`** row for **`4.1.1.10`** (`queue_entry_id` / `last_auto_iteration` anchor).
+2. **This note** — `IsAuditablePath_v0`, `AppendWitness_v0`, **EXAMPLE** `EvidenceWitnessRow_v0` JSON.
+3. **[[phase-4-1-1-9-bundle-verification-witness-and-rollback-runbook-roadmap-2026-03-24-2304]]** — rollback §1 when path check fails.
+4. **[[phase-4-1-1-7-adapter-registry-rollup-handoff-bundle-and-closure-map-roadmap-2026-03-24-0926]]** — bundle / closure map for valid **`bundle_id`** (vault scope only).
+
+### EXAMPLE EvidenceWitnessRow_v0 (non-normative)
+
+> [!warning] EXAMPLE ONLY — not evidence of CI closure or rollup PASS
+
+```json
+{
+  "gate_row_id": "G-P4-1-ADAPTER-CORE",
+  "bundle_id": "P4-1-1-BUNDLE-A",
+  "proposed_target": "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/phase-4-1-1-7-adapter-registry-rollup-handoff-bundle-and-closure-map-roadmap-2026-03-24-0926.md",
+  "witness_actor": "operator-example",
+  "witness_utc": "2026-03-25T00:03:21Z",
+  "workflow_log_anchor": "resume-deepen-post-pass2-41110-auditable-path-gmm-20260325T000321Z"
+}
+```
+
+### Acceptance criteria
+
+1. **`IsAuditablePath_v0`** documents **inputs**, **outputs**, and **enum** tied to **4.1.1.9** rollback wording.
+2. **`AppendWitness_v0`** documents **preconditions**, **outcomes**, and **closure_table** row-key coupling + honesty table (**no** rollup PASS implication).
+3. **Witness appendix** lists ordered artifacts (workflow log anchor → this note → 4.1.1.9 → 4.1.1.7).
+4. **EXAMPLE** row is explicitly **non-normative** and does not flip **G-P4-1-*** stubs to PASS.
+5. Upward links to **4.1.1.9**, **4.1.1.7**, and tertiary **4.1.1** present in body and `links`.
+6. **Rollup HR 92 < 93** and **REGISTRY-CI HOLD** remain explicit in prose.
+
+### Non-goals
+
+- No **ReplayAndVerify** or registry row materialization.
+- No automatic **`recal`** queue line from this note alone (**D-060** applies when context tracking shows util ≥ threshold).
+
+### Edges
+
+- **Symlinks / case sensitivity:** treat as **MOVED_OR_AMBIGUOUS** until operator normalizes canonical vault path policy (**D-027** stack TBD does not block this vault-only contract).

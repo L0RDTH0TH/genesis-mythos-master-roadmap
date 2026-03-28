@@ -15,12 +15,46 @@ This document shows the big picture of how rules are organized: always-applied v
 
 ## Two rule layers
 
+```mermaid
+flowchart LR
+  subgraph Always [Always-applied]
+    A1["00-always-core"]
+    A2["mcp-obsidian-integration"]
+    A3["confidence-loops"]
+    A4["watcher-result-append"]
+    A5["backbone-docs-sync"]
+  end
+  subgraph Context [Context-triggered]
+    C1["para-zettel-autopilot"]
+    C2["auto-eat-queue"]
+    C3["auto-distill / auto-archive / auto-express / auto-organize"]
+  end
+  Trigger["User trigger or glob"]
+  Trigger --> Always
+  Trigger --> Context
+```
+
 - **Always-applied** — Run on every agent turn. They define persona, Ingest-first behavior, MCP safety (backups, snapshots, dry_run before move), confidence bands, guidance-aware contract, when to list Ingest and run the ingest pipeline, and when to append to Watcher-Result. They also require backbone docs and `.cursor/sync` to stay updated when rules or skills change.
 - **Context-triggered** — Run only when the instruction or open file matches a trigger (phrase, glob, or queue). They start pipelines: full-autonomous-ingest, queue processor, autonomous-distill, -archive, -express, -organize, plus ingest pre-steps (non-MD handling), snapshot sweep, restore, resurface, and lens/view rules (highlight perspective, distill lens, express view, mobile seed, async cascade).
 
 ---
 
 ## How the user’s trigger selects rules
+
+```mermaid
+flowchart TD
+  Trigger["Trigger source"]
+  Trigger --> Phrase["Phrase: INGEST MODE, EAT-QUEUE, DISTILL MODE, etc."]
+  Trigger --> Watcher["Watcher plugin signal"]
+  Trigger --> Commander["Commander / toolbar → queue"]
+  Trigger --> Glob["Open file / glob e.g. Ingest/*.md"]
+  Phrase --> Rules["always-ingest-bootstrap, para-zettel-autopilot, auto-eat-queue, auto-distill, etc."]
+  Watcher --> Rules
+  Commander --> EAT["EAT-QUEUE"]
+  EAT --> Rules
+  Glob --> Rules
+  Rules --> Pipeline["Pipeline: full-autonomous-ingest, queue processor, autonomous-distill, etc."]
+```
 
 1. **User says a phrase in Cursor**  
    Examples: INGEST MODE, Process Ingest, run ingests → always-ingest-bootstrap and para-zettel-autopilot (full-autonomous-ingest). DISTILL MODE, ARCHIVE MODE, EXPRESS MODE, ORGANIZE MODE → the matching auto-* context rule (autonomous-distill, -archive, -express, -organize). EAT-QUEUE, Process queue, eat cache / EAT-CACHE → auto-eat-queue (queue processor). PROCESS TASK QUEUE → auto-queue-processor.
@@ -38,6 +72,20 @@ This document shows the big picture of how rules are organized: always-applied v
 
 ## Main safety gates (all pipelines)
 
+```mermaid
+flowchart TD
+  Gate1["Backup: ensure_backup / create_backup before destructive"]
+  Gate2["Snapshot: per-change when conf ≥85% before move/rename/split/distill"]
+  Gate3["Dry run: move_note dry_run true then false; ensure_structure before move"]
+  Gate4["Confidence: high → snapshot then commit; mid → one loop; low → proposal only"]
+  mcp["mcp-obsidian-integration always"]
+  conf["confidence-loops always"]
+  Gate1 --> mcp
+  Gate2 --> mcp
+  Gate3 --> mcp
+  Gate4 --> conf
+```
+
 - **Backup** — Before destructive or move steps, a recent backup must exist (ensure_backup / create_backup). No destructive action until backup is in place.
 - **Snapshot** — Before move, rename, split, structural distill, or large appends, a per-change snapshot is created when confidence ≥85%. Batch snapshots when batch size exceeds threshold.
 - **Dry run before move** — Every `obsidian_move_note` at ≥85% is called first with `dry_run: true`; effects are reviewed; then `dry_run: false` to commit. Path must exist (ensure_structure for parent).
@@ -47,12 +95,35 @@ This document shows the big picture of how rules are organized: always-applied v
 
 ## Ingest: Phase 1 vs Phase 2 (rule split)
 
+```mermaid
+flowchart TD
+  Phase1["Phase 1: para-zettel-autopilot"]
+  Phase1 --> NoMove["No move/rename"]
+  Phase1 --> Wrapper["Create/refresh Decision Wrapper A–G"]
+  Wrapper --> User["User sets approved: true or re-wrap"]
+  User --> EAT["User runs EAT-QUEUE"]
+  EAT --> Phase2["Phase 2: auto-eat-queue Step 0"]
+  Phase2 --> Apply["Apply path or re-wrap or re-try branch"]
+  Apply --> Move["Move/rename after backup, snapshot, dry_run"]
+```
+
 - **Phase 1** — Governed by para-zettel-autopilot and ingest context rules. Classify, enrich, organize proposal, split, distill, hub append, and **create/refresh Decision Wrapper**. No move/rename of the original note; the wrapper lists options A–G (and optionally 0). User checks one option and sets `approved: true`, or sets `re-wrap: true` / option 0.
 - **Phase 2 (apply-mode)** — Governed by auto-eat-queue Step 0 and feedback-incorporate. When the user runs EAT-QUEUE, Step 0 runs first: for wrappers with `approved: true`, `re-wrap: true`, or `re-try: true`, it resolves path, re-wrap intent, or re-try intent. Then: apply-mode ingest (move/rename to approved path), phase-direction apply (provenance + comment guidance on roadmap; wrapper → Roadmap-Decisions/), re-wrap branch (archive wrapper, create new from Thoughts), or re-try branch (re-queue EXPAND-ROAD/TASK-TO-PLAN-PROMPT with guidance; cap re_try_max_loops). Moves and renames happen only after backup/snapshot and dry_run.
 
 ---
 
 ## Where rules live
+
+```mermaid
+flowchart LR
+  AlwaysDir[".cursor/rules/always/*.mdc"]
+  ContextDir[".cursor/rules/context/*.mdc"]
+  SyncAlways[".cursor/sync/rules/always/*.md"]
+  SyncContext[".cursor/sync/rules/context/*.md"]
+  AlwaysDir --> SyncAlways
+  ContextDir --> SyncContext
+  Map["Map: Rules.md, Cursor-Skill-Pipelines-Reference, Pipelines"]
+```
 
 - Always: `.cursor/rules/always/*.mdc`
 - Context: `.cursor/rules/context/*.mdc`

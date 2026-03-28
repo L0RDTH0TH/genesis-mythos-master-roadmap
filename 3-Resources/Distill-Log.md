@@ -29,6 +29,10 @@ Each run should append lines in this format (mirroring the global pipelines refe
 
 2026-02-25 21:22 | Pipeline: autonomous-distill | Note: 1-Projects/Test-Project/2026-02-25-distill-messy.md | Confidence: 88% | Changes: backup, per-change snapshot, distill_note, distill-highlight-color, layer-promote, callout-tldr-wrap, readability-flag; Backup: /home/darth/Documents/Second-Brain-oops-Backups/20260225-212242-2026-02-25-distill-messy.md; Snapshot: Backups/Per-Change/2026-02-25-distill-messy--0da3acfa--20260225-212245.md.bak | Flag: none
 
+2026-03-14 12:00 | Pipeline: autonomous-distill | Note: Ingest/Agent-Research/voronoi-world-generation-2026-03-14-1200.md | Confidence: 88% | Changes: backup, obsidian_distill_note, TL;DR callout, distill-highlight-color (4 spans), research_distilled: true; Backup: /home/darth/Documents/Second-Brain-oops-Backups/20260314-050051-voronoi-world-generation-2026-03-14-1200.md | Flag: none
+
+2026-03-14 05:06 | Pipeline: autonomous-distill | Note: Ingest/Agent-Research/azgaar-fantasy-map-generator-2026-03-14-1430.md | Confidence: 85% | Changes: backup, per-change snapshot, TL;DR callout, agent highlights (Voronoi, map layers), research_distilled: true; Backup: /home/darth/Documents/Second-Brain-oops-Backups/20260314-050533-azgaar-fantasy-map-generator-2026-03-14-1430.md; Snapshot: Backups/Per-Change/azgaar-fantasy-map-generator-2026-03-14-1430--a7f2b1c9--20260314-050600.md.bak | Flag: none
+
 2026-02-25 21:22 | Pipeline: autonomous-distill | Note: 1-Projects/Test-Project/2026-02-25-distill-short.md | Confidence: 90% | Changes: backup, per-change snapshot, distill_note, distill-highlight-color, layer-promote, callout-tldr-wrap; Backup: /home/darth/Documents/Second-Brain-oops-Backups/20260225-212242-2026-02-25-distill-short.md; Snapshot: Backups/Per-Change/2026-02-25-distill-short--334b0054--20260225-212246.md.bak | Flag: none
 
 2026-02-25 21:22 | Batch: Backups/Batch/2026-02-25T212250Z-batch-distill-002.md | notes: 2 | pipeline: autonomous-distill | flag: none 

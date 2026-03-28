@@ -14,11 +14,11 @@ description: Reads an approved Decision Wrapper (wrapper_type mid-band-refinemen
 
 1. **Read wrapper**: The wrapper path and frontmatter are in context (Step 0 passes the wrapper being processed). Read frontmatter: `original_path`, `approved_option`, `approved_path`, `user_guidance` (or extract from Thoughts block). Resolve the chosen option (A–G) to a **distill_lens** or **depth/layer** value (e.g. option A = "1 layer", B = "2 layers", C = "3 layers", or option text = lens name).
 
-2. **Resolve distill params**: Set `distill_lens` (or equivalent) from `approved_option` / wrapper body so the distill pipeline uses the user's choice. If the wrapper body or options describe a lens (e.g. "beginner", "executive"), use that as the lens override. If options are depth-only, pass depth/layers to the distill run.
+2. **Resolve distill params**: Set `distill_lens` (or equivalent) from `approved_option` / wrapper body so the distill pipeline uses the user’s choice. If the wrapper body or options describe a lens (e.g. "beginner", "executive"), use that as the lens override. If options are depth-only, pass depth/layers to the distill run.
 
 3. **Re-run autonomous-distill**: Run the **autonomous-distill** pipeline on the note at `original_path` with:
    - **distill_lens** (or depth) override from the resolved option.
-   - **user_guidance** from the wrapper's Thoughts block (if any) as soft context.
+   - **user_guidance** from the wrapper’s Thoughts block (if any) as soft context.
    - Normal backup/snapshot gates and confidence rules apply; this run may perform the structural distill (bold, highlight, TL;DR) that was previously proposed in the refinement wrapper.
 
 4. **No wrapper writes**: This skill does not update or move the wrapper; Step 0 updates the wrapper (e.g. `used_at`, `processed: true`) and moves it to the archive after the distill run completes.
@@ -26,7 +26,7 @@ description: Reads an approved Decision Wrapper (wrapper_type mid-band-refinemen
 ## MCP / pipeline
 
 - `obsidian_read_note` — read wrapper and original note when needed.
-- The autonomous-distill pipeline (auto-distill context rule) is run by the agent with the overrides in context; no dedicated MCP for "run distill" — the agent executes the pipeline steps (backup, distill_note with lens/depth, layer-promote, etc.) using the overrides.
+- The autonomous-distill pipeline (auto-distill context rule) is run by the agent with the overrides in context; no dedicated MCP for “run distill” — the agent executes the pipeline steps (backup, distill_note with lens/depth, layer-promote, etc.) using the overrides.
 
 ## Reference
 

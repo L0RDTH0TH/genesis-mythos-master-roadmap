@@ -7,6 +7,10 @@ status: active
 links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 ---
 
+**TL;DR** — Required: Dataview (dashboards), Highlightr (colors; data-highlight-source), Local REST API (MCP), Watcher (signal/result/queue). Optional: Commander (triggers, macros). Agent does not modify Dataview blocks; must not move/delete Watcher paths.
+
+---
+
 # Second Brain Plugins
 
 ## Obsidian (required)
@@ -22,7 +26,7 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 
 | Plugin | Role | Responsibilities |
 |--------|------|------------------|
-| **Commander** | Place Watcher/queue and roadmap commands in ribbon, status bar, or mobile toolbar; macros for pipeline triggers; commander_source/commander_macro logging. See [[3-Resources/Commander-Plugin-Usage|Commander-Plugin-Usage]]. | Surfaces triggers in UI; agent logs commander_source and commander_macro when run was Commander-triggered |
+| **Commander** | Place Watcher/queue and roadmap commands in ribbon, status bar, or mobile toolbar; macros for pipeline triggers; commander_source/commander_macro logging. **Multi-run roadmap macros:** Resume Roadmap, RECAL-ROAD, Sync phase outputs, Reopen Phase (REVERT-PHASE), **Approve All Roadmap Wrappers** (or Approve All Pending Wrappers in Project) for bulk-approve of roadmap Decision Wrappers; **Queue Research: Phase** (RESEARCH-AGENT); **Queue Research: Gaps** (RESEARCH-GAPS — scan current phase note for gaps, append RESEARCH-AGENT with gaps array; run from roadmap phase note). When roadmap-deepen detects high-severity gaps, it appends a banner to the phase note and an entry to Mobile-Pending-Actions so mobile/laptop user can approve or run "Queue Research: Gaps". With **auto_apply_safe_threshold: 82** (Second-Brain-Config roadmap block), single-option wrappers ≥82% may auto-apply with snapshot + log. See [[3-Resources/Commander-Plugin-Usage|Commander-Plugin-Usage]] (or [[4-Archives/Resources/Plugins-Usage/Commander-Plugin-Usage]] if moved to Archives). | Surfaces triggers in UI; agent logs commander_source and commander_macro when run was Commander-triggered |
 | **Commando** (optional) | Enhances Commander macros; optional for timed chains. | Add to Plugins only if needed. |
 | **Templater**, **Tasks**, **QuickAdd**, **Excalidraw** | Optional; templates and task management. | Optional; not required for Second-Brain pipelines. |
 

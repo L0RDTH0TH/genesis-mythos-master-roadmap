@@ -16,7 +16,7 @@ description: Marks high-potential notes (links, highlights) with resurface-candi
 
 2. **Mark**: If high potential, set frontmatter via `obsidian_manage_frontmatter`(path, key: "resurface-candidate", value: "true", action: set).
 
-3. **Optional**: Append to a Resurface hub (e.g. a dedicated MOC or hub note) using `obsidian_append_to_hub`(hub_name: "Resurface", wikilink: "[[note-title]]", summary: "brief reason"). Document hub name in pipeline reference if it differs.
+3. **Optional**: Append to a Resurface hub using `obsidian_append_to_hub`. Hub names: prefer [Second-Brain-Config.md](3-Resources/Second-Brain-Config.md) hub_names (e.g. resurface: "Resurface"); fallback to "Resurface", "Projects Hub", etc. if config is not available.
 
 4. **Color theory**: When presenting in hub views, analogous colors can group related resurface candidates; document in pipeline or Highlightr key if needed.
 

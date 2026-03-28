@@ -42,8 +42,20 @@ Assembly: Base-Prompt → Param-Defaults/Param-Overrides → Guidance-Default �
 
 ## Fallback chain (param precedence)
 
+```mermaid
+flowchart TD
+  Q["1. Queue entry params"]
+  U["2. user_guidance frontmatter"]
+  C["3. Config prompt_defaults / profiles"]
+  M["4. MCP tool defaults"]
+  Q --> Merge["EAT-QUEUE merge → pipeline"]
+  U --> Merge
+  C --> Merge
+  M --> Merge
+```
+
 1. **Queue entry params** — Explicit on the queue line.
-2. **user_guidance frontmatter** — Merge (e.g. append to rationale_style if compatible).
+2. **user_guidance frontmatter** — Merge (e.g. append to rationale_style if compatible). `user_guidance` remains human-only; AI reasoning from crafter C choices lives in queue `agent_reasoning` and the scratchpad instead.
 3. **Config prompt_defaults / profiles** — From Second-Brain-Config for the chosen pipeline or profile.
 4. **MCP tool defaults** — e.g. max_candidates: 3 per MCP-Tools when absent.
 
@@ -52,6 +64,17 @@ Documented in [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]. EAT-QUEU
 ---
 
 ## Validation (pre-dispatch)
+
+```mermaid
+flowchart TD
+  Merged["Merged params"]
+  Contract["Validate vs MCP-Tools contract"]
+  Valid["Valid: pass to pipeline"]
+  Invalid["Invalid: skip dispatch; Errors.md; Watcher-Result failure"]
+  Merged --> Contract
+  Contract --> Valid
+  Contract --> Invalid
+```
 
 - **Contract**: EAT-QUEUE validates merged params against [[3-Resources/Second-Brain/MCP-Tools|MCP-Tools]] before dispatching (e.g. rationale_style in ['concise','detailed','bullet','technical']; context_mode and max_candidates in allowed ranges).
 - **On invalid**: Reject entry; skip dispatch; append to Errors.md per Error Handling Protocol; append failure to Watcher-Result; continue to next entry.
@@ -68,6 +91,38 @@ Documented in [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]. EAT-QUEU
 | **Craft and Queue** | Append to prompt-queue.jsonl with validated params; if invalid, abort and log to Prompt-Log.md. | (same as Craft Prompt when appending) |
 
 Sub-macros: e.g. "Craft Ingest Default", "Craft Organize Custom" for batch or one-shot. Documented in [[3-Resources/Plugins-Usage/Commander-Plugin-Usage|Commander-Plugin-Usage]].
+
+---
+
+## Plan-mode architecture (mid-level)
+
+Plan-mode: two kickoffs (CODE / ROADMAP), then mode choice, then optionals from param table; routing to prompt-queue.jsonl vs Task-Queue.md by mode; read-then-append.
+
+```mermaid
+flowchart TD
+  User["User in Plan mode"]
+  Kickoff["Kickoff: CODE or ROADMAP"]
+  CodeBranch["CODE: pipeline / task mode"]
+  RoadmapBranch["ROADMAP: MODE vs RESUME"]
+  Optionals["Optionals in param table order"]
+  ManualText["Manual text phase"]
+  Summary["Summary + plan + payload"]
+  Confirm["Append to queue? Y/n"]
+  Validate["Validate vs contract"]
+  Route["Route: Task-Queue.md if task mode else prompt-queue.jsonl"]
+  ReadAppend["Read file, append line, write"]
+  User --> Kickoff
+  Kickoff --> CodeBranch
+  Kickoff --> RoadmapBranch
+  CodeBranch --> Optionals
+  RoadmapBranch --> Optionals
+  Optionals --> ManualText
+  ManualText --> Summary
+  Summary --> Confirm
+  Confirm --> Validate
+  Validate --> Route
+  Route --> ReadAppend
+```
 
 ---
 

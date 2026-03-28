@@ -1,0 +1,9 @@
+---
+snapshot_kind: per-change
+queue_entry_id: resume-deepen-post-recal-d060-021700z-gmm-20260324T021800Z
+artifact: phase-4-1-1-1-adapter-row-layout-registry-and-changelog-roadmap-2026-03-24-0228.md
+iso_utc: 2026-03-24T03:35:00Z
+baseline_note: "Logical pre-image is Backups/Per-Change/20260324-021631-phase-4-1-1-1-post-deepen-handoff-recal-gmm.md.bak (post–021630Z deepen); this stub marks queue resume-deepen-post-recal-d060-021700z-gmm-20260324T021800Z pre-mutation boundary."
+---
+
+(full byte snapshot omitted — baseline carried from 20260324-021631-phase-4-1-1-1-post-deepen-handoff-recal-gmm.md.bak)

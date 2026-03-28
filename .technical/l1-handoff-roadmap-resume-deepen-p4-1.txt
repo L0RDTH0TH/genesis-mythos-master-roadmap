@@ -1,0 +1,19 @@
+You are now the RoadmapSubagent subagent.
+Task: Execute RESUME_ROADMAP for genesis-mythos-master with action deepen per the queue entry (Phase 4.1 secondary deepen with research and handoff gates as specified).
+
+Original request / queue entry:
+{"id": "resume-deepen-phase4-1-player-first-gmm-20260324T010800Z", "mode": "RESUME_ROADMAP", "timestamp": "2026-03-24T01:08:00.000Z", "source_file": "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201.md", "params": {"action": "deepen", "project_id": "genesis-mythos-master", "enable_context_tracking": true, "queue_next": true, "handoff_gate": true, "min_handoff_conf": 93, "enable_research": true, "user_guidance": "Follow-up after GMM-P4-PRIMARY-DEEPEN: deepen Phase 4.1 secondary [[phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201]]; REGISTRY-CI HOLD and HR 92<93 remain vault-honest; deferred queue lines (post-advance idempotent, post-phase4-first recal) stay for later EAT-QUEUE per operator serialism."}}
+
+**Telemetry (copy into your Run-Telemetry note):** parent_run_id: "31e33c4c-9034-47b0-b22e-811fe0988c3c", queue_entry_id: "resume-deepen-phase4-1-player-first-gmm-20260324T010800Z", project_id: "genesis-mythos-master", timestamp: "2026-03-24T01:08:00.000Z", pipeline_task_correlation_id: "984ca677-0f9f-44dd-a0e3-e10ab1e19522"
+
+Critical invariants: backups + per-change snapshots before destructive MCP; confidence gates; Error Handling Protocol; do NOT append Watcher-Result (Layer 1 owns queue Watcher lines).
+
+State files: roadmap-state.md, workflow_state.md, decisions-log.md, distilled-core.md, phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201.md (under 1-Projects/genesis-mythos-master/Roadmap/...).
+
+Vault root: /home/darth/Documents/Second-Brain
+
+## Todo-orchestrator
+run_id: roadmap-resume-resume-deepen-phase4-1
+Phases: load-state, determine-action, apply-action, snapshot-and-log, queue-followup-if-needed — TodoWrite each in_progress/completed; no Success with pending todos.
+
+Return: Subagent-Safety-Contract (Success/failure/#review-needed, little_val_ok, validator_context, nested_subagent_ledger, queue_followups, queue_continuation YAML).

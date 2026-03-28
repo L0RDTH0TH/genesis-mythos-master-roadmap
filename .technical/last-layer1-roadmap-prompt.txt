@@ -1,0 +1,47 @@
+## Layer 2 hand-off — RoadmapSubagent (queue-dispatched)
+
+**Subagent:** RoadmapSubagent  
+**Task:** Execute one RESUME_ROADMAP run for genesis-mythos-master: action `deepen` with conceptual-track cross-link guidance; respect `queue_next: false` and `enable_context_tracking: false`.
+
+### Telemetry (required)
+- `parent_run_id`: pr-eatq-gmm-crosslink-20260325T121030Z
+- `queue_entry_id`: gmm-conceptual-crosslink-core-20260325T120003Z
+- `project_id`: genesis-mythos-master
+- `timestamp`: 2026-03-24T22:56:27Z
+- `pipeline_task_correlation_id`: fc95405e-c9ab-4311-9b9c-e26c0e73c7f6
+- `vault_root`: /home/darth/Documents/Second-Brain
+
+### Original queue entry (JSON)
+```json
+{"id":"gmm-conceptual-crosslink-core-20260325T120003Z","mode":"RESUME_ROADMAP","source_file":"1-Projects/genesis-mythos-master/Roadmap/workflow_state.md","params":{"action":"deepen","project_id":"genesis-mythos-master","roadmap_track":"conceptual","queue_next":false,"enable_context_tracking":false,"enable_research":false,"user_guidance":"Conceptual only: improve cross-links between distilled-core.md and active phase roadmap notes under Roadmap/ (not Execution/). No recal; no execution-track artifacts."}}
+```
+
+### Critical invariants
+- Projects-only: `1-Projects/genesis-mythos-master/Roadmap/` — never mutate `4-Archives/**` roadmap state.
+- Dual track: conceptual work only; do not create or prioritize `Roadmap/Execution/` artifacts for this run.
+- `queue_next: false` — align `queue_followups` / `queue_continuation` with no automatic next RESUME_ROADMAP append.
+- Snapshot `roadmap-state.md` and `workflow_state.md` before and after state updates.
+- Obey MCP backup/snapshot gates and nested Validator→IRA contract for roadmap_handoff_auto when applicable.
+
+### State files (read first)
+- `1-Projects/genesis-mythos-master/Roadmap/roadmap-state.md`
+- `1-Projects/genesis-mythos-master/Roadmap/workflow_state.md`
+- `1-Projects/genesis-mythos-master/Roadmap/distilled-core.md`
+- `1-Projects/genesis-mythos-master/Roadmap/decisions-log.md`
+
+### Next-Need Resolver hints (Layer 1 advisory — user params lock action)
+- `effective_action`: deepen (explicit in queue params)
+- `effective_target`: conceptual cross-links between `distilled-core.md` and active phase roadmap notes under `Roadmap/` (exclude `Roadmap/Execution/`)
+- `need_class`: phase_gate_ready
+- `delta_basis`: cursor **4.1.1.8**; last row Ctx **80%**, Conf **92**, iter phase 4 = **15**
+
+### Decisions preflight
+- Config `queue.decisions_preflight.enabled` is **false** — no handoff_addendum YAML.
+
+### Return format (Subagent-Safety-Contract)
+- Success or failure with `little_val_ok`, `validator_context` when Success and nested validator ran, `nested_subagent_ledger` (fenced YAML), `queue_continuation` (fenced YAML tail), `queue_followups` consistent with `queue_next: false`.
+
+### Todo-orchestrator (you MUST update via TodoWrite)
+- `run_id`: `roadmap-resume-gmm-crosslink-20260325`
+- Phases: `load-state` → `determine-action` → `apply-action` → `snapshot-and-log` → `queue-followup-if-needed`
+- Do not return Success while any phase remains `pending` or `in_progress`; cancel with reason if aborted.

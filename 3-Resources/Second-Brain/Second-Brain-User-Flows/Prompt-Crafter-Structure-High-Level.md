@@ -56,6 +56,36 @@ User (or macro) chooses pipeline and profile → Commander assembles from Config
 
 ---
 
+## Plan-mode architecture (high-level)
+
+Plan-mode path: user starts crafting in Cursor Plan mode; agent uses param table + Queue-Sources + Config; one question per message; then manual text, summary, validate, route, append.
+
+```mermaid
+flowchart LR
+  User["User in Plan mode"]
+  Agent["Plan-mode agent"]
+  ParamTable["Param table + Queue-Sources"]
+  Config["Config prompt_defaults"]
+  Optionals["Optionals one per message"]
+  ManualText["Manual text phase"]
+  Summary["Summary + payload"]
+  Validate["Validate payload"]
+  Route["Route file"]
+  Append["Append to queue"]
+  User --> Agent
+  Agent --> ParamTable
+  Agent --> Config
+  ParamTable --> Optionals
+  Config --> Optionals
+  Optionals --> ManualText
+  ManualText --> Summary
+  Summary --> Validate
+  Validate --> Route
+  Route --> Append
+```
+
+---
+
 ## Safety and invariants
 
 - **Non-destructive defaults** — Params influence proposals only; approved: true required for any move/rename (Pipelines § Phase 2). No auto-approval injection.

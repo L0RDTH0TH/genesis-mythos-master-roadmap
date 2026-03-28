@@ -1,0 +1,5 @@
+snapshot_marker: pre-mutate
+source: 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md
+queue_entry_id: followup-deepen-post-d099-skimmer-parity-gmm-20260327T141500Z
+timestamp_utc: 2026-03-27T14:15:00Z
+note: marker snapshot; full body not duplicated per run scope

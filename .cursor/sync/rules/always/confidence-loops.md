@@ -14,10 +14,13 @@ alwaysApply: true
   - Destructive actions (move, rename, split, structural distill, large appends) are allowed **only** in this band and only after a successful per-change snapshot.
 - **Mid-band (loop)**: \(68\% \le conf \le 84\%\) (or **tunable** `mid: [min, max]` from Second-Brain-Config when present)
   - Triggers **at most one** non-destructive refinement loop per note per pipeline run.
+  - **Async option**: When async refinement is enabled, generate a **preview** and write it to [Mobile-Pending-Actions](3-Resources/Mobile-Pending-Actions.md). Do **not** commit the destructive action until the user sets **`approved: true`** in frontmatter or adds feedback. On the next EAT-QUEUE or re-run, if approved or feedback is present, proceed to snapshot + destructive step only when post_loop_conf ≥85%. **Commander**: User approval is done on **laptop** via Commander macros (e.g. "Async Approve" = scan Mobile-Pending-Actions + set approved: true + re-queue); mobile does not append to queue (mobile = observe + fill Ingest only). See Mobile-Migration-Spec.
 - **Low-confidence**: \(<68\%\) (or below configured mid minimum)
-  - **No loop**. Do not perform destructive actions; treat outputs as proposals / candidates and hand them off to **user decision flows** (e.g. Decision Wrappers for ingest, async preview + `approved: true` for other pipelines) rather than auto-applying changes.
+  - **No loop**. Do not perform destructive actions; treat outputs as proposals / candidates and hand them off to **user decision flows**. **Create a Decision Wrapper** under `Ingest/Decisions/Low-Confidence/` with `wrapper_type: low-confidence`, `pipeline: <organize|archive|distill|express>`, `original_path`, `clunk_severity: high`; fill options A–G with top classification/path proposals and "Try distill lens", "Seed-enhance from highlight", "Mark orphan / move to review-pending", "Ignore" (see each pipeline context rule). Use the option labels and meanings from [User-Questions-and-Options-Reference](3-Resources/Second-Brain/User-Questions-and-Options-Reference.md) §2 (Decision Wrappers: A–G, 0, R, re-wrap). Ensure `obsidian_ensure_structure`(folder_path: "Ingest/Decisions/Low-Confidence"); ensure CHECK_WRAPPERS entry exists; append Watcher-Result line when wrapper created. For ingest, the existing Decision Wrapper under Ingest/Decisions/Ingest-Decisions/ already covers this; other pipelines use Low-Confidence/.
 
 **Tunable bands**: When `confidence_bands` is set in `3-Resources/Second-Brain-Config.md` (e.g. `mid: [80, 90]`, `high_threshold: 90`), rules and skills **read** these values; otherwise fallback to the defaults above. See Parameters.md.
+
+**Crafted-params bump (optional)**: When the run uses **crafted params** (from queue entry `params` or prompt-crafter assembly), add a small **pre_loop_conf floor** bump (e.g. **+5%**) so stricter params imply higher baseline stability. Tunable via Parameters.md (e.g. `crafted_params_conf_boost: 5`); default 0 if unset.
 
 **Loop-skip flag**: When a note has frontmatter **`loop-skip: true`** (or **`skip_refinement_loop: true`**), **skip** the mid-band refinement loop for that note (trusted path). Proceed to snapshot + destructive action only if confidence already meets high threshold; otherwise treat as proposal. Document in Parameters.md and pipeline reference.
 
@@ -93,9 +96,10 @@ Use this template for loops in ingest, organize, archive, and adapted versions f
     - The relevant primary signal is now \(\ge 85\%\), **and**
     - `post_loop_conf > pre_loop_conf`, **and**
     - Snapshot creation via `obsidian-snapshot` succeeds for that note.
-  - If any of these conditions fail:
+  - If any of these conditions fail (or **post_loop_conf < 85%**):
     - Skip the destructive action for this note in the current run.
     - Log with `#review-needed` where appropriate.
+    - **Create or update a Decision Wrapper** under `Ingest/Decisions/Refinements/` so the outcome is a deliberate user touchpoint (see "Mid-band → Wrapper" in Cursor-Skill-Pipelines-Reference and each pipeline context rule). Set `wrapper_type: mid-band-refinement`, `pipeline: <organize|archive|distill|express>`, `original_path`, `clunk_severity: medium`; fill options A–G with pipeline-specific choices (e.g. top path candidates, "Re-queue with user_guidance", "Skip", "Ignore"). Use the option labels and meanings from [User-Questions-and-Options-Reference](3-Resources/Second-Brain/User-Questions-and-Options-Reference.md) §2 (Decision Wrappers: A–G, 0, R, re-wrap). Ensure subfolder exists via `obsidian_ensure_structure`(folder_path: "Ingest/Decisions/Refinements"); ensure a CHECK_WRAPPERS queue entry exists. Prefer wrapper as primary; optionally append a short line to Mobile-Pending-Actions pointing to the wrapper.
 
 ## Loop Logging Fields
 
@@ -114,6 +118,9 @@ These values should be recorded consistently in:
 - The human-readable log notes (`3-Resources/*-Log.md`).
 - The `changes` string or structured fields of `obsidian_log_action`, so Dataview queries can aggregate loop behavior across pipelines.
 
+**High-util confidence bump (roadmap/deepen):** When **context utilization ≥ 50%** (e.g. from a roadmap deepen run), apply **high_util_conf_boost** (+5–8%, tunable in Parameters; cap +10%) to the **next post_loop_conf floor** for any downstream refinement (e.g. handoff or recal). Log the bump in loop_* fields when those are written (e.g. `loop_reason: "high_util_conf_boost applied"`). See Parameters.md and roadmap-deepen.
+
 ## Proposal auto-escalation (re-queue after edit)
 
 When a **low-confidence** proposal is logged (proposal callout written to the note), the user can **add `approved: true` to the note's frontmatter** and run **EAT-QUEUE** again. The auto-eat-queue rule (optional pre-dispatch) scans for notes with `approved: true` and a matching proposal id/tag and injects a queue entry or processes inline, so the next run re-processes that note. See `3-Resources/Second-Brain/Templates.md` (Re-queue after edit) and Queue-Sources.
+

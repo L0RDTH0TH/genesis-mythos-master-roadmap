@@ -155,6 +155,28 @@ flowchart TB
 
 ## Snapshot triggers (per pipeline)
 
+```mermaid
+flowchart LR
+  subgraph Pipelines [Pipelines]
+    I[ingest]
+    D[distill]
+    A[archive]
+    E[express]
+    O[organize]
+  end
+  subgraph When [Trigger]
+    P["Per-change: before move/rename/split/structural distill"]
+    B["Batch: when batch size > batch_size_for_snapshot"]
+  end
+  I --> P
+  I --> B
+  D --> P
+  D --> B
+  A --> P
+  E --> P
+  O --> P
+```
+
 | Pipeline | Per-change triggers | Batch frequency |
 |----------|---------------------|------------------|
 | full-autonomous-ingest | Before split_atomic, distill_note (rewrite), append_to_hub, task-reroute (target note); Phase 2: before move_note, rename_note | Every 5 notes |
@@ -192,7 +214,7 @@ flowchart TB
   subgraph PARA [PARA/organize]
     classify_para[classify_para mode]
     subfolder_organize[subfolder_organize]
-    obsidian_propose_para_paths[obsidian_propose_para_paths context_mode, max_candidates]
+    propose_para_paths[propose_para_paths context_mode, max_candidates]
   end
   subgraph Content [Content]
     split_atomic[split_atomic]
@@ -210,7 +232,7 @@ flowchart TB
   end
 ```
 
-**Key params:** move_note: dry_run (true = preview only; always dry_run first, then commit). update_note: mode overwrite | create (create for new version files; server skips destination backup). ensure_backup: max_age_minutes (e.g. 1440). obsidian_propose_para_paths: context_mode (wrapper | midband | organize | fallback), max_candidates ("3"–"8").
+**Key params:** move_note: dry_run (true = preview only; always dry_run first, then commit). update_note: mode overwrite | create (create for new version files; server skips destination backup). ensure_backup: max_age_minutes (e.g. 1440). propose_para_paths: context_mode (wrapper | midband | organize | fallback), max_candidates ("3"–"8").
 
 ---
 
@@ -404,7 +426,7 @@ flowchart TB
   Unit --> Exclusions[Path exclusions]
   Unit --> LogFormat[Log and Errors.md format]
   Unit --> Config[Config keys, confidence bands]
-  Unit --> Propose[obsidian_propose_para_paths contract]
+  Unit --> Propose[propose_para_paths contract]
   Integration --> PipelineOrder[Pipeline step order]
   Integration --> ConfidenceBands[High/mid/low bands]
   Integration --> DryRun[dry_run before move]

@@ -786,9 +786,16 @@ module.exports = class WatcherPlugin extends Plugin {
   async appendToQueue(mode, fullPrompt, sourceFile) {
     const requestId = (Date.now() + Math.random() * 1e9).toString(36);
     const modeNorm = (mode || "").replace(/\s+–\s+safe batch autopilot$/i, "").trim() || mode;
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    const h = String(now.getHours()).padStart(2, "0");
+    const min = String(now.getMinutes()).padStart(2, "0");
     const entry = {
       id: requestId,
-      timestamp: new Date().toISOString(),
+      timestamp: now.toISOString(),
+      local_timestamp: `${y}-${m}-${d} ${h}:${min}`,
       mode: modeNorm,
       prompt: fullPrompt,
       source_file: sourceFile || "",

@@ -1,0 +1,8 @@
+---
+snapshot_kind: per-change
+queue_entry_id: resume-deepen-post-handoff-audit-recal-gmm-20260324T021630Z
+artifact: workflow_state.md
+iso_utc: 2026-03-24T02:16:31Z
+---
+
+Post-mutation: `## Log` row appended; frontmatter `last_auto_iteration`, `iterations_per_phase.4: 7`, `last_conf: 93`.

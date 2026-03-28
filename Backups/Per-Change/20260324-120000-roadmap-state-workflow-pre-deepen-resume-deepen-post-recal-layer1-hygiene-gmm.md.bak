@@ -1,0 +1,13 @@
+---
+type: per-change-snapshot-manifest
+created: "2026-03-24T12:00:00Z"
+project_id: genesis-mythos-master
+queue_entry_id: resume-deepen-post-recal-layer1-hygiene-gmm-20260324T120000Z
+stage: pre-change
+---
+
+Snapshot intent recorded before RESUME_ROADMAP deepen mutation.
+
+Target files:
+- 1-Projects/genesis-mythos-master/Roadmap/roadmap-state.md
+- 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md

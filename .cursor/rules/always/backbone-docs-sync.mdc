@@ -11,9 +11,15 @@ When the user or the agent modifies any **backbone** component, update the corre
 
 Backbone components: files under `.cursor/rules/` (always or context), `.cursor/skills/`, pipeline definitions or trigger mapping (e.g. Cursor-Skill-Pipelines-Reference or context rules), MCP server config or tool behavior (`~/.cursor/mcp.json` or project `mcps/`), `3-Resources/Second-Brain-Config.md`, or any note in `3-Resources/Second-Brain/`.
 
+## Documentation location (official system docs)
+
+- **All official system documentation** belongs in **`3-Resources/Second-Brain/Docs/`** (pipelines, subagents, user flows, operations, reference). When creating or placing new system docs, use that path; keep backbone index files (e.g. Rules.md, Skills.md) in `3-Resources/Second-Brain/` as the map, with detailed content under `Docs/` as appropriate.
+- **`3-Resources/Second-Brain`** (the folder) is **dev docs** (configuration, indices, backbone reference).
+- **`3-Resources/Second-Brain/Docs`** is the **user-facing documentation**.
+
 ## (A) Update Second-Brain documentation
 
-Map the changed artifact to the right doc(s) in `3-Resources/Second-Brain/`:
+Map the changed artifact to the right doc(s) in `3-Resources/Second-Brain/` (and under `Docs/` when adding or updating system documentation):
 
 - Rules → Rules.md (tables and diagrams)
 - Skills → Skills.md

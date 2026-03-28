@@ -29,6 +29,8 @@ Add a toolbar or ribbon item that runs the command that triggers queue processin
 
 Group TASK-ROADMAP, Task Complete, Add Roadmap Item, Expand Road, Reorder, Duplicate, Merge, Export, and Progress under one icon or sub-menu if Commander supports it. **Prioritize Task Complete and Process Queue (EAT-QUEUE)** on the main bar; put the rest in the sub-menu to reduce clutter. See [[3-Resources/Mobile-Toolbar-Task-Commands|Mobile-Toolbar-Task-Commands]].
 
+**Multi-run roadmap macros** (per Multi-Run Roadmap plan): **Resume Roadmap** — append RESUME-ROADMAP with project_id to prompt-queue (or open Watcher modal → pick mode). **RECAL-ROAD** — append RECAL-ROAD (recalibrate roadmap: audit + validate). **Sync phase outputs** — append SYNC-PHASE-OUTPUTS. **Reopen Phase** — append REVERT-PHASE with phase number (escape hatch to re-open a phase). **Approve All Pending Wrappers in Project** — set approved: true on all wrappers in current project scope (or Ingest/Decisions/** for the project) to reduce wrapper fatigue; document in Commander-Plugin-Usage. **Queue Research: Phase** — append RESEARCH-AGENT with project_id and linked_phase (query from phase/outline). **Queue Research: Gaps** — from a **roadmap phase note**: run gap detection (same logic as roadmap-deepen: word-count + research_gap_markers), then append one entry to `.technical/prompt-queue.jsonl` with `mode: "RESEARCH-AGENT"`, `payload: { project_id, linked_phase, gaps, origin: "commander-gaps" }`; optionally add callout to note `> [!info] Gap research queued`. Enables on-demand outward fetches for gaps without running a full deepen. See Queue-Alias-Table § RESEARCH-GAPS and roadmap-deepen § Gap detection design.
+
 ### Macros (depth / queue)
 
 - **Seed and Layer**: Detect user `<mark>` (or prompt for note) + queue highlight-seed-enhance + optional preview gen. Document in mobile-seed-detect and highlight-seed-enhance skill.
@@ -38,6 +40,8 @@ Group TASK-ROADMAP, Task Complete, Add Roadmap Item, Expand Road, Reorder, Dupli
 - **Safety Wrapper** (pre-check macro): Chain ensure_backup + health_check before destructive or pipeline macros. Run this first when using macros that trigger move/distill/archive. See Safety best practices below.
 
 ### Prompt-crafter macros (laptop-only)
+
+**Relationship to Plan-mode:** Commander prompt-crafter macros are **one-tap presets** — they append a fixed or quick-param queue entry (e.g. "Craft Ingest Default", "Craft Deepen Aggressive"). The **full, accurate path** with optional-by-optional Q&A, "It does …", and manual text phase is **Plan mode** in Cursor: start with "We are making a CODE prompt" or "We are making a ROADMAP prompt" (see [[3-Resources/Second-Brain/Chat-Prompts|Chat-Prompts]] § Plan-mode crafting). Use Commander for speed when defaults are fine; use Plan mode when you want to choose each optional and get C (let AI decide) or manual text for params.
 
 **"Craft Prompt" / "Prompt Craft"** — Assemble MCP params from [[3-Resources/Second-Brain-Config|Second-Brain-Config]] prompt_defaults and [[3-Resources/Second-Brain/Templates#Prompt-Components (laptop)|Templates/Prompt-Components]] for consistent ingest/organize. Laptop/desktop only; no mobile toolbar required.
 
@@ -55,7 +59,9 @@ For desktop workflows you can chain commands, e.g. "Open Watcher modal" → dela
 
 ### Device-specific
 
-Show "Process Queue" (or the command that opens Cursor / runs queue processing) on the **mobile** toolbar. Optionally show or hide Roadmap Tools only on mobile or only on desktop. **Mobile-only**: e.g. "Async Approve", "Queue Highlight Perspective" for ingestion breaks; hide complex batch macros on mobile to reduce clutter.
+**Mobile (migrated):** Mobile = **observation** + **filling Ingest** only. On mobile, **hide or repurpose** commands that append to prompt-queue or Task-Queue (e.g. "Resume Roadmap", "Craft Deepen Aggressive", "Async Approve" that inject queue entries). Show only commands that support observation and Ingest (e.g. "New note in Ingest", "Move to Ingest"). Queue and prompt crafting are **laptop-only**. See [[3-Resources/Second-Brain/Mobile-Migration-Spec|Mobile-Migration-Spec]].
+
+**Laptop:** Show "Process Queue" (or the command that opens Cursor / runs queue processing). Roadmap Tools and prompt-crafter macros (Craft and Queue, etc.) are **laptop-only**.
 
 ## Safety best practices
 

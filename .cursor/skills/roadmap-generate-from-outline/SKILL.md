@@ -25,6 +25,7 @@ This skill **does not** run from ingest. It:
 - `original_note`: vault-relative path of the seed note (from wrapper `original_path`).
 - `suggested_project_name`: project slug or name (from wrapper or original frontmatter, e.g. `project-id`).
 - `guidance_text` (optional): freeform text from the wrapper’s **Thoughts / corrections / why this location?** block or `user_guidance`.
+- **`resume_from`** (optional): When set (e.g. `resume_from: 2`), skip phases 1..N-1; read existing master and phase notes from `Roadmap/`; generate only from phase N onward. Append/update master and MOC as needed. Output of each phase must end with a **"## Next Phase Hand-Off"** section: short summary + open TBDs + link to `[[roadmap-state]]` and `[[decisions-log]]`. Used by **roadmap-resume** when continuing a multi-run roadmap.
 
 ## High-level behavior
 
@@ -32,17 +33,21 @@ This skill **does not** run from ingest. It:
    - Ensure `obsidian_create_backup` has already been called for `original_note` in the ingest/apply pipeline (per `mcp-obsidian-integration` and `para-zettel-autopilot`). If not, run it before any structural writes.
    - Before **moving** the original seed note, create a **per-change snapshot** via the `obsidian-snapshot` skill (`type: "per-change"`) so the original state is recoverable.
 
-2. **Read and parse the seed**
+2. **Normalize seed if master goal**
+   - After backup/snapshot, read the seed note once. If it is a **Project Master Goal** (`is_master_goal: true` in frontmatter **or** filename/path matches `*Master*Goal*` / `*MasterGoal*`), run the **normalize-master-goal** skill on `original_note` so the body follows [[Templates/Roadmap/Master-Goal]] (One-line, Vision, Phases, Technical Integration, TL;DR, Related). Then re-read the note for parsing. This ensures phase detection (step 3) sees a consistent structure; phases are expected under `## Phases` as `### Phase N — <Name>` or as top-level `## Phase N — <Name>`.
+
+3. **Read and parse the seed**
    - Use `obsidian_read_note(original_note)` to obtain:
      - Frontmatter (title, `project-id`, tags, `is_roadmap`, etc.).
      - Body headings and bullet structure.
    - Detect candidate phases from the outline:
-     - Use top-level or second-level headings that enumerate systems/phases, e.g. `## 1. Paddle Controls`, `## 2. Ball Physics`, etc.
+     - **If the seed follows the Master-Goal template**: Look for `## Phases` and parse `### Phase N — <Name>` (and any paragraph under each) for phase display name and seed sentence.
+     - **Else**: Use top-level or second-level headings that enumerate systems/phases, e.g. `## 1. Paddle Controls`, `## 2. Ball Physics`, or `## Phase 1 — Name`.
      - For each heading, extract:
        - A **phase display name** (e.g. `Paddle Controls`, `Ball Physics`).
        - A short **seed sentence** (the paragraph under that heading) describing the system.
 
-3. **Intent / ambiguity check (lightweight)**
+4. **Intent / ambiguity check (lightweight)**
    - Using the guidance + parsed content, check for **conflicting or vague statements** about:
      - What the game / system is for (player outcome).
      - Whether a system is core vs optional.
@@ -52,7 +57,7 @@ This skill **does not** run from ingest. It:
        - Document uncertainty in the master’s provenance callout (see below).
      - Continue with generation; provenance makes the ambiguity visible instead of blocking the pipeline.
 
-4. **Target folder layout**
+5. **Target folder layout**
 
 Use the **Roadmap Standard Format** folder structure:
 
@@ -73,7 +78,38 @@ Implementation:
   - `1-Projects/<ProjectName>/Roadmap/`
   - Each `Phase-N-<Name>/` folder.
 
-5. **Master roadmap note**
+5b. **Create workflow_state.md if missing**
+
+- **Path**: `1-Projects/<ProjectName>/Roadmap/workflow_state.md`
+- When the Roadmap/ folder exists (after step 5), check if **workflow_state.md** exists there. If it does **not** exist, create it **from the canonical template**:
+  - Read `Templates/Roadmap/Artifacts/workflow_state.md`.
+  - Replace placeholders (at minimum `{{project_id}}`) with `<ProjectName>`.
+  - Seed any config-derived defaults where applicable (e.g. `max_iterations_per_phase`, `iteration_guidance_ranges`) while preserving the template’s structure.
+  - **Must conform** to [Vault-Layout § workflow_state ## Log table format](3-Resources/Second-Brain/Vault-Layout.md): keep the 12-column header and mandatory separator row intact.
+- Use `obsidian_update_note` (or equivalent) to create the file when missing.
+
+5c. **Create Phase 0 state artifacts if missing (multi-run)**
+
+Under `1-Projects/<ProjectName>/Roadmap/`, ensure these exist (create **only when missing**, never overwrite existing):
+
+- **roadmap-state**: `roadmap-state.md`
+  - Create from `Templates/Roadmap/Artifacts/roadmap-state.md`.
+  - Replace `{{project_id}}` with `<ProjectName>` and fill `{{source_master_goal}}` with the seed master-goal path (or `original_note` path if not a master-goal seed).
+- **decisions-log**: `decisions-log.md`
+  - Create from `Templates/Roadmap/Artifacts/decisions-log.md`.
+  - Replace `{{project_id}}` with `<ProjectName>`.
+- **distilled-core**: `distilled-core.md`
+  - Create from `Templates/Roadmap/Artifacts/distilled-core.md`.
+  - Replace placeholders:
+    - `{{project_id}}` = `<ProjectName>`
+    - `{{source_master_goal}}` = seed master-goal path (or `original_note`)
+    - `{{roadmap_state_path}}` = `1-Projects/<ProjectName>/Roadmap/roadmap-state.md`
+    - `{{workflow_state_path}}` = `1-Projects/<ProjectName>/Roadmap/workflow_state.md`
+    - `{{decisions_log_path}}` = `1-Projects/<ProjectName>/Roadmap/decisions-log.md`
+
+**Safety:** When creating these Phase 0 artifacts for the first time, snapshot `roadmap-state.md` and `workflow_state.md` before/after any state writes (per mcp-obsidian-integration). Do not claim Phase 0 is “initialized” unless all four artifacts exist and workflow_state’s `## Log` table renders (header + separator).
+
+6. **Master roadmap note**
 
 - Path:
   - `1-Projects/<ProjectName>/Roadmap/<ProjectName>-Roadmap-YYYY-MM-DD-HHMM.md`
@@ -122,10 +158,10 @@ Implementation:
      - Dataview block following [Roadmap Standard Format]:
 
        ```dataview
-       TABLE WITHOUT ID file.link AS "Sub-Phase", status, priority, progress AS "%"
+       TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
        FROM "1-Projects/<ProjectName>/Roadmap/Phase-N-<PhaseNameSlug>"
-       WHERE roadmap-level = "phase" OR roadmap-level = "subphase"
-       SORT file.name ASC
+       WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
+       SORT subphase-index ASC, file.name ASC
        ```
 
   5. **Related section**:
@@ -135,7 +171,7 @@ Implementation:
        - `[[<ProjectName>-Roadmap-MOC]]`
        - `[[<SourceNote>]]`
 
-6. **Phase roadmap notes**
+7. **Phase roadmap notes**
 
 For each detected phase `N` with display name `<PhaseName>` and seed sentence:
 
@@ -146,7 +182,7 @@ For each detected phase `N` with display name `<PhaseName>` and seed sentence:
 
   ```yaml
   title: Phase N — <PhaseName>
-  roadmap-level: phase
+  roadmap-level: primary
   phase-number: N
   project-id: <ProjectName>
   status: active
@@ -172,9 +208,10 @@ For each detected phase `N` with display name `<PhaseName>` and seed sentence:
     - [ ] Glue / integration task
     ```
 
+  - **Subphases & notes (MOC block):** Add a section **"## Subphases & notes"** and a Dataview block so the phase note is a MOC from creation (per Roadmap Structure and MOC migration plan). Use canonical columns with Level: `TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"` with `FROM "1-Projects/<ProjectName>/Roadmap/Phase-N-<PhaseNameSlug>"`, `WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"`, `SORT subphase-index ASC, file.name ASC`.
   - Do **not** add dependencies/estimates yet; those will come later via TASK-ROADMAP / ADD-ROADMAP-ITEM / EXPAND-ROAD-ASSIST.
 
-7. **Project roadmap MOC**
+8. **Project roadmap MOC**
 
 - Path:
   - `1-Projects/<ProjectName>/<ProjectName>-Roadmap-MOC.md`
@@ -201,14 +238,14 @@ For each detected phase `N` with display name `<PhaseName>` and seed sentence:
   ## All phase roadmaps
 
   ```dataview
-  TABLE WITHOUT ID file.link AS "Roadmap", roadmap-level, status, progress AS "%"
+  TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Roadmap", subphase-index AS "Index", status, progress AS "%"
   FROM "1-Projects/<ProjectName>/Roadmap"
-  WHERE roadmap-level = "phase" OR roadmap-level = "subphase" OR roadmap-level = "master"
-  SORT phase-number ASC, file.name ASC
+  WHERE roadmap-level = "master" OR roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
+  SORT phase-number ASC, subphase-index ASC, file.name ASC
   ```
   ```
 
-8. **Move the original seed note**
+9. **Move the original seed note**
 
 - After master + phases + MOC are written successfully:
   - Move `original_note` from `Ingest/...` to:
@@ -218,7 +255,7 @@ For each detected phase `N` with display name `<PhaseName>` and seed sentence:
     - `obsidian_move_note` with `dry_run: true` then `dry_run: false`.
   - Do **not** alter the original seed content (beyond what ingest may already have done); treat it as a historical source.
 
-9. **Optional polish (future-safe hooks)**
+10. **Optional polish (future-safe hooks)**
 
 These steps are **optional** but recommended when confidence is high and performance allows:
 
@@ -229,13 +266,37 @@ These steps are **optional** but recommended when confidence is high and perform
 
 Current implementation may skip these in the first version; the important part is that the master structure, provenance, and phase notes exist and are consistent with `Roadmap-Standard-Format`.
 
-10. **Logging and wrapper cleanup**
+11. **Logging and wrapper cleanup**
 
 - Log a `CHECK_WRAPPERS` entry in `3-Resources/Ingest-Log.md`, e.g.:
   - `CHECK_WRAPPERS: <timestamp> | Roadmap created for <ProjectName> (Option A) | Project | created master + N phases + MOC; moved original to Roadmap/Source; wrapper archived | 85% | 1-Projects/<ProjectName>/Roadmap/ | `
 - After success:
   - Set `used_at` and/or `processed: true` on the wrapper.
   - Move the wrapper to `4-Archives/Ingest-Decisions/` (per auto-eat-queue and para-zettel-autopilot).
+
+12. **Mandatory post-processing (multi-run)**
+
+When not in one-shot mode (i.e. when auto-roadmap runs the default multi-run path), after generating phase notes:
+
+- **For each phase roadmap note** (or phase-output.md when phase-output sync is used):
+  - Run **distill-highlight-color** with lens `roadmap-accuracy` (bias toward factual consistency, cross-references).
+  - Derive or receive **per-phase confidence** (e.g. from distill or a lightweight scoring step).
+  - **If phase conf < 85%:**
+    - Do **not** mark the phase complete.
+    - Create a Decision Wrapper in `Ingest/Decisions/Roadmap-Decisions/` (ensure structure via obsidian_ensure_structure) with options:
+      - A: Accept anyway (risky)
+      - B: Refine with guidance "Increase factual consistency and cross-check prior phases"
+      - C: Revert this phase and regenerate from previous
+      - D: Abort roadmap
+  - **Else:**
+    - Append to decisions-log: `- Phase {{n}}: [summary] [[phase-n-output or phase note]] (conf {{conf}}%)`
+    - Append 🔵 core-decision highlights to distilled-core.md (frontmatter core_decisions and/or body).
+- **Hand-off gate (when `handoff_gate_enabled` or payload `handoff_gate: true`):** For each phase, run **hand-off-audit** (see [hand-off-audit](.cursor/skills/hand-off-audit/SKILL.md)). Resolve high threshold from config (default 85) or **handoff_thresholds_by_tech** by phase tech_level. If **handoff_readiness < high threshold**: do **not** add phase to completed_phases; do **not** set phase status to ready-for-impl; create Decision Wrapper `wrapper_type: handoff-readiness` under `Ingest/Decisions/Roadmap-Decisions/` (use phase-direction template from Templates § Roadmap), pre-populate A–G with gap-filling options, add option R (re-try with auto-stub gen); link phase note and decisions-log; add `#review-needed`; optionally append to Mobile-Pending-Actions. If handoff_readiness ≥ high threshold, proceed with existing logic (append to decisions-log, update state, snapshot).
+- **If recal was triggered and drift > drift_score_threshold** (from Parameters, default 0.08):
+  - Force a Decision Wrapper with **"A: Revert to last safe phase"** as the default/first option (revert prioritized).
+- **Update roadmap-state.md**: Set current_phase, last_run (YYYY-MM-DD-HHMM), and increment version. See roadmap-state schema in Vault-Layout.
+
+Use **drift_score_threshold** and **conf_phase_complete_threshold** (85) from Parameters or Second-Brain-Config roadmap block. Snapshot roadmap-state before and after every state update (per mcp-obsidian-integration).
 
 ## MCP tools
 
@@ -248,7 +309,20 @@ Current implementation may skip these in the first version; the important part i
 
 ## Confidence gate
 
-- Use the ingest/apply-mode **`ingest_conf`** (and any `guidance_conf_boost`) as the primary signal.
-- **≥85%**: Create project + roadmap tree as described.
-- **<85%**: Do **not** make structural changes; leave the wrapper and seed note as-is and log a low-confidence proposal (e.g. suggested project name and phases) into Ingest-Log.md with `#review-needed`.
+Entry-point split: behavior depends on how the skill was invoked.
+
+- **ROADMAP MODE / queue entry (no ingest context)**  
+  When the skill is invoked from ROADMAP MODE (or a queue entry with `mode: "ROADMAP MODE"`) or ROADMAP-ONE-SHOT, **do not use `ingest_conf`**. No ingest pipeline has run; that signal is undefined.
+  - **Proceed** with generation when:
+    - `original_note` / `source_file` exists and is readable, and
+    - Project name is resolved (`suggested_project_name` from params or from seed frontmatter/title).
+  - The only confidence guardrail for this path is the existing **step 4 (Intent / ambiguity check)**: if confidence in phase decomposition or project name is very low (e.g. <75%) after considering `guidance_text`, prefer conservative structure (e.g. single-phase or fewer phases) and document uncertainty in the master's provenance callout — but **do not block** structural creation (no "leave wrapper and seed as-is").
+  - Backup and snapshot requirements (step 1) unchanged.
+
+- **Ingest apply-mode (future)**  
+  If the skill is ever invoked from a path that **supplies** `ingest_conf` (e.g. an approved roadmap Decision Wrapper that runs apply-mode and then calls this skill with the same run context), use **ingest_conf** (and any `guidance_conf_boost`) as the primary signal:
+  - **≥85%:** Create project + roadmap tree as described.
+  - **<85%:** Do not make structural changes; leave the wrapper and seed note as-is and log a low-confidence proposal (suggested project name and phases) into `3-Resources/Ingest-Log.md` with `#review-needed`.
+
+*Current entry point is ROADMAP MODE only; ingest apply-mode path is reserved for a possible future re-introduction.*
 

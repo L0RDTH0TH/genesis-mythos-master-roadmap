@@ -242,3 +242,21 @@ Flag: #ghost-sweep (report-only; tool path resolution failed).
 **Result:** **33 empty folders removed** via `obsidian_remove_empty_folder` (vault-relative paths; dry_run then commit). Pass 1: 25 leaf folders (Phase-* roadmaps, Cursor-Ingest, Genesis-Mythos, Highlightr, MCP-Obsidian, OG-minecraft, Plugins-Usage, Reference, Testing, Watcher, Zettelkasten-PKM, TTRPGs/Rulebooks, Example/Roadmap, 1-Projects/OG-minecraft). Pass 2: 5 parents (Retro Snake Game/Roadmap, Pong-Game/Roadmap, Genesis-Mythos/Roadmap, TTRPGs, Example). Pass 3: 3 project roots (Pong-Game, Retro Snake Game, Genesis-Mythos). No blacklisted paths removed. **0 empty folders** remain under 1-Projects, 2-Areas, 3-Resources.
 
 Flag: #ghost-sweep
+
+---
+
+## 2026-03-10 — Archive genesis-mythos-master folder (user request)
+
+**Pipeline:** User request "Archive this folder's content: genesis-mythos-master". **Excluded:** `Source-genesis-mythos-master-goal-unaltered-capture-2026-03-07-0033-2026-03-08-0900.md` (do not move).
+
+**Backup:** All 66 notes backed up to `/home/darth/Documents/Second-Brain-oops-Backups/` (20260310-052000 through 20260310-052004). **Moves:** ensure_structure for `4-Archives/genesis-mythos-master` and Phase subfolders; dry_run then commit for each note via MCP.
+
+**Moved (66 notes):** From `1-Projects/genesis-mythos-master/` to `4-Archives/genesis-mythos-master/` preserving structure: genesis-mythos-master-Roadmap-MOC.md, Roadmap/decisions-log, distilled-core, genesis-mythos-master-Roadmap-2026-03-08-2358, roadmap-state, workflow_state; Phase-1 through Phase-6 roadmap trees (Conceptual-Foundation, Procedural-Generation, Living-Simulation, Perspective-Split-Control-Systems, Rule-System-Integration-Extensibility, Prototype-Assembly-Testing-Iteration) with all subphase notes.
+
+**Post-move:** `status: archived` and `para-type: Archive` set on all 66 notes in `4-Archives/genesis-mythos-master/`.
+
+**Left in place:** `1-Projects/genesis-mythos-master/Roadmap/Source-genesis-mythos-master-goal-unaltered-capture-2026-03-07-0033-2026-03-08-0900.md`.
+
+**Ghost sweep (2026-03-10):** Removed 16 empty folders via `obsidian_remove_empty_folder` (dry_run then commit): Phase-6, Phase-5; Phase-4-2-DM-Controls (after deleting leftover Phase-4-2-2-Depth4-Section.tmp), Phase-4-1-Player-Perspective, Phase-4-Perspective-Split-Control-Systems; Phase-3-2, Phase-3-1, Phase-3-Living-Simulation-Dynamic-Agency; Phase-2-2, Phase-2-1, Phase-2-Procedural-Generation-World-Building; Phase-1-4, Phase-1-3, Phase-1-2, Phase-1-1, Phase-1-Conceptual-Foundation-Core-Architecture. Roadmap/ retained (contains excluded Source file).
+
+Flag: none.

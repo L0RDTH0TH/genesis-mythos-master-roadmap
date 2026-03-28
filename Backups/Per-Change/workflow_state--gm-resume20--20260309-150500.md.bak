@@ -1,0 +1,35 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md
+original_title: workflow_state
+pipeline: roadmap-deepen
+snapshot_type: per-change
+snapshot_created: "2026-03-09T15:05:00Z"
+snapshot_hash: ""
+confidence: 85
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+---
+current_phase: 3
+current_subphase_index: "3.1.4"
+status: in-progress
+automation_level: semi
+last_auto_iteration: "2026-03-09T14:55:00Z"
+iterations_per_phase:
+  "1": 16
+  "2": 8
+  "3": 5
+max_iterations_per_phase: 33
+---
+
+# Workflow state
+
+Run-time automation state for Cursor Agent loop. Used by RESUME-ROADMAP and roadmap-deepen.
+
+## Log
+
+(last row only in snapshot)
+| 2026-03-09 14:55 | deepen | Phase-3-1-4-Faction-Relationship-State | 5 | 5 | 10% | 90% | 80% | 12800 / 128000 | next deepen (depth 3, within_range) |

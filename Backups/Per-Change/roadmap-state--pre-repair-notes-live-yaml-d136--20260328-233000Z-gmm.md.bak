@@ -1,0 +1,7 @@
+# Pre-mutate excerpt — roadmap-state Notes Live YAML repair (D-136)
+# queue: repair-l1-postlv-notes-skimmer-d132-gmm-20260329T001000Z
+# validator: roadmap-handoff-auto-genesis-mythos-master-20260328T222030Z-conceptual-v1-post-l1-little-val-d132.md
+
+Stale clause (Authoritative cursor section, `last_run` vs deepen narrative bullet):
+**Live YAML** claimed `last_run` `2026-03-28-2352`, `version` `175`, `last_deepen_narrative_utc` `2026-03-28-2330`
+while live frontmatter was `last_run: 2026-03-28-2359`, `version: 176`, `last_deepen_narrative_utc: "2026-03-28-2359"`.

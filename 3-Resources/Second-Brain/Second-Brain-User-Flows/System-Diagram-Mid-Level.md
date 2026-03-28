@@ -136,7 +136,7 @@ flowchart TB
   subgraph PARA [PARA/organize]
     classify_para[classify_para]
     subfolder_organize[subfolder_organize]
-    propose_para_paths[obsidian_propose_para_paths]
+    propose_para_paths[propose_para_paths]
   end
   subgraph Content [Content]
     split_atomic[split_atomic]

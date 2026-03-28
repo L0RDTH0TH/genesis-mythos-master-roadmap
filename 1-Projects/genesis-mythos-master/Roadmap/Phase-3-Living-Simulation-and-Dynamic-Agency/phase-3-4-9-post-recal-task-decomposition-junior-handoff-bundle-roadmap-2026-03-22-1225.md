@@ -34,6 +34,14 @@ links:
 
 **Shallow deepen (2026-03-23 02:22 UTC, queue `resume-deepen-post-layer1-recal-gmm-20260323T022200Z`):** **GMM-PC-349** § below cites **Layer-2** compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T021530Z-layer2-recal-compare-final.md`** — same **`reason_codes`** (**`missing_roll_up_gates`**, **`missing_task_decomposition`**, **`safety_unknown_gap`**) as first pass; **§ Validator definition of done (mirror)** remains **`[ ]`** (traceability only).
 
+**Planned-chain shallow deepen (2026-03-23 12:16 UTC, queue `resume-deepen-post-recal-pc349-gmm-20260323T121500Z`, D-061):** post **`resume-recal-post-pc349-followup-deepen-gmm-20260323T121530Z`** — cite compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T121600Z-gmm-followup-recal-d060-compare-final.md`**; **rollup HR 92 < 93** and **G-P*.*-REGISTRY-CI HOLD** unchanged until repo evidence; see **GMM-PC-349-D061** in the traceability matrix.
+
+**Post-planned-`recal` compare-final shallow deepen (2026-03-23 21:36 UTC, queue `resume-deepen-post-recal-planned-pc349-gmm-20260323T213600Z`, D-061):** after **`resume-recal-post-planned-deepen-pc349-gmm-20260323T130100Z`** — cite nested compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T213500Z-recal-pc349-planned-compare-final.md`** (**`severity: medium`**, **`recommended_action: needs_work`**, **`primary_code: missing_roll_up_gates`**); report states **`delta_vs_first: improved`** (citation/traceability wiring only) and **`machine_verdict_unchanged_vs_first_pass: true`** — **not** rollup/REGISTRY-CI clearance; see **GMM-PC-349-D061-02** in the traceability matrix.
+
+**Post-2136-recal compare-final shallow deepen (2026-03-23 22:12 UTC, queue `resume-deepen-post-recal-2136-followup-gmm-20260323T221200Z`, D-061):** after **`resume-recal-post-planned-deepen-2136-followup-gmm-20260323T214500Z`** — cite compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T221000Z-recal-2136-followup-compare-final.md`** (**`rollup HR 92 < 93`** + **`G-P*.*-REGISTRY-CI HOLD`** unchanged; **`machine_verdict_unchanged_vs_first_pass: true`** vs **220500Z** first; **`dulling_detected: false`** per report); **no** fabricated **D-044**/**D-059**; operator checklist **GMM-HYG-01** “after next” line **reconciled** (see **Tasks**); see **GMM-2136-D061** in the traceability matrix.
+
+**Post-2318 Layer-2 compare-final shallow deepen (2026-03-23 23:24 UTC, queue `resume-deepen-post-recal-2318-layer2-compare-gmm-20260323T232400Z`, D-061):** after **`resume-recal-post-2136-followup-deepen-gmm-20260323T231800Z`** — cite compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T232200Z-recal-2136-layer2-compare-final.md`** vs first **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T231800Z-recal-2136-layer2-first.md`** (**`delta_vs_first: improved`**, **`machine_verdict_unchanged_vs_231800Z_layer2_first: true`**, **`dulling_detected: false`**); regression anchors unchanged: deepen **`resume-deepen-post-recal-2136-followup-gmm-20260323T221200Z`** + nested second pass **231500Z**; **rollup HR 92 < 93** + **REGISTRY-CI HOLD** unchanged; **no** fabricated **D-044**/**D-059**; see **GMM-2318-L2** in the traceability matrix.
+
 ### Key takeaways
 
 - Decompose ladder work as **WBS-style leaves**: each checkbox = one verifiable artifact (path, `queue_entry_id`, or decisions-log sub-bullet pattern).
@@ -45,7 +53,7 @@ links:
 
 ### Validator definition of done (mirror — not closure)
 
-**Source:** nested **`roadmap_handoff_auto`** first pass **2026-03-23** (Layer-2 `recal`). These items are **unchecked** until real evidence exists — **not** vault-only PASS claims.
+**Source (queues `resume-recal-post-planned-deepen-pc349-gmm-20260323T130100Z` + deepen `resume-deepen-post-recal-planned-pc349-gmm-20260323T213600Z` + **`recal` `resume-recal-post-planned-deepen-2136-followup-gmm-20260323T214500Z`** + deepen `resume-deepen-post-recal-2136-followup-gmm-20260323T221200Z`):** nested **`roadmap_handoff_auto`** first **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T213000Z-recal-pc349-planned-first.md`**; **compare-final anchor** (recal queue `user_guidance`): **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T130000Z-post-ira-hygiene-pass2.md`**; **post-`recal` deepen cite-final:** **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T213500Z-recal-pc349-planned-compare-final.md`**; **2136-followup chain:** first **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T220500Z-recal-2136-followup-first.md`** → IRA **`.technical/Internal-Repair-Agent/roadmap/2026-03/genesis-mythos-master-ira-call-1-resume-recal-post-planned-deepen-2136-followup-20260323T214500Z.md`** → compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T221000Z-recal-2136-followup-compare-final.md`**. Older **2026-03-23** Layer-2 `recal` traces remain valid for other queue ids. These items are **unchecked** until real evidence exists — **not** vault-only PASS claims.
 
 - [ ] Clear **G-P*.*-REGISTRY-CI** **HOLD** with repo/CI evidence **or** document a **policy exception** on [[decisions-log]]; rollup **HR ≥ 93** when policy requires it.
 - [ ] **D-032 / D-043 / D-045**-gated ladder / golden evidence before expanding **3.4.8** **PASS** claims beyond cited **`queue_entry_id`** rows.
@@ -131,6 +139,11 @@ procedure VerifyWorkflowHygieneAgainstLastLogRow():
 | GMM-BS-01 | Empty-queue bootstrap / **A.1b** operator audit | Continuation tail excerpt + `idempotency_key` + `suggested_next` vs minimal deepen + duplicate-key check — [[Ingest/Agent-Research/phase-3-4-9-bs-gmm-bootstrap-d060-junior-wbs-research-2026-03-22-2215]] § GMM-BS-01 | Operator + automation |
 | GMM-L2-01 | Layer-1 deepen after **`resume-recal-post-bs-gmm-deepen-20260322T2025Z-k9m2`** | This note § **Layer-2 post-recal deepen (Layer-1 queue)** — **D-060** / compare-final literacy; **no** **D-044**/**D-059** fabrication; **`workflow_state`** row **`resume-deepen-post-recal-bs-gmm-20260322T202600Z-layer1`** | Automation + Layer-1 validator |
 | GMM-PC-349 | Layer-2 **`recal`** compare-final after **`resume-recal-post-layer1-deepen-gmm-20260323T021530Z`** | This note § **Post–Layer-2 `recal` compare-final trace** — cite **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T021530Z-layer2-recal-compare-final.md`**; mirror DoD **`[ ]`**; **`workflow_state`** row **`resume-deepen-post-layer1-recal-gmm-20260323T022200Z`** | Automation + junior |
+| GMM-PC-349-D061 | Planned-chain shallow **3.4.9** / **D-061** after **`resume-recal-post-pc349-followup-deepen-gmm-20260323T121530Z`** | This note § **Planned-chain follow-up compare-final (D-061)** — cite **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T121600Z-gmm-followup-recal-d060-compare-final.md`**; **`workflow_state`** row **`resume-deepen-post-recal-pc349-gmm-20260323T121500Z`** | Automation + junior |
+| GMM-PC-349-D061-02 | Post-planned-`recal` compare-final shallow **3.4.9** / **D-061** | This note § **Post-planned-`recal` compare-final trace** — cite **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T213500Z-recal-pc349-planned-compare-final.md`**; **`workflow_state`** row **`resume-deepen-post-recal-planned-pc349-gmm-20260323T213600Z`**; **`parent_run_id` `d789dc0f-ec3c-48e0-8cca-5be3a3ac56fa`** | Automation + junior |
+| GMM-2136-D061 | Post-2136-`recal` compare-final shallow **3.4.9** / **D-061** | This note § **Post-2136-recal compare-final trace** — cite **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T221000Z-recal-2136-followup-compare-final.md`** after **`resume-recal-post-planned-deepen-2136-followup-gmm-20260323T214500Z`**; **`workflow_state`** row **`resume-deepen-post-recal-2136-followup-gmm-20260323T221200Z`**; **`parent_run_id` `9011e363-eatq`** · **`pipeline_task_correlation_id` `7eb53bb3-cc53-433a-ad59-f0fa83b1eb11`** | Automation + junior |
+| GMM-2235-AUTO | Post-221200Z deepen nested **`roadmap_handoff_auto`** (standalone) | This note + **`workflow_state`** Notes — first **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T223530Z-post-221200Z-deepen-roadmap-handoff-auto.md`** vs baseline **221000Z** compare-final; second pass **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T231500Z-post-223530Z-second-pass-roadmap-handoff-auto.md`** vs **223530Z** (**`delta_vs_prior`:** IRA wiring visible; **no dulling**); **`reason_codes`:** **`missing_roll_up_gates`**, **`missing_task_decomposition`**, **`safety_unknown_gap`** — **traceability only**; **§ Validator definition of done (mirror)** **`[ ]`** unchanged | Automation + junior |
+| GMM-2318-L2 | Post-231800Z `recal` Layer-2 compare-final / D-061 | This note § **Post-2318 Layer-2 compare-final** — cite **232200Z** compare-final vs **231800Z** first; **`workflow_state`** row **`resume-deepen-post-recal-2318-layer2-compare-gmm-20260323T232400Z`**; **`idempotency_key`** **`resume-recal-post-2136-followup-deepen-gmm-20260323T231800Z-followup-deepen-layer2-final`** | Automation + junior |
 
 ## Post–Layer-2 `recal` compare-final trace — queue `resume-deepen-post-layer1-recal-gmm-20260323T022200Z` (**GMM-PC-349**)
 
@@ -148,6 +161,31 @@ procedure VerifyWorkflowHygieneAgainstLastLogRow():
 ### Junior one-liner
 
 If a reader asks “did the **02:22** deepen clear rollup gates?” → **No.** It only **wires** the **Layer-2** compare-final path + **GMM-PC-349** row into **3.4.9** for traceability.
+
+### Planned-chain follow-up compare-final (D-061) — queue `resume-deepen-post-recal-pc349-gmm-20260323T121500Z` (**GMM-PC-349-D061**)
+
+- **Compare-final cite (post-`resume-recal-post-pc349-followup-deepen-gmm-20260323T121530Z` nested cycle):** `.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T121600Z-gmm-followup-recal-d060-compare-final.md`
+- **Truth preserved:** **rollup HR 92 < `min_handoff_conf` 93** on **3.2.4 / 3.3.4 / 3.4.4** rollups; **G-P*.*-REGISTRY-CI** **HOLD** unchanged until **2.2.3** / **D-020** + execution evidence — this deepen is **traceability / literacy only**, not gate clearance.
+- **`workflow_state`:** physical last **`## Log`** **deepen** row **`queue_entry_id` `resume-deepen-post-recal-pc349-gmm-20260323T121500Z`**; **`idempotency_key`** **`resume-recal-post-pc349-followup-deepen-gmm-20260323T121530Z-followup-deepen`** on RoadmapSubagent return payload.
+
+### Post-planned-`recal` compare-final trace (D-061) — queue `resume-deepen-post-recal-planned-pc349-gmm-20260323T213600Z` (**GMM-PC-349-D061-02**)
+
+- **Parent `recal` queue:** **`resume-recal-post-planned-deepen-pc349-gmm-20260323T130100Z`** — nested first **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T213000Z-recal-pc349-planned-first.md`** → IRA → compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T213500Z-recal-pc349-planned-compare-final.md`**.
+- **Truth preserved:** **rollup HR 92 < `min_handoff_conf` 93**; **G-P*.*-REGISTRY-CI HOLD** until **2.2.3** / **D-020** execution evidence; **§ Validator definition of done (mirror)** remains **`[ ]`**.
+- **Junior one-liner:** “Did the **21:36** deepen clear compare-final gaps?” → **No.** It **binds** the **213500Z** compare-final path + **GMM-PC-349-D061-02** row for auditors; machine verdict **unchanged** vs **213000Z** first pass.
+
+### Post-2136-recal compare-final trace (D-061) — queue `resume-deepen-post-recal-2136-followup-gmm-20260323T221200Z` (**GMM-2136-D061**)
+
+- **Parent `recal` queue:** **`resume-recal-post-planned-deepen-2136-followup-gmm-20260323T214500Z`** — nested first **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T220500Z-recal-2136-followup-first.md`** → IRA **`.technical/Internal-Repair-Agent/roadmap/2026-03/genesis-mythos-master-ira-call-1-resume-recal-post-planned-deepen-2136-followup-20260323T214500Z.md`** → compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T221000Z-recal-2136-followup-compare-final.md`** (user cite).
+- **Truth preserved:** **rollup HR 92 < `min_handoff_conf` 93**; **G-P*.*-REGISTRY-CI HOLD** unchanged; **§ Validator definition of done (mirror)** remains **`[ ]`**.
+- **Junior one-liner:** “Did the **22:12** deepen clear **221000Z** gaps?” → **No.** It **binds** the **221000Z** compare-final + **GMM-2136-D061** + **GMM-HYG-01** checklist reconciliation for auditors only.
+
+### Post-2318 Layer-2 compare-final shallow deepen (D-061) — queue `resume-deepen-post-recal-2318-layer2-compare-gmm-20260323T232400Z` (**GMM-2318-L2**)
+
+- **Parent `recal` queue:** **`resume-recal-post-2136-followup-deepen-gmm-20260323T231800Z`** — nested first **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T231800Z-recal-2136-layer2-first.md`** → IRA → compare-final **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T232200Z-recal-2136-layer2-compare-final.md`** (**`compare_to_report_path`** → **231800Z** first).
+- **Regression anchors (unchanged):** deepen **`resume-deepen-post-recal-2136-followup-gmm-20260323T221200Z`**; nested second pass **`.technical/Validator/roadmap-auto-validation-genesis-mythos-master-20260323T231500Z-post-223530Z-second-pass-roadmap-handoff-auto.md`**.
+- **Truth preserved:** **rollup HR 92 < `min_handoff_conf` 93**; **G-P*.*-REGISTRY-CI HOLD** unchanged; **§ Validator definition of done (mirror)** remains **`[ ]`**; **no** fabricated **D-044**/**D-059**.
+- **Junior one-liner:** “Did the **23:24** deepen clear **232200Z** gaps?” → **No.** It **binds** the Layer-2 **232200Z** compare-final vs **231800Z** first for auditors; machine payload identical to first pass — **`delta_vs_first: improved`** labels **traceability** only.
 
 ## Layer-2 post-recal deepen — Layer-1 queue (`resume-deepen-post-recal-bs-gmm-20260322T202600Z-layer1`)
 
@@ -230,8 +268,8 @@ After this row lands in `workflow_state`, Layer 1 should prefer **`RESUME_ROADMA
 
 ### Checklist (vault-normative — unchecked until evidence)
 
-- [ ] Run **GMM-HYG-01** after next deepen/recal; record `queue_entry_id` in `workflow_state` Notes when repairing.
-  - **Evidence to record:** `last_ctx_util_pct`, `last_conf`, `current_subphase_index`, `last_auto_iteration` vs physical last `## Log` row; cite repair `queue_entry_id` if YAML was repaired.
+- [x] **GMM-HYG-01 (checklist scope reconciled 2026-03-23 22:12 UTC):** Prior “after next deepen/recal” wording was **stale** vs existing **[[workflow_state]]** parity work (**21:36 UTC** deepen **`resume-deepen-post-recal-planned-pc349-gmm-20260323T213600Z`**, **22:00 UTC** **`recal`** **`resume-recal-post-planned-deepen-2136-followup-gmm-20260323T214500Z`**, Notes + **`## Log`**). **Re-run** full **GMM-HYG-01** YAML↔last-row assertion **on the next cursor move** (new **`queue_entry_id`** / **`last_auto_iteration`**).
+  - **Evidence already on vault:** `last_ctx_util_pct`, `last_conf`, `current_subphase_index`, `last_auto_iteration` vs physical last **`## Log`** **deepen** row — see **22:12 UTC** deepen row **`resume-deepen-post-recal-2136-followup-gmm-20260323T221200Z`** after this edit lands.
 - [ ] Run **GMM-DLG-01** before claiming any regen interleaving story in new tertiaries.
   - **Evidence to record:** scan date + cite **`Operator pick logged (2026-03-23): Option A`** under **D-044** (or flag if absent).
 - [ ] Run **GMM-TREE-01** before minting any `phase-4-1-*` tertiary roadmap file.
@@ -254,7 +292,7 @@ After this row lands in `workflow_state`, Layer 1 should prefer **`RESUME_ROADMA
 ### Nested research trace (pre-deepen)
 
 - **Research nested ledger:** see Research subagent return for **`nested_subagent_ledger`** (Validator → IRA → compare-final on **`research_synthesis`**).
-- **Index hygiene:** **`distilled-core`** `core_decisions` + **Core decisions** body for **Phase 3.4.9** must stay aligned with **`workflow_state`** **`last_ctx_util_pct`**, the physical last **`## Log`** row, and **`last_auto_iteration`** (post–**IRA** sync: **92%** + **`bs-gmm-deepen-20260322T201945Z-m4n8p2q6`**).
+- **Index hygiene:** **`distilled-core`** `core_decisions` + **Core decisions** body for **Phase 3.4.9** must stay aligned with **`workflow_state`** **`last_ctx_util_pct`**, the physical last **`## Log`** row, and **`last_auto_iteration`** — **authoritative (2026-03-23):** **98%** + **`resume-deepen-post-recal-2318-layer2-compare-gmm-20260323T232400Z`** (older examples e.g. **96%** + **`resume-deepen-post-recal-planned-pc349-gmm-20260323T213600Z`**, **92%** + **`bs-gmm-deepen-20260322T201945Z-m4n8p2q6`** are **historical** only).
 
 ## Dependencies
 

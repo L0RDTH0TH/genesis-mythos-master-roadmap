@@ -1,11 +1,20 @@
 # Technical / machine-only bin — exclude from indexing and AI context
 .technical/**
 *.jsonl
-Watcher-*.md
+3-Resources/Watcher-*.md
 *.log
 
-# Exception: EAT-QUEUE must read/write the prompt queue (Watcher appends here)
+# Exceptions for technical files that Cursor must access
+!.technical/
 !.technical/prompt-queue.jsonl
+!.technical/queue-continuation.jsonl
+!.technical/prompt-queue-audit.jsonl
+!.technical/queue-gate-state.json
+!.technical/Run-Telemetry/
+!.technical/Run-Telemetry/**
+!.technical/Validator/
+!.technical/Validator/**
+!3-Resources/Watcher-Result.md
 
 # Root-level technical files (must stay at root; Syncthing/Cursor read them here)
 .stignore

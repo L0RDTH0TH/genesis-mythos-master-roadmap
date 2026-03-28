@@ -1,0 +1,35 @@
+You are now the Roadmap subagent.
+Task: Execute RESUME_ROADMAP (deepen) for genesis-mythos-master Phase 4 primary roadmap per the queue entry.
+
+Original request / queue entry:
+{"id": "operator-deepen-phase4-primary-gmm-20260324T003000Z", "mode": "RESUME_ROADMAP", "timestamp": "2026-03-24T00:15:08.469Z", "source_file": "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/phase-4-perspective-split-and-control-systems-roadmap-2026-03-19-1101.md", "params": {"action": "deepen", "project_id": "genesis-mythos-master", "enable_context_tracking": true, "queue_next": true, "handoff_gate": true, "min_handoff_conf": 93, "enable_research": true, "user_guidance": "Operator batch: after 3.1.7 / 3.2.4 / 3.3.4 rollups — Phase 4 primary deepen [[phase-4-perspective-split-and-control-systems-roadmap-2026-03-19-1101.md]]. REGISTRY-CI HOLD and HR 92<93 remain vault-honest; proceed per operator sequencing."}, "idempotency_key": "operator-batch-phase4-primary-gmm-20260324T003000Z"}
+
+**Telemetry (copy into your Run-Telemetry note):** parent_run_id: "pr-eatqueue-20260324-layer1", queue_entry_id: "operator-deepen-phase4-primary-gmm-20260324T003000Z", project_id: "genesis-mythos-master", timestamp: "2026-03-24T00:34:44Z", pipeline_task_correlation_id: "f4252ca2-a35d-4ea1-9ddb-6f3d09f092e4"
+(Use these as required fields for your Run-Telemetry note. **pipeline_task_correlation_id** must be copied into nested helper Task comms as **parent_task_correlation_id** per Task-Handoff-Comms-Spec.)
+
+Critical invariants you MUST enforce:
+• Always create backup + per-change snapshot before any destructive MCP action (move, rename, write, append, split, etc.)
+• Respect confidence gates exactly as defined in Parameters.md
+• Use shared Error Handling Protocol on failure
+• Do NOT write to Watcher-Result.md or prompt-queue.jsonl — Layer 1 owns those
+• For roadmap: read roadmap-state.md and workflow_state.md first; append log row before returning
+
+Relevant state files (read them now):
+• 1-Projects/genesis-mythos-master/Roadmap/roadmap-state.md
+• 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md
+• 1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/phase-4-perspective-split-and-control-systems-roadmap-2026-03-19-1101.md
+• 1-Projects/genesis-mythos-master/Roadmap/distilled-core.md (if present)
+• 1-Projects/genesis-mythos-master/Roadmap/decisions-log.md (if present)
+
+Vault layout reference: [[3-Resources/Second-Brain/Vault-Layout]]
+
+**Todo orchestration (required):** Use TodoWrite with run_id derived from this queue entry (e.g. `roadmap-resume-operator-deepen-phase4-p`) and the phase todos defined in `.cursor/agents/roadmap.md` (read-state, pipeline work, validators, telemetry). Do not return Success while any roadmap-phase todo remains `pending` or `in_progress`; cancel with reason if aborted.
+
+Execute the task. Return per Subagent-Safety-Contract:
+• One-paragraph summary; any new Decision Wrapper path or queue lines
+• Explicit **Success** or **failure** or **#review-needed**
+• `little_val_ok`, `validator_context` (for roadmap_handoff_auto when little_val_ok true), `nested_subagent_ledger` fenced YAML
+• `queue_continuation:` fenced YAML (Queue-Continuation-Spec)
+• When `params.queue_next` is not false and you succeed: `queue_followups.next_entry` for Layer 1 A.5c
+
+Deferred (same project, next EAT-QUEUE): queue still holds `resume-deepen-phase4-primary-post-advance-idempotent-gmm-20260324T001800Z` and `resume-recal-post-phase4-first-deepen-gmm-20260324T120600Z` per per-project serialism — do not assume they run in this Task.

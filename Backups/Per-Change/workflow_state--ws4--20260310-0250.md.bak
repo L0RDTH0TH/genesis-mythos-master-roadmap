@@ -1,0 +1,76 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md
+pipeline: roadmap
+snapshot_type: per-change
+snapshot_created: "2026-03-10T02:50:24Z"
+confidence: 85
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+---
+current_phase: 4
+current_subphase_index: "4.2.2"
+status: in-progress
+automation_level: semi
+last_auto_iteration: "2026-03-09T19:42:00Z"
+iterations_per_phase:
+  "1": 16
+  "2": 8
+  "3": 10
+  "4": 5
+max_iterations_per_phase: 33
+---
+
+# Workflow state
+
+Run-time automation state for Cursor Agent loop. Used by RESUME-ROADMAP and roadmap-deepen.
+
+## Log
+
+| Timestamp | Action | Target | Iter Obj | Iter Phase | Ctx Util % | Leftover % | Threshold | Est. Tokens / Window | Util Delta % | Status / Next |
+|-----------|--------|--------|----------|------------|------------|------------|-----------|----------------------|--------------|----------------|
+| 2026-03-08 23:58 | Phase 0 bootstrap | Roadmap/ | 0 | 0 | - | - | - | - | - | RESUME-ROADMAP |
+| 2026-03-09 00:06 | deepen | Phase-1-1-Core-Abstractions | 1 | 1 | - | - | - | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 00:10 | deepen | Phase-1-1-1-World-State | 2 | 2 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 00:15 | deepen | Phase-1-1-2-Simulation-API | 3 | 3 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 00:20 | deepen | Phase-1-1-3-Rendering-Input | 4 | 4 | - | - | - | - | - | next deepen (depth 3, within_range); Phase 1.1 complete |
+| 2026-03-09 00:25 | deepen | Phase-1-2-Generation-Intent-Pipeline | 5 | 5 | - | - | - | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 00:30 | deepen | Phase-1-2-1-Generation-Stages | 6 | 6 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 00:35 | deepen | Phase-1-2-2-Seed-Override-Contracts | 7 | 7 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 00:40 | deepen | Phase-1-2-3-Intent-Lore-Injection | 8 | 8 | - | - | - | - | - | next deepen (depth 3, within_range); Phase 1.2 complete |
+| 2026-03-09 00:45 | deepen | Phase-1-3-Modularity-Seams | 9 | 9 | - | - | - | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 00:50 | deepen | Phase-1-3-1-Generation-Pipeline-Seams | 10 | 10 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 00:55 | deepen | Phase-1-3-2-Rule-Engine-Seams | 11 | 11 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 01:00 | deepen | Phase-1-3-3-Event-Bus-Seams | 12 | 12 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 01:05 | deepen | Phase-1-3-4-Input-Loop-Seams | 13 | 13 | - | - | - | - | - | next deepen (depth 3, within_range); Phase 1.3 complete |
+| 2026-03-09 01:10 | deepen | Phase-1-4-Safety-Invariants | 14 | 14 | - | - | - | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 12:06 | deepen | Phase-1-4-1-Seed-Snapshot-Contract | 1 | 15 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 12:15 | deepen | Phase-1-4-2-Dry-Run-Validation | 2 | 16 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 13:00 | advance-phase | Phase 2 | 0 | 0 | - | - | - | - | - | next deepen (in-progress) |
+| 2026-03-09 13:15 | deepen | Phase-2-1-Generation-Pipeline-Stages | 1 | 1 | - | - | - | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 13:20 | deepen | Phase-2-1-1-Stage-Responsibilities-IO | 2 | 2 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 13:25 | deepen | Phase-2-1-2-Seed-Overrides-Flow | 3 | 3 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 13:30 | deepen | Phase-2-1-3-Error-Propagation-Invariants | 4 | 4 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 13:35 | deepen | Phase-2-2-Intent-Schema-Hook-Graphs | 5 | 5 | - | - | - | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 13:38 | deepen | Phase-2-2-1-Intent-Schema-Structure | 6 | 6 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 13:41 | deepen | Phase-2-2-2-Hook-Attach-Points | 7 | 7 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 13:50 | deepen | Phase-2-2-3-Intent-Hook-Lifecycle-Sync | 8 | 8 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 14:00 | advance-phase | Phase 3 | 0 | 0 | - | - | - | - | - | next deepen (Phase 3.1, in-progress) |
+| 2026-03-09 14:05 | deepen | Phase-3-1-Tick-Based-Simulation-Layer | 1 | 1 | - | - | - | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 14:10 | deepen | Phase-3-1-1-Tick-Model-Sim-Clock | 2 | 2 | - | - | - | - | - | next deepen (depth 3, within_range) |
+| 2026-03-09 14:35 | deepen | Phase-3-1-2-Weather-Environmental-State | 3 | 3 | 8% | 92% | 80% | 10240 / 128000 | - | next deepen (depth 3, within_range) |
+| 2026-03-09 14:45 | deepen | Phase-3-1-3-NPC-Agendas-Schedules | 4 | 4 | 9% | 91% | 80% | 11520 / 128000 | - | next deepen (depth 3, within_range) |
+| 2026-03-09 14:55 | deepen | Phase-3-1-4-Faction-Relationship-State | 5 | 5 | 10% | 90% | 80% | 12800 / 128000 | - | next deepen (depth 3, within_range) |
+| 2026-03-09 15:05 | deepen | Phase-3-1-5-Persistent-State-Replay-Boundaries | 6 | 6 | 11% | 89% | 80% | 14080 / 128000 | - | Phase 3.1 complete; next deepen (Phase 3.2, depth 2) |
+| 2026-03-09 15:15 | deepen | Phase-3-2-DM-Overwrites-Re-Generation | 7 | 7 | 12% | 88% | 80% | 15360 / 128000 | - | next deepen (depth 2, within_range) |
+| 2026-03-09 16:19 | deepen | Phase-3-2-1-Live-In-Session-Overwrites | 8 | 8 | 13% | 87% | 80% | 16640 / 128000 | - | next deepen (depth 3, within_range) |
+| 2026-03-09 16:30 | deepen | Phase-3-2-2-Re-Generation-Triggers | 9 | 9 | 14% | 86% | 80% | 17920 / 128000 | - | next deepen (depth 3, within_range) |
+| 2026-03-09 16:45 | deepen | Phase-3-2-3-Overwrite-Application-Order-Persistence | 10 | 10 | 15% | 85% | 80% | 19200 / 128000 | - | Phase 3.2 complete; next deepen or advance-phase |
+| 2026-03-09 17:00 | advance-phase | Phase 4 | 0 | 0 | - | - | - | - | - | next deepen (Phase 4.1, in-progress) |
+| 2026-03-09 18:54 | deepen | Phase-4-1-Player-Perspective | 1 | 1 | 2% | 98% | 80% | 2560 / 128000 | - | next deepen (depth 2, within_range) |
+| 2026-03-09 19:02 | deepen | Phase-4-1-1..4-1-5 (tertiaries) | 2 | 2 | 8% | 92% | 80% | 10240 / 128000 | - | Phase 4.1 complete; next deepen (Phase 4.2, depth 2) |
+| 2026-03-09 19:03 | deepen | Phase-4-2-DM-Controls | 3 | 3 | 3% | 97% | 80% | 3840 / 128000 | - | - | next deepen (depth 2, within_range) |
+| 2026-03-09 19:36 | deepen | Phase-4-2-1..4-2-4 (tertiaries) | 4 | 4 | 4% | 96% | 80% | 5120 / 128000 | 1 | Phase 4.2 complete; next deepen (depth 3, within_range) or advance-phase |
+| 2026-03-09 19:42 | deepen | Phase-4-2-1-1..4-2-1-3 (depth-4 tasks) | 5 | 5 | 5% | 95% | 80% | 6400 / 128000 | 1 | Phase 4.2.1 at depth 4; next deepen 4.2.2 or advance-phase |

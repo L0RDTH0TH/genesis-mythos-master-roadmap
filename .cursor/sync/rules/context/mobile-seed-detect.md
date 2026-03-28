@@ -16,6 +16,7 @@ alwaysApply: false
 
 - **Purpose**: When a note has **user highlights** (plain `<mark>` with no `data-highlight-source`), allow the agent to run **highlight-seed-enhance** via explicit trigger or queue. Do **not** auto-run on every save; only when user says "Enhance highlights from seeds", "SEEDED-ENHANCE", or when a queue entry with mode **SEEDED-ENHANCE** targets this note (e.g. `source_file` set).
 - **Reference**: [highlight-seed-enhance](.cursor/skills/highlight-seed-enhance/SKILL.md), [Queue-Sources](3-Resources/Second-Brain/Queue-Sources.md). MCP safety: [mcp-obsidian-integration](.cursor/rules/always/mcp-obsidian-integration.mdc).
+- **Mobile vs laptop**: Mobile can **add content** (e.g. `<mark>`) into notes in Ingest or elsewhere. **Triggering** SEEDED-ENHANCE is a **laptop** action: user runs EAT-QUEUE with a queue that references that note, or Plan-mode CODE → DISTILL/SEEDED-ENHANCE. See [Mobile-Migration-Spec](3-Resources/Second-Brain/Mobile-Migration-Spec.md).
 
 ## How to activate
 

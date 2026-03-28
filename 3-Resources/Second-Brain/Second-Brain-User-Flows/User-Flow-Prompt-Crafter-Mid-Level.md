@@ -15,6 +15,19 @@ This document adds **per-option** user paths: pipeline and profile selection, Pr
 
 ## Commander: pipeline and profile (user choices)
 
+```mermaid
+flowchart TD
+  Macro["Macro: Craft Prompt"]
+  Macro --> Q1["Pipeline: ingest or organize?"]
+  Q1 --> Q2["Profile: default or project-priority?"]
+  Q2 --> IngestDefault["ingest + default → strict-para, max 7, concise"]
+  Q2 --> IngestProj["ingest + project-priority → project-strict, max 5"]
+  Q2 --> OrganizeDefault["organize + default → organize, max 5"]
+  IngestDefault --> Out["Assembled string or temp note"]
+  IngestProj --> Out
+  OrganizeDefault --> Out
+```
+
 - **Macro prompts:** "Pipeline: ingest | organize?" and "Profile: default | project-priority?" (or equivalent).
 - **User choices:**
   - **ingest + default** → Assembly uses prompt_defaults.ingest (context_mode: strict-para, max_candidates: 7, rationale_style: concise).
@@ -25,6 +38,17 @@ This document adds **per-option** user paths: pipeline and profile selection, Pr
 ---
 
 ## Preview Assembly vs Craft and Queue (user choices)
+
+```mermaid
+flowchart LR
+  Choice["User choice"]
+  Choice --> Preview["Preview Assembly"]
+  Choice --> CraftQueue["Craft and Queue"]
+  Preview --> TempNote["Temp note; edit or copy"]
+  CraftQueue --> Validate["Validate params"]
+  Validate -->|valid| Append["Append one line to prompt-queue.jsonl"]
+  Validate -->|invalid| Abort["Abort; log Prompt-Log"]
+```
 
 | User action | Result | Logging |
 |-------------|--------|---------|
@@ -38,6 +62,16 @@ This document adds **per-option** user paths: pipeline and profile selection, Pr
 
 ## EAT-QUEUE with crafted params (user path)
 
+```mermaid
+flowchart TD
+  Run["User runs EAT-QUEUE"]
+  Run --> Merge["Step 5: Merge params queue → user_guidance → Config → MCP"]
+  Merge --> Validate["Validate vs MCP-Tools"]
+  Validate -->|invalid| Skip["Skip entry; Errors.md; Watcher-Result failure"]
+  Validate -->|valid| Dispatch["Pass merged params to pipeline"]
+  Dispatch --> MCP["classify_para, propose_para_paths receive params"]
+```
+
 - **User runs EAT-QUEUE** (or Process queue / eat cache). Entry has optional **params** (from Craft and Queue or manual edit).
 - **auto-eat-queue** Step 5: Merge params (queue → user_guidance → Config → MCP defaults). Validate merged params against MCP-Tools. If invalid → skip entry, Errors.md, Watcher-Result failure. If valid → pass merged params into pipeline context.
 - **User sees:** Watcher-Result line(s). For valid entry: pipeline runs (ingest, organize, distill, etc.) with merged params; classify_para and propose_para_paths receive them. For invalid: status: failure, message referencing param validation.
@@ -45,6 +79,14 @@ This document adds **per-option** user paths: pipeline and profile selection, Pr
 ---
 
 ## Guidance-aware merge (user with user_guidance or queue prompt)
+
+```mermaid
+flowchart LR
+  Note["Note has user_guidance or queue has prompt"]
+  Note --> GuidanceAware["Run is guidance-aware"]
+  GuidanceAware --> Merge["Merge user_guidance into rationale_style"]
+  Merge --> Log["Log merged params to Prompt-Log"]
+```
 
 - **When note has user_guidance** (or queue entry has non-empty prompt): Run is **guidance-aware** (guidance-aware.mdc). Merged params include user_guidance merged into rationale_style if compatible (e.g. "concise + explain rankings"). Full merged params logged to Prompt-Log.md.
 - **User choices:** Add user_guidance to the note (or prompt to the queue entry) for refinement hints. Do not expect user_guidance to be overwritten; defaults inject only where missing.
@@ -63,3 +105,28 @@ This document adds **per-option** user paths: pipeline and profile selection, Pr
 
 - **Craft Ingest Default** / **Craft Organize Custom** — One-click assembly for a fixed pipeline+profile; user can then paste or "Craft and Queue."
 - **Batch:** User may run macro multiple times (different source_file or mode) to append several queue entries; each validated independently. User runs EAT-QUEUE once to process the batch.
+
+---
+
+## Plan-mode Q&A user flow (mid-level)
+
+Plan-mode path: one question per message; optionals count varies by mode (see [[3-Resources/Second-Brain/Prompt-Crafter-Param-Table|Prompt-Crafter-Param-Table]]). After kickoff and mode choice, both branches merge at manual text, then summary and append.
+
+```mermaid
+flowchart TD
+  Start["User says We are making a prompt"]
+  Start --> Kickoff["Which kind? A. CODE B. ROADMAP"]
+  Kickoff --> CodeBranch["CODE"]
+  Kickoff --> RoadmapBranch["ROADMAP"]
+  CodeBranch --> ModeChoiceCode["Which pipeline? INGEST / ORGANIZE / DISTILL / EXPRESS / ARCHIVE / Task modes"]
+  ModeChoiceCode --> OptionalsCode["Optionals per param table for chosen pipeline, e.g. 1–6 for INGEST"]
+  RoadmapBranch --> ModeChoiceRoadmap["ROADMAP MODE vs RESUME-ROADMAP"]
+  ModeChoiceRoadmap --> OptionalsRoadmap["ROADMAP MODE: 2 optionals; RESUME-ROADMAP: 18 optionals"]
+  OptionalsCode --> ManualText["Manual text phase"]
+  OptionalsRoadmap --> ManualText
+  ManualText --> Summary["Summary + optional plan + payload"]
+  Summary --> AppendConfirm["Append to queue? Y/n"]
+  AppendConfirm -->|Y| ValidateRouteAppend["Validate, route, read-append-write"]
+  AppendConfirm -->|n| NoWrite["Payload in plan for copy-paste"]
+  ValidateRouteAppend --> Done["Done"]
+```

@@ -1,0 +1,88 @@
+---
+title: Phase 2.2 — Intent parser integration (generation hooks)
+original_path: 1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/phase-2-2-intent-parser-integration-generation-hooks-roadmap-2026-03-20-0624.md
+original_title: phase-2-2-intent-parser-integration-generation-hooks-roadmap-2026-03-20-0624
+pipeline: roadmap
+snapshot_type: per-change
+snapshot_created: "2026-03-20T04:31:35-04:00"
+snapshot_hash: e5cd683bde22fc8ea708ffb427f4e33618abe9e2f49e1d89a9af8bf45f878d12
+confidence: 88
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+roadmap-level: secondary
+phase-number: 2
+project-id: genesis-mythos-master
+priority: high
+progress: 0
+created: 2026-03-20
+tags: [roadmap, genesis-mythos-master, phase]
+subphase-index: "2.2"
+handoff_readiness: 86
+links:
+  - "[[phase-2-procedural-generation-and-world-building-roadmap-2026-03-19-1101]]"
+  - "[[genesis-mythos-master-roadmap-2026-03-19-1101]]"
+---
+
+## Phase 2.2 — Intent parser integration (generation hooks)
+
+Integrate a player/DM *intent parser* into the Phase 2 generation hook chain so co-authored intent deterministically influences world generation outcomes, while preserving replay safety, immutable published plan artifacts, and fail-closed semantics.
+
+### Objectives
+
+- Define the end-to-end **intent lifecycle**: capture co-authored intent text, canonicalize, parse, validate, and publish an immutable `IntentPlan`.
+- Define **where** the intent plan is consumed by generation stages (stage hooks) without violating deterministic ordering or the async commit barrier semantics established in Phase 2.1.
+- Define **failure surfaces** as deterministic replay events: invalid intent yields deterministic denials, not partial/implicit fallback behavior.
+
+### Integration contract (v0)
+
+- **Canonical intent bytes:** Require a stable canonicalization step that produces deterministic bytes used for hashing and replay identity.
+- **Schema-bound plan:** Require a versioned `IntentPlan` schema (explicit field list, stable serialization rules) so changes are replay-disciplined and detectable.
+- **Deterministic hash chain:** Wire `intent_hash` into downstream hash chain inputs that ultimately bind to `policy_bundle_hash` and `manifest_hash` (so intent affects manifest deterministically).
+- **Hook consumption rule:** Stage hooks may *read* the published `IntentPlan`, but must not mutate it in-place. Stages must treat the plan as immutable input.
+- **Fail-closed semantics:** If parse/validation fails, generation must deterministically stop for that `intent_id` and emit the corresponding denial event under the command/event schema.
+
+### Lifecycle: from co-authored intent to replay-safe stage hooks
+
+1. Co-authored intent text enters the pipeline at the intent entry point (player/DM input boundary).
+2. Canonicalization converts intent text into canonical bytes used for identity (no “normalization drift” across runs).
+3. Parser produces a structured representation that is validated against the versioned schema.
+4. The system publishes an immutable `IntentPlan` plus a deterministic hash identity.
+5. Generation stages consume the published plan and derive deterministic impacts via the hash chain into `manifest_hash` / spawn ordering.
+
+### Command/Event contracts
+
+- Ensure validation failures map to deterministic denial events with stable reason codes.
+- Ensure stage consumption failures map to deterministic fail-closed events (no silent “use defaults” branches).
+- Keep command/event outputs aligned with Phase 1 replay determinism guarantees (stable reason codes, stable replay identities).
+
+### Open questions (for tertiary breakdown)
+
+- Which stage hook boundary should consume `IntentPlan` first: before policy derivation, between policy derivation and manifest draft, or at the manifest-emission boundary?
+- What exact “canonical bytes” rules should be frozen for the canonicalization step (byte encodings, whitespace/punctuation handling)?
+- Which transient fields are explicitly excluded from `IntentPlan` hashing so the schema remains replay-verifiable?
+
+## Research integration
+
+### Key takeaways (drafted without injected research block)
+
+- Deterministic intent identity must be anchored to canonical bytes and a frozen serialization rule.
+- Intent must affect `manifest_hash` through a deterministic hash chain, not narrative-only annotations.
+- Invalid intent must fail closed with deterministic denial events and stable reason codes.
+
+### Pending decisions
+
+- Pin exact byte encodings + concatenation rules for `hash(...)`/`H(...)` so replay equality is directly assertable.
+- Pin canonicalization + transient-field exclusion rules so the `IntentPlan` hash is stable across runs.
+- Confirm the hook-consumption boundary so intent influence cannot bypass the async commit barrier.
+
+## Tertiary notes
+
+```dataview
+TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
+FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building"
+WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
+SORT subphase-index ASC, file.name ASC
+```
+

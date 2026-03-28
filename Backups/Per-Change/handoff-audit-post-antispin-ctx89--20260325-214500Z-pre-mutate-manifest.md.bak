@@ -1,0 +1,19 @@
+---
+snapshot_kind: pre-mutate-manifest
+queue_entry_id: handoff-audit-post-antispin-deepen-ctx89-gmm-20260325T050500Z
+parent_run_id: pr-l1-eatq-handoff-audit-gmm-20260325T214500Z
+completed_iso: "2026-03-25T21:45:00.000Z"
+pipeline: RESUME_ROADMAP
+params_action: handoff-audit
+project_id: genesis-mythos-master
+---
+
+# Pre-mutate SHA256 (workflow_state, decisions-log, phase 4.1.1.10)
+
+| path | sha256 |
+| --- | --- |
+| `1-Projects/genesis-mythos-master/Roadmap/workflow_state.md` | `02181cc95e425823f60ddfe442820679a0d38a4c1405ecb956e02966f2992720` |
+| `1-Projects/genesis-mythos-master/Roadmap/decisions-log.md` | `aa2810a7e9da449063b53d4874b59ac8681b5522c8fa3420b271cd0ccee05510` |
+| `1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/phase-4-1-1-10-auditable-path-check-contract-and-example-witness-appendix-roadmap-2026-03-25-0003.md` | `3dc51f6b417f52243ddd8758f4c6303cf4a3c6e57f55885057af01a32386e926` |
+
+Full file copies not inlined (large `workflow_state`); hashes are the rollback anchor for this handoff-audit run.

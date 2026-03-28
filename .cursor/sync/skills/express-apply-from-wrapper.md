@@ -14,11 +14,11 @@ description: Reads an approved Decision Wrapper (wrapper_type mid-band-refinemen
 
 1. **Read wrapper**: The wrapper path and frontmatter are in context (Step 0 passes the wrapper being processed). Read frontmatter: `original_path`, `approved_option`, `approved_path`, `user_guidance` (or extract from Thoughts block). Resolve the chosen option (A–G) to an **express_view** or **outline style** value (e.g. option A = "summary", B = "full outline", or option text = view name).
 
-2. **Resolve express params**: Set **express_view** (or equivalent) from `approved_option` / wrapper body so the express pipeline uses the user's choice. If the wrapper body or options describe a view (e.g. "publish-ready", "minimal"), use that as the express_view override.
+2. **Resolve express params**: Set **express_view** (or equivalent) from `approved_option` / wrapper body so the express pipeline uses the user’s choice. If the wrapper body or options describe a view (e.g. "publish-ready", "minimal"), use that as the express_view override.
 
 3. **Re-run autonomous-express**: Run the **autonomous-express** pipeline on the note at `original_path` with:
    - **express_view** override from the resolved option.
-   - **user_guidance** from the wrapper's Thoughts block (if any) as soft context.
+   - **user_guidance** from the wrapper’s Thoughts block (if any) as soft context.
    - Normal backup/snapshot gates and confidence rules apply; this run may perform the outline/Related/CTA steps that were previously proposed in the refinement wrapper.
 
 4. **No wrapper writes**: This skill does not update or move the wrapper; Step 0 updates the wrapper (e.g. `used_at`, `processed: true`) and moves it to the archive after the express run completes.
@@ -26,7 +26,7 @@ description: Reads an approved Decision Wrapper (wrapper_type mid-band-refinemen
 ## MCP / pipeline
 
 - `obsidian_read_note` — read wrapper and original note when needed.
-- The autonomous-express pipeline (auto-express context rule) is run by the agent with the overrides in context; no dedicated MCP for "run express" — the agent executes the pipeline steps (related-content-pull, express-mini-outline, call-to-action-append, etc.) using the overrides.
+- The autonomous-express pipeline (auto-express context rule) is run by the agent with the overrides in context; no dedicated MCP for “run express” — the agent executes the pipeline steps (related-content-pull, express-mini-outline, call-to-action-append, etc.) using the overrides.
 
 ## Reference
 

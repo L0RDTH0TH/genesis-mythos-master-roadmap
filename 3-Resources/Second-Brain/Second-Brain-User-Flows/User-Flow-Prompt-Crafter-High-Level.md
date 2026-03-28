@@ -15,6 +15,15 @@ This document describes the **user's path** through the prompt-crafter (laptop-o
 
 ## User starts crafting (trigger → assembly)
 
+```mermaid
+flowchart LR
+  Trigger["User runs macro or types mode"]
+  Trigger --> Pipeline["Pipeline: ingest or organize"]
+  Pipeline --> Profile["Profile: default or project-priority"]
+  Profile --> Assembly["Assembly from Config + Templates"]
+  Assembly --> Out["Crafted prompt or queue entry"]
+```
+
 - **User runs a Commander macro** (e.g. Craft Prompt, Craft Ingest Default)  
   Macro prompts for **pipeline** (ingest | organize) and **profile** (default | project-priority). Assembly pulls from [[3-Resources/Second-Brain-Config|Second-Brain-Config]] prompt_defaults and [[3-Resources/Second-Brain/Templates#Prompt-Components (laptop)|Templates/Prompt-Components]]. Output is a crafted prompt string (trigger + params).
 
@@ -26,6 +35,19 @@ This document describes the **user's path** through the prompt-crafter (laptop-o
 
 ## Main gate: validation before use
 
+```mermaid
+flowchart TD
+  Params["Params assembled"]
+  Params --> Check["Check vs MCP contract"]
+  Check -->|invalid| Abort["Abort; log Prompt-Log or Errors"]
+  Check -->|valid| PasteOrQueue["Paste or append to queue"]
+  PasteOrQueue --> EAT["EAT-QUEUE runs"]
+  EAT --> Merge["Merge queue + user_guidance + Config"]
+  Merge --> Validate["Validate merged params"]
+  Validate -->|invalid| Skip["Skip entry; Errors.md; Watcher-Result"]
+  Validate -->|valid| Dispatch["Dispatch to pipeline; MCP receives params"]
+```
+
 - **Before paste or queue append**: Params are checked (e.g. max_candidates ≤10, rationale_style in allowed enum per MCP-Tools). **Invalid** → abort; log to Prompt-Log.md (and optionally Errors.md per Error Handling Protocol). **Valid** → paste or append.
 
 - **When EAT-QUEUE runs**: auto-eat-queue validates merged params (queue + user_guidance + Config) against MCP-Tools contracts before dispatching. **Invalid** → skip that entry; append to Errors.md; append failure to Watcher-Result. **Valid** → pass merged params into the pipeline; classify_para, propose_para_paths, subfolder_organize receive them.
@@ -35,6 +57,17 @@ So: the user either gets a working crafted prompt/queue entry (valid) or sees an
 ---
 
 ## Ingest / organize with crafted params (user outcome)
+
+```mermaid
+flowchart TD
+  Phase1["Phase 1: INGEST MODE or queue INGEST"]
+  Phase1 --> Classify["classify → enrich → organize proposal"]
+  Classify --> Wrapper["Decision Wrapper A–G"]
+  Wrapper --> UserApprove["User sets approved: true"]
+  UserApprove --> Phase2["Phase 2: EAT-QUEUE"]
+  Phase2 --> Apply["Apply-mode move/rename or run other modes"]
+  Apply --> Result["Watcher-Result; notes in PARA or wrapper archived"]
+```
 
 - **Phase 1 (INGEST MODE or queue entry mode INGEST MODE)**  
   Agent runs full-autonomous-ingest with **crafted params** (e.g. context_mode: strict-para, max_candidates: 7). User sees the same as before: classify → enrich → organize proposal → Decision Wrapper A–G. Params make path proposals more stable; they do **not** auto-approve. User still checks one option and sets approved: true.
@@ -51,3 +84,25 @@ So: crafting gives **consistent params**; the rest of the flow (Decision Wrapper
 - **No move without approval** — Crafted params influence proposals only. approved: true is still required for any move/rename (Pipelines § Phase 2). No auto-approval injection from params.
 - **Invalid params never dispatch** — EAT-QUEUE rejects invalid params pre-dispatch; the user sees a failure line in Watcher-Result and an entry in Errors.md instead of a bad run.
 - **Merge, don't override** — When the note has user_guidance (or queue prompt), it is **merged** with crafted params (e.g. appended to rationale_style); user_guidance is never overwritten by defaults.
+
+---
+
+## Plan-mode Q&A user flow (high-level)
+
+This is the **Plan-mode** path (distinct from Commander macro): user says "We are making a prompt" (or CODE/ROADMAP); agent asks one question per message with A/B/C so Cursor can show the question box; then summary and append to queue after confirm.
+
+```mermaid
+flowchart TD
+  Start["User says We are making a prompt"]
+  Start --> Kickoff["Which kind? A. CODE B. ROADMAP"]
+  Kickoff --> ModeChoice["Choose mode or pipeline"]
+  ModeChoice --> Optionals["Optionals in param table order, one question per message, A/B/C"]
+  Optionals --> ManualText["Manual text phase for params that accept text"]
+  ManualText --> Summary["Summary + optional plan + payload"]
+  Summary --> AppendConfirm["Append to queue? Y/n"]
+  AppendConfirm -->|Y| Confirm["User confirms"]
+  AppendConfirm -->|n| Decline["User declines"]
+  Confirm --> ValidateRouteAppend["Validate, route, read-append-write"]
+  ValidateRouteAppend --> Done["Done. Payload appended."]
+  Decline --> NoWrite["Payload in plan for copy-paste"]
+```

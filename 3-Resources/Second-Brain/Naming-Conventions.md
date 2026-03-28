@@ -7,6 +7,10 @@ status: active
 links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 ---
 
+**TL;DR** — Note format: `kebab-slug-YYYY-MM-DD-HHMM.md` (slug first, date and time at end). Time 24-hour; source priority: created frontmatter → file mtime → ingest/now. Referenced by Parameters, subfolder-organize, name-enhance.
+
+---
+
 # Naming Conventions
 
 Single source of truth for note and file naming in the vault. Referenced by [[Parameters]], [[.cursor/rules/always/second-brain-standards|second-brain-standards]], [[Templates]], [[Vault-Layout]], [[.cursor/skills/subfolder-organize/SKILL|subfolder-organize]], and [[.cursor/skills/name-enhance/SKILL|name-enhance]].
@@ -36,6 +40,10 @@ If multiple notes created/ingested in the same minute on the same topic → use 
 ### Display names
 
 Filename is primarily a **stable identifier + retrieval cue**. Frontmatter `title:` or `aliases:` can hold prettier or longer display names if desired.
+
+### Research notes (Ingest/Agent-Research/)
+
+Notes created by the research-agent use the same core format `kebab-slug-YYYY-MM-DD-HHMM.md`. **Slug source**: derive from `research_query` (e.g. "faction state persistence" → `faction-state-persistence`) or from `linked_phase` (e.g. `Phase-4-1`); optionally combine both, e.g. `faction-state-persistence-Phase-4-1-2026-03-09-1430.md`. Keeps research notes findable by phase and query.
 
 ---
 

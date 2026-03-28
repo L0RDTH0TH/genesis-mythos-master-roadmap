@@ -5,7 +5,7 @@ description: Builds target path from para-type, project-id, and semantic themes 
 
 # Project Linking Priority (enforced 2026-02-26 fix)
 
-- If classify_para returned a non-null **project_name** → ALWAYS place under `1-Projects/{sanitized-project_name}/{subfolder_hint or ''}/{kebab-slug-YYYY-MM-DD-HHMM.md}` (Naming-Conventions; date and time at end)
+- If classify_para returned a non-null **project_name** → ALWAYS place under `1-Projects/{sanitized-project_name}/{subfolder_hint or ''}/{kebab-slug-YYYY-MM-DD-HHMM.md}` (see Naming-Conventions; date and time at end)
 - For **Audits**: force subfolder_hint `Audits` even if classify didn't return it
 - For **Tasks**: force subfolder_hint `Tasks`
 - Only create brand-new `1-Projects/` folder when classify_para explicitly sets **para_type: 'Project'** AND **project_name is null**
@@ -28,7 +28,7 @@ description: Builds target path from para-type, project-id, and semantic themes 
 
 1. **Read frontmatter**: Use `obsidian_read_note` to get `para-type`, `project-id` (if any), and content themes.
 
-2. **Build path** (max 4 levels): Use **classify_para** result first: when `project_name` is non-null, use it as the project segment and `subfolder_hint` (Audits, Tasks, etc.) as the subfolder; only then fall back to thematic names.
+2. **Build path** (max 4 levels): Use **classify_para** result first: when `project_name` is non-null, use it as the project segment and `subfolder_hint` (Audits, Tasks, etc.) as the subfolder; only then fall back to thematic names. **Filename segment**: Follow [[3-Resources/Second-Brain/Naming-Conventions|Naming-Conventions]] — format `kebab-slug-YYYY-MM-DD-HHMM.md` (date and time at end). When **name-enhance** (ingest) provides optional `suggested_filename` and confidence ≥85% and not protected, use it for the path segment; else derive from current filename or content.
    - **Ingest**: `{para-root}/{ProjectOrAreaName?}/{subfolder_hint?}/{IdeaClusterOrSubtheme?}/{kebab-slug-YYYY-MM-DD-HHMM}.md`
      - Examples: `1-Projects/Project-X/Idea-Cluster/meeting-notes-2026-02-25-1430.md`, `3-Resources/reference-basb-2026-02-25-0915.md`.
    - **Archive**: `4-Archives/{Project-X-Archive?}/{Subtheme?}/{kebab-slug-YYYY-MM-DD-HHMM}.md`
@@ -37,15 +37,14 @@ description: Builds target path from para-type, project-id, and semantic themes 
 
 3. **Ensure structure**: For deep paths (3–4 levels), call `obsidian_ensure_structure` with **folder_path** set to the target parent (e.g. `4-Archives/Project-Archive/Subtheme`) before `obsidian_move_note`; the server creates that path recursively. Without this, move may fail if intermediate folders are missing.
 
-4. **Move**: Call `obsidian_move_note(path, new_path)`. **Requires backup first** (`obsidian_create_backup` or ensure_backup).
+4. **Move**: Call `obsidian_move_note(path, new_path)`. **Requires backup first** (obsidian_create_backup or ensure_backup).
 
 ## MCP tools
 
 - `obsidian_read_note` — read current path and frontmatter
 - `obsidian_ensure_structure` — ensure PARA folders exist (if needed)
-- `obsidian_move_note` — move note to `new_path` (destructive; backup first)
+- `obsidian_move_note` — move note to new_path (destructive; backup first)
 
 ## Confidence gate
 
 **≥85%**: Execute move. **<85%**: Propose `new_path` only; do not call move_note.
-

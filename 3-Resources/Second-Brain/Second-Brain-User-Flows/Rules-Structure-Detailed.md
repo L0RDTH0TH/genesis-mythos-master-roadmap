@@ -54,6 +54,21 @@ This document lists every rule file, its trigger/glob, pipeline or flow, main re
 
 ## Step 0 and re-wrap / re-try / phase-direction (rule detail)
 
+```mermaid
+flowchart TD
+  Step0["Step 0: enumerate Ingest/Decisions/**"]
+  Filter["approved: true | re-wrap: true | re-try: true"]
+  Feedback["feedback-incorporate → hard_target_path, re-wrap intent, re-try intent"]
+  ReWrap["Re-wrap branch: archive wrapper → create new from Thoughts"]
+  ReTry["Re-try branch: cap check → re-queue EXPAND-ROAD / TASK-TO-PLAN-PROMPT"]
+  PathApply["Path-apply: apply-mode ingest or phase-direction apply"]
+  Step0 --> Filter
+  Filter --> Feedback
+  Feedback --> ReWrap
+  Feedback --> ReTry
+  Feedback --> PathApply
+```
+
 - **Step 0 (auto-eat-queue)**  
   Runs before reading the queue. Enumerate Ingest/Decisions/** recursively. For each wrapper: skip if approved: false and re-wrap is not true and re-try is not true. For (approved: true or re-wrap: true or re-try: true) and not processed: run feedback-incorporate → hard_target_path, re-wrap intent, or re-try intent.  
   - **Re-wrap branch** (re-wrap: true or approved_option: 0 or no hard_target_path): backup + per-change snapshot of wrapper; ensure_structure(4-Archives/Ingest-Decisions/Re-Wrap/Ingest-Decisions); move_note(wrapper, Re-Wrap path) dry_run then commit; create new wrapper under Ingest/Decisions/ with same original_path, Thoughts as seed, link to archived wrapper; approved: false, no approved_option/approved_path on new wrapper; log CHECK_WRAPPERS re-wrap line.  

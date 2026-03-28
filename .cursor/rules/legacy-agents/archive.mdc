@@ -1,0 +1,64 @@
+---
+description: "ArchiveSubagent — autonomous-archive (move completed/inactive notes to 4-Archives/ with summary preservation, resurface markers, ghost-folder sweep). Handles ARCHIVE MODE and related triggers."
+globs:
+  - "1-Projects/**/*.md"
+  - "2-Areas/**/*.md"
+  - "3-Resources/**/*.md"
+  - "!4-Archives/**"
+  - "!Backups/**"
+  - "!Templates/**"
+  - "!**/Log*.md"
+  - "!**/* Hub.md"
+alwaysApply: false
+---
+
+# ArchiveSubagent (context rule)
+
+- **Subagent**: This rule is the **ArchiveSubagent**. Responsible for autonomous-archive — move completed/inactive notes to `4-Archives/` with summary preservation and resurface markers. Invoked when user says ARCHIVE MODE, "archive this note", "send to Archives", "move completed to 4-Archives", or when the Queue subagent dispatches ARCHIVE MODE.
+- **Reference**: [Cursor-Skill-Pipelines-Reference](3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference.md). **MCP safety**: [mcp-obsidian-integration.mdc](.cursor/rules/always/mcp-obsidian-integration.mdc).
+
+## Depends on (shared always rules)
+
+This subagent **depends on** and does not duplicate: core-guardrails.mdc, confidence-loops.mdc, guidance-aware.mdc, mcp-obsidian-integration.mdc, watcher-result-append.mdc.
+
+## How to activate
+
+- **ARCHIVE MODE – safe batch autopilot**, **archive this note**, **send to Archives**, **move completed to 4-Archives** → run pipeline below.
+- **Queue**: `mode: "ARCHIVE MODE"` → Queue subagent dispatches here (optional scope/source_file). No archive-apply-from-wrapper; re-queue ARCHIVE MODE after wrapper approval to re-run.
+
+## Pipeline overview
+
+**Entry condition (hand-off required when queue-dispatched):** When this pipeline was invoked by the Queue subagent for a queue entry, the hand-off block for that entry (task, queue entry, invariants, state files, return format per [Subagent-Safety-Contract](3-Resources/Second-Brain/Subagent-Safety-Contract.md)) must have been **output** as the first content for that entry. If you are running for a queue entry and that hand-off was **not** output above for it, do **not** run the following steps; state: "Hand-off missing. Queue processor must output the hand-off block for this entry before pipeline steps." and stop.
+
+1. **Backup**: Ensure `obsidian_create_backup` for the note.
+2. **Classify PARA**: Confirm para-type and status.
+3. **`archive-check`** — verify archive readiness (no open tasks, status complete, age threshold, subfolder checks). Primary signal: `archive_conf` (≥85% for move).
+4. **Mid-band (68–84)**: Single archive-refine loop (re-scan tasks, optional TL;DR preview, self-critique, compute post_loop_conf). If post_loop_conf ≥85: snapshot → proceed. Else: skip move; **create Decision Wrapper** under Ingest/Decisions/Refinements/ (mid-band-refinement, pipeline archive). CHECK_WRAPPERS; Watcher-Result. Use User-Questions-and-Options-Reference §2.
+5. **Low (<68)**: No loop; archive candidate only. **Create Decision Wrapper** under Ingest/Decisions/Low-Confidence/ (low-confidence, pipeline archive). CHECK_WRAPPERS; Watcher-Result. Use User-Questions-and-Options-Reference §2.
+6. **Per-change snapshot**: After archive-check ≥85%, **before** subfolder-organize, summary-preserve, move — call obsidian-snapshot type "per-change". Below threshold or snapshot fail: do not move; log #review-needed.
+7. **`subfolder-organize`** — compute target path under 4-Archives/ (≥85%). Optionally propose_para_paths (context_mode organize/archive) for advisory candidates.
+8. **`resurface-candidate-mark`** — mark high-potential notes (≥85% for hub append; metadata-only ≥75%).
+9. **`summary-preserve`** — minimal TL;DR/summary callout, project color links (≥85%).
+10. **Move**: obsidian_ensure_structure(parent of target) → obsidian_move_note dry_run then commit. Post-move: set para-type Archive, **status: archived** on note at new path per mcp-obsidian-integration. On failure use MCP fallback table.
+11. **Logging**: obsidian_log_action; append to Archive-Log.md and Backup-Log.md.
+12. **Ghost-folder sweep**: After all moves, if moved_notes_list non-empty, invoke **archive-ghost-folder-sweep** with that list (obsidian_remove_empty_folder; no shell rmdir). Log #ghost-sweep in Archive-Log.
+
+**Loop logging**: loop_attempted, loop_band, pre_loop_conf, post_loop_conf, loop_outcome, loop_type: "archive-refine", loop_reason in Archive-Log.md and obsidian_log_action.
+
+**Batch**: One batch snapshot per sweep; log in Archive-Log.md and Backup-Log.md.
+
+## Exclusions
+
+**Includes**: 1-Projects/** , 2-Areas/** , 3-Resources/** . **Excludes**: 4-Archives/**, Backups/**, Templates/**, **/Log*.md, **/* Hub.md, Watcher paths and watcher-protected: true.
+
+## Error handling
+
+On failure: Follow **Error Handling Protocol** in mcp-obsidian-integration.mdc. Pipeline: autonomous-archive; include error_type in Errors.md. Log to Errors.md, reference in Archive-Log.md and Backup-Log.md. Backup/snapshot fail: abort for that note, continue next.
+
+## Safety
+
+Backups first; per-change snapshot mandatory before move when archive_conf ≥85%. No destructive action unless confidence ≥85% **and** successful per-change snapshot. Fallbacks: obsidian_ensure_structure then retry move; else log and propose manual parent. No shell cp/mv/rm. Restore is user-triggered only.
+
+## Rollout guidance
+
+Start with single test project folder; run 3–5 archive sweeps; confirm only complete/inactive notes moved, snapshots created; then widen scope.

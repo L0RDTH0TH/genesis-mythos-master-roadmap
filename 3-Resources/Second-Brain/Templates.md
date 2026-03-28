@@ -7,11 +7,15 @@ status: active
 links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 ---
 
+**TL;DR** — Templates live in **Templates/** (Ingest-template, AI-Output, etc.); Prompt-Components for laptop crafter; Chat-Prompts for copy-paste. Decision-Wrapper and Phase-Direction under Templates/; Master-Goal and Planning-Prompt-Task for roadmap.
+
+---
+
 # Second Brain Templates
 
 ## Where
 
-Templates live in **Templates/** (e.g. Ingest-template, AI-Output, Mobile-AI-Question). Optional subfolders by project or type. **Ingest by-type** (AI-Output, Link-Note, Stray-Thoughts) are consolidated at **Templates/Ingest/By-Type/**; Ingest-Selector and pipelines reference these paths.
+Templates live in **Templates/** under organized subfolders: **Decisions/** (wrappers), **Roadmap/** (Master-Goal, Hand-Off-Roadmap, Planning-Prompt-Task, Roadmap-*-Template), **Ingest/** (Ingest-Selector, Ingest-Template, By-Type/), **Notes/** (Session-Prep, Daily/Weekly, Mobile-AI-Question), **Chat/** (AI Prompts), **Prompt-Components/**, **Scripts/**. **Ingest by-type** (AI-Output, Link-Note, Stray-Thoughts) are at **Templates/Ingest/By-Type/**; Ingest-Selector and pipelines reference these paths. **Templater dependency:** `Templates/Ingest-Selector.tpl` is required for the Templater plugin to work (folder template for Ingest); **do not remove it** or Templater will break.
 
 ## Prompt-Components (laptop)
 
@@ -28,6 +32,28 @@ Templates live in **Templates/** (e.g. Ingest-template, AI-Output, Mobile-AI-Que
 - **Templater**: If Templater is hooked, placeholders (e.g. from Config) may be resolved when you open the template; otherwise paste as-is and rely on Config defaults at run time.
 
 See [[3-Resources/Second-Brain/Chat-Prompts|Chat-Prompts]] for canonical phrases, validation, and safety.
+
+## Master Goal (PMG normalization)
+
+**Location**: `Templates/Roadmap/Master-Goal.md`. Normalized structure for Project Master Goal (PMG) notes: **One-line**, **Vision**, **Phases** (used by ROADMAP MODE – generate from outline for phase parsing), **Technical Integration** (optional), **TL;DR**, **Related**. All master goal files should be normalized to this template so roadmap generation and scoping (research-scope, link-to-pmg-if-applicable) see a consistent structure. The **normalize-master-goal** skill restructures existing PMG content into these sections; **roadmap-generate-from-outline** runs it when the seed is a PMG. Queue mode **NORMALIZE-MASTER-GOAL** runs normalization on demand. See [[.cursor/skills/normalize-master-goal/SKILL|normalize-master-goal]] and [[3-Resources/Second-Brain/Naming-Conventions#Project Master Goal notes|Naming-Conventions § PMG]].
+
+## Hand-Off Roadmap (multi-run resumption)
+
+**Location**: `Templates/Roadmap/Hand-Off-Roadmap.md`. Prompt skeleton for resuming a multi-run roadmap. Fields: `previous_outputs` ([[links]] to phase outputs), `current_directive`, `open_tbd`. **Mandate:** @-ref distilled-core.md first before previous_outputs; emit outputs as linked atomic notes; max 300 tokens per task pseudocode block. Used by **roadmap-resume** skill when building the resumption prompt. See Multi-Run Roadmap plan and [[.cursor/skills/roadmap-resume/SKILL|roadmap-resume]].
+
+## Roadmap artifact templates (Phase 0 + multi-run state)
+
+**Location**: `Templates/Roadmap/Artifacts/`.
+
+These templates are the **canonical source** for the internal ROADMAP artifacts created during multi-run automation (created **only when missing**, never overwritten):
+
+- `Templates/Roadmap/Artifacts/workflow_state.md` — created by **roadmap-generate-from-outline** (Phase 0) and used/updated by **roadmap-deepen**.
+- `Templates/Roadmap/Artifacts/roadmap-state.md` — Phase 0 single source of truth for current_phase/status/version; updated by roadmap actions.
+- `Templates/Roadmap/Artifacts/decisions-log.md` — append-only decisions per phase (and `#handoff-review` / `#handoff-needed` lines).
+- `Templates/Roadmap/Artifacts/distilled-core.md` — compressed memory for resumption (Phase 0 anchors + core_decisions + dependency graph).
+- `Templates/Roadmap/Artifacts/phase-output.md` — created on demand by **roadmap-phase-output-sync** when a `phase-X-output.md` file is missing.
+
+If you change the schema for these artifacts, update the templates first, then update the roadmap skills and `Vault-Layout.md` spec to match.
 
 ## Planning prompt (TASK-TO-PLAN-PROMPT)
 
@@ -110,7 +136,7 @@ When the ingest pipeline marks a note as a decision candidate (ingest_conf < 72 
 
 ## Ingest/Decisions wrapper notes (Decision Wrapper template)
 
-**Required:** For every ingest decision candidate, the pipeline MUST create or refresh a **Decision Wrapper** note under **`Ingest/Decisions/`**, using the canonical template **`Templates/Decision-Wrapper.md`** (A–G version). Live wrappers for ingest path decisions use the subfolder **`Ingest/Decisions/Ingest-Decisions/`**; other wrapper types (Refinements, Low-Confidence, Errors, Roadmap-Decisions, Re-Wrap) use their corresponding subfolders as described in [[3-Resources/Second-Brain/Vault-Layout#Ingest/Decisions subfolders|Vault-Layout § Ingest/Decisions subfolders]]. Ensure the target subfolder exists via `obsidian_ensure_structure` (for example `folder_path: "Ingest/Decisions/Ingest-Decisions"`) before writing.
+**Required:** For every ingest decision candidate, the pipeline MUST create or refresh a **Decision Wrapper** note under **`Ingest/Decisions/`**, using the canonical template **`Templates/Decisions/Decision-Wrapper.md`** (A–G version). Live wrappers for ingest path decisions use the subfolder **`Ingest/Decisions/Ingest-Decisions/`**; other wrapper types (Refinements, Low-Confidence, Errors, Roadmap-Decisions, Re-Wrap) use their corresponding subfolders as described in [[3-Resources/Second-Brain/Vault-Layout#Ingest/Decisions subfolders|Vault-Layout § Ingest/Decisions subfolders]]. Ensure the target subfolder exists via `obsidian_ensure_structure` (for example `folder_path: "Ingest/Decisions/Ingest-Decisions"`) before writing.
 
 - **Filename pattern (ingest wrappers)**: `Decision-for-<original_slug>--YYYY-MM-DD-HHMM.md` where `original_slug` comes from the original note’s filename and the timestamp is when the wrapper was (re)created.
 - **Frontmatter (common fields)**:

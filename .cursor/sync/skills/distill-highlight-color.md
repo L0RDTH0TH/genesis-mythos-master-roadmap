@@ -45,4 +45,3 @@ description: Applies Highlightr colors to note content after distill using maste
 ## Reference
 
 - [3-Resources/Highlightr-Color-Key.md](3-Resources/Highlightr-Color-Key.md) — master key (Section 1 semantics + Section 2 exact storage format), project-specific guidelines, `highlight_key` fallback.
-

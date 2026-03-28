@@ -13,6 +13,20 @@ Single reference for **what to paste or say in Cursor chat** to trigger pipeline
 
 ---
 
+## Prompt crafting — question-led (Chat/Agent)
+
+To **craft a prompt interactively** in Chat or Agent mode (not Cursor Plan mode), start with one of two kickoffs:
+
+| You say | Kickoff | Funnel |
+|--------|---------|--------|
+| **We are making a CODE prompt** | CODE | Agent asks which pipeline/task mode (INGEST, ORGANIZE, DISTILL, EXPRESS, ARCHIVE, or task modes), then walks optionals in param-table order, then manual text phase. All questions are asked and answered **before** any plan or queue write. Then agent may show a plan (Q&A + payload at bottom) and asks the Final confirmation question ([[3-Resources/Second-Brain/User-Questions-and-Options-Reference#1-question-led-prompt-crafter-chatagent|User-Questions-and-Options-Reference]] §1 Message 9: A. yes — append | B. no — cancel | C. AI reasoning). On **confirm** (A): validate, route, read-append-write. On **decline**: do not write; payload remains in plan for copy-paste or manual add. |
+| **We are making a ROADMAP prompt** | ROADMAP | Agent asks setup vs resume (ROADMAP MODE vs RESUME-ROADMAP). **If RESUME-ROADMAP (V4 order):** run **resume gate** (when prior locks exist), then **profile gate**, then "Which action?" (A. deepen | B. recal | C. Other), then **all** param optionals in §1 order with no skips, then manual text phase, then the Final confirmation (§1 Message 9). Do not ask "Which action?" before the gates. Same Q&A-first flow as above. |
+| **We are making a prompt** (generic) | — | Agent **asks**: "Which kind? A. CODE B. ROADMAP" and does not guess. |
+
+Crafting is **laptop-only**. All questions must be asked and answered **before** any summary or queue write. Format each question with **each option on its own line** (real newlines); see [[3-Resources/Second-Brain/User-Questions-and-Options-Reference|User-Questions-and-Options-Reference]] §1 for the exact layout. Then the agent may present a recap (Q&A + payload) and asks the Final question from User-Questions-and-Options-Reference §1 Message 9. On confirm (A): validate payload, route to correct queue file, read-append-write. On decline: do not write; payload remains in chat for copy-paste or manual add. Question order and param ownership are defined in [[3-Resources/Second-Brain/Second-Brain-User-Flows/Prompt-Crafter-Structure-Detailed#Plan-mode crafting entrypoints (two kickoffs)|Prompt-Crafter-Structure-Detailed]] and the [[3-Resources/Second-Brain/Prompt-Crafter-Param-Table|Prompt-Crafter-Param-Table]] (param table). **Prompt-Crafter is the primary, preferred entry door** for starting automation runs; the direct mode phrases in the tables below (INGEST MODE, DISTILL MODE, etc.) are treated as **manual/advanced** call formats that bypass Q&A and are intended for power users and Commander flows.
+
+---
+
 ## Safety invariants
 
 > [!warning] Triggers propose only

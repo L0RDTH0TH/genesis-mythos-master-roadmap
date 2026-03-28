@@ -1,0 +1,15 @@
+# Partial snapshot (pre) — workflow_state.md
+# Intended restore anchor for: `followup-recal-post-deepen-d060-gmm-20260326T001500Z`
+#
+# NOTE: This is a partial excerpt snapshot (frontmatter only) written by RoadmapSubagent.
+---
+title: Workflow State — genesis-mythos-master (partial pre snapshot)
+project-id: genesis-mythos-master
+current_phase: 4
+current_subphase_index: "4.1.1.10"
+last_auto_iteration: "followup-deepen-post-recal-distilled-parity-gmm-20260325T213400Z"
+last_ctx_util_pct: 89
+last_conf: 88
+workflow_log_authority: last_table_row
+---
+

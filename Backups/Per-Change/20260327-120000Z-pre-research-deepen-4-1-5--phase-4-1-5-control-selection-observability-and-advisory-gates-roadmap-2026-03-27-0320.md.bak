@@ -1,0 +1,54 @@
+---
+title: Phase 4.1.5 - Control selection observability and advisory gates
+roadmap-level: tertiary
+phase-number: 4
+project-id: genesis-mythos-master
+status: in-progress
+priority: high
+progress: 8
+created: 2026-03-27
+tags: [roadmap, genesis-mythos-master, phase-4, perspective, controls, observability, t-p4-06]
+para-type: Project
+subphase-index: "4.1.5"
+handoff_readiness: 81
+handoff_readiness_scope: "Conceptual observability contract for control-selection traces and advisory gate visibility without execution closure claims."
+execution_handoff_readiness: 44
+handoff_gaps:
+  - "**D-032 / D-043 literals:** replay row literals and canonical hash binding remain unresolved."
+  - "**Closure boundary:** REGISTRY-CI HOLD and rollup HR 92 < 93 remain execution-deferred."
+links:
+  - "[[phase-4-1-4-control-read-model-and-golden-row-selection-contract-roadmap-2026-03-27-0320]]"
+  - "[[phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201]]"
+  - "[[decisions-log]]"
+---
+
+## Phase 4.1.5 - Control selection observability and advisory gates (tertiary)
+
+This node extends 4.1.4 by making control-selection evidence observable and audit-ready while keeping all execution closure claims explicitly deferred.
+
+### Objectives
+
+- Define a deterministic observability envelope for control-selection outcomes and drift signals.
+- Keep replay-literal and CI closure work advisory-open for execution track handling.
+- Preserve `@skipUntil(D-032)` and avoid closure inflation in conceptual mapping.
+
+### Contract sketch
+
+| Step | Input | Output | Constraint |
+| --- | --- | --- | --- |
+| Record selection witness | `SelectedGoldenRows_v0`, `tick_key` | `SelectionWitnessEnvelope_v0` | Read-only witness, no mutation side effects |
+| Compute advisory gates | `SelectionWitnessEnvelope_v0`, `gate_policy` | `SelectionGateAdvisory_v0` | Advisory only; no PASS claim mutation |
+| Emit operator-facing digest | `SelectionGateAdvisory_v0` | `ControlSelectionDigest_v0` | Explicit HOLD/OPEN semantics, no closure inflation |
+
+### Acceptance checklist (conceptual)
+
+- [x] Witness envelope and advisory gate outputs are explicitly read-only.
+- [x] HOLD/OPEN semantics are described without CI closure claims.
+- [x] Execution-deferred boundaries are explicit (`D-032`, `D-043`, REGISTRY-CI hold).
+- [ ] Replay literal-field freeze and canonical hash registry remain intentionally deferred.
+
+### Forward-only deepen note (2026-03-27)
+
+- Trigger: `resume-roadmap-forward-only-gmm-20260327T032000Z`
+- Reason: continue forward-only conceptual autopilot from `4.1.4` into the next structural node.
+- Guardrails: preserve vault-honest language; keep rollup/registry debt advisory and non-blocking for conceptual mapping.

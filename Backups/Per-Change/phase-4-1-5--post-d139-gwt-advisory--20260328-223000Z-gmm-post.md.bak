@@ -1,0 +1,381 @@
+---
+title: Phase 4.1.5 - Control selection observability and advisory gates
+roadmap-level: tertiary
+phase-number: 4
+project-id: genesis-mythos-master
+status: in-progress
+priority: high
+progress: 25
+created: 2026-03-27
+tags: [roadmap, genesis-mythos-master, phase-4, perspective, controls, observability, t-p4-06]
+para-type: Project
+subphase-index: "4.1.5"
+handoff_readiness: 91
+handoff_readiness_scope: "Conceptual observability contract for control-selection traces and advisory gate visibility without execution closure claims."
+execution_handoff_readiness: 44
+handoff_gaps:
+  - "**D-032 / D-043 literals:** replay row literals and canonical hash binding remain unresolved."
+  - "**Closure boundary:** REGISTRY-CI HOLD and rollup HR 92 < 93 remain execution-deferred."
+links:
+  - "[[phase-4-1-4-control-read-model-and-golden-row-selection-contract-roadmap-2026-03-27-0320]]"
+  - "[[phase-4-1-player-first-perspective-read-model-and-rig-contracts-roadmap-2026-03-24-1201]]"
+  - "[[decisions-log]]"
+---
+
+## Phase 4.1.5 - Control selection observability and advisory gates (tertiary)
+
+This node extends 4.1.4 by making control-selection evidence observable and audit-ready while keeping all execution closure claims explicitly deferred.
+
+### Objectives
+
+- Define a deterministic observability envelope for control-selection outcomes and drift signals.
+- Keep replay-literal and CI closure work advisory-open for execution track handling.
+- Preserve `@skipUntil(D-032)` and avoid closure inflation in conceptual mapping.
+
+### Contract sketch
+
+| Step | Input | Output | Constraint |
+| --- | --- | --- | --- |
+| Record selection witness | `SelectedGoldenRows_v0`, `tick_key` | `SelectionWitnessEnvelope_v0` | Read-only witness, no mutation side effects |
+| Compute advisory gates | `SelectionWitnessEnvelope_v0`, `gate_policy` | `SelectionGateAdvisory_v0` | Advisory only; no PASS claim mutation |
+| Emit operator-facing digest | `SelectionGateAdvisory_v0` | `ControlSelectionDigest_v0` | Explicit HOLD/OPEN semantics, no closure inflation |
+| Skimmer parity witness | `roadmap_state_phase4_line`, `workflow_yaml` | `SkimmerParityWitness_v0` | Read-only join witness for Phase 4 summary **Machine cursor** narrative ↔ [[workflow_state]] YAML; **never** implies HR/CI PASS; **D-099** audit anchor |
+| Distilled-core parity anchor | `core_decisions` Phase **3.4.9** / **4.1** cursor strings, `workflow_yaml` | `DistilledCoreParityAnchor_v0` | Read-only triple-check after Layer-1 **`repair-l1-postlv-distilled-core-d099`** — confirms **`last_auto_iteration`** in [[distilled-core]] matches live YAML; **D-101** follow-up deepen; **no** HR/CI closure claim |
+| Layer-1 hostile-pass advisory echo | `.technical/Validator` **`roadmap_handoff_auto`** report URI, `primary_code` / `reason_codes[]` | `ValidatorAdvisoryEcho_v0` | Projects validator **execution-advisory** signals into **`ControlSelectionDigest_v0`** as HOLD/OPEN only; **does not** justify **`recal`** by itself when codes are rollup HR / REGISTRY-CI / `missing_roll_up_gates` profile (**conceptual_v1**); **D-102** post–**D-101** |
+| Post-D-103 parity continuation | `ValidatorAdvisoryEcho_v0`, `D-103 parity-repaired skimmers`, `workflow_yaml` | `PostD103ParityContinuation_v0` | Bounded structural continuation after D-103 handoff parity repair; keeps advisory rollup/REGISTRY-CI gaps execution-deferred and preserves **deepen-over-recal** unless a fresh `stale_outputs` signal appears (D-060 discipline) |
+| Post-D-104 continuation | `PostD103ParityContinuation_v0`, `workflow_state` machine cursor tuple, `D-104` decision anchor | `PostD104ContinuationEnvelope_v0` | Forward-only conceptual continuation after D-104 recal handoff; keeps machine-cursor parity explicit and keeps rollup/REGISTRY-CI debt advisory-open on conceptual track (no closure inflation) |
+| Post-D108 hygiene | `workflow_log_authority`, `last_run`, `last_deepen_narrative_utc`, Layer-1 nested **`roadmap_handoff_auto`** (**D-108**) | `PostD108WorkflowLogHygiene_v0` | Read-only witness that **D-108** cleared **`workflow_log_authority`** dual-truth and aligned **`last_run`** vs narrative stamps; **no** HR/CI PASS claim; **D-060** deepen-over-recal discipline for advisory-only codes |
+| Post-D-109 continuation | `PostD108WorkflowLogHygiene_v0`, `workflow_yaml`, vault-first junior synthesis [[Ingest/Agent-Research/phase-4-1-5-junior-handoff-2026-03-27-1200.md]], **D-060** matrix | `PostD109ContinuationMapping_v0` | Bounded forward structural mapping after **D-109** deepen; reinforces witness→advisory→digest chain + **CQRS** read-model boundary; **no** rollup/REGISTRY-CI closure; pre-deepen **`Task(research)`** reinforcement consumed; **D-112** |
+| Post-D-110 temporal coherence | `workflow_state` **07:04** row (**D-110** `retroactive_edit`), queue-id **Zulu** time semantics (`183500Z` ≠ **07:04** forensic anchor), **D-060** recal discipline | `PostD110TemporalCoherence_v0` | Forensic join: **audit replay** rows must not cite a **later** queue id as contemporaneous alignment for an earlier wall-clock row; **D-111** skimmer repair is orthogonal to **D-110** **07:04** fix; **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** advisory; pre-deepen **`Task(research)`** vault-first reinforcement; **D-114** |
+| Post-D-112 bounded forward mapping | `PostD109ContinuationMapping_v0`, `PostD110TemporalCoherence_v0`, **D-060** matrix, **D-112** continuation anchor | `PostD112BoundedForwardMapping_v0` | Bounded conceptual forward mapping after **D-112** / **D-114** without treating execution-advisory **`missing_roll_up_gates`** / **`safety_unknown_gap`** / rollup HR / **REGISTRY-CI** as **`recal`** triggers alone; pairs with **`ValidatorAdvisoryEcho_v0`** + **`STALE_SURFACE_v0`**; **`research_pre_deepen`:** skipped when `enable_research: false`; **D-115** |
+| Post-D-111 handoff-audit advisory echo | Layer-1 **`roadmap_handoff_auto`** post-D111 (**`contradictions_detected`** cleared on [[roadmap-state]] Notes); **`missing_roll_up_gates`** / rollup / **REGISTRY-CI** remain **execution-deferred** | `PostD111HandoffAuditAdvisory_v0` | Separates **audit-clean Notes** from rollup/CI closure; digest **HOLD/OPEN** only; **no** **`recal`** solely for advisory codes; pairs with **`ValidatorAdvisoryEcho_v0`** + **`PostD112BoundedForwardMapping_v0`**; nested **`Task(research)`** vault-first reinforcement; **D-117** |
+| Post-D-113 compare-final handoff-audit | **D-113** Layer-1 **`handoff-audit`** parity on [[distilled-core]] / [[roadmap-state]]; optional **compare-final** **`roadmap_handoff_auto`** re-read contract for operator re-validation | `PostD113CompareFinalHandoffAudit_v0` | Joins **D-113** repair narrative to **compare-final** hostile-pass semantics without elevating **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** to standalone **`recal`** triggers; pairs with **`PostD112BoundedForwardMapping_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-118** |
+| Post-D-116 skimmer repair bounded mapping | **D-116** Phase 4 skimmer repair complete; Layer-1 validator tail **post-IRA** (`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260328T040000Z-conceptual-v1-post-ira-zero-fixes.md` — needs_work/medium expected on conceptual_v1); **`PostD113CompareFinalHandoffAudit_v0`** + **`ValidatorAdvisoryEcho_v0`** + **D-060** | `PostD116SkimmerRepairBoundedMapping_v0` | Continues bounded 4.1.5 conceptual mapping after **D-116** without treating rollup/REGISTRY-CI advisory as standalone **`recal`** triggers; pairs with prior post-compare-final row; **`research_pre_deepen`:** skipped; **D-119** |
+| Post-D-118 bounded 4.1.5 conceptual mapping | **D-118** compare-final + **D-119** **`PostD116SkimmerRepairBoundedMapping_v0`** chain; bounded-415 follow-up queue **`resume-deepen-followup-post-d118-bounded-415-gmm-20260328T030000Z`**; **D-060** shallow deepen at ~80% ctx | `PostD118Bounded415Mapping_v0` | Joins **D-060** matrix to **post-D-118** advisory tail without **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD; pairs with **`PostD116SkimmerRepairBoundedMapping_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-120** |
+| Post-D-120 bounded 4.1.5 conceptual mapping | **D-120** **`PostD118Bounded415Mapping_v0`** anchor; follow-up queue **`resume-deepen-followup-post-d120-bounded-415-gmm-20260328T180000Z`**; **D-060** shallow bounded deepen; **`gate_signature: post-d120-bounded|4.1.5|conceptual_v1|D-060`** | `PostD120Bounded415Mapping_v0` | Joins **D-060** matrix to post–**D-120** bounded slice after **`resume-deepen-followup-post-d118-bounded-415-gmm-20260328T030000Z`** without **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD (conceptual_v1 advisory); pairs with **`PostD118Bounded415Mapping_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-122** |
+| Post-D-122 bounded 4.1.5 conceptual mapping | **D-122** **`PostD120Bounded415Mapping_v0`** anchor; follow-up queue **`resume-deepen-followup-post-d122-bounded-415-gmm-20260328T183500Z`**; **D-060** shallow bounded deepen; **`gate_signature: post-d122-bounded|4.1.5|conceptual_v1|D-060`** | `PostD122Bounded415Mapping_v0` | Joins **D-060** matrix to post–**D-122** bounded slice after **`resume-deepen-followup-post-d120-bounded-415-gmm-20260328T180000Z`** without **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD (conceptual_v1 advisory); pairs with **`PostD120Bounded415Mapping_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-123** |
+| Post-D-125 distilled-core / workflow YAML parity | **D-125** Layer-2 **`handoff-audit`** aligned [[distilled-core]] **`core_decisions`** live **`last_auto_iteration`** to **D-123** terminal; queue **`resume-deepen-post-d125-distilled-core-parity-gmm-20260327T124500Z`**; **D-060** bounded 4.1.5 forward mapping; **`gate_signature: post-d125-distilled|4.1.5|conceptual_v1|D-060`** | `PostD125DistilledCoreWorkflowYamlParity_v0` | Refreshes **triple parity** ([[roadmap-state]] Phase 4 **Machine cursor**, [[distilled-core]] **`core_decisions`** / **Canonical cursor parity**, [[workflow_state]] YAML) to **`resume-deepen-post-d125-distilled-core-parity-gmm-20260327T124500Z`** @ **`4.1.5`**; **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** advisory on conceptual_v1; **`research_pre_deepen`:** skipped; **D-128** |
+| Post-D-127 consistency-repair bounded 4.1.5 mapping | **D-127** historicalized **d118**/**D-120** skimmers vs live **d122**/**D-123** terminal; **D-129** **D-128** parity rewind on [[workflow_state]] **## Log**; queue **`followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`**; **D-060** bounded forward mapping; **`gate_signature: post-d127-consistency|4.1.5|conceptual_v1|D-060`**; Layer-1 may compare **`roadmap_handoff_auto`** to **`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260327T132600Z-second-pass-compare-131500Z-d127.md`** | `PostD127ConsistencyRepairBounded415Mapping_v0` | Continues bounded **4.1.5** conceptual mapping after **D-127**/**D-128**/**D-129** repair chain; **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup HR advisory on conceptual_v1; cites **post-D-127** consistency reports repair context (**d118**/**D-120** historicalized; live terminal **d122**/**D-123** superseded by **D-128** **d125** then this **d127** queue id); **`research_pre_deepen`:** skipped; **D-130** |
+| Post-D-128 bounded 4.1.5 late-queue consume | **D-128** **`PostD125DistilledCoreWorkflowYamlParity_v0`**; **D-130** **`PostD127ConsistencyRepairBounded415Mapping_v0`** live terminal (**`followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`**); stale queue **`resume-deepen-followup-post-d128-bounded-415-gmm-20260327T211500Z`** consumed **without** **`last_auto_iteration` regress**; **D-060**; optional cosmetic-only validator-compare row polish | `PostD128Bounded415LateQueueConsume_v0` | **Late EAT-QUEUE** line honors **post–D-128** triple parity + skimmer-repair-complete intent while preserving **D-130** YAML authority; **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup HR on conceptual_v1; **`research_pre_deepen`:** skipped; **D-132** |
+| Post-D-130 continuation bounded 4.1.5 conceptual mapping | **D-130** terminal **`followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`**; optional Layer-1 **`roadmap_handoff_auto`** after **D-130** vault edits when applicable; queue **`followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`**; **D-060** bounded shallow deepen | `PostD130ContinuationBounded415Mapping_v0` | Forward **4.1.5** mapping after **D-130** / **D-132** without **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / rollup HR / **REGISTRY-CI** HOLD on **conceptual_v1**; pairs with **`PostD128Bounded415LateQueueConsume_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-133** |
+| Post-D-123 bounded 4.1.5 late-queue consume | **D-123** **`PostD122Bounded415Mapping_v0`** anchor; stale sibling queue **`resume-deepen-followup-post-d123-bounded-415-gmm-20260328T190000Z`** consumed **after** **D-133** live terminal **`followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`**; **D-060** shallow bounded mapping; **`gate_signature: post-d123-bounded|4.1.5|conceptual_v1|D-060`** | `PostD123Bounded415LateQueueConsume_v0` | **Late EAT-QUEUE** line honors post–**D-123** bounded-415 intent without **`last_auto_iteration` regress**; **no** **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD on conceptual_v1; pairs with **`PostD130ContinuationBounded415Mapping_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-134** |
+| Post-D-132 bounded late-queue consume complete | **D-132** **`PostD128Bounded415LateQueueConsume_v0`** chain ledger close-out after **D-134**/**D-133** live YAML; queue **`followup-deepen-post-d132-bounded-415-gmm-20260328T191600Z`**; optional Layer-1 compare **`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260328T191500Z-conceptual-v1-post-ira-compare-181000Z.md`** (cosmetic / **`missing_roll_up_gates`** advisory only) | `PostD132Bounded415LateConsumeComplete_v0` | **D-060** bounded 4.1.5 mapping; **no** **`recal`** solely for execution-advisory **`missing_roll_up_gates`** / **REGISTRY-CI** on conceptual_v1; pairs with **`PostD123Bounded415LateQueueConsume_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-135** |
+| Post-D-134 sibling serial bounded 415 dispatch | **D-134** **`PostD123Bounded415LateQueueConsume_v0`**; **D-135** **`PostD132Bounded415LateConsumeComplete_v0`**; idempotent sibling queue **`resume-deepen-sibling-post-d134-bounded-415-gmm-20260328T210500Z`** (`idempotency_key` ties **D-123**→**D-134** serial follow-up); **D-060** shallow bounded mapping; Layer-1 **`gate_signature: bounded-4.1.5|conceptual_v1|D-060|d134-serial-dispatch`** | `PostD134Bounded415SiblingSerialDispatch_v0` | **Sibling RESUME_ROADMAP** **`deepen`** after **D-135** ledger close **without** **`last_auto_iteration` regress** — live **`followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`** (**D-133**); **no** **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD on conceptual_v1; pairs with **`PostD132Bounded415LateConsumeComplete_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-137** |
+| Post-D-129 workflow_state ## Log reconcile (IRA d112/d113/d116 prefixes) | **D-129** parity-rewind authority + **IRA**-era **`handoff-audit`** rows in prepend stack; Layer-1 compare **`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260328T220500Z-post-d129-compare-210530Z.md`** (medium / needs_work / **`missing_roll_up_gates`** only) | `PostD129WorkflowLogReconcileBounded415Mapping_v0` | **D-060** bounded **4.1.5** forward mapping; **no** **`recal`** solely for rollup HR / **REGISTRY-CI** on **conceptual_v1**; **no** **`last_auto_iteration` advance** — live **D-133** terminal retained; pairs **`PostD134Bounded415SiblingSerialDispatch_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-138** |
+| Post-D-138 post-L1 post–little-val bounded 415 continue | **D-138** **`PostD129WorkflowLogReconcileBounded415Mapping_v0`**; Layer-1 post–**little-val** **`roadmap_handoff_auto`** consumer after **D-138** queue; **`followup-deepen-post-d138-bounded-415-continue-gmm-20260328T221500Z`** | `PostD138PostL1LittleValBounded415Continue_v0` | **D-060** bounded **4.1.5** forward mapping; **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup HR advisory on **conceptual_v1**; **no** **`last_auto_iteration` advance** — live **D-133** retained; pairs **`PostD129WorkflowLogReconcileBounded415Mapping_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-139** |
+| Post-D-139 optional GWT advisory (PostD138 anchor) | **D-139** **`PostD138PostL1LittleValBounded415Continue_v0`**; queue **`followup-deepen-post-d139-bounded-415-continue-gmm-20260328T223000Z`**; optional validator **`next_artifacts`** Given/When/Then hook (**advisory only**) | `PostD139GwtAdvisoryPostD138_v0` | **D-060** bounded **4.1.5** mapping; **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / **`safety_unknown_gap`** on **conceptual_v1**; **no** **`last_auto_iteration` advance** — **D-133** retained; pairs **`PostD138PostL1LittleValBounded415Continue_v0`** + **`ValidatorAdvisoryEcho_v0`**; **`research_pre_deepen`:** skipped; **D-140** |
+
+### Conceptual handoff checklist (NL)
+
+- **Scope:** Read-only witness chain for **control selection** outcomes — `SelectionWitnessEnvelope_v0` → `SelectionGateAdvisory_v0` → `ControlSelectionDigest_v0` — extending [[phase-4-1-4-control-read-model-and-golden-row-selection-contract-roadmap-2026-03-27-0320]]; no sim-write or command-path commits (**D-060** presentation read-model / query-plane only).
+- **Behavior:** Witness records `SelectedGoldenRows_v0` + `tick_key` (+ correlation id for trace join); advisory derives HOLD/OPEN/UNKNOWN from witness + `gate_policy`; digest surfaces labels with copy that **forbids** implying REGISTRY-CI PASS or HR thresholds.
+- **Interfaces:** Inputs/outputs named in contract table; telemetry may use span-like structured events (**D-027** illustrative); policy enforcement stays outside the observability layer.
+- **Edge cases:** Missing `gate_policy` version → UNKNOWN advisory; witness without selection → explicit empty witness (no silent PASS); D-032/D-043 replay literals and preimage work remain **OPEN_STUB** — not implemented in this slice.
+- **Open questions:** Lane-C replay-and-verify wiring and replay literal freeze remain deferred per checklist item below; canonical registry binding follows vault decisions, not this observability slice.
+- **Pseudo-code readiness:** Junior-facing Given/When/Then acceptance lines live under **Research integration** and synthesis [[Ingest/Agent-Research/phase-4-1-5-junior-handoff-2026-03-27-1200.md]]; execution repo layout **TBD** on execution track.
+
+### Acceptance checklist (conceptual)
+
+- [x] Witness envelope and advisory gate outputs are explicitly read-only.
+- [x] HOLD/OPEN semantics are described without CI closure claims.
+- [x] Execution-deferred boundaries are explicit (`D-032`, `D-043`, REGISTRY-CI hold).
+- [ ] Replay literal-field freeze and canonical hash registry remain intentionally deferred (`@skipUntil(D-032)` / D-043 preimage — lane-C harness wiring out of scope for this conceptual slice).
+
+### Stale-output signal (conceptual, non-CI)
+
+To support **D-060** / **stale_outputs** class without treating **`missing_roll_up_gates`** alone as a conceptual blocker:
+
+- **`STALE_SURFACE_v0` (advisory):** operator-observable flag when **vault-represented** rollup/registry row metadata (wiki table + witness hooks) **diverges** from the last **D-060** / **`recal`** consistency stamp for the same phase slice — e.g. phase note amended after **`last_recal_consistency_utc`** without a matching audit row. Emitted only in **`ControlSelectionDigest_v0`** as **HOLD/OPEN** language; **never** a REGISTRY-CI PASS or HR≥93 claim.
+- **Not** triggered by: validator **`needs_work`** on execution-deferred codes alone when **no** narrative/hash drift vs prior recal stamp exists (per conceptual_v1 advisory profile).
+
+### Correlation join discipline
+
+- **`selection_correlation_id`:** stable join key carried **verbatim** from `SelectionWitnessEnvelope_v0` → `SelectionGateAdvisory_v0` → `ControlSelectionDigest_v0` so audit replay can pair digest lines to witness rows without inferring order from timestamps alone.
+- **Uniqueness:** one correlation id per **(tick_key, selection attempt)** tuple; retries mint a new id (prevents silent merge of partial retries in digest).
+
+### Post-D-125 distilled-core / workflow_state YAML parity deepen (2026-03-27 20:05 UTC — D-128)
+
+- Trigger: **`resume-deepen-post-d125-distilled-core-parity-gmm-20260327T124500Z`** (`parent_run_id` `f3a8c2d1-9e4b-4a7c-8d1f-6e5c4b3a2010`, **`pipeline_task_correlation_id` `a1b2c3d4-e5f6-4789-a012-3456789abcde`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-125 distilled-core / workflow_state cursor parity; continue bounded 4.1.5 conceptual mapping per D-060; no recal solely for execution-advisory gates (missing_roll_up_gates / REGISTRY-CI) on conceptual_v1`** · **`gate_signature: post-d125-distilled|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD125DistilledCoreWorkflowYamlParity_v0`** contract row — post–**D-125** parity repair; aligns [[distilled-core]] **`core_decisions`** / **Canonical cursor parity** / body **Phase 4.1** with [[workflow_state]] frontmatter + [[roadmap-state]] Phase 4 **Machine cursor** skimmer (**triple parity**).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup HR advisory profile on conceptual_v1.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-post-d125-distilled-core-parity-gmm-20260327T124500Z`** @ **`4.1.5`** (supersedes **`resume-deepen-followup-post-d122-bounded-415-gmm-20260328T183500Z`** for live YAML authority). [[decisions-log]] **D-128**.
+
+### Post-D-127 consistency-repair bounded 4.1.5 conceptual mapping deepen (2026-03-28 12:30 UTC — D-130)
+
+- Trigger: **`followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`** (`parent_run_id` `c3e7a1b2-9d4e-5f6a-8b0c-1d2e3f4a5b6c`, **`pipeline_task_correlation_id` `d4f8b2c3-0e5f-6a7b-9c1d-2e3f4a5b6c7d`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-127 Consistency reports repair (d118/D-120 historicalized; live terminal d122/D-123). Continue bounded 4.1.5 conceptual mapping per D-060.`** · **`gate_signature: post-d127-consistency|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD127ConsistencyRepairBounded415Mapping_v0`** contract row — folds **D-127**/**D-129** repair narrative into **D-060** deepen-over-recal discipline; **Layer-1 hostile compare** may use **`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260327T132600Z-second-pass-compare-131500Z-d127.md`** per queue **`user_guidance`**.
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup HR advisory on conceptual_v1.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`** @ **`4.1.5`** (supersedes **`resume-deepen-post-d125-distilled-core-parity-gmm-20260327T124500Z`** for live YAML authority). [[decisions-log]] **D-130**.
+
+### Post-D-128 bounded 4.1.5 late-queue consume deepen (2026-03-28 05:00 UTC — D-132)
+
+- Trigger: **`resume-deepen-followup-post-d128-bounded-415-gmm-20260327T211500Z`** (`parent_run_id` `e4c8b1a2-9f3d-4e7c-8b1a-6d5c4f3e2a10`, **`pipeline_task_correlation_id` `f7a3c2e1-4b5d-6f8a-9c0d-1e2f3a4b5c6d`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-128 triple parity + roadmap-state skimmer repair complete; continue bounded 4.1.5 conceptual mapping per D-060; do not recal solely for missing_roll_up_gates / REGISTRY-CI advisory on conceptual_v1`** · **`gate_signature: post-d128-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD128Bounded415LateQueueConsume_v0`** contract row — joins **post–D-128** bounded-queue intent to **D-060** after **D-130** terminal already advanced live YAML (**no regress**).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** advisory on conceptual_v1; optional shallow contract-row polish applied as table row only.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor:** **no advance** — live [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`** @ **`4.1.5`** (**D-130**) retained; this queue id is **late consume** ledger. [[decisions-log]] **D-132**.
+
+### Post-D-123 bounded 4.1.5 late-queue consume deepen (2026-03-28 20:00 UTC — D-134)
+
+- Trigger: **`resume-deepen-followup-post-d123-bounded-415-gmm-20260328T190000Z`** (`parent_run_id` `l1-eatq-bef2ff00-d123-gmm-20260328`, **`pipeline_task_correlation_id` `3c8e1f4a-9d2b-4e7f-8a1c-5b6d7e8f9a0b`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-123 bounded conceptual mapping per D-060 after D-123; shallow bounded deepen; honor queue user_guidance (no recal solely for missing_roll_up_gates / safety_unknown_gap / REGISTRY-CI HOLD on conceptual_v1)`** · **`gate_signature: post-d123-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD123Bounded415LateQueueConsume_v0`** contract row — **late sibling** queue consumed after **D-133** live YAML (**`followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`**) without cursor regress (mirrors **D-132** / **`PostD128Bounded415LateQueueConsume_v0`** pattern).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** **no** **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD advisory on **conceptual_v1**.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor:** **no advance** — live [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`** (**D-133**) retained; this queue id is **late consume** ledger. [[decisions-log]] **D-134**.
+
+### Post-D-132 bounded late-queue consume complete deepen (2026-03-28 23:59 UTC — D-135)
+
+- Trigger: **`followup-deepen-post-d132-bounded-415-gmm-20260328T191600Z`** (`parent_run_id` `l1-eatq-20260328-d132-gmm-a1f2c3d4`, **`pipeline_task_correlation_id` `e7f3a2b1-4c9d-5e8f-a0b1-c2d3e4f5a6b7`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Post-D-132 late consume complete; live terminal D-133; D-130 d127 historical; bounded 4.1.5 per D-060; optional compare-hint cosmetic tail`** · **`gate_signature: post-d132-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD132Bounded415LateConsumeComplete_v0`** contract row — ledger close-out for **`PostD128Bounded415LateQueueConsume_v0`** chain after **D-134**/**D-133** live YAML; optional Layer-1 compare **`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260328T191500Z-conceptual-v1-post-ira-compare-181000Z.md`** (**`missing_roll_up_gates`** / **REGISTRY-CI** advisory only — **no** standalone **`recal`** on **conceptual_v1**).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** post–**D-132** late consume complete; live terminal **D-133** **`followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`**; **D-130** d127 historical; **D-060** bounded mapping.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor:** **no advance** — live [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`** (**D-133**) retained. [[decisions-log]] **D-135** · [[Conceptual-Decision-Records/deepen-phase-4-1-5-post-d132-bounded-consume-complete-2026-03-28-2359|CDR D-135]].
+
+### Post-D-129 workflow_state ## Log reconcile deepen (2026-03-28 22:08 UTC — D-138)
+
+- Trigger: **`followup-deepen-post-d129-workflow-log-reconcile-gmm-20260328T220800Z`** (`parent_run_id` `l1-eatq-e15d051c-roadmap-d129-gmm-20260328`, **`pipeline_task_correlation_id` `a8f1c2d3-e4b5-4678-9abc-def012345678`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Post-D-129 workflow_state ## Log reconcile + IRA d116/d113/d112 historical prefixes; final nested validator compare post-d129 (missing_roll_up_gates only, execution-deferred); continue bounded 4.1.5 per D-060; do not recal solely for rollup HR or REGISTRY-CI advisory`** · **`gate_signature: post-d129-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD129WorkflowLogReconcileBounded415Mapping_v0`** contract row — extends **[!important]** callout with **IRA**-era **`handoff-audit`** row **historical-prefix** discipline (**d112**/**d113**/**d116**) vs live **D-133** YAML; cites Layer-1 compare **`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260328T220500Z-post-d129-compare-210530Z.md`**.
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** **no** **`recal`** solely for **`missing_roll_up_gates`** / rollup HR / **REGISTRY-CI** advisory on **conceptual_v1**.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor:** **no advance** — live [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`** (**D-133**) retained. [[workflow_state]] **## Log** row **2026-03-28 22:08** (**`Iter Obj` 61**, **Ctx Util 72%**). [[decisions-log]] **D-138** · [[Conceptual-Decision-Records/deepen-phase-4-1-5-post-d129-workflow-log-reconcile-2026-03-28-2208|CDR D-138]].
+
+### Post-D-138 post-L1 post–little-val bounded 415 continue deepen (2026-03-28 22:15 UTC — D-139)
+
+- Trigger: **`followup-deepen-post-d138-bounded-415-continue-gmm-20260328T221500Z`** (`parent_run_id` `l1-eatq-bdd13554-d138-gmm-20260328`, **`pipeline_task_correlation_id` `f9a3c7e2-1b4d-4e8a-9c6f-2d5e8a1b3c4d`**, **`idempotency_key` `followup-deepen-post-d129-workflow-log-reconcile-gmm-20260328T220800Z-followup-d138`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Post-D-138; continue bounded 4.1.5 per D-060 after L1 post–little-val roadmap_handoff_auto; do not recal solely for missing_roll_up_gates / REGISTRY-CI advisory on conceptual_v1`** · **`gate_signature: post-d138-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD138PostL1LittleValBounded415Continue_v0`** contract row — joins **D-138** bounded line to Layer-1 post–**little-val** **`roadmap_handoff_auto`** consumer semantics (**execution-advisory** codes remain non-standalone **`recal`** triggers on **conceptual_v1**).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup HR advisory on **conceptual_v1** after L1 compare pass.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor:** **no advance** — live [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`** (**D-133**) retained. [[workflow_state]] **## Log** row **2026-03-28 22:15** (**`Iter Obj` 62**, **Ctx Util 71%**). [[decisions-log]] **D-139** · [[Conceptual-Decision-Records/deepen-phase-4-1-5-post-d138-l1-little-val-continue-2026-03-28-2215|CDR D-139]]. Pre-mutate snapshot: [[Backups/Per-Change/phase-4-1-5--pre-d138-bounded-continue--20260328-221500Z-gmm.md.bak]].
+
+### Post-D-139 optional GWT advisory deepen (2026-03-28 22:30 UTC — D-140)
+
+- Trigger: **`followup-deepen-post-d139-bounded-415-continue-gmm-20260328T223000Z`** (`parent_run_id` `l1-eatq-d139-serial-gmm-20260328`, **`pipeline_task_correlation_id` `b2c9e4f1-8a3d-4e7b-9c01-5d6e7f8a9b0c`**, **`idempotency_key` `followup-deepen-post-d138-bounded-415-continue-gmm-20260328T221500Z-followup-d139`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Post-D-139; continue bounded 4.1.5 per D-060; optional in-note GWT for PostD138PostL1LittleValBounded415Continue_v0 per validator next_artifacts (advisory only)`** · **`gate_signature: post-d139-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD139GwtAdvisoryPostD138_v0`** contract row + **optional GWT** block (below) — **advisory only**; does not imply REGISTRY-CI PASS or HR closure.
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / **`safety_unknown_gap`** on **conceptual_v1**.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor:** **no advance** — live [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`** (**D-133**) retained. [[workflow_state]] **## Log** row **2026-03-28 22:30** (**`Iter Obj` 63**, **Ctx Util 70%**). [[decisions-log]] **D-140** · [[Conceptual-Decision-Records/deepen-phase-4-1-5-post-d139-gwt-advisory-2026-03-28-2230|CDR D-140]]. Pre-mutate snapshot: [[Backups/Per-Change/phase-4-1-5--pre-d139-gwt-advisory--20260328-223000Z-gmm.md.bak]].
+
+#### Optional GWT — `PostD138PostL1LittleValBounded415Continue_v0` (advisory)
+
+> **Advisory only:** optional validator **`next_artifacts`**-style junior trace hook; does not elevate execution-deferred codes to standalone **`recal`** triggers on **conceptual_v1**.
+
+- **Given** a Layer-1 post–**little-val** **`roadmap_handoff_auto`** pass has consumed **D-138** context and this phase note already records **`PostD138PostL1LittleValBounded415Continue_v0`**.
+- **When** the operator queues **`followup-deepen-post-d139-bounded-415-continue-gmm-20260328T223000Z`** with **`user_guidance`** naming **D-060**, **conceptual_v1** non-**`recal`** discipline for **`missing_roll_up_gates`** / **REGISTRY-CI** / **`safety_unknown_gap`**, and optional **GWT** for the **PostD138** anchor.
+- **Then** the slice adds **`PostD139GwtAdvisoryPostD138_v0`** plus this **GWT** block; **`ControlSelectionDigest_v0`** copy remains **HOLD/OPEN** only; **no** **`last_auto_iteration`** mutation vs **D-133** terminal.
+
+### Post-D-130 continuation bounded 4.1.5 conceptual mapping deepen (2026-03-28 23:30 UTC — D-133)
+
+- Trigger: **`followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** (`parent_run_id` `l1-eatq-9315a711-roadmap-d130-gmm-20260328`, **`pipeline_task_correlation_id` `8e4c2f1a-6b7d-4c9e-a1f2-3d4e5f6a7b8c`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-130 terminal (followup-deepen-post-d127-consistency-repair); continue bounded 4.1.5 conceptual mapping per D-060 after roadmap_handoff_auto on D-130 if applicable`** · **`gate_signature: post-d130-continuation|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD130ContinuationBounded415Mapping_v0`** contract row — joins optional Layer-1 **`roadmap_handoff_auto`** tail on **D-130** edits to **D-060** deepen-over-recal discipline; **no** **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup HR advisory on **conceptual_v1**.
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** queue **`user_guidance`** — do not queue **`recal`** solely for execution-advisory codes on **conceptual_v1**.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d130-continuation-bounded-415-gmm-20260328T124500Z`** @ **`4.1.5`** (supersedes **`followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`** for live YAML authority). [[decisions-log]] **D-133**.
+
+### Post-D-122 bounded 4.1.5 conceptual mapping deepen (2026-03-28 18:35 UTC — D-123)
+
+- Trigger: **`resume-deepen-followup-post-d122-bounded-415-gmm-20260328T183500Z`** (`parent_run_id` `1375e297-501c-4c65-aa8e-9e3d3b2bab9b`, **`pipeline_task_correlation_id` `e4aad6f1-5235-4974-a0d2-0a5a898004e8`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-122 bounded 4.1.5 conceptual mapping per D-060 after D-122; shallow bounded deepen; honor queue user_guidance (no recal solely for missing_roll_up_gates / safety_unknown_gap / REGISTRY-CI HOLD advisory on conceptual_v1)`** · **`gate_signature: post-d122-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD122Bounded415Mapping_v0`** contract row — post–**D-122** follow-up after **`resume-deepen-followup-post-d120-bounded-415-gmm-20260328T180000Z`**; **D-060** deepen-over-recal discipline (**no** **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD advisory profile).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** shallow bounded deepen; **no** **`recal`** solely for conceptual_v1 execution-advisory codes cited in queue.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor (historical as-of D-123; live superseded by D-130):** at completion, [[workflow_state]] **`last_auto_iteration` `resume-deepen-followup-post-d122-bounded-415-gmm-20260328T183500Z`** @ **`4.1.5`** (then superseded **`resume-deepen-followup-post-d120-bounded-415-gmm-20260328T180000Z`**); **live** terminal after **D-130** — **`followup-deepen-post-d127-consistency-repair-gmm-20260327T131600Z`** (**historical** **D-128** **`resume-deepen-post-d125-distilled-core-parity-gmm-20260327T124500Z`**). [[decisions-log]] **D-123**.
+
+### Post-D-120 bounded 4.1.5 conceptual mapping deepen (2026-03-28 18:30 UTC — D-122)
+
+- Trigger: **`resume-deepen-followup-post-d120-bounded-415-gmm-20260328T180000Z`** (`parent_run_id` `l1-eatq-20260328-d120-gmm-8f4a2c9e1b7d`, **`pipeline_task_correlation_id` `7c3e9f1a-4b2d-5e6f-8a0c-1d2e3f4a5b6c`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-120 bounded 4.1.5 conceptual mapping per D-060 after D-120; shallow bounded deepen; honor queue user_guidance (no recal solely for missing_roll_up_gates / safety_unknown_gap / REGISTRY-CI HOLD advisory on conceptual_v1)`** · **`gate_signature: post-d120-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD120Bounded415Mapping_v0`** contract row — post–**D-120** follow-up after **`resume-deepen-followup-post-d118-bounded-415-gmm-20260328T030000Z`**; **D-060** deepen-over-recal discipline (**no** **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD advisory profile).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** shallow bounded deepen; **no** **`recal`** solely for conceptual_v1 execution-advisory codes cited in queue.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-followup-post-d120-bounded-415-gmm-20260328T180000Z`** @ **`4.1.5`** (supersedes **`resume-deepen-followup-post-d118-bounded-415-gmm-20260328T030000Z`** for live YAML authority). [[decisions-log]] **D-122**.
+
+### Research integration
+
+Full synthesis: [[Ingest/Agent-Research/phase-4-1-5-junior-handoff-2026-03-27-1200.md]] (pre-deepen **junior_handoff** research, `enable_research: true`, queue `resume-roadmap-conceptual-research-gmm-20260326T120500Z`).
+
+**Reinforcement pass (2026-03-27 18:45 UTC — D-112):** queue **`resume-deepen-post-d109-continuation-gmm-20260327T184500Z`** re-invoked nested **`Task(research)`** vault-first against the same synthesis to tighten **junior handoff** traceability after **D-109** without new external URLs; consumable folded into **`PostD109ContinuationMapping_v0`** narrative + contract table row.
+
+**Post-D-110 temporal coherence pass (2026-03-27 19:07 UTC — D-114):** queue **`resume-deepen-post-d110-temporal-coherence-gmm-20260327T190700Z`** — nested **`Task(research)`** vault-first reinforcement on **D-110** / **D-111** orthogonality (**07:04** forensic row vs **`183500Z`** time semantics) + **D-060** “no **recal** solely for advisory rollup/registry codes”; consumable folded into **`PostD110TemporalCoherence_v0`** + **Contract sketch** row.
+
+**Post-D-111 handoff-audit advisory reinforcement (2026-03-27 20:10 UTC — D-117):** queue **`resume-deepen-post-d111-handoff-audit-advisory-gmm-20260327T201000Z`** — nested **`Task(research)`** vault-first reinforcement (no new synthesis file under **`Ingest/Agent-Research/`**); consumable folded into **`PostD111HandoffAuditAdvisory_v0`** + **Contract sketch** row — explicit **audit-vs-closure** boundary: Notes coherence repair (**D-111**) does **not** upgrade **`missing_roll_up_gates`** / rollup HR / **REGISTRY-CI** to closure or **`recal`** triggers alone.
+
+### Post-D-118 bounded 4.1.5 conceptual mapping deepen (2026-03-28 18:00 UTC — D-120)
+
+- Trigger: **`resume-deepen-followup-post-d118-bounded-415-gmm-20260328T030000Z`** (`parent_run_id` `af8b7f43-76f9-4c25-8ded-c7b8ce88f3c7`, **`pipeline_task_correlation_id` `f31ff172-bb3d-451f-8a1e-1bb130f4e8f7`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — continue bounded conceptual mapping per D-060 after D-118; prefer shallow bounded deepen ~80% ctx`** · **`gate_signature: post-d118-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD118Bounded415Mapping_v0`** contract row — folds **D-118** compare-final advisory + **bounded-415** follow-up after **D-119** skimmer repair into **D-060** deepen-over-recal discipline (**no** **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** HOLD advisory profile).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** shallow bounded deepen vs **recal** unless **stale-output** / resolver **`need_class`** warrants **recal**; **~80%** ctx policy observed (**82%** in **[[workflow_state]] ## Log**).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-followup-post-d118-bounded-415-gmm-20260328T030000Z`** @ **`4.1.5`** (supersedes **`followup-deepen-post-d116-skimmer-repair-gmm-20260328T030000Z`** for live YAML authority).
+
+### Post-D-116 skimmer repair bounded deepen (2026-03-28 12:00 UTC — D-119)
+
+- Trigger: **`followup-deepen-post-d116-skimmer-repair-gmm-20260328T030000Z`** (`parent_run_id` `l1-eatq-20260328-d116-gmm-96809d4b2231`, **`pipeline_task_correlation_id` `239d0344-9de0-46a3-87db-0d589965d969`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-116 Phase 4 skimmer repair complete; continue bounded conceptual mapping per D-060`** · **`gate_signature: post-d116-skimmer|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD116SkimmerRepairBoundedMapping_v0`** contract row — folds **D-116** skimmer repair + Layer-1 validator tail (post-IRA compare-final; needs_work/medium expected on conceptual_v1) into **D-060** deepen-over-recal discipline (**no** **`recal`** solely for advisory rollup/REGISTRY-CI / **`missing_roll_up_gates`**).
+- **`research_pre_deepen`:** skipped (`enable_research` absent).
+- **User guidance honored:** Validator path **`.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260328T040000Z-conceptual-v1-post-ira-zero-fixes.md`** cited as expected advisory tail — not a standalone **`recal`** trigger.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d116-skimmer-repair-gmm-20260328T030000Z`** @ **`4.1.5`** (supersedes **`resume-deepen-post-d113-compare-final-gmm-20260328T024500Z`** for live YAML authority).
+
+### Post-D-113 compare-final handoff-audit deepen (2026-03-28 02:45 UTC — D-118)
+
+- Trigger: **`resume-deepen-post-d113-compare-final-gmm-20260328T024500Z`** (`parent_run_id` `2a67f83c-74ae-43f8-aa5a-7963a67960c3`, **`pipeline_task_correlation_id` `91e70c9b-9584-46bf-a52d-c5001ad3c9ab`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-113 compare-final / handoff-audit advisory; continue bounded conceptual forward mapping per D-060`** · **`gate_signature: post-d113-compare|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD113CompareFinalHandoffAudit_v0`** contract row — joins **D-113** cross-surface repair to **compare-final** re-validation contract (operator may cite Layer-1 **`roadmap_handoff_auto`** compare-final when re-validating; **no** rollup/REGISTRY-CI closure inflation).
+- **`research_pre_deepen`:** skipped (not enabled on queue entry).
+- **User guidance honored:** do **not** queue **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / **REGISTRY-CI** advisory; cite compare-final artifact paths when re-running hostile validation.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-post-d113-compare-final-gmm-20260328T024500Z`** @ **`4.1.5`** (supersedes **`followup-deepen-post-d112-bounded-415-gmm-20260327T191500Z`** for live YAML authority).
+
+**Junior-dev handoff (abbreviated):**
+
+- **Traceability:** This note; upstream [[phase-4-1-4-control-read-model-and-golden-row-selection-contract-roadmap-2026-03-27-0320]]; [[decisions-log]] (**D-032**, **D-043**, **D-060**, **D-027**).
+- **Implement (stack-agnostic):** (1) **Witness** — immutable `SelectionWitnessEnvelope_v0`; zero side effects on sim, apply ledger, golden files. (2) **Advisory** — `SelectionGateAdvisory_v0` from witness + `gate_policy`; no mutation of CI registry bits or rollup HR. (3) **Digest** — `ControlSelectionDigest_v0` with HOLD/OPEN and explicit non-claims (no HR≥93, no REGISTRY-CI PASS).
+- **CQRS (D-060):** Witness/advisory/digest = presentation read-model / audit witnesses; not sim-write or command path.
+- **Deferrals:** No replay literal freeze, canonical hash registry binding, or `replay_row_version` coordination here — **OPEN_STUB** until D-032/D-043 vault resolution.
+- **Given / When / Then:** See synthesis for three acceptance tests (witness read-only, advisory non-mutation, digest semantics).
+
+### Forward-only deepen note (2026-03-27) — historical
+
+- Trigger: `resume-roadmap-forward-only-gmm-20260327T032000Z`
+- Reason: continue forward-only conceptual autopilot from `4.1.4` into the next structural node.
+- Guardrails: preserve vault-honest language; keep rollup/registry debt advisory and non-blocking for conceptual mapping.
+
+### Research-integrated deepen (2026-03-27 12:00 UTC)
+
+- Trigger: `resume-roadmap-conceptual-research-gmm-20260326T120500Z` (`parent_run_id` `l1-eatq-20260327-resume-conceptual-research-gmm-a3f9c1e2`, `pipeline_task_correlation_id` `9c4e7b2a-1d3f-4e8a-9b6c-5f2a8e1d0c7b`).
+- Action: consumed nested **Task(research)** pre-deepen synthesis; integrated **NL handoff checklist** + **Research integration** + junior **GWT** traceability; **no machine subphase advance** (cursor remains **`4.1.5`** — structural mapping refinement in place).
+- **`research_pre_deepen`:** `invoked_ok` — synthesis path [[Ingest/Agent-Research/phase-4-1-5-junior-handoff-2026-03-27-1200.md]].
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, **`missing_roll_up_gates`**, **`safety_unknown_gap`** remain advisory / execution-deferred.
+
+### Post–D-096 recal forward deepen (2026-03-27 12:45 UTC)
+
+- Trigger: **`followup-deepen-post-d096-recal-415-gmm-20260327T124500Z`** (post–[[decisions-log]] **D-096** queue **`followup-recal-post-415-research-deepen-gmm-20260327T121500Z`**); **`parent_run_id` `7af118f2-ef7f-4b11-9026-5d66357206be`**, **`pipeline_task_correlation_id` `57eccdbf-8d0b-4faf-bd9b-a9f6eb08c506`**.
+- Action: bounded in-place structural mapping after **D-060** consistency stamp — added **Stale-output signal** + **Correlation join discipline** subsections (audit replay join keys + advisory `STALE_SURFACE_v0` semantics). **`research_pre_deepen`:** **skipped** (queue did not enable pre-deepen research).
+- **User guidance honored:** execution rollup / **REGISTRY-CI** debt remains **advisory**; next automated follow-up **`deepen`**-compatible — **no** `recal` queued **solely** to chase **`missing_roll_up_gates`** without a **new** stale-output / cross-surface drift signal (D-096 already refreshed surfaces at **12:15**).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, **`missing_roll_up_gates`**, **`safety_unknown_gap`** remain advisory / execution-deferred.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d096-recal-415-gmm-20260327T124500Z`** @ **`4.1.5`** (supersedes prior terminal id **`resume-roadmap-conceptual-research-gmm-20260326T120500Z`** for live YAML authority).
+
+### Post-D-099 skimmer/YAML parity structural anchor (2026-03-27 14:15 UTC)
+
+- Trigger: **`followup-deepen-post-d099-skimmer-parity-gmm-20260327T141500Z`** (`parent_run_id` `a1b2c3d4-e5f6-4a7b-8c9d-1e2f3a4b5c6d`, **`pipeline_task_correlation_id` `f47ac10b-58cc-4372-a567-0e02b2c3d479`**).
+- **Post-D-099 context:** Layer-2 **handoff-audit** verify **[[decisions-log]]** **D-099** closed **Phase 4** summary **Machine cursor** skimmer ↔ [[workflow_state]] YAML parity; nested **`roadmap_handoff_auto`** cleared **`state_hygiene_failure`** class on **line 29** (vs **D-098**/**D-097** repair chain).
+- **Bounded structural mapping (D-060):** Added **`SkimmerParityWitness_v0`** row to **Contract sketch** — join from **[[roadmap-state]]** Phase 4 summary narrative → **live YAML** (`last_auto_iteration` + `current_subphase_index`) for audit replay; pairs with **`selection_correlation_id`** when correlating digest lines to vault automation state.
+- **No `recal` for advisory-only:** Per queue **`user_guidance`**, **`missing_roll_up_gates`** and **`safety_unknown_gap`** remain **execution-deferred**; **no** **`recal`** follow-up **solely** to chase those codes when **D-099** already verified skimmer parity.
+- **`research_pre_deepen`:** skipped (not enabled on queue entry).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d099-skimmer-parity-gmm-20260327T141500Z`** @ **`4.1.5`** (supersedes **`followup-deepen-post-d096-recal-415-gmm-20260327T124500Z`** for live YAML authority).
+
+### Post–D-099 distilled-core parity follow-up deepen (2026-03-27 15:40 UTC)
+
+- Trigger: **`resume-deepen-post-d099-distilled-parity-followup-gmm-20260327T154000Z`** (`parent_run_id` `54f76cc0-55f1-46fe-8e03-85a32dfa8295`, **`pipeline_task_correlation_id` `818d0fc2-4cf8-4530-9870-7fac502ee3e3`**).
+- **Context:** Layer-1 **`repair-l1-postlv-distilled-core-d099-gmm-20260327T153500Z`** verified [[distilled-core]] **`core_decisions`** ↔ [[workflow_state]] YAML parity (**D-099** chain); this run **continues** bounded **D-060** conceptual mapping without **`recal`** solely for **`missing_roll_up_gates`** / **`REGISTRY-CI`** advisory.
+- **Bounded structural mapping:** Added **`DistilledCoreParityAnchor_v0`** row to **Contract sketch** — read-only join for **`core_decisions`** machine-cursor strings vs live YAML after distilled-core repair; pairs with **`SkimmerParityWitness_v0`** for cross-surface audit replay.
+- **D-060 matrix echo (conceptual):** When validator surfaces **rollup HR** / **REGISTRY-CI** as **execution-deferred / advisory**, **`deepen`** remains the default next automation class; **`recal`** is reserved for **`stale_outputs`** / explicit **D-060** consistency stamp — **not** advisory-code chasing alone (**conceptual_v1**).
+- **`research_pre_deepen`:** skipped (not enabled on queue entry).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-post-d099-distilled-parity-followup-gmm-20260327T154000Z`** @ **`4.1.5`** (supersedes **`followup-deepen-post-d099-skimmer-parity-gmm-20260327T141500Z`** for live YAML authority).
+
+### Post–D-101 continued bounded deepen (2026-03-27 16:15 UTC)
+
+- Trigger: **`resume-deepen-continued-415-post-d101-gmm-20260327T161500Z`** (`parent_run_id` `7c4f2a1e-9b3d-4c8a-f2e1-6d5c4b3a2010`, **`pipeline_task_correlation_id` `3f8e9d2c-1a4b-5e6f-7d8c-9b0a1e2f3d4c`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — continue bounded conceptual structural mapping per D-060 after D-101; target note phase-4-1-5-control-selection-observability-and-advisory-gates`** · **`gate_signature: continued-415-post-d101|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`ValidatorAdvisoryEcho_v0`** row to **Contract sketch** — binds Layer-1 **`roadmap_handoff_auto`** advisory outputs to digest semantics so **rollup HR**, **REGISTRY-CI HOLD**, and **`missing_roll_up_gates`** surface as **execution-deferred** observability lines (paired with **`SkimmerParityWitness_v0`** / **`DistilledCoreParityAnchor_v0`**) without treating them as **`recal`** triggers alone.
+- **User guidance honored:** do **not** queue **`recal`** solely for rollup HR / REGISTRY-CI advisory (**D-060** discipline); next automation class remains **`deepen`** unless **`stale_outputs`** / fresh cross-surface drift warrants **D-060** **`recal`**.
+- **`research_pre_deepen`:** skipped (not enabled on queue entry).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-continued-415-post-d101-gmm-20260327T161500Z`** @ **`4.1.5`** (supersedes **`resume-deepen-post-d099-distilled-parity-followup-gmm-20260327T154000Z`** for live YAML authority).
+
+### Post-D-103 handoff parity follow-up deepen (2026-03-27 17:45 UTC)
+
+- Trigger: **`resume-deepen-post-d103-parity-followup-gmm-20260327T174500Z`** (`parent_run_id` `layer1-queue-20260327T174500Z`, `queue_entry_id` `resume-deepen-post-d103-parity-followup-gmm-20260327T174500Z`).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D-103 handoff-audit parity follow-up bounded conceptual work`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** added **`PostD103ParityContinuation_v0`** contract row to codify that post-D-103 parity work continues as conceptual structure and does not pivot to **`recal`** solely on execution-advisory rollup/REGISTRY-CI reason codes.
+- **User guidance honored:** second-pass validator advisory (`missing_roll_up_gates` / `safety_unknown_gap`) remains execution-deferred; no **`recal`** follow-up queued only for advisory-code chasing.
+- **`research_pre_deepen`:** skipped (not enabled on queue entry).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-post-d103-parity-followup-gmm-20260327T174500Z`** @ **`4.1.5`**.
+
+### Post-D-104 continuation deepen (2026-03-27 18:10 UTC)
+
+- Trigger: **`followup-deepen-post-recal-d104-continuation-gmm-20260327T181000Z`** (`parent_run_id` `queue-run-20260327T000000Z`, `queue_entry_id` `followup-deepen-post-recal-d104-continuation-gmm-20260327T181000Z`).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-recal D-104 continuation bounded conceptual work`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD104ContinuationEnvelope_v0`** row in **Contract sketch** to keep machine-cursor parity explicit and execution-deferred gate debt advisory.
+- **User guidance honored:** preserve machine-cursor parity and do **not** promote advisory rollup/REGISTRY-CI debt to closure claims.
+- **`research_pre_deepen`:** skipped (not enabled on queue entry).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-recal-d104-continuation-gmm-20260327T181000Z`** @ **`4.1.5`**.
+
+### Post-D108 workflow_log_authority + last_run hygiene (2026-03-27 18:35 UTC)
+
+- Trigger: **`resume-deepen-post-d108-workflow-hygiene-gmm-20260327T183500Z`** (`parent_run_id` `e7f2a3c1-4b5d-4e6f-9a0b-1c2d3e4f5a6b`, **`pipeline_task_correlation_id` `8f9e0d1c-2b3a-4d5e-8f90-1a2b3c4d5e6f`).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D108 workflow_log_authority + last_run hygiene; continue bounded conceptual forward mapping per D-060`** · **`gate_signature: post-d108-hygiene|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD108WorkflowLogHygiene_v0`** contract row — joins **D-108** / **D-106** repair narrative to **Layer-1 `last_run`** vs **`last_deepen_narrative_utc`** hygiene (narrow timestamp reconciliation; **no** rollup/REGISTRY-CI closure inflation).
+- **`research_pre_deepen`:** skipped (not enabled on queue entry).
+- **User guidance honored:** do **not** queue **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** (execution-deferred advisory).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-post-d108-workflow-hygiene-gmm-20260327T183500Z`** @ **`4.1.5`**.
+
+### Post-D-109 continuation deepen (2026-03-27 18:45 UTC) — historical (superseded by D-114)
+
+- Trigger: **`resume-deepen-post-d109-continuation-gmm-20260327T184500Z`** (`parent_run_id` `l1-eatq-20260327-d109-gmm-7f8e9d0c`, **`pipeline_task_correlation_id` `c4e8f1a2-9b3d-4e7c-8d1f-6a5b4c3d2e1f`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — continue bounded conceptual forward mapping per D-060 after D-109; execution-deferred rollup/REGISTRY-CI codes are advisory only.`** · **`gate_signature: post-d109-continuation|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD109ContinuationMapping_v0`** contract row — post–**D-109** forward map reinforcing witness/advisory/digest + **D-060** presentation read-model boundary; pairs with **`PostD108WorkflowLogHygiene_v0`** and junior synthesis reinforcement.
+- **`research_pre_deepen`:** nested **`Task(research)`** `invoked_ok` (vault-first reinforcement pass against [[Ingest/Agent-Research/phase-4-1-5-junior-handoff-2026-03-27-1200.md]]).
+- **User guidance honored:** do **not** queue **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** (execution-deferred advisory profile).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor (historical):** **`resume-deepen-post-d109-continuation-gmm-20260327T184500Z`** @ **`4.1.5`** — [[decisions-log]] **D-112**; superseded **2026-03-27 19:07Z** by **`resume-deepen-post-d110-temporal-coherence-gmm-20260327T190700Z`** (**D-114**).
+
+### Post-D-110 temporal coherence deepen (2026-03-27 19:07 UTC)
+
+- Trigger: **`resume-deepen-post-d110-temporal-coherence-gmm-20260327T190700Z`** (`parent_run_id` `l1-eatq-20260327-d110-gmm-a7c3e9f1`, **`pipeline_task_correlation_id` `d110-eatq-7f4a-9c2e-8b1d-6a5e4f3c2b1a`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D110 workflow_state 07:04 retroactive_edit (temporal coherence); continue bounded 4.1.5 conceptual mapping per D-060`** · **`gate_signature: post-d110-temporal|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD110TemporalCoherence_v0`** contract row — forensic **queue-id Zulu** vs **log Timestamp** semantics for **D-110** **07:04** row; **D-111** Notes repair remains orthogonal.
+- **`research_pre_deepen`:** nested **`Task(research)`** `invoked_ok` (vault-first temporal-coherence reinforcement; synthesis path [[Ingest/Agent-Research/phase-4-1-5-junior-handoff-2026-03-27-1200.md]] context only).
+- **User guidance honored:** do **not** queue **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** advisory.
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `resume-deepen-post-d110-temporal-coherence-gmm-20260327T190700Z`** @ **`4.1.5`** (supersedes **`resume-deepen-post-d109-continuation-gmm-20260327T184500Z`** for live YAML authority). [[decisions-log]] **D-114**.
+
+### Post-D-112 bounded forward mapping deepen (2026-03-27 22:00 UTC)
+
+- Trigger: **`followup-deepen-post-d112-bounded-415-gmm-20260327T191500Z`** (`parent_run_id` `e8d4f2a1-9c3b-4e7d-8f21-6a5b4c3d2e1f`, **`pipeline_task_correlation_id` `f1a2b3c4-d5e6-4789-a012-bcdef0123456`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — continue bounded conceptual forward mapping per D-060 after D-112; execution-deferred rollup/REGISTRY-CI codes remain advisory only.`** · **`gate_signature: post-d112-bounded|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD112BoundedForwardMapping_v0`** contract row — explicit join witness for post–**D-112** forward mapping under **D-060** (deepen-over-recal for advisory-only execution-deferred codes); does not authorize **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`**.
+- **`research_pre_deepen`:** skipped (`enable_research: false` on queue entry).
+- **User guidance honored:** do **not** queue **`recal`** solely for **`missing_roll_up_gates`** / **`safety_unknown_gap`** / rollup HR / **REGISTRY-CI** advisory profile (**conceptual_v1**).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **Machine cursor advance** — [[workflow_state]] **`last_auto_iteration` `followup-deepen-post-d112-bounded-415-gmm-20260327T191500Z`** @ **`4.1.5`** (supersedes **`resume-deepen-post-d110-temporal-coherence-gmm-20260327T190700Z`** for live YAML authority). [[decisions-log]] **D-115**.
+
+### Post-D-111 handoff-audit advisory deepen (2026-03-27 20:10 UTC)
+
+- Trigger: **`resume-deepen-post-d111-handoff-audit-advisory-gmm-20260327T201000Z`** (`parent_run_id` `8aeffbbc-7d19-44c2-a9d5-e7236ffe3fcf`, **`pipeline_task_correlation_id` `ac4eeed2-edab-437b-84b9-9d3522b83836`**).
+- **Resolver:** **`need_class: missing_structure`** · **`effective_action: deepen`** · **`effective_target: Phase 4.1.5 — post-D111 handoff-audit advisory; continue bounded conceptual mapping per D-060`** · **`gate_signature: post-d111-advisory|4.1.5|conceptual_v1|D-060`** · **`gate_catalog_id: conceptual_v1`** · **`track_lock_explicit: true`** · **`effective_track: conceptual`**.
+- **Bounded structural mapping:** Added **`PostD111HandoffAuditAdvisory_v0`** contract row — joins **D-111**-cleared **Notes** coherence with **unchanged** execution-deferred advisory tuple (**rollup HR 92 < 93**, **REGISTRY-CI HOLD**, **`missing_roll_up_gates`**).
+- **`research_pre_deepen`:** nested **`Task(research)`** `invoked_ok` (vault-first reinforcement; no new **`Ingest/Agent-Research/`** file).
+- **User guidance honored:** do **not** queue **`recal`** solely for **`missing_roll_up_gates`** / **REGISTRY-CI** / rollup advisory codes (**D-060**).
+- **Vault-honest unchanged:** rollup **HR 92 < 93**, **REGISTRY-CI HOLD**, advisory OPEN.
+- **No machine cursor advance** — terminal [[workflow_state]] YAML remains **`followup-deepen-post-d112-bounded-415-gmm-20260327T191500Z`** @ **`4.1.5`** (**22:00** **D-112**/**D-115** supersedes this **20:10** slice); **`## Log`** row records **`no machine cursor advance`**. [[decisions-log]] **D-117**.

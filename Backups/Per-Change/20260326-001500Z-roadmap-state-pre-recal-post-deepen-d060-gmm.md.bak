@@ -1,0 +1,20 @@
+# Partial snapshot (pre) — roadmap-state.md
+# Intended restore anchor for: `followup-recal-post-deepen-d060-gmm-20260326T001500Z`
+#
+# NOTE: This is a partial excerpt snapshot (frontmatter only) written by RoadmapSubagent.
+---
+title: Roadmap State — genesis-mythos-master (partial pre snapshot)
+project-id: genesis-mythos-master
+status: in-progress
+current_phase: 4
+completed_phases: [1, 2, 3]
+last_run: 2026-03-25-2345
+version: 121
+roadmap_track: conceptual
+drift_score_last_recal: 0.04
+handoff_drift_last_recal: 0.15
+drift_metric_kind: qualitative_audit_v0
+last_recal_consistency_utc: "2026-03-25-2130"
+last_deepen_narrative_utc: "2026-03-25-2345"
+---
+

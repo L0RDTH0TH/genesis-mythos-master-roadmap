@@ -84,6 +84,16 @@ All path proposals, `obsidian_ensure_structure`, classify/subfolder outputs, and
   - Prefer to keep `Backups/` and `BACKUP_DIR` on encrypted storage or excluded from any public repos.
   - Do not rely on snapshots as an access-control boundary; treat them as additional history, not as a security feature.
 
+### Roadmap state invariants (multi-run)
+
+When reading or writing **roadmap-state.md** under `1-Projects/<project_id>/Roadmap/`:
+
+- **Never advance `current_phase`** unless ALL prior phases have confidence ≥ 85% (per Parameters roadmap.conf_phase_complete_threshold).
+- **Snapshot roadmap-state.md before AND after every update** (obsidian-snapshot skill with type per-change). State is versioned and snapshotted like phase notes.
+- **If roadmap-state.md parse fails** (invalid YAML, missing required frontmatter such as `current_phase`, `status`) → abort the roadmap pipeline, log to [Errors](3-Resources/Errors.md) with **#state-corrupt**, and create a Decision Wrapper under `Ingest/Decisions/Errors/`: "Fix state.md or revert?" with options to repair state or reset. Do not proceed with resume or phase generation.
+
+See [Vault-Layout](3-Resources/Second-Brain/Vault-Layout.md) § Roadmap state artifacts for the roadmap-state.md schema.
+
 ## MCP fallback table
 
 When an MCP call fails due to path or structure issues, use the following behavior:
@@ -152,6 +162,8 @@ When **any** pipeline or workflow step fails (MCP call error, classification fai
    - **Severity threshold**: Treat as **high** when: backup creation failed; snapshot creation failed immediately before a destructive step; move/rename/delete failed after dry_run was approved; or any error that could leave a note in an inconsistent state. Treat as **medium** when a non-destructive step failed (e.g. classify returned low confidence). Treat as **low** when the failure is cosmetic or recoverable without user action (e.g. optional step skipped).
 
 This protocol does not replace pipeline-specific "On failure" bullets; it standardizes **what** to write to Errors.md and **when** to escalate. Each pipeline rule references this section and adds pipeline-specific stage names.
+
+**Deepen-specific (roadmap-deepen):** When **estimated_tokens > context_window_tokens × 0.9** (90% of window), treat as failure: **error_type: context-overflow**; log to Errors.md with #review-needed; append Watcher-Result failure; queue RECAL-ROAD (RESUME_ROADMAP action recal). Do not queue another deepen until recal has run. See roadmap-deepen skill § Overflow check.
 
 *Test path used for verification:* `4-Archives/Test-Project-Archive/Subtheme/2026-02-25-archive-test.md` (4 segments).
 

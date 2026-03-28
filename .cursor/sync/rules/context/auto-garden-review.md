@@ -12,15 +12,19 @@ alwaysApply: false
 ## How to activate
 
 - **Trigger phrases** (case-insensitive): **GARDEN REVIEW**, **run garden review**, **orphans and distill candidates**, **garden health**, **vault orphans**, **distill candidates sweep**.
-- **Queue**: Append an entry with **`mode: "GARDEN-REVIEW"`** to `.technical/prompt-queue.jsonl`; optional **`source_file`** (scope/folder path) or **`params`** (scope, focus, output_path, auto_apply). EAT-QUEUE dispatches to this rule.
+- **Queue**: Append an entry with **`mode: "GARDEN-REVIEW"`** to `.technical/prompt-queue.jsonl` (e.g. from Watcher or Commander); optional **`source_file`** (scope/folder path) or **`params`** (scope, focus, output_path, auto_apply). EAT-QUEUE dispatches to this rule.
 
 ## Behavior
 
-1. **Resolve scope and focus**: From queue entry `params` or prompt: `scope`, `focus` (orphans | distill_candidates | weak_links | all), optional `output_path`, optional `auto_apply`. Default **`auto_apply: false`**.
-2. **Call MCP**: **`obsidian_garden_review`**(scope, focus, output_path, auto_apply). If `source_file` is a folder path, use it as scope.
-3. **Downstream**: Use the report to feed autonomous-distill and/or autonomous-organize batches. Do not auto-apply unless `auto_apply: true` in params; suggest batching and log to Feedback-Log or Organize-Log.
-4. **Logging**: Append short entry to Feedback-Log.md or Organize-Log.md (scope, focus, report path if set, batch suggestions).
+1. **Resolve scope and focus**: From queue entry `params` or prompt: `scope` (e.g. `"all"`, `"folder:Ingest"`, `"tag:xyz"`), `focus` (`orphans` | `distill_candidates` | `weak_links` | `all`), optional `output_path`, optional `auto_apply`. Default **`auto_apply: false`** during initial adoption.
+2. **Call MCP**: **`obsidian_garden_review`**(scope, focus, output_path, auto_apply). If `source_file` is a folder path, use it as scope (e.g. `folder:1-Projects/MyProject`).
+3. **Downstream**: Use the returned report to feed **autonomous-distill** and/or **autonomous-organize** batches (e.g. list of note paths from report → run distill or organize on that set). Do not auto-apply structural changes unless user has set `auto_apply: true` in params; suggest batching and log to Feedback-Log or Organize-Log.
+4. **Logging**: Append a short entry to Feedback-Log.md or Organize-Log.md (scope, focus, report path if output_path set, batch suggestions).
+
+## Observability
+
+- Log **scope**, **focus**, **output_path** (if used), and **batch suggestions** (count of notes for distill/organize) so MOC or Dataview can aggregate Garden review runs.
 
 ## Exclusions
 
-No note-specific exclusions; flow is vault- or scope-level. Exclude Backups/, Templates/, **/Log*.md from batch lists when feeding distill/organize.
+- No note-specific exclusions; flow is vault- or scope-level. Exclude Backups/, Templates/, and **/Log*.md from any batch list derived from the report when feeding distill/organize.

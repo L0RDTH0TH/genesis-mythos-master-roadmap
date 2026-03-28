@@ -30,7 +30,7 @@ flowchart TB
   end
   subgraph MCP [MCP tool groups]
     Backup[create_backup, ensure_backup]
-    PARA[classify_para, subfolder_organize, obsidian_propose_para_paths]
+    PARA[classify_para, subfolder_organize, propose_para_paths]
     Content[split_atomic, distill_note, append_to_hub]
     Move[move_note, rename_note, ensure_structure]
     Conf[calibrate_confidence, verify_classification, propose_alternative_paths]
@@ -63,7 +63,7 @@ flowchart LR
   B --> C --> O --> CO --> M
 ```
 
-Documented order: backup first; then classify; then path/organize (skills use subfolder_organize or obsidian_propose_para_paths); then content ops (split, distill, append_to_hub); move last with ensure_structure(folder_path: parent) then move_note(dry_run: true) then move_note(dry_run: false).
+Documented order: backup first; then classify; then path/organize (skills use subfolder_organize or propose_para_paths); then content ops (split, distill, append_to_hub); move last with ensure_structure(folder_path: parent) then move_note(dry_run: true) then move_note(dry_run: false).
 
 ---
 

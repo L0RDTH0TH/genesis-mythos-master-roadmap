@@ -49,7 +49,7 @@ Use these example patterns in tool prompts and descriptors:
 
 ## Usage in tools and pipelines
 
-- All PARA-related tools (e.g. `obsidian_classify_para`, `obsidian_propose_para_paths`, `propose_alternative_paths`) **must follow this rubric exactly**, including the tie-breaker rule.
+- All PARA-related tools (e.g. `obsidian_classify_para`, `propose_para_paths`, `propose_alternative_paths`) **must follow this rubric exactly**, including the tie-breaker rule.
 - When multiple PARA types are plausible, tools and pipelines should:
   - Prefer **Projects** when there is any concrete goal or deadline.
   - Prefer **Areas** when the note describes a responsibility or standard without a clear end date.

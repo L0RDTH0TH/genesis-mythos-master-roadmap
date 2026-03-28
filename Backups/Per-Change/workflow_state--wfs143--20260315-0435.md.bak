@@ -1,0 +1,31 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/workflow_state.md
+snapshot_type: per-change
+pipeline: roadmap
+snapshot_created: "2026-03-15T04:35:00Z"
+immutable: true
+para-type: Archive
+status: frozen
+---
+---
+title: Workflow state — genesis-mythos-master
+created: 2026-03-14
+current_phase: 1
+current_subphase_index: "1.1.3"
+status: in-progress
+automation_level: semi
+last_auto_iteration: ""
+iterations_per_phase: {"1": 4}
+last_ctx_util_pct: 1
+last_conf: 85
+---
+
+## Log
+
+| Timestamp | Action | Target | Iter Obj | Iter Phase | Ctx Util % | Leftover % | Threshold | Est. Tokens / Window | Util Delta % | Confidence | Status / Next |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-03-14 12:00 | Phase 0 setup | — | — | — | — | — | — | — | — | — | ROADMAP MODE setup complete; next: deepen |
+| 2026-03-15 03:33 | deepen | Phase-1-1-Key-Abstractions | 1 | 1 | 1 | 99 | 80 | 1375 / 128000 | - | 85 | next deepen |
+| 2026-03-15 03:36 | deepen | Phase-1-1-1-World-State | 2 | 1 | 2 | 98 | 80 | 2300 / 128000 | 1 | 85 | next deepen |
+| 2026-03-15 04:02 | deepen | Phase-1-1-2-Simulation-Logic | 3 | 1 | 1 | 99 | 80 | 1475 / 128000 | -1 | 85 | next deepen |
+| 2026-03-15 04:15 | deepen | Phase-1-1-3-Rendering | 4 | 1 | 1 | 99 | 80 | 1475 / 128000 | 0 | 85 | next deepen |

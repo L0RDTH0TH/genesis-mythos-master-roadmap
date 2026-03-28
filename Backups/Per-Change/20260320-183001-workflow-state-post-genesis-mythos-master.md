@@ -1,0 +1,55 @@
+---
+title: Workflow State — genesis-mythos-master
+created: 2026-03-19
+tags: [roadmap, workflow-state, genesis-mythos-master]
+para-type: Project
+project-id: genesis-mythos-master
+status: in-progress
+automation_level: semi
+current_phase: 2
+current_subphase_index: "2.2.1"
+last_auto_iteration: "resume-roadmap-genesis-mythos-master-phase2-deepen-20260320-0000-followup"
+iterations_per_phase:
+  "1": 10
+  "2": 9
+max_iterations_per_phase: 80
+iteration_guidance_ranges:
+  depth_1: [10, 15]
+  depth_2: [8, 12]
+  depth_3: [5, 10]
+  depth_4_plus: [3, 6]
+chained_branch_count: 0
+last_ctx_util_pct: 32
+last_conf: 92
+---
+
+# Workflow state — genesis-mythos-master
+
+## Log
+
+| Timestamp | Action | Target | Iter Obj | Iter Phase | Ctx Util % | Leftover % | Threshold | Est. Tokens / Window | Util Delta % | Confidence | Status / Next |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-03-19 00:00 | setup | Phase 0 | roadmap-tree | 0 | - | - | - | - | - | 90 | Phase 0 initialized; ready to deepen Phase 1 (subphase 1) |
+| 2026-03-19 00:01 | deepen | Phase-1-1-Core-Architecture-Contracts | 1 | 1 | 4 | 96 | 80 | 5500 / 128000 | - | 90 | next deepen (subphase 1.1.1); research integrated |
+| 2026-03-19 11:32 | deepen | Phase-1-1-1-Deterministic-Runtime-and-Replay-Boundary | 1 | 1 | 6 | 94 | 80 | 8200 / 128000 | 2 | 92 | next deepen (subphase 1.1.2); research integrated from vault |
+| 2026-03-19 11:34 | state-hygiene-proof | Canonical roadmap state set | 1 | 1 | 6 | 94 | 80 | 8600 / 128000 | 0 | 92 | validator remediation evidence linked; continue with next deepen |
+| 2026-03-19 11:42 | deepen | Phase-1-1-2-Command-Stream-Validation-and-Fault-Recovery | 1 | 1 | 8 | 92 | 80 | 10300 / 128000 | 2 | 93 | next deepen (subphase 1.1.3); research integrated |
+| 2026-03-19 12:00 | deepen | Phase-1-1-3-Replay-Determinism-Gate-and-Compensation-Orchestrator | 1 | 1 | 10 | 90 | 80 | 12400 / 128000 | 2 | 94 | next deepen (subphase 1.1.4); research integrated |
+| 2026-03-19 12:01 | deepen | Phase-1-1-4-State-Snapshot-Lineage-and-Authoritative-Rollback-Ledger | 1 | 1 | 12 | 88 | 80 | 15360 / 128000 | 2 | 95 | next deepen (subphase 1.1.5); research integrated |
+| 2026-03-19 12:08 | deepen | Phase-1-1-5-Idempotent-State-Rehydration-Contract-and-Cold-Start-Consistency | 1 | 1 | 14 | 86 | 80 | 17920 / 128000 | 2 | 95 | next deepen (subphase 1.1.6); research integrated |
+| 2026-03-19 12:16 | deepen | Phase-1-1-6-Distributed-Rehydration-Continuation-Coordinator-and-Quorum-Activation | 1 | 1 | 16 | 84 | 80 | 20480 / 128000 | 2 | 95 | next deepen (subphase 1.1.7); research integrated |
+| 2026-03-19 12:30 | deepen | Phase-1-1-7-Quorum-Degradation-Safe-Mode-and-Read-Write-Fencing-Policy | 1 | 1 | 18 | 82 | 80 | 23040 / 128000 | 2 | 95 | next deepen (subphase 1.1.8); research integrated |
+| 2026-03-19 17:26 | deepen | Phase-1-1-8-Quorum-Restoration-and-Deterministic-Write-Fence-Lift | 1 | 1 | 20 | 80 | 80 | 25600 / 128000 | 2 | 95 | next deepen (subphase 1.1.9); research integrated |
+| 2026-03-19 17:52 | deepen | Phase-1-1-9-Deterministic-Replay-Harness-and-Phase-1-Gate-Closure | 1 | 1 | 18 | 82 | 80 | 23040 / 128000 | -2 | 95 | next deepen (subphase computed); research integrated |
+| 2026-03-19 18:08 | deepen | Phase-1-1-10-Phase-1-Secondary-Closure-Boundary-Sign-Off-and-Advance-Readiness | 1 | 1 | 19 | 81 | 80 | 24800 / 128000 | 1 | 94 | next: advance-phase candidate (1.1 rollup) or recal if inventory fails; depth_3 iter at guidance max; research integrated |
+| 2026-03-19 19:05 | advance-phase | Phase-2-Procedural-Generation-and-World-Building | 0 | 2 | - | - | - | - | - | - | Phase 1 → 2; next deepen Phase 2 (primary/secondary); rollup handoff 94 ≥ min_handoff_conf 93 |
+| 2026-03-19 19:12 | deepen | Phase-2-1-Stage-Pipeline-Skeleton-Seed-to-Entity-Contracts | 1 | 2 | 22 | 78 | 80 | 28160 / 128000 | 4 | 91 | next deepen (subphase 2.1.1+); pre-deepen research integrated; gaps: 0; queue_next requested |
+| 2026-03-19 19:30 | deepen | Phase-2-1-1-Stage-Graph-and-Per-Stage-IO-Contracts | 2 | 2 | 23 | 77 | 80 | 29600 / 128000 | 1 | 92 | next deepen (subphase 2.1.2+); pre-deepen research integrated; gaps: 0; queue_next requested |
+| 2026-03-19 19:35 | deepen | Phase-2-1-2-Intent-Stream-and-Hierarchical-RNG-Ordering | 3 | 2 | 24 | 76 | 80 | 31200 / 128000 | 1 | 92 | next deepen (subphase 2.1.3+); pre-deepen research integrated; gaps: 0; queue_next requested |
+| 2026-03-19 20:00 | deepen | Phase-2-1-3-Deterministic-Async-Commit-Barrier-and-Stage-Ledger-Reconciliation | 4 | 2 | 25 | 75 | 80 | 32800 / 128000 | 1 | 92 | next deepen (subphase 2.1.4+); pre-deepen research integrated; gaps: 0; queue_next requested |
+| 2026-03-19 20:30 | deepen | Phase-2-1-4-Entity-Spawn-Manifest-Density-Lattice-Spawn-Policy | 5 | 2 | 27 | 73 | 80 | 34400 / 128000 | 2 | 92 | next deepen (Phase 2.1 spine continuation or recal); pre-deepen research integrated; gaps: 0; queue_next requested; handoff_gate params forwarded |
+| 2026-03-19 20:35 | deepen | Phase-2-1-5-Spawn-Commit-Idempotent-Entity-Apply-Replay-Harness | 6 | 2 | 28 | 72 | 80 | 36000 / 128000 | 1 | 92 | next deepen (Phase 2.1.6+ or secondary closure); pre-deepen research integrated; gaps: 0; queue_next requested; handoff_gate params forwarded |
+| 2026-03-19 21:05 | deepen | Phase-2-1-6-Multi-Cell-Footprint-Hash-Closure-and-Secondary-Readiness-Bundle | 7 | 2 | 29 | 71 | 80 | 37600 / 128000 | 1 | 92 | next: Phase 2.1 secondary closure rollup or deepen 2.2+ per smart dispatch; chain research consumed: [[Ingest/Agent-Research/phase-2-1-6-footprint-hash-closure-research-2026-03-19-2105]]; gaps: 0; queue_next requested; handoff_gate params forwarded |
+| 2026-03-19 21:10 | deepen | Phase-2-1-7-Phase-2-1-Secondary-Closure-Rollup-and-Advance-Readiness | 8 | 2 | 31 | 69 | 80 | 39200 / 128000 | 2 | 93 | next: advance-phase (2.1 to 2.2) or deepen Phase 2.2 per dispatch; pre-deepen research: [[Ingest/Agent-Research/phase-2-1-7-secondary-closure-rollup-research-2026-03-19-2110]]; rollup handoff_readiness 94 >= min_handoff_conf 93; gaps: 0; queue_next requested; handoff_gate params forwarded |
+| 2026-03-20 00:00 | advance-phase | Phase-2-2-primary | 0 | 2 | - | - | - | - | - | - | Phase 2.1 secondary closure → **2.2** primary container; gate: rollup [[phase-2-1-7-phase-2-1-secondary-closure-rollup-and-advance-readiness-roadmap-2026-03-19-2110]] handoff_readiness 94 ≥ min_handoff_conf 93; macro phase stays 2; next: **deepen** 2.2.x with enable_research per queue; queue_next requested |
+| 2026-03-20 18:30 | deepen | Phase-2-2-1-Intent-Parser-StageGraph-Hook-Contracts | 9 | 2 | 32 | 68 | 80 | 40800 / 128000 | 1 | 92 | next deepen (subphase 2.2.2+); pre-deepen research: [[Ingest/Agent-Research/phase-2-2-1-intent-parser-generation-hooks-research-2026-03-20-1830]]; gaps: 0; queue_next requested; handoff_gate params forwarded |

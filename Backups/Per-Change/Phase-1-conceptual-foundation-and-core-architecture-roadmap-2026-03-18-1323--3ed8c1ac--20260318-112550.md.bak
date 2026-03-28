@@ -1,0 +1,48 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/Phase-1-conceptual-foundation-and-core-architecture/Phase-1-conceptual-foundation-and-core-architecture-roadmap-2026-03-18-1323.md
+original_title: "Phase 1 — Conceptual Foundation and Core Architecture"
+pipeline: roadmap
+snapshot_type: per-change
+snapshot_created: 2026-03-18T11:25:50Z
+snapshot_hash: 407ef67509607c849fc4e827df86abd076fc8f66348e865f15787c6e2cb49b5d
+confidence: 90
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+---
+title: "Phase 1 — Conceptual Foundation and Core Architecture"
+roadmap-level: primary
+phase-number: 1
+project-id: genesis-mythos-master
+status: active
+priority: high
+progress: 0
+created: 2026-03-18
+tags: [roadmap, genesis-mythos-master, phase]
+para-type: Project
+links:
+  - "[[1-Projects/genesis-mythos-master/Roadmap/genesis-mythos-master-roadmap-2026-03-18-1323]]"
+---
+
+## Phase 1 — Conceptual Foundation and Core Architecture
+
+Define the modular skeleton early: world-state vs simulation vs rendering vs input boundaries; a staged generation graph; an intent population pipeline; and the “safety invariants” (seed snapshots, dry-run validation, provenance) that must exist before complexity compounds.
+
+### Seed tasks
+
+- [ ] Define core abstractions and boundaries (world-state, sim, render, input, rules)
+- [ ] Draft generation graph stages + interfaces (seed → terrain → biome → POI → entity → sim bootstrap)
+- [ ] Specify intent resolver inputs/outputs (DM + player lore → systemic hooks)
+- [ ] Establish safety invariants and provenance schema (snapshot/dry-run/traceability)
+
+## Subphases & notes
+
+```dataview
+TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Roadmap", subphase-index AS "Index", status AS "Status", progress AS "% Progress"
+FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-1-conceptual-foundation-and-core-architecture"
+WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
+SORT subphase-index ASC, file.name ASC
+```
+

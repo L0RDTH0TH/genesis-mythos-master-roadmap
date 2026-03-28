@@ -10,7 +10,7 @@ links: ["[[3-Resources/Second-Brain/Testing]]", "[[3-Resources/Second-Brain/PARA
 # PARA Regression Suite
 
 Small, hand-curated regression set for **PARA classification and path proposals**.  
-Use these notes to sanity-check `obsidian_classify_para` and `obsidian_propose_para_paths` after changes to descriptors, sampling parameters, or ingest rules.
+Use these notes to sanity-check `obsidian_classify_para` and `propose_para_paths` after changes to descriptors, sampling parameters, or ingest rules.
 
 ## How to run a regression
 

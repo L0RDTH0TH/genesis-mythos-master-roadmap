@@ -1,0 +1,15 @@
+---
+snapshot_kind: pre-append-marker
+project_id: genesis-mythos-master
+queue_entry_id: operator-advance-phase-after-phase3-rollups-gmm-20260324T000000Z
+note: >-
+  Full workflow_state.md exceeds inline snapshot size in agent context.
+  Pre-append structural state: current_phase 4, completed_phases [1,2,3];
+  Phase 3→4 advance already logged 2026-03-23 23:25 (resume-advance-phase4-operator-gmm-20260323T232553Z).
+  This run appends one idempotent advance-phase ## Log row only; roadmap-state.md not mutated.
+created: 2026-03-24
+---
+
+# Pre-append marker — workflow_state (idempotent advance-phase)
+
+See [[1-Projects/genesis-mythos-master/Roadmap/workflow_state]] for live file.
