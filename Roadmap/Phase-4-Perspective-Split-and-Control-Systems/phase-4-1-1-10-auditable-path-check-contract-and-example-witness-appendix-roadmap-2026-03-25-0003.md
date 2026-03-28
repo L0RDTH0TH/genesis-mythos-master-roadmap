@@ -441,15 +441,3 @@ Maps validator compare-final **`.technical/Validator/roadmap-auto-validation-gen
 
 > [!note]
 > This contract does **not** imply Lane-C green, CI pass, or registry closure.
-
-### Artifact materialization (2026-03-26, queue `layer1-next-followup-deepen-post-forward-map-recal-gmm-20260326T191900Z`)
-
-- **A-41110-01:** [[Artifacts/rollup-gatechecklist-v0-evidence-index-2026-03-26]]
-- **A-41110-02:** [[Artifacts/appendwitness-v0-outcome-matrix-2026-03-26]]
-- **A-41110-03:** [[Artifacts/witnessrefhash-v0-registry-promotion-plan-2026-03-26]]
-
-Acceptance rows (materialization pass):
-
-- [x] All three `A-41110-*` artifacts exist as files under `Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Artifacts/`.
-- [x] Each artifact contains explicit acceptance rows.
-- [x] Hold-honesty preserved: no **HR >= 93** claim, no **REGISTRY-CI PASS** claim.
