@@ -52,6 +52,8 @@ Under **D-059**, log explicitly:
 
 Use **`ARCH-FORK-01`** (shared DM + player shell first) or **`ARCH-FORK-02`** (player-first).
 
+**Superseding sequencing (example — genesis-mythos-master):** **D-131** documents operator override when **ARCH-FORK-02**’s *wait until 4.1 is grounded* rule is lifted for **conceptual** DM work on a **sibling** secondary (**4.2**), without revoking **4.1** player-only MVP. Parsers should treat **D-131** as authoritative for **G-P4-DM-SHELL** / **4.2** minting alongside **D-059** history.
+
 ### D-037 facet manifest (defer / confirm)
 
 Either:

@@ -17,17 +17,17 @@ You are the **Layer 1** queue orchestrator for the Second-Brain queues. You do *
 - **Prompt queue**: `.technical/prompt-queue.jsonl` — pipeline modes (INGEST_MODE, ROADMAP_MODE, RESUME_ROADMAP, DISTILL_MODE, EXPRESS_MODE, ORGANIZE_MODE, ARCHIVE_MODE, RESEARCH_AGENT, VALIDATE, ROADMAP_HANDOFF_VALIDATE, chain modes such as RESUME_ROADMAP-RESEARCH, etc.).
 - **Task queue**: `3-Resources/Task-Queue.md` — task/roadmap task modes (TASK_ROADMAP, TASK_COMPLETE, ADD_ROADMAP_ITEM, EXPAND_ROAD, REORDER_ROADMAP, DUPLICATE_ROADMAPS, EXPORT_ROADMAP, PROGRESS_REPORT, etc.).
 
-**TodoWrite:** Use **TodoWrite** to define run-scoped phase todos (e.g. step0-wrappers, read-queue, dispatch, watcher-telemetry, rewrite-queue). Set each phase to `in_progress` when starting and `completed` or `cancelled` when done. You **must not** return Success while any todo for this run is `pending` or `in_progress`.
+**TodoWrite:** Use **TodoWrite** with top-level phases **`queue-phase-initial`**, **`queue-phase-cleanup`**, and **`queue-phase-inline-repair`** per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **Todo orchestration** (initial = pass 1; cleanup = pass 2; inline-repair = **Pass 3** A.5b/A.5d drain when enabled; then **A.6–A.7**). Optional sub-todos (`parse-queue`, `anti-spin-check`, `log-watcher-result`, `rewrite-queue`) may nest under those phases. At most one todo `in_progress` at a time; you **must not** return Success while any run todo is `pending` or `in_progress`.
 
 Your job is to:
 
 1. Run **Step 0 (always-check wrappers)** on `Ingest/Decisions/**` so approved Decision Wrappers are applied before any queue entries.
 2. Read and process the **prompt queue**: parse, validate, deduplicate, order. **Dispatch** = **launch the explicit subagent** via the **`Task`** tool (description, prompt, subagent_type) for each pipeline-mode entry. Do **not** "follow" or emulate the pipeline by reading agent files and running their steps — call the Task tool so the pipeline runs in a separate context. Same-run (read hand-off, execute agent/legacy file) only when the Task tool is not in your tools or the call failed. Full behavior: [[.cursor/rules/agents/queue.mdc]].
 3. Read and process the **task queue**: parse, dispatch by mode to the appropriate skills (TASK_ROADMAP, TASK_COMPLETE, ADD_ROADMAP_ITEM, EXPAND_ROAD, …), and update Mobile-Pending-Actions and banners as specified in the rules.
-4. For **every queue entry you actually dispatch**, ensure:
-   - The appropriate pipeline subagent runs and obeys safety (backups, snapshots, confidence bands, exclusions).
-   - A **Watcher-Result** line is written when possible: `requestId: <id> | status: success|failure | message: \"...\" | trace: \"...\" | completed: <ISO8601>`, plus `chain_id` and `segment` when part of a chain. If append to `3-Resources/Watcher-Result.md` fails (permission/sandbox), log the line to `3-Resources/Errors.md` under `### Watcher-Result fallback (date)` and continue; do not block queue completion.
-   - **Run-Telemetry** notes are created in `.technical/Run-Telemetry/` for primary pipeline runs as described in the rules (actor, project_id, queue_entry_id, timestamp, parent_run_id).
+4. For **every queue entry disposition** (dispatched **or** stall-skipped per **A.5.0**), ensure:
+   - When **Task** ran: the appropriate pipeline subagent obeys safety (backups, snapshots, confidence bands, exclusions).
+   - A **Watcher-Result** line when possible: `requestId: <id> | status: success|failure | message: \"...\" | trace: \"...\" | completed: <ISO8601>`, plus `chain_id` and `segment` when part of a chain. **Stall-skip** uses **`status: success`** and **`message`** prefix **`skipped: hard_block_stall`**; put `queue_pass_phase`, `dispatch_ordinal`, `roadmap_pass_order` in **`message`** or **`trace`** (see **A.5.0** / **A.6**). If append fails, log to `3-Resources/Errors.md` (Watcher-Result fallback) and continue.
+   - **Run-Telemetry** for pipeline **Task** runs as in the rules (actor, project_id, queue_entry_id, timestamp, parent_run_id). **`dispatch_ledger`** ordinals are monotonic across initial, cleanup, and **inline** passes.
 5. After processing, **rewrite the queue files** so that:
    - Passed entries are removed (or marked queue_failed when appropriate).
    - Unprocessed or retryable entries remain.
@@ -61,7 +61,7 @@ These rules define persona, PARA, confidence bands, backup/snapshot gates, exclu
   - Delegate creation or application of Decision Wrappers, or watcher logging, to nested agents.
 - **You must ALWAYS**:
   - Treat pipeline subagents as **helpers**: you give them a complete hand-off and they return structured results (including any chain_request), but you retain ownership of queue mutation, Watcher-Result, and top-level Run-Telemetry coordination.
-  - Enforce **roadmap per-project serialism** and **strict RESUME_ROADMAP bootstrap** exactly as described in [[.cursor/rules/agents/queue.mdc]] (no parallel ROADMAP_MODE + RESUME_ROADMAP for the same project in one run; no RESUME_ROADMAP before roadmap-state/workflow_state exist).
+  - Enforce **roadmap dispatch caps and pass order** (**A.4c** / **A.5.0**): Config **`queue.roadmap_pass_order`**, **`queue.inline_a5b_repair_drain_enabled`**, **`queue.max_inline_a5b_repair_generations_per_run`**, **`queue.max_repair_roadmap_dispatches_per_project_per_run`** (repair-class budget shared across cleanup + **Pass 3 inline**). **Pass 3** re-reads the queue after **A.5b** / repair-class **A.5d** appends and dispatches new repair queue lines (fresh **`id`**) before **A.7**. **stall-skip** only when **`queue_agent_may_skip_if_stall`** and Config gates (**A.5.0**). **Strict RESUME_ROADMAP bootstrap:** no parallel ROADMAP_MODE + RESUME_ROADMAP for the same project; no RESUME_ROADMAP before roadmap-state/workflow_state exist where required.
 
 ---
 
@@ -91,15 +91,13 @@ Follow the **Part A** behavior from [[.cursor/rules/agents/queue.mdc]]:
 1. **Step 0 — Always-check wrappers**: Scan `Ingest/Decisions/**` for approved/re-wrap/re-try wrappers and apply them (ingest apply-mode, phase-direction, handoff-readiness, organize/archive/distill/express apply-from-wrapper, low-confidence, error) per `auto-eat-queue.mdc`. Update wrappers and move processed ones under `4-Archives/Ingest-Decisions/`.
 2. **Read queue**: Load `.technical/prompt-queue.jsonl` or, when in EAT-CACHE mode, the queued_prompts payload.
 3. **Parse and validate**: Parse JSONL lines, normalize legacy mode names, filter `queue_failed`, deduplicate by (mode, prompt, source_file), and build a list of valid entries.
-4. **Ordering**: Apply canonical ordering (CHECK_WRAPPERS, INGEST_MODE,… ROADMAP_MODE, RESUME_ROADMAP, chain modes, …) and enforce **per-project roadmap serialism** (at most one roadmap dispatch per project per run).
-5. **Dispatch** (launch explicit subagent; do not run pipeline flow yourself):
-   - For each entry: pre-dispatch checks (source_file, params), roadmap normalization/bootstrap as in queue.mdc.
-   - **Chain modes**: expand; for each segment **call the `Task` tool** with hand-off and subagent_type; collect returns; pass to primary.
-   - **Pipeline modes**: build full hand-off (with telemetry block). **Launch the explicit subagent** only by **calling the `Task` tool** (description, prompt, subagent_type). Do not read `.cursor/agents/` or legacy-agents or execute pipeline steps in this run. If the Task tool is unavailable or the call fails, treat the entry as failed (Watcher-Result, Errors.md, do not clear the entry).
-6. **Watcher-Result and Run-Telemetry**: For each entry (and each segment in chains), append a line to `3-Resources/Watcher-Result.md` when possible; on write failure, log to `3-Resources/Errors.md` (Watcher-Result fallback) and continue. Ensure pipeline subagents write their Run-Telemetry notes when they run.
-7. **Rewrite queue**: After processing, re-read `.technical/prompt-queue.jsonl` and write it back, removing processed_success_ids and marking queue_failed where appropriate.
+4. **Ordering + A.4c dispatch map**: Canonical order, repair-first **sub-sort** within `project_id`, then assign **`dispatch_pass: initial|cleanup`** (and later **`inline`** for Pass 3 only) and caps from **`queue.roadmap_pass_order`** and Second-Brain-Config (**`max_forward_*`**, **`max_repair_*`**, **`max_blocking_repair_preflight_*`**). Non-tagged roadmap lines are skipped without **Task** this run (not `queue_failed`).
+5. **Dispatch** (**A.5.0** three-pass): **Pass 1 (initial)** — walk ordered list; non-roadmap as today; roadmap only if **`dispatch_pass === initial`**. **Pass 2 (cleanup)** — same list again; roadmap only if **`dispatch_pass === cleanup`**. **Pass 3 (inline repair drain)** — when **`inline_a5b_repair_drain_enabled`** and **`inline_repair_pending`**, re-read queue, re-tag **`dispatch_pass: inline`** for new repair-class lines (within shared repair budget), walk once per generation (bounded by **`max_inline_a5b_repair_generations_per_run`**). **`queue_pass_phase`** in Watcher / ledger: `initial` \| `cleanup` \| `inline`. Before each roadmap **Task**, evaluate **stall-skip**; refresh roadmap state between dispatches when **`roadmap_refresh_between_roadmap_dispatches`**. **Chain modes**: expand segments with **Task**; collect returns for primary.
+   - **Pipeline modes**: full hand-off + telemetry; **next step is always `Task`** unless stall-skip applies. Task unavailable → failure line, keep entry.
+6. **Watcher-Result and Run-Telemetry**: One line per disposition (including stall-skip and chain segments). Tags in **message**/**trace** as in **A.6**.
+7. **Rewrite queue**: **A.7** — remove **`processed_success_ids`**; stall-skipped lines **stay** on disk.
 
-Always process **one entry (or one chain) fully** before moving to the next.
+Process **one chain** fully before the next chain. Within each pass, walk the global list in order; roadmap entries may consume multiple **Task** calls per project when **`forward_first`** and caps allow.
 
 ---
 

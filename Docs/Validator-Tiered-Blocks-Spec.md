@@ -102,6 +102,7 @@ When a **hard block** or surviving **`contradictions_detected`** applies to scop
 2. **Repair lines MUST sort before** other **`RESUME_ROADMAP`** lines for the **same** `project_id` that would **deepen** or **advance** the same spine.  
    **Rationale:** `RECAL-ROAD` normalizes to `RESUME_ROADMAP`, so mode-order alone does not separate recal from deepen — use **`queue_priority: repair`** (integer, lower = earlier) or **`validator_repair_followup: true`** plus **sub-sort** in auto-eat-queue (see Queue-Sources).
 3. **Orthogonal** entries (other projects / no dependency) **continue** in canonical order without waiting for S’s repair.
+4. **Pass 3 (inline repair drain, same EAT-QUEUE run):** After Layer 1 **A.5b** (or repair-class **A.5d** recovery) appends a **`RESUME_ROADMAP`** repair line, **`queue.inline_a5b_repair_drain_enabled`** (Second-Brain-Config) gates whether **Pass 3** runs: re-read **`prompt-queue.jsonl`**, tag **`dispatch_pass: inline`**, and dispatch **`Task(roadmap)`** on the new **`id`** before **A.7**, within **`max_repair_roadmap_dispatches_per_project_per_run`** (shared with cleanup-pass repair dispatches) and **`max_inline_a5b_repair_generations_per_run`**. See [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.4c**, **A.5.0**, **A.5b**.
 
 ---
 

@@ -26,7 +26,7 @@ When the entry is part of a **chain** (subagent returned chain_request; primary 
 Example line (chained): `requestId: abc123 | chain_id: queue-456 | segment: RESEARCH_AGENT | status: success | message: "..." | trace: "" | completed: <ISO8601>`.
 
 - **requestId**: The same `requestId` from the Watcher signal line that triggered this run (read from the prompt or from the last line of `Watcher-Signal.md` if present), or the queue entry's `id` for queue-based runs.
-- **status**: `success` or `failure`.
+- **status**: `success` or `failure` only — do **not** add new enum values (e.g. `skipped`); for Layer 1 stall-skip use **`status: success`** with **`message`** prefix **`skipped: hard_block_stall`** and machine tags in **`message`** / **`trace`** (`queue_pass_phase`, `dispatch_ordinal`, `roadmap_pass_order`) per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.5.0** / **A.6**.
 - **message**: Short human-readable summary; use quotes and escape internal double quotes as `\"`.
 - **trace**: For failures, the **full error stack or log excerpt** (not a one-liner). For success, empty string or short note. Escape internal double quotes as `\"`.
 - **completed**: ISO 8601 timestamp when the run finished (e.g. `2026-02-27T12:34:56.789Z`). Enables lag estimation: compare with the timestamp on the matching line in `Watcher-Signal.md` (triggered at) to compute end-to-end delay.

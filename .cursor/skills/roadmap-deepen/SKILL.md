@@ -49,6 +49,12 @@ description: Performs one deepen step for multi-run roadmap — reads workflow_s
 - **params.conceptual_decision_record_mode** (optional): Overrides Config **`roadmap.conceptual_decision_record_mode`**: **`off`** \| **`best_effort`** \| **`required`**.
 - **params.queue_entry_id** (optional): Passed to **conceptual-decision-record** and decisions-log bullet when present.
 
+## Return payload (to caller)
+
+- **`queue_followups`** — per step 7 (when **`params.queue_next !== false`** and context gates allow).
+- **`next_structural_target_hint`** — optional; **conceptual** track only; see **§6a**. RoadmapSubagent uses this for **Conceptual subphase exit** ([[3-Resources/Second-Brain/Parameters|Parameters]] § Conceptual subphase exit).
+- **`conceptual_decision_record`** — per step **6b** when applicable.
+
 ## Dual track (conceptual vs execution)
 
 **Authority:** Read `1-Projects/<project_id>/Roadmap/roadmap-state.md` frontmatter **`roadmap_track`**. If absent → **`conceptual`**. Optional queue override **`params.roadmap_track`** (`conceptual` \| `execution`) may force the active track for **this run only** when the operator must temporarily target one tree (document in Log Status / Next).
@@ -135,6 +141,12 @@ Call **obsidian_ensure_structure** with `folder_path` = parent of the execution 
    - Next phase if current phase is fully deepened (per granularity for that phase).
    - Use [Roadmap Structure](Roadmap Structure.md) path patterns and frontmatter: `roadmap-level` (primary | secondary | tertiary | task), `phase-number`, `subphase-index` (e.g. "1.1", "1.1.1").
 
+  3.1 **Conceptual NL checklist prioritization (refine current node first)**:
+  - When **`active_track === conceptual`**, before selecting a *next* missing child node, resolve the existing roadmap note that corresponds to **the current cursor** (**`current_phase`** and **`current_subphase_index`**).
+  - Run **conceptual-checklist gap detection** against that *existing* note content using the checklist requirements in **`Conceptual-Execution-Handoff-Checklist.md`** (Scope, Behavior, Interfaces, Edge cases, Open questions, Pseudo-code readiness).
+  - If any checklist row is missing or underfilled (word-count < `gap_min_words` and no explicit “none/empty/TBD with contract” phrasing), set an in-run flag in context such as `refining_existing_conceptual_target: true` and treat the **next target** as the same `current_subphase_index` note (i.e. refine in place) instead of creating deeper children.
+  - Only advance `current_subphase_index` after the conceptual-checklist gaps for that resolved note are resolved in the refine draft.
+
 4. **Pre-create quality gate (when current_depth ≥ 4):** Before creating a new subphase note at depth ≥ 4, run a quick **handoff-audit** (or equivalent confidence check) on the **parent** secondary/tertiary note (confidence on "technical completeness"). **When active_track is `execution`**, treat this gate as the primary blocker for minting depth-4+ children until confidence ≥ 75%. **When active_track is `conceptual`**, keep the same gate unless operator policy relaxes it later. If **confidence < 75%**: do **not** create the new subphase. Instead, create a **Decision Wrapper** under `Ingest/Decisions/Roadmap-Decisions/` with **rationale callout** (e.g. `> Architect: Parent 1.2.3 technical completeness 72%; below 75% gate. Wrapper time.`) and options: **A:** Create anyway | **B:** Refine parent first | **C:** Skip to next secondary. Ensure folder (obsidian_ensure_structure for Ingest/Decisions/Roadmap-Decisions/); append CHECK_WRAPPERS and Watcher-Result; exit. If **confidence ≥ 75%**: proceed to step 4.5.
 
 4.5. **Gap analysis and optional gap-fill research (before final write)**  
@@ -150,6 +162,17 @@ Call **obsidian_ensure_structure** with `folder_path` = parent of the execution 
    - When **params.max_depth** or **params.branch_factor** is set: create up to **branch_factor** children at the current level (default 4 for phases ≥3), then recurse depth until **max_depth** (or phase-derived: 1–2→2, 3–4→3, 5–6→4). One snapshot before the multi-step run; one Log row at end.
    - Use **obsidian_ensure_structure** for the target phase folder under **phaseTreeRoot** (e.g. `…/Phase-N-<Name>/Phase-N-M-<SecondaryName>/` with prefix **phaseTreeRoot**).
    - Create the roadmap note at the path per Roadmap Structure **under phaseTreeRoot** (e.g. `Phase-N-M-<SecondaryName>-Roadmap-YYYY-MM-DD-HHMM.md` with frontmatter `roadmap-level: secondary`, `phase-number: N`, `subphase-index: "N.M"`). When **active_track** is **`execution`**, add **`roadmap_track: execution`** and **`conceptual_counterpart`** pointing at the parallel conceptual path (derive from mirrored folder path under `Roadmap/` without `Execution/` when minting a mirror).
+
+  - **Conceptual checklist completeness scaffolding (refine mode aware)**:
+    - When **`active_track === conceptual`**, ensure the deepened/updated roadmap note (the resolved target note from step 3) includes the NL handoff checklist headings/sections needed by **`Conceptual-Execution-Handoff-Checklist.md`**:
+      - one **Scope** paragraph stating what the slice covers and explicitly what it does not cover
+      - NL **Behavior** (actors, inputs, outputs, ordering)
+      - **Interfaces** (expectations from adjacent slices + outward guarantees)
+      - **Edge cases** (failure modes; deferrals labeled TBD if intentional)
+      - **Open questions** (remaining ambiguities listed OR explicitly “none” / “empty”)
+      - **Pseudo-code readiness** (reader can start sketching without guessing core behavior)
+    - If this run is in `refining_existing_conceptual_target` mode, preferentially fill missing/underfilled sections in the existing note rather than only creating deeper children.
+    - In this refine mode, use `obsidian_update_note` against the existing resolved target note path (do not mint new child notes) and do not advance `current_subphase_index` in the workflow log until the conceptual-checklist gaps are resolved.
    - **Frozen guard:** If the derived conceptual path would be written (should not occur on execution track), or when on conceptual track the target already exists with `frozen: true`, **abort** the write per Dual track section.
    - **When the created note is a secondary roadmap** (path matches `Phase-N-M-<Name>-Roadmap-*.md`, subphase-index "N.M"): after writing the note, **append** to it a section **"## Tertiary notes"** and a Dataview block FROM that secondary folder with **Level column**: `TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"` with `WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"`, `SORT subphase-index ASC, file.name ASC`. So every new secondary is created as the bottom MOC (per Roadmap Structure and MOC migration plan).
    - For tertiary notes: create note with tasks in body; frontmatter `roadmap-level: tertiary`, `subphase-index: "N.M.K"`.
@@ -181,6 +204,8 @@ Call **obsidian_ensure_structure** with `folder_path` = parent of the execution 
    - Use obsidian_update_note or equivalent; do not overwrite existing Log rows.
    - Optionally append to **deepen_log** in workflow_state frontmatter (if schema supports): `{ timestamp, depth, reason, parent, confidence_pre }` for audit trail.
    - **Run-Telemetry:** After updating workflow_state, ensure `.technical/Run-Telemetry/` exists (obsidian_ensure_structure or create on first write), then write one note to `.technical/Run-Telemetry/`. **Required fields:** actor: roadmap; project_id, queue_entry_id, timestamp, parent_run_id from the hand-off (if hand-off omits any, use queue entry in context or caller-provided values). **Optional (when available):** estimated_tokens, context_window_tokens, util_pct (from context_util_pct just written), chain_segment (from hand-off or params), workflow_state_link (wikilink to workflow_state ## Log or last row), tool_calls (e.g. counts of obsidian_read_note, obsidian_update_note), internals (confidence, duration_sec, freeform). **Phase 2 (cost):** When a rate table exists (e.g. [Telemetry-Model-Rates](3-Resources/Second-Brain/Telemetry-Model-Rates.md) or Config), set input_tokens = estimated_tokens, output_tokens = 0 or a rough completion estimate, total_tokens, and cost_estimate_usd from the rate table; write these to the Run-Telemetry note. No new computation — reuse existing workflow_state/context numbers. Naming: `Run-YYYYMMDD-HHMMSS-<project_id>-roadmap.md`. See [Logs § Run-Telemetry](3-Resources/Second-Brain/Logs.md) and [Vault-Layout § .technical/Run-Telemetry](3-Resources/Second-Brain/Vault-Layout.md).
+
+6a. **`next_structural_target_hint` (conceptual only):** When **`active_track === conceptual`** and step **6** successfully appended the Log row and updated **`current_subphase_index`**, re-apply **step 3 — Compute next target** **once** using the **updated** **active** workflow_state / roadmap-state (as if starting the **next** deepen run). **Return** in the skill payload **`next_structural_target_hint`**: `{ subphase_index: string, refining_existing_conceptual_target: boolean, same_slice_repeat: boolean }`. Set **`same_slice_repeat: true`** when the recomputed next target would keep working on the **same** `subphase_index` as the post-step-6 cursor (refine-in-place / checklist loop). **Omit** this object when **`active_track !== conceptual`** or step 6 did not complete.
 
 6b. **Conceptual decision record (conceptual track only):** After step 6 succeeds and roadmap note(s) were created/updated in step 5 (not when deepen aborted early, frozen guard, or Decision Wrapper exit). When **`active_track === conceptual`**:
    - Resolve **effective_mode** = `params.conceptual_decision_record_mode` if present, else **`roadmap.conceptual_decision_record_mode`** from [[3-Resources/Second-Brain-Config|Second-Brain-Config]], else **`best_effort`**. If **`off`**, skip this step.
@@ -221,6 +246,7 @@ Call **obsidian_ensure_structure** with `folder_path` = parent of the execution 
        - `next_entry` for RECAL-ROAD (`mode: "RESUME_ROADMAP", params: { action: "recal", ... }`) when a gate requires recal, or
        - `suppress_next: true` when `queue_next === false` or a hard ceiling blocks further deepen.
      - Identity/sticky params to forward: **project_id** or **source_file**, **profile** (if present), effective **enable_context_tracking**, **queue_next**, and other crafter-locked/static params. Do **not** sticky-write dynamic per-iteration knobs (token_cap, research_* budgets, branch_factor, max_depth, etc.).
+     - Include **`next_structural_target_hint`** from **§6a** in the **overall** skill return to RoadmapSubagent (alongside **`queue_followups`**) when computed.
 
 8. **Optional hand-off context**: When auto-roadmap passes **handoff_gate** or **focus: handoff-readiness**, caller may run **roadmap-resume** first for hand-off context, then call this skill. This skill does not run hand-off-audit; it only deepens structure and updates workflow_state.
 
@@ -229,6 +255,11 @@ Call **obsidian_ensure_structure** with `folder_path` = parent of the execution 
 - **Input**: The draft note content (markdown) for the target phase/subphase before it is written. **Mode**: Read **gap_detection_mode** from Parameters (default **heuristic**); reserve **semantic** for a future optional pass (LLM/embedding completeness check).
 - **Word-count threshold**: For each section (between two headings or heading and end), count words in the body. If **word count &lt; gap_min_words** (Parameters, default **30**), flag a **gap** of type **thin_explanation** (or infer type from heading; see below).
 - **Marker-based detection**: For each heading, check if it contains any of **research_gap_markers** (Parameters, array; default `["pseudo-code", "edges", "examples", "TODO"]`). If it does, check the section body: if there is **no** code fence (```), no bullet list with ≥2 items, and body word count &lt; **gap_min_words** (or &lt; 50 for "examples"/"edges"), flag a gap. **gap_type** from heading: "pseudo-code" → **missing_pseudocode**, "edges" → **missing_edges**, "examples" → **missing_examples**, "TODO" or generic → **thin_explanation**.
+  - When **active_track === conceptual**, also treat Conceptual-Execution-Handoff-Checklist row headings as marker headings even if they are not present in `research_gap_markers`:
+    - `Pseudo-code readiness` → **missing_pseudocode**
+    - `Edge cases` → **missing_edges**
+    - `Scope`, `Behavior`, `Interfaces`, `Open questions` → **thin_explanation**
+  - For `Open questions`, if the section explicitly declares “none”, “empty”, or an intentional TBD with a contract sentence (e.g. “deferred until X on execution track”), treat it as done for gap purposes.
 - **Severity scoring (0–100)**:
   - Base from word count: e.g. `max(0, 100 - (word_count * 2))` so 0 words → 100, 50 words → 0 (tune so &lt; gap_min_words gives high severity).
   - Boost +15 if heading matches a **research_gap_marker** (promised but missing content).

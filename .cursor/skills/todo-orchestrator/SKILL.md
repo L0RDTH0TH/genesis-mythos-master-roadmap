@@ -46,7 +46,7 @@ Subagents do not call a separate MCP tool for this skill; instead they **follow 
    - Derived from telemetry, such as `"queue-" + queue_entry_id` when appropriate.
 2. Define a **small ordered list** of phases for this run:
    - Example (Queue prompt-queue flow): `["parse-queue", "dispatch-entries", "write-watcher-result", "rewrite-queue"]`.
-   - Example (Roadmap deepen): `["load-state", "determine-action", "apply-action", "snapshot-and-update-state", "queue-followup-if-needed"]`.
+   - Example (Roadmap RESUME): `["load-state", "determine-action", "apply-action", "snapshot-and-log", "queue-followup-if-needed"]`.
 3. For each phase, synthesize a **todo id**:
    - Convention: `"<run_id>:<phase_id>"` (e.g. `"queue-eat-queue:parse-queue"`).
    - Label: short, imperative description (e.g. `"Parse and validate prompt queue"`).
@@ -143,13 +143,27 @@ These are canonical starting points; subagents may refine them but should stay s
 - `log-and-banners` — Watcher-Result + Mobile-Pending-Actions + banner cleanup.
 - `update-task-queue` — clear or mark processed entries as configured.
 
-### RoadmapSubagent (RESUME_ROADMAP)
+### RoadmapSubagent
 
-- `load-state` — read roadmap-state.md and workflow_state.md, derive current target.
-- `determine-action` — map params.action or auto decision into a single concrete action.
-- `apply-action` — run the corresponding skill(s) (deepen, advance-phase, recal, etc.).
-- `snapshot-and-update-state` — ensure state snapshots, logs, and Run-Telemetry are written.
-- `queue-followup-if-needed` — append the next RESUME_ROADMAP to the queue when `queue_next !== false`.
+Normative detail and invariants for roadmap todos also live in [[.cursor/rules/agents/roadmap.mdc|roadmap.mdc]] § **Todo orchestration (todo-orchestrator)**.
+
+#### ROADMAP_MODE (setup only)
+
+Use run_id such as `roadmap-setup`.
+
+- `resolve-project` — resolve project_id and roadmap directory, enforce Projects-only invariants.
+- `bootstrap-state` — ensure roadmap-state.md, decisions-log.md, distilled-core.md, workflow_state.md exist and are initialized correctly for Phase 0.
+- `generate-from-outline` — invoke `roadmap-generate-from-outline` when appropriate and verify artifacts.
+
+#### RESUME_ROADMAP (single continue action)
+
+Use run_id such as `roadmap-resume`.
+
+- `load-state` — read roadmap-state.md / workflow_state.md and derive current target/phase.
+- `determine-action` — merge params with Config/profile and resolve a concrete action (including smart-dispatch when `action: "auto"`).
+- `apply-action` — call the corresponding skill(s) (deepen, advance-phase, recal, revert-phase, sync-outputs, handoff-audit, resume-from-last-safe, expand, compact-depth, unfreeze_conceptual, bootstrap-execution-track).
+- `snapshot-and-log` — ensure state snapshots, workflow_state/roadmap-state updates, and any associated logging are complete.
+- `queue-followup-if-needed` — **request** the next queue action via `queue_followups` in the return to the Queue/Dispatcher when `params.queue_next !== false` (RoadmapSubagent does not write the queue file); or explicitly no follow-up when `queue_next === false`.
 
 ### IngestSubagent
 
