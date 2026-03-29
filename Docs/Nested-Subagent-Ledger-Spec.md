@@ -95,7 +95,7 @@ links:
 
 ### `detail` object (always)
 
-- **`reason_code`** (machine): e.g. `contract_skip_material_gate`, `research_disabled_param`, `research_skipped_util_gate`, `legacy_clean_log_only_no_ira`, `little_val_failed_before_nested`, `task_enum_rejected`, `task_resource_exhausted`, `not_applicable_action`, `no_synthesis_skip_validator`, `ledger_invalid_invoked_ok_without_task`.
+- **`reason_code`** (machine): e.g. `contract_skip_material_gate`, `research_disabled_param`, `research_skipped_util_gate`, `legacy_clean_log_only_no_ira`, `little_val_failed_before_nested`, `task_enum_rejected`, `task_resource_exhausted`, `not_applicable_action`, `no_synthesis_skip_validator`, `ledger_invalid_invoked_ok_without_task`, `nested_helper_skip_without_task_attempt` (**invalid** — use only in strict-gate / operator diagnostics when a **required** step used **`skipped`** + **`task_tool_invoked: false`** without a real nested **`Task`** attempt; Layer 2 should instead emit **`task_error`** with **`host_error_class`** such as **`nested_task_unavailable`**).
 - **`human_readable`** (1–3 sentences).
 - Optional: `contract_citation`, `inputs_considered` (paths[]), `follow_up_effect`.
 
@@ -114,6 +114,18 @@ These rules align the ledger with [[3-Resources/Second-Brain/Subagent-Safety-Con
 | `research_pre_deepen` | ResearchSubagent (`research`) **only when** pre-deepen research is **attempted** this run and the run is **not** using chain hand-off consumables (use `chain_research_consumed` instead). |
 
 **Forbidden (invalid attestation):** `outcome` is `invoked_ok` or `invoked_empty_ok` **and** `task_tool_invoked: false` **for any mandated helper `step` above** when that step was **required** for the branch (e.g. top-level `nested_cycle_applicable: true` and the nested Validator→IRA cycle ran). Operators and Layer 1 strict gates must treat this as **non-compliant**, not success.
+
+**Forbidden (invalid attestation — skip without attempt):** `outcome` is **`skipped`** **and** `task_tool_invoked: false` on **`nested_validator_first`**, **`nested_validator_second`**, **`ira_post_first_validator`**, or **`research_pre_deepen`** when that step was **required** for this run and **`detail.reason_code`** is **not** on the allowlist below. Inspecting host **`available_functions`** (or equivalent) and emitting **`skipped`** without calling **`Task`** is **non-compliant**; the correct record is **`outcome: task_error`** with **`host_error_raw`** and **`host_error_class`** (e.g. **`nested_task_unavailable`**). **`nested_task_unavailable`** is a **`host_error_class`** value on **`task_error`** rows — **not** a free-form excuse on **`skipped`** rows.
+
+**Allowlist for honest `skipped` + `task_tool_invoked: false` (non-exhaustive — must match pipeline contract):** e.g. **`legacy_clean_log_only_no_ira`**, **`contract_skip_material_gate`**, **`unfreeze_conceptual_frontmatter_only`** (and equivalent material-gate / unfreeze-only paths), **`no_synthesis_skip_validator`**, **`research_skipped_util_gate`**, **`research_disabled_param`**, **`not_applicable_action`** when the step was genuinely out of scope; use **`chain_research_consumed`** instead of **`research_pre_deepen`** when chain consumables apply.
+
+**Per-step “required this run” (Layer 1 / operators):**
+
+| Step | Treat as required when (heuristic) |
+|------|-------------------------------------|
+| `nested_validator_first` | `nested_cycle_applicable: true` and, for roadmap-style material policy, `material_state_change_asserted: true` when that field is **`true`** (omit check when `false`/`unknown` if pipeline did not assert material change). |
+| `nested_validator_second`, `ira_post_first_validator` | `nested_cycle_applicable: true` **and** the nested Validator→IRA protocol applies (`ira_after_first_pass_effective: true` or first pass was not legacy clean `log_only` skip — align with pipeline agent); if uncertain, prefer strict gate when `nested_cycle_applicable: true` and first validator row was **`invoked_ok`**. |
+| `research_pre_deepen` | Pre-deepen research was in scope for this run (pipeline enabled research, not chain **`chain_research_consumed`**, not explicit opt-out); if research was **not** required, **`not_applicable`** with documented **`reason_code`** is valid instead of **`skipped`**. |
 
 **Allowed `task_tool_invoked: false` without `task_error`** for helper-shaped work only in **documented** cases:
 
@@ -157,3 +169,4 @@ One record per Queue-initiated `Task` in the EAT-QUEUE run:
 | 1 | 2026-03-22 | Initial schema (roadmap-first). |
 | 2 | 2026-03-21 | Normative scope extended to all queue-dispatched pipelines using nested helpers; `pipeline` / `params_action` rules; `no_synthesis_skip_validator`; Run-Telemetry for all normative pipelines. |
 | 3 | 2026-03-21 | **Attestation invariants:** forbidden `invoked_ok` / `invoked_empty_ok` with `task_tool_invoked: false` on mandated helper steps; `chain_research_consumed` vs `research_pre_deepen`; `ledger_invalid_invoked_ok_without_task`, `nested_task_unavailable`; Layer 1 semantic gate (see queue.mdc A.5 b0 iii). |
+| 4 | 2026-03-29 | **Skip-without-attempt:** forbidden `skipped` + `task_tool_invoked: false` when step required; `nested_helper_skip_without_task_attempt`; `nested_task_unavailable` only as `host_error_class` on `task_error`; per-step required heuristics; Layer 1 **A.5 (b0)(iv)** + `#review-needed` path when strict (queue.mdc). |

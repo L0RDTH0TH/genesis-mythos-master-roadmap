@@ -118,6 +118,8 @@ List applied rules in **`sanitization_rules_applied`**.
 
 **Nested helper** example: same `queue_entry_id` / `parent_run_id`, new `task_correlation_id`, `parent_task_correlation_id` = the `pipeline_task_correlation_id` from the L1→roadmap dispatch, `from_actor` e.g. `layer2_roadmap`, `to_actor` / `subagent_type` for `validator`.
 
+**Compliant nested attempts (validator / IRA / research):** For each mandated nested **`Task`**, Layer 2 should emit paired **`handoff_out`** / **`return_in`** rows with **`parent_task_correlation_id`** = that run’s **`pipeline_task_correlation_id`**, **`from_actor`** naming the pipeline (e.g. `layer2_ingest`, `layer2_roadmap`), **`subagent_type`** = `validator` \| `internal-repair-agent` \| `research`. A real attempt (or a host **`task_error`** transcript) supports **`queue.mdc` A.5 (b0)(iv)** and [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] attestation; **skipped** without **`Task`** on a required step is non-compliant unless **`detail.reason_code`** is allowlisted.
+
 ---
 
 ## Related

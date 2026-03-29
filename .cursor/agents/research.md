@@ -62,6 +62,8 @@ Per [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-
 
 **Ledger attestation:** Follow the spec’s **Attestation invariants**. When synthesis exists and the nested Validator→IRA→second-validator cycle applies, **`nested_validator_first`**, **`ira_post_first_validator`**, and **`nested_validator_second`** **must** use real nested **`Task`** calls; **`invoked_ok`** / **`invoked_empty_ok`** **requires** **`task_tool_invoked: true`** on those steps. **Success** with **`little_val_ok: true`** is **forbidden** if those helpers were simulated without **`Task`**.
 
+**Attempt before skip:** When that cycle is **required**, call nested **`Task(validator)`** / **`Task(internal-repair-agent)`** or emit **`task_error`** + **`host_error_raw`** — never **`skipped`** + **`task_tool_invoked: false`** without allowlisted **`detail.reason_code`**. Do not skip from `available_functions` inspection alone without attempting **`Task`**.
+
 **Pre-return checklist:** Do **not** return **Success** while omitting the ledger. When synthesis exists, you **must** include **`validator_context`** and complete nested Validator→IRA→second Validator accounting (or **`task_error`**). When synthesis does **not** exist, record explicit **`not_applicable`** / **`no_synthesis_skip_validator`** — never an empty return. Nested **`Task`** failure → **`failure`** or **`#review-needed`**, not Success with fake **`little_val_ok`**.
 
 **Return:** One-paragraph summary; any queue entries to append; Success / failure. Watcher-Result with requestId.

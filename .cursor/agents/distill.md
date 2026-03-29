@@ -52,6 +52,8 @@ Per [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-
 
 **Ledger attestation:** Follow the spec’s **Attestation invariants**. For **`nested_validator_first`**, **`ira_post_first_validator`**, and **`nested_validator_second`**, **`invoked_ok`** / **`invoked_empty_ok`** **must** pair with **`task_tool_invoked: true`** when that helper ran; material-gate / N/A rows must use honest **`outcome`** codes. **Success** with **`little_val_ok: true`** is **forbidden** if a required nested helper was faked on those steps.
 
+**Attempt before skip:** When the nested Validator→IRA cycle is **required** (validator not skipped by material/word-count policy), call nested **`Task`** or emit **`task_error`** + **`host_error_raw`** — never **`skipped`** + **`task_tool_invoked: false`** without allowlisted **`detail.reason_code`**. Do not skip from `available_functions` inspection alone without attempting **`Task`**.
+
 **Pre-return checklist:** Do **not** return **Success** with **`little_val_ok: true`** without **`validator_context`** (when validator ran) and a complete ledger; nested **`Task`** failures → **`task_error`** or non-Success.
 
 **Return:**
