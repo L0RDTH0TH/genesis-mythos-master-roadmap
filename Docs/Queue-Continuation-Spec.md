@@ -48,6 +48,24 @@ When **`queue.gate_block_detection_enabled`** or **`queue.spin_detection_enabled
 | `resolver_alignment` | object | yes | `aligned` \| `partially_aligned` \| `overridden_by_user_lock` \| `drifted`, or `{ "skipped": true, "reason": "..." }` when comparison not done. |
 | `effective_track` | string | recommended | `conceptual` \| `execution` — copy from Layer 1 **`layer1_resolver_hints`** / Roadmap **`validator_context`** for traceability. |
 | `gate_catalog_id` | string | optional | `conceptual_v1` \| `execution_v1` per [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-By-Track|Roadmap-Gate-Catalog-By-Track]]. |
+| `workflow_cursor_at_completion` | object | optional | Snapshot after successful **RESUME_ROADMAP deepen**: `{ "last_auto_iteration": string, "current_subphase_index": string }` from **`1-Projects/<project_id>/Roadmap/workflow_state.md`** frontmatter. Layer 1 **A.5e** merges when absent from pipeline YAML. Used by **A.1b** step **8a** empty-queue bootstrap dedup (do not respawn deepen for the same cursor pair). |
+
+### Additive fields (control plane v2)
+
+When **`roadmap.control_plane_v2`** is configured, Roadmap **Task** returns **should** include a separate fenced **`yaml`** block with root **`control_plane_observability`** (see [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]] §2). Layer 1 **A.5e** merges these into the continuation JSONL row:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `control_plane_version` | string | recommended | e.g. **`v2`**. |
+| `effective_cap_used` | int \| null | recommended | Adaptive cap after formula; **`null`** when disabled. |
+| `stagnation_severity` | string | recommended | **`none`** \| **`mild`** \| **`moderate`** \| **`chronic`**. |
+| `stagnation_cluster_id` | string \| null | recommended | Cluster id or **`null`**. |
+| `routing_decision` | string | recommended | Matrix outcome: **`consume`**, **`repair_followup`**, etc. |
+| `gate_waived` | array | optional | e.g. **`["pseudo_code_requirement"]`**. |
+| `waiver_reason` | string \| null | optional | **`conceptual_track`** \| **`per_subphase_tag`**. |
+| `section_score_breakdown` | object | optional | Debug / replay. |
+
+**`effective_track`** remains in the anti-spin table above; **`control_plane_observability`** may repeat it for traceability — **A.5e** merge prefers resolver / **`layer1_resolver_hints`** on conflict.
 
 **`queue_continuation` YAML** in Roadmap Task returns may also carry mirrors of these when the pipeline emits them; Layer 1 merges and wins on missing pipeline fields.
 

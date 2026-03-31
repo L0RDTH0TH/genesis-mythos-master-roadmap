@@ -50,6 +50,9 @@ Emitted when a queue line is **omitted** from the rewritten `prompt-queue.jsonl`
 | `parent_run_id` | optional | string | Layer 1 / hand-off correlation when known. |
 | `spawned_line_ids` | optional | array of string | New line `id`s appended this run tied to this entry (A.5b repair, A.5c `next_entry`, merged follow-ups). |
 | `watcher_linked` | optional | bool | `true` if a Watcher-Result line with `requestId` = `queue_entry_id` is expected for this consumption. |
+| `blocked_subphase` | optional | string | e.g. `4.1.5` — subphase where anti-circle / cap applied. |
+| `iterations_this_run` | optional | number | e.g. `roadmap_tasks_invoked_this_eat_queue_run` at disposition (Layer 1). |
+| `stagnation_triggered` | optional | bool | `true` when slice exit or audit row is driven by deepen **`stagnation_suspected`**. |
 
 ### Event: `line_appended`
 
@@ -76,12 +79,19 @@ Emitted when Layer 1 **appends** a new line to `prompt-queue.jsonl` during the r
 | `consumed_forward_slot` | Roadmap line consumed as a **forward-class** initial-slot dispatch under **`forward_first`** (see `queue.mdc` A.4c). |
 | `consumed_repair_drain` | Roadmap line consumed in the **cleanup** pass (repair drain). |
 | `consumed_inline_repair_drain` | Roadmap line consumed in **Pass 3** (**inline** repair drain after **A.5b** / repair-class **A.5d** append). |
+| `consumed_inline_forward_followup_drain` | Forward-class line consumed in **Pass 3** (**inline_forward**). |
+| `partial_success_consumed` | Success consumption with slice-exit / thin-checklist path (e.g. cap or stagnation forced **subphase_slice_exit_applied**); pair with explicit next-line **`user_guidance`**. |
+| `capped_mid_run_stopped` | Optional: last successful consume when the **same** EAT-QUEUE run stopped further roadmap dispatches due to **A.5.0.2** fuse on the next candidate (best-effort attribution). |
+| `roadmap_invocation_cap_exceeded` | Rare: line removed with cap attribution; default cap block uses **`entry_skipped_no_dispatch`** with **`reason: roadmap_invocation_cap_exceeded`** instead. |
+| `stagnation_triggered` | Consumed roadmap deepen success where Roadmap return carried **`stagnation_suspected: true`** (computed in **roadmap-deepen**). |
 
-**Optional on `line_removed`:** **`queue_pass_phase`**: `initial` \| `cleanup` \| `inline` — which pass consumed the line.
+**Optional on `line_removed`:** **`queue_pass_phase`**: `initial` \| `cleanup` \| `inline` \| `inline_forward` — which pass consumed the line.
+
+**Skipped dispatch (cap):** When **A.5.0.2** blocks **`Task(roadmap)`**, emit **`event: entry_skipped_no_dispatch`** with **`reason: roadmap_invocation_cap_exceeded`** (not **`line_removed`** — the line stays in the queue).
 
 ### Event: `entry_skipped_no_dispatch`
 
-Emitted when Layer 1 **stall-skips** a line (**A.5.0**) without calling **`Task`**.
+Emitted when Layer 1 records a roadmap-class line **without** calling **`Task`**: **stall-skip** (**A.5.0**) or **`roadmap_invocation_cap_exceeded`** (**A.5.0.2** fuse). The line **remains** in `prompt-queue.jsonl`.
 
 | Field | Required | Type | Description |
 |-------|----------|------|-------------|
@@ -90,7 +100,7 @@ Emitted when Layer 1 **stall-skips** a line (**A.5.0**) without calling **`Task`
 | `eat_queue_run_id` | yes | string | Current EAT-QUEUE pass id. |
 | `queue_entry_id` | yes | string | Skipped line’s `id`. |
 | `skipped_iso` | yes | string | UTC ISO 8601 when skip was recorded. |
-| `reason` | yes | string | e.g. `hard_block_stall` |
+| `reason` | yes | string | e.g. `hard_block_stall` \| `roadmap_invocation_cap_exceeded` |
 | `queue_pass_phase` | optional | string | `initial` \| `cleanup` \| `inline` |
 | `payload_metadata` | optional | object | Per `audit_log_payload_mode`. |
 

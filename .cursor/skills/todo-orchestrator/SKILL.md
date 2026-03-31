@@ -29,6 +29,15 @@ The goal is to make “what this run intends to do” explicit as a **small todo
 
 Under the hood, the actual storage and updates are implemented via Cursor’s `TodoWrite` tool; this skill defines a **convention and contract** so all subagents behave consistently.
 
+### Helper contracts vs todos
+
+- Todos cover **run-level phases** (parse, dispatch, apply-action, nested-helpers, logging, rewrite), **not** individual nested helper calls.
+- Enforcement that a helper **must be called** (e.g. roadmap’s nested `Task(validator)` / `Task(internal-repair-agent)` / `Task(research)`, or Layer 1’s Task dispatch to pipelines) lives in:
+  - [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § Task-`attempt-before-skip` and nested helper rules,
+  - [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] (attestation invariants for `nested_subagent_ledger`),
+  - [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]] (Task launch and return logging).
+- This skill’s job is to make sure **phases** are either completed or explicitly cancelled; helper-level guarantees come from those other contracts. In some pipelines, a dedicated `nested-helpers` phase is used to connect the two layers.
+
 ## API surface (conventions for agents)
 
 Subagents do not call a separate MCP tool for this skill; instead they **follow this contract** and use the `TodoWrite` tool accordingly.
@@ -132,7 +141,7 @@ These are canonical starting points; subagents may refine them but should stay s
 ### Queue/Dispatcher (prompt-queue flow)
 
 - `parse-queue` — read, parse, validate, dedup, and order queue entries.
-- `dispatch-entries` — build hand-offs and call Task subagents (including chains); collect results.
+- `dispatch-entries` — build hand-offs and call Task subagents (including chains); collect results **only when mandated nested-helper and validator contracts are satisfied or recorded as `task_error`** per [[.cursor/rules/agents/queue.mdc|queue.mdc]] A.5 and [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] / [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]].
 - `log-watcher-result` — append one Watcher-Result line per processed entry (including chain segments).
 - `rewrite-queue` — clear passed entries only; write updated `.technical/prompt-queue.jsonl`.
 
@@ -162,6 +171,7 @@ Use run_id such as `roadmap-resume`.
 - `load-state` — read roadmap-state.md / workflow_state.md and derive current target/phase.
 - `determine-action` — merge params with Config/profile and resolve a concrete action (including smart-dispatch when `action: "auto"`).
 - `apply-action` — call the corresponding skill(s) (deepen, advance-phase, recal, revert-phase, sync-outputs, handoff-audit, resume-from-last-safe, expand, compact-depth, unfreeze_conceptual, bootstrap-execution-track).
+- `nested-helpers` — run required nested helpers (pre-deepen Research, nested Validator, IRA) and ensure Task calls, Task-Handoff-Comms rows, and `nested_subagent_ledger` steps are present or recorded as `task_error` per the roadmap nested-helper contracts.
 - `snapshot-and-log` — ensure state snapshots, workflow_state/roadmap-state updates, and any associated logging are complete.
 - `queue-followup-if-needed` — **request** the next queue action via `queue_followups` in the return to the Queue/Dispatcher when `params.queue_next !== false` (RoadmapSubagent does not write the queue file); or explicitly no follow-up when `queue_next === false`.
 

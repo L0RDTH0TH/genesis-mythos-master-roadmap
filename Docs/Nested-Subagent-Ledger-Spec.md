@@ -43,6 +43,8 @@ links:
 | `ira_after_first_pass_effective` | boolean | yes |
 | `nested_cycle_applicable` | boolean | yes |
 | `steps` | array of step records | yes — ordered by execution |
+| `pipeline_mode_used` | string | optional — `quality` \| `balance` \| `speed` from Layer 1 hand-off |
+| `effective_profile_snapshot` | object | optional — echo of canonical profile keys for operator/debug |
 
 ---
 
@@ -117,7 +119,7 @@ These rules align the ledger with [[3-Resources/Second-Brain/Subagent-Safety-Con
 
 **Forbidden (invalid attestation — skip without attempt):** `outcome` is **`skipped`** **and** `task_tool_invoked: false` on **`nested_validator_first`**, **`nested_validator_second`**, **`ira_post_first_validator`**, or **`research_pre_deepen`** when that step was **required** for this run and **`detail.reason_code`** is **not** on the allowlist below. Inspecting host **`available_functions`** (or equivalent) and emitting **`skipped`** without calling **`Task`** is **non-compliant**; the correct record is **`outcome: task_error`** with **`host_error_raw`** and **`host_error_class`** (e.g. **`nested_task_unavailable`**). **`nested_task_unavailable`** is a **`host_error_class`** value on **`task_error`** rows — **not** a free-form excuse on **`skipped`** rows.
 
-**Allowlist for honest `skipped` + `task_tool_invoked: false` (non-exhaustive — must match pipeline contract):** e.g. **`legacy_clean_log_only_no_ira`**, **`contract_skip_material_gate`**, **`unfreeze_conceptual_frontmatter_only`** (and equivalent material-gate / unfreeze-only paths), **`no_synthesis_skip_validator`**, **`research_skipped_util_gate`**, **`research_disabled_param`**, **`not_applicable_action`** when the step was genuinely out of scope; use **`chain_research_consumed`** instead of **`research_pre_deepen`** when chain consumables apply.
+**Allowlist for honest `skipped` + `task_tool_invoked: false` (non-exhaustive — must match pipeline contract):** e.g. **`legacy_clean_log_only_no_ira`**, **`pipeline_mode_medium_or_higher_ira_skipped`**, **`research_synthesis_light_skip`**, **`contract_skip_material_gate`**, **`unfreeze_conceptual_frontmatter_only`** (and equivalent material-gate / unfreeze-only paths), **`no_synthesis_skip_validator`**, **`research_skipped_util_gate`**, **`research_disabled_param`**, **`not_applicable_action`** when the step was genuinely out of scope; use **`chain_research_consumed`** instead of **`research_pre_deepen`** when chain consumables apply. For escalation documentation (not a skip excuse): **`profile_escalation_full_validation`** in **`detail.reason_code`** or return metadata when Layer 2 forces full path per [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] §5.
 
 **Per-step “required this run” (Layer 1 / operators):**
 
@@ -170,3 +172,4 @@ One record per Queue-initiated `Task` in the EAT-QUEUE run:
 | 2 | 2026-03-21 | Normative scope extended to all queue-dispatched pipelines using nested helpers; `pipeline` / `params_action` rules; `no_synthesis_skip_validator`; Run-Telemetry for all normative pipelines. |
 | 3 | 2026-03-21 | **Attestation invariants:** forbidden `invoked_ok` / `invoked_empty_ok` with `task_tool_invoked: false` on mandated helper steps; `chain_research_consumed` vs `research_pre_deepen`; `ledger_invalid_invoked_ok_without_task`, `nested_task_unavailable`; Layer 1 semantic gate (see queue.mdc A.5 b0 iii). |
 | 4 | 2026-03-29 | **Skip-without-attempt:** forbidden `skipped` + `task_tool_invoked: false` when step required; `nested_helper_skip_without_task_attempt`; `nested_task_unavailable` only as `host_error_class` on `task_error`; per-step required heuristics; Layer 1 **A.5 (b0)(iv)** + `#review-needed` path when strict (queue.mdc). |
+| 5 | 2026-03-29 | **Pipeline validator profiles:** optional top-level `pipeline_mode_used`, `effective_profile_snapshot`; allowlist `pipeline_mode_medium_or_higher_ira_skipped`, `research_synthesis_light_skip`, `profile_escalation_full_validation` (see Pipeline-Validator-Profiles). |

@@ -45,6 +45,7 @@ alwaysApply: false
     - `load-state` — read roadmap-state.md / workflow_state.md and derive current target/phase.
     - `determine-action` — merge params with Config/profile and resolve a concrete action (including smart-dispatch when `action: "auto"`).
     - `apply-action` — call the corresponding skill(s) (deepen, advance-phase, recal, revert-phase, sync-outputs, handoff-audit, resume-from-last-safe, expand, compact-depth, unfreeze_conceptual, bootstrap-execution-track).
+    - `nested-helpers` — run required nested helpers for this run (pre-deepen Research, nested Validator, IRA) and ensure their Task calls, Task-Handoff-Comms rows, and `nested_subagent_ledger` steps are present or recorded as `task_error` when they fail.
     - `snapshot-and-log` — ensure state snapshots, workflow_state/roadmap-state updates, and any associated logging are complete.
     - `queue-followup-if-needed` — **request** the next queue action (do not write the queue): return a `queue_followups` object to the Queue/Dispatcher when `params.queue_next !== false`, or explicitly request no follow-up when `queue_next === false`.
 - Around each of these phases, update the corresponding todos via `TodoWrite`:
@@ -141,7 +142,7 @@ When the **final** nested **`roadmap_handoff_auto`** verdict is **`high`** or **
 
 1. **Budget `R`:** At run start, `R` = queue entry **`incoherence_retries_remaining`** if a non-negative integer (top-level or `params`); else `R` = Config **`validator.max_incoherence_retries`** (default 1).
 
-2. **If `R > 0`:** Return **`#review-needed`** (or **`failure`** per policy) — **not** Success — with **`queue_followups.next_entry`**: `mode: "RESUME_ROADMAP"`, same `project_id`, **`params.action`:** **`recal`** default or **`handoff-audit`** when the report demands it; **`params.user_guidance`** (or `prompt`) citing **`report_path`** + boundary-restatement mandate (Validator-Tiered-Blocks-Spec §1.1); **`queue_priority: "repair"`**, **`validator_repair_followup: true`**, **`incoherence_retries_remaining: R - 1`**. Include **`blocked_scope`**, **`validator_primary_code: "incoherence"`**, **`validator_context`**, hard-block one-liner per Subagent-Safety-Contract.
+2. **If `R > 0`:** Return **`#review-needed`** (or **`failure`** per policy) — **not** Success — with **`queue_followups.next_entry`**: `mode: "RESUME_ROADMAP"`, same `project_id`, **`params.action`:** **`recal`** default or **`handoff-audit`** when the report demands it; **`params.user_guidance`** (or `prompt`) citing **`report_path`** + boundary-restatement mandate (Validator-Tiered-Blocks-Spec §1.1); **`queue_priority: "repair"`**, **`validator_repair_followup: true`**, **`incoherence_retries_remaining: R - 1`**. Include **`blocked_scope`**, **`validator_primary_code: "incoherence"`**, **`validator_context`**, hard-block one-liner per Subagent-Safety-Contract. This **Incoherence bounded retry** path is the **only** repair-class RESUME_ROADMAP branch that is allowed to emit a new repair-class follow-up; all other repair-class runs should behave as **repair-only** and terminate without emitting `queue_followups.next_entry` (see Pre-return `queue_next` contract below).
 
 3. **If `R === 0`:** No retry follow-up; return **#review-needed**/**failure** with optional **`incoherence_retries_exhausted: true`**.
 

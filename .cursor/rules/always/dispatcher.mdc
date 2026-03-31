@@ -11,7 +11,23 @@ alwaysApply: true
 
 ## Delegation and fallback
 
-- **Dispatch via Task subagent tool**: For pipeline modes (ingest, roadmap, distill, express, archive, organize, research, **validator**), the queue processor **calls the Cursor `Task` tool** with **prompt** = the full hand-off block (per Subagent-Safety-Contract) and **subagent_type** = the pipeline type (roadmap | ingest | distill | express | archive | organize | research | validator). For **ROADMAP_HANDOFF_VALIDATE**, the queue passes **model** from Config § validator.roadmap_handoff.model. The subagent runs in a separate context with only that prompt. The queue processor waits for the Task call to return, then logs Watcher-Result and continues. Pipeline subagents may in turn call only the three sanctioned **nested helper** subagents defined in the Subagent-Safety-Contract — **Internal Repair Agent (IRA)**, **Validator**, and **Research** — and may not dispatch any other pipelines directly. **PromptCraftSubagent** is **not** a nested pipeline helper: **only Layer 0 (manual)** or **Layer 1 ([[.cursor/rules/agents/queue.mdc|queue.mdc]] A.5d)** may call **`Task(prompt_craft)`**; IRA and Validator must **never** call it.
+- **Dispatch via Task subagent tool (with Task harden pass)**: For pipeline modes (ingest, roadmap, distill, express, archive, organize, research, **validator**), the queue processor **never calls the raw Task tool directly**. Instead, it MUST invoke the **Task harden pass** described in [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § **Task harden pass (capability probing, profiles, and launch modes)**:
+  - Pass **prompt** = the full hand-off block (per Subagent-Safety-Contract) and **desired_subagent_type** = the pipeline type (roadmap | ingest | distill | express | archive | organize | research | validator), along with the current **task_role** (e.g. `layer1_queue`) and **effective_pipeline_mode** / profile snapshot from Config.
+  - The harden pass:
+    - Uses the **per-run capability cache** (`available_subagents` / `raw_errors`) to decide whether this `subagent_type` is actually supported by the host.
+    - Applies the **profile-specific helper graph** (fast | balance | extreme) to decide whether this helper is **mandatory** or **out of graph** for this run.
+    - Normalizes the launch decision:
+      - `launch_mode: native_subagent` when `available_subagents[type] === true`.
+      - `launch_mode: generalPurpose_fallback` only for non-mandatory helpers when explicitly configured.
+      - Or marks the step as **blocked** (no Task call) when a **mandatory** helper is unavailable, so the parent MUST NOT report full Success.
+  - When the harden pass elects to launch, it calls the Cursor `Task` tool on behalf of this rule with the chosen `subagent_type` and a decorated prompt that includes:
+    - `task_harden_metadata.layer_role: layer1_queue`,
+    - `task_harden_metadata.launch_mode: native_subagent | generalPurpose_fallback`,
+    - `task_harden_metadata.expected_contract` identifying the contract (e.g. `roadmap_handoff_auto`, `archive_candidate`, etc.).
+  - For **ROADMAP_HANDOFF_VALIDATE**, the queue passes **model** from Config § validator.roadmap_handoff.model into the harden pass so the underlying `Task(validator)` call uses the fixed model when it is actually reachable.
+  - The subagent still runs in a separate context with only that prompt; the queue processor waits for the Task call to return, inspects the child’s `task_harden_result` footer (`task_launch_mode`, `contract_satisfied`) when present, logs Watcher-Result, and continues. When `contract_satisfied: false` on a **mandatory** contract under the active profile, Layer 1 MUST NOT treat the entry as fully successful even if the subagent text claims “Success”.
+  - Pipeline subagents may in turn call only the three sanctioned **nested helper** subagents defined in the Subagent-Safety-Contract — **Internal Repair Agent (IRA)**, **Validator**, and **Research** — and must route those nested calls through the **same Task harden pass** (task_role `helper_internal_repair_agent` / `helper_validator` / `helper_research`) instead of using raw Task.
+  - **PromptCraftSubagent** is **not** a nested pipeline helper: **only Layer 0 (manual)** or **Layer 1 ([[.cursor/rules/agents/queue.mdc|queue.mdc]] A.5d)** may call **`Task(prompt_craft)`** (again via the Task harden pass with `desired_subagent_type: "prompt_craft"`); IRA and Validator must **never** call it.
 - **Task `model` (Cursor API):** **Omit** `model` on Task calls to use the parent chat's model (inherit behavior). Use **`model: "fast"`** only when intentionally selecting the fast tier. **Never** pass `model: "inherit"` — invalid and fails validation. Validator (and similar) dispatches pass Config `model` as documented. Agent files `.cursor/agents/*.md` may use YAML `model: inherit`; that is **not** a Task payload value. See [Subagent-Safety-Contract](3-Resources/Second-Brain/Subagent-Safety-Contract.md) § Cursor Task tool: `model` parameter.
 - **All pipeline dispatch via subagent**: All pipeline-mode entries **must** be routed through the **Task** subagent tool (launch explicit subagent). There is **no same-run fallback**. If a Task call **fails**, do **not** run the pipeline inline. For that entry: append a failure line to Watcher-Result (requestId, status: failure, message e.g. "subagent launch required; Task subagent call failed"), log to Errors.md per Error Handling Protocol, do not add the entry to processed_success_ids (so it remains in the queue or is marked queue_failed at rewrite), and continue to the next entry.
 - **Watcher-Result**: If the agent cannot write to `3-Resources/Watcher-Result.md` (permission or sandbox), it logs the intended line to `3-Resources/Errors.md` (Watcher-Result fallback) and continues; queue completion is not blocked.
@@ -26,7 +42,7 @@ When the user instruction contains any of these (case-insensitive):
 - **EAT-CACHE** / **eat cache**
 - **PROCESS TASK QUEUE**
 
-then **Layer 0 (this agent) must NOT run queue logic**. Your **only** action is to **launch the Queue/Dispatcher subagent (Layer 1)** by **calling the `Task` tool once**:
+then **Layer 0 (this agent) must NOT run queue logic**. Your **only** action is to **launch the Queue/Dispatcher subagent (Layer 1)** by **calling the `Task` tool once**. Per [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § Task-`attempt-before-skip`, you **must attempt** this Task call with `subagent_type: "queue"` rather than inferring from schema that it is unavailable; treat only real Task errors as unavailability.
 
 1. **Build a hand-off** for the Queue subagent that includes:
    - Vault root (workspace path).

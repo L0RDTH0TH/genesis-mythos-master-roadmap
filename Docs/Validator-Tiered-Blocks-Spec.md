@@ -82,6 +82,14 @@ Document `primary_code` in the validator return / report when more than one code
 
 **Post–little-val (Layer 1):** Same signals; Layer 1 **appends repair follow-ups** and applies **repair-first sort** (Queue-Sources, queue.mdc). It does **not** call IRA.
 
+### 3.1 Dual-track: conceptual + missing pseudo-code
+
+**Ordering:** After classifying **hard block** vs **needs-work-only**, and **before** generic repair append for roadmap **`roadmap_handoff_auto`**:
+
+- When **`effective_track === conceptual`** (from **`layer1_resolver_hints`** / **`validator_context.effective_track`** / Queue-Sources resolution), the verdict is **needs-work-only** (not **high** / **`block_destructive`** / unconditional hard **`primary_code`**), and **`primary_code`** (or dominant missing-artifact code) is in the **missing pseudo-code / depth-4 artifact** family per Config **`queue.conceptual_pseudo_code_advisory_codes`** (e.g. **`missing_pseudo_code`**, **`pseudo_code_gap`**, **`handoff_pseudo_code_gap`**): **do not** append **Layer 1** repair lines **solely** for that **needs-work** gap. **Do not** apply **A.5b.0** execution-only fence — those primaries are **not** in **`queue.conceptual_execution_only_advisory_codes`**. Tag **`conceptual_track_compliant`** in **Watcher-Result** **`trace`** / **`message`** for audit when consumed without repair. **Hard block** with these primaries: **A.5b.0** does **not** suppress **A.5b.1–3** (repair append per **queue.mdc** **A.5b.0d**). **Execution** track keeps **repair_followup** for hard blocks; **needs_work** alone still allows Success when little val ok.
+
+See [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]] §3.4 and [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.5b.0d**.
+
 ---
 
 ## 4. Scoped block contract
@@ -137,3 +145,13 @@ See [[3-Resources/Second-Brain/Parameters|Parameters]] / [[3-Resources/Second-Br
 
 - `max_incoherence_retries` — cap guided retries for `incoherence` (default 0–1). **Wiring:** Roadmap subagent applies the decrement contract in `.cursor/agents/roadmap.md` § **Incoherence bounded retry** (and `roadmap.mdc`); Layer 1 **A.5b** uses the same formula on post–little-val repair lines when `primary_code` is `incoherence` (see Queue-Sources § Tiered validator queue fields).
 - `validator.tiered_blocks_enabled` — if false, fall back to legacy “high or block_destructive always no Success” (optional kill-switch).
+
+---
+
+## 9. Stagnation (computed; not a Validator closed-set requirement)
+
+**Roadmap circling** on the conceptual track may be detected from **`workflow_state ## Log`** (same **Target** / subphase streak with flat **Confidence**) in **roadmap-deepen** ([[.cursor/skills/roadmap-deepen/SKILL|roadmap-deepen]] §77b), surfaced as structured **`stagnation_suspected: true`** on the Roadmap Task return.
+
+- **ValidatorSubagent** **need not** emit a **`reason_code`** or **`primary_code`** for stagnation; stagnation is **not** part of the §2 closed-set unless you explicitly extend §2 in a future revision.
+- **RoadmapSubagent** and **Parameters** § Conceptual subphase exit treat **`stagnation_suspected`** as a valid **slice-exit** trigger alongside **`conceptual_max_deepen_per_subphase`** (see [[3-Resources/Second-Brain/Parameters|Parameters]] § Anti-Circling & Overnight Safety).
+- **Layer 1** may record **`stagnation_triggered`** disposition on **`prompt-queue-audit.jsonl`** when consuming a line whose Roadmap return carried the flag ([[3-Resources/Second-Brain/Docs/Queue-Audit-Log-Spec|Queue-Audit-Log-Spec]]).

@@ -19,6 +19,8 @@ Single reference for what runs when you say **EAT-QUEUE** or **PROCESS TASK QUEU
 
 The **Dispatcher** (`.cursor/rules/always/dispatcher.mdc`) routes these phrases to the **Queue rule** (`.cursor/rules/agents/queue.mdc`).
 
+**Overnight / anti-circle:** One EAT-QUEUE session caps **`Task(roadmap)`** invocations (**queue.mdc** **A.5.0.2**; default from Second-Brain-Config). Remaining roadmap lines stay on disk for the next message. Roadmap deepen uses per-subphase caps and stagnation-driven slice exit (Parameters § Anti-Circling & Overnight Safety; **roadmap-deepen**). See also [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]].
+
 ---
 
 ## Two queues
@@ -48,7 +50,7 @@ The **Dispatcher** (`.cursor/rules/always/dispatcher.mdc`) routes these phrases 
    CHECK_WRAPPERS meta-entries first, then canonical pipeline order per [Queue-Sources](../../Queue-Sources.md) (INGEST MODE → FORCE-WRAPPER → … → RESUME-ROADMAP → … → DISTILL → EXPRESS → ARCHIVE → … → CURATE-CLUSTER).
 
 6. **A.5 — Dispatch (with pre-dispatch checks)**  
-   For each entry: CHECK_WRAPPERS no-op; verify source_file exists if non-empty; validate mode and merged params. **Normalize aliases:** RECAL-ROAD, REVERT-PHASE, SYNC-PHASE-OUTPUTS, HANDOFF-AUDIT, RESUME-FROM-LAST-SAFE, EXPAND-ROAD → set `mode: "RESUME-ROADMAP"` and merge `params.action` (and phase/userText as needed). **RESUME-ROADMAP:** approved roadmap-next-step wrapper → resolve approved_option to params.action; context-tracking default-on; bootstrap (if no roadmap-state.md, dispatch ROADMAP MODE same project from queue first if present). **Match mode to pipeline:** delegate to `.cursor/agents/<name>.md` (or legacy-agents) per Subagent-Safety-Contract. Guidance-aware: feedback-incorporate when prompt or user_guidance present; pass guidance_text and hard_target_path. Process one entry fully before the next.
+   For each entry: CHECK_WRAPPERS no-op; verify source_file exists if non-empty; validate mode and merged params. **A.4z — Effective pipeline profile:** merge **`effective_pipeline_mode`** and **`effective_profile_snapshot`** into roadmap and research **`Task`** hand-offs (`layer1_resolver_hints` / `## effective_pipeline_profile`). **Post–little-val (b1):** roadmap-class entries may **profile-skip** Layer 1 hostile validator per `l1_post_lv_policy` unless **`validator_context.force_layer1_post_lv`**; see [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] and `.cursor/rules/agents/queue.mdc` **A.5 (b1)**. **Normalize aliases:** RECAL-ROAD, REVERT-PHASE, SYNC-PHASE-OUTPUTS, HANDOFF-AUDIT, RESUME-FROM-LAST-SAFE, EXPAND-ROAD → set `mode: "RESUME-ROADMAP"` and merge `params.action` (and phase/userText as needed). **RESUME-ROADMAP:** approved roadmap-next-step wrapper → resolve approved_option to params.action; context-tracking default-on; bootstrap (if no roadmap-state.md, dispatch ROADMAP MODE same project from queue first if present). **Match mode to pipeline:** delegate to `.cursor/agents/<name>.md` (or legacy-agents) per Subagent-Safety-Contract. Guidance-aware: feedback-incorporate when prompt or user_guidance present; pass guidance_text and hard_target_path. Process one entry fully before the next.
 
 7. **A.6 — Log**  
    Append one line per processed request to `3-Resources/Watcher-Result.md`: `requestId: <id> | status: success|failure | message: "..." | trace: "..." | completed: <ISO8601>`.
@@ -76,6 +78,7 @@ The **Dispatcher** (`.cursor/rules/always/dispatcher.mdc`) routes these phrases 
 
 ## References
 
+- [Pipeline-Validator-Profiles](../Pipeline-Validator-Profiles.md) — `pipeline_mode`, `effective_profile_snapshot`, L1 skip / escalation
 - [Queue-Sources](../../Queue-Sources.md) — canonical order, validation, RESUME-ROADMAP append, remove-stale
 - [Rules/Dispatcher-Rule](../Rules/Dispatcher-Rule.md)
 - [User-Flows/EAT-QUEUE-Flow](../User-Flows/EAT-QUEUE-Flow.md)

@@ -18,6 +18,261 @@ When Layer 0, Layer 1, or a pipeline invokes the Cursor **Task** tool: **omit** 
 
 ---
 
+## Task-`attempt-before-skip` invariant (all Task callers)
+
+- When this contract (or a pipeline / queue rule that cites it) says a subagent **must** be called – for example:
+  - Layer 0 → Layer 1 `Task(subagent_type: "queue")` for EAT-QUEUE / PROCESS TASK QUEUE,
+  - Layer 1 → pipeline `Task` for modes such as `INGEST_MODE`, `ROADMAP_MODE`, `RESUME_ROADMAP`, `DISTILL_MODE`, `EXPRESS MODE`, `ARCHIVE MODE`, `ORGANIZE MODE`, `RESEARCH_AGENT`, `VALIDATE`, `ROADMAP_HANDOFF_VALIDATE`,
+  - Layer 2 → nested helper `Task` for `research_pre_deepen`, `nested_validator_first` / `nested_validator_second`, `ira_post_first_validator`,
+- then the caller **MUST attempt a real Cursor `Task` call** with the intended `subagent_type` at least once in that run.
+- Callers **MUST NOT** skip a mandated helper or pipeline dispatch purely because schema metadata or examples make that `subagent_type` look unavailable. The only allowed “did not run” outcome for a required helper is a real Task failure, recorded as `outcome: task_error` with a concrete `host_error_class` (e.g. `invalid_enum`, `nested_task_unavailable`, `resource_exhausted`) in the nested ledger and mirrored in [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]] records.
+- For any run where this invariant applies, **compliance can be audited** by checking:
+  - `.technical/task-handoff-comms.jsonl` for a `handoff_out` / `return_in` pair whose `subagent_type` matches the required helper or pipeline and whose `task_correlation_id` (or `parent_task_correlation_id` for nested helpers) matches the run’s `pipeline_task_correlation_id`, and
+  - the pipeline’s `nested_subagent_ledger` (when present) for a step row with `task_tool_invoked: true` or `outcome: task_error` on the mandated helper `step` id.
+- When the Task tool itself is genuinely unavailable or rejects the call, callers must:
+  - record `task_error` with `host_error_raw` / `host_error_class` in the ledger,
+  - append a `handoff_out` / `return_in` pair to `.technical/task-handoff-comms.jsonl`, and
+  - **not** claim Success with `little_val_ok: true` when the safety contract still required that helper for this run.
+
+---
+
+## Task harden pass (capability probing, profiles, and launch modes)
+
+All `Task` callers (Layer 0, Layer 1, and Layer 2 nested helpers) MUST route their Task invocations through a **Task harden pass**. The harden pass is a **pure wrapper** around the Cursor Task tool that:
+
+- Probes which `subagent_type` values are actually usable in the current host.
+- Caches those capabilities for the rest of the run.
+- Normalizes launch decisions (native vs fallback vs skipped) based on an explicit **profile**.
+- Decorates hand-offs and returns with machine-readable metadata so deviations from the ideal contract are auditable.
+
+### 1. Capability probe and per-run cache
+
+- **When to probe**
+  - On the **first** Task use per conversation/run, the harden pass MUST:
+    - Attempt a **no-op Task call** for each expected pipeline subagent type:
+      - `queue`, `roadmap`, `ingest`, `distill`, `express`, `archive`, `organize`, `research`, `validator`,
+      - plus any additional, explicitly-whitelisted helper types such as `prompt_craft`, `internal-repair-agent`.
+    - Use a trivial prompt such as `"ping (capability probe only)"` that makes it clear to the callee that no real work is required.
+  - These probe calls exist **only** to discover whether a given `subagent_type` is accepted by the host; pipeline logic MUST ignore their semantic content.
+
+- **Interpreting probe results**
+  - The harden pass MUST treat each probe outcome as:
+    - **available** when the Task call succeeds (normal return from the subagent, regardless of its textual content).
+    - **unavailable** only when the Task host explicitly rejects the `subagent_type` (e.g. enum/validation error, schema mismatch) or when the model signals that the Task tool itself is not usable.
+  - Probes MUST NOT infer unavailability from examples, documentation, or schema guesses alone.
+
+- **Capabilities cache (per run, in-memory)**
+  - The harden pass maintains an **in-memory** cache for the remainder of the run:
+    - `available_subagents: { [subagent_type: string]: boolean }`
+      - e.g. `{ queue: true, roadmap: true, validator: false, research: true, ... }`.
+    - `raw_errors: { [subagent_type: string]: string }`
+      - first failure / rejection message per type, for diagnostics.
+  - Once populated, this cache MUST be treated as the single source of truth for whether a given `subagent_type` is usable **in this run**.
+
+- **Guardrail**
+  - After the probe:
+    - No caller may claim that a particular `subagent_type` is unavailable unless `available_subagents[type] === false` **and** there is a corresponding `raw_errors[type]` describing the Task host rejection.
+    - No caller may assume new `subagent_type` values outside this set; use of unknown types is a contract violation.
+
+### 2. Profiles and normalized launch decisions
+
+Every Task launch MUST pass through a small decision function controlled by:
+
+- `desired_subagent_type`: the intended subagent (`roadmap`, `validator`, `archive`, `research`, …).
+- `task_role`: role of the caller (e.g. `layer0_chat`, `layer1_queue`, `layer2_roadmap`, `helper_validator`).
+- `pipeline_profile`: the active safety/speed tier for this pipeline:
+  - `fast` — minimal helper set.
+  - `balance` — default helper set (recommended).
+  - `extreme` — maximal helper set (all helpers enabled).
+
+**Helper graph per profile**
+
+- For each pipeline mode, maintain a **profile-specific helper graph** that lists which nested helpers are:
+  - **selected** for that profile (must run when reachable), or
+  - **not selected** (optional or unused for that profile).
+- Once a helper is selected for the current profile, it becomes **mandatory** for that run:
+  - If it appears in the helper graph for this profile and step, failure to run it cleanly MUST block `Success` for that step, even when capability probes indicate the host cannot supply it.
+
+**Branching logic (per launch)**
+
+Given `desired_subagent_type` and the profile/helper graph:
+
+1. If `available_subagents[desired_subagent_type] === true`:
+   - Launch Task with that `subagent_type` and the full hand-off prompt.
+   - Mark `launch_mode: native_subagent` in both:
+     - the hand-off metadata, and
+     - the child’s required return footer.
+
+2. If `available_subagents[desired_subagent_type] === false` **and** the helper is **not selected** by the current profile (out of graph):
+   - Treat this helper as **out of graph** for this run:
+     - Do **not** call Task for it.
+     - Do **not** require it for `Success`.
+   - Record a ledger row (when applicable) indicating:
+     - `outcome: not_applicable`,
+     - `task_tool_invoked: false`,
+     - `detail.reason_code: helper_not_selected_for_profile`.
+
+3. If `available_subagents[desired_subagent_type] === false` **and** the helper **is selected** by the current profile (mandatory):
+   - **Do not** attempt `generalPurpose` emulation for this mandatory helper.
+   - Treat the overall step as **blocked**:
+     - Mark a ledger row for that helper step with `outcome: task_error`, `task_tool_invoked: false`, `detail.host_error_class: "task_enum_missing"` (or equivalent), and `detail.host_error_raw` from `raw_errors[desired_subagent_type]` when present.
+     - Propagate this into the parent status: the pipeline or parent helper MAY NOT return overall `Success` for this step; it MUST return `#review-needed` or `failure`.
+
+4. **Optional generalPurpose fallback (non-mandatory helpers only)**
+   - When a helper is **not selected** for the current profile (non-mandatory) but the pipeline wishes to attempt an emulation via `generalPurpose`, it MAY:
+     - Launch `Task(subagent_type: "generalPurpose")` with an explicit YAML preamble describing the expected contract.
+     - Mark this in the outbound metadata as `launch_mode: generalPurpose_fallback`.
+   - The harden pass MUST treat this as a **best-effort** optimization:
+     - Fallback results MUST NOT be used to pretend that the ideal helper actually ran.
+     - Failure or absence of this fallback MUST NOT be allowed to gate or fake `Success` for any **mandatory** helper.
+
+### 3. Hand-off and return metadata
+
+To make Task launches and their outcomes auditable, the harden pass MUST decorate both outbound prompts and inbound returns.
+
+**Outbound (hand-off decoration)**
+
+- For every Task launch (Layer 0, Layer 1, or Layer 2), prepend or append a small YAML block to the prompt that includes at least:
+
+```yaml
+task_harden_metadata:
+  layer_role: layer0_chat | layer1_queue | layer2_roadmap | layer2_ingest | helper_validator | helper_research | helper_internal_repair_agent | ...
+  launch_mode: native_subagent | generalPurpose_fallback
+  expected_contract: "<short identifier, e.g. roadmap_handoff_auto, archive_candidate, distill_readability>"
+```
+
+- This block is **advisory** for the child but **normative** for observability:
+  - `layer_role` tells observability tools where in the stack the call originated.
+  - `launch_mode` binds the invocation to the capability decision taken by the harden pass.
+  - `expected_contract` names the target contract so validators and auditors can align behavior with specs.
+
+**Inbound (child result decoration)**
+
+- Every subagent (pipeline or helper) MUST end its return with a short, machine-readable footer (e.g. fenced `yaml`) that includes:
+
+```yaml
+task_harden_result:
+  task_launch_mode: native_subagent | generalPurpose_fallback
+  contract_satisfied: true | false
+  nested_subagent_ledger_ref: "<optional pointer or summary>"  # when ledger is present
+```
+
+- The child:
+  - MUST set `task_launch_mode` to match the outbound `launch_mode` it observed in its hand-off.
+  - MUST set `contract_satisfied` to `false` whenever:
+    - It skipped a mandatory step it was contracted to perform, or
+    - It encountered an unrecoverable error that prevents it from fulfilling its contract.
+
+**Parent-side enforcement**
+
+- The parent harden pass (caller of Task) MUST:
+  - Inspect `task_harden_result` on the child’s return.
+  - **Refuse** to upgrade a run to full `Success` when:
+    - `contract_satisfied: false`, **and**
+    - the corresponding helper was mandatory under the active profile, or the pipeline contract labels it “hard gate”.
+  - In such cases, it MUST:
+    - Mark the parent status as `#review-needed` or `failure`, and
+    - Ensure that Layer 1 does not add the originating queue entry to `processed_success_ids` when strict nested gates are enabled.
+
+### 4. Error logging and observability hooks
+
+**Errors.md integration**
+
+- On the **first failure per subagent type** in a run (e.g. `roadmap`, `validator`, `research`, `internal-repair-agent`, `prompt_craft`), the harden pass SHOULD:
+  - Append an Errors.md entry summarizing:
+    - The attempted `subagent_type`.
+    - The host error (`host_error_class`, `host_error_raw`) captured from Task.
+    - Whether a `generalPurpose` fallback was attempted and with what outcome.
+  - Use `error_type` such as `task_dispatch_failure` or `task_enum_missing`.
+
+**Task-handoff-comms.jsonl**
+
+- The harden pass MUST continue to log every Task call as described in [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]], and additionally:
+  - Include `launch_mode` in the JSONL rows (e.g. in a field such as `launch_mode` or within a small `task_harden` object).
+  - On `return_in`, include:
+    - The parsed `contract_satisfied` flag when present.
+    - Any `fallback_reason` (e.g. `helper_not_selected_for_profile`, `task_enum_missing`, `generalPurpose_fallback_failed`).
+
+**Watcher-Result neutrality**
+
+- When a pipeline is degraded because:
+  - A mandatory helper was blocked by host capabilities, or
+  - A `generalPurpose` fallback failed and the contract remained unsatisfied,
+  - the parent MUST keep **Watcher-Result** lines human-neutral but:
+    - Include a short machine tag in the `trace` or message such as:
+      - `launch_mode=generalPurpose_fallback`,
+      - `contract_satisfied=false`,
+      - `mandatory_helper_unavailable=validator`.
+
+### 5. Layered responsibilities
+
+- **Layer 0 (chat / manual entry)**
+  - MUST use the Task harden pass when launching `Task(subagent_type: "queue")` for EAT-QUEUE / PROCESS TASK QUEUE.
+  - MUST run the capability probe once per conversation and pass the resulting capabilities snapshot to Layer 1 as part of the queue hand-off (e.g. under a telemetry or `task_harden_caps` section).
+
+- **Layer 1 (Queue/Dispatcher)**
+  - MUST use the provided capabilities snapshot (and update it if it runs additional probes) to decide:
+    - Whether to launch `Task(roadmap)`, `Task(validator)`, etc. natively,
+    - Whether to attempt an optional `generalPurpose` fallback, or
+    - Whether to treat a helper as out-of-graph under the active profile.
+  - MUST apply stricter behavior when `queue.strict_nested_return_gates` is enabled:
+    - No consuming of entries as `Success` when a mandatory helper shows `contract_satisfied: false` or a required step was skipped.
+
+- **Layer 2 (pipeline subagents and nested helpers)**
+  - MUST treat `task_harden_metadata` in their hand-offs as **read-only context**:
+    - They MUST NOT re-probe capabilities on their own.
+    - They MUST respect `expected_contract` when populating `contract_satisfied`.
+  - MUST emit clear `nested_subagent_ledger` entries (where applicable) that distinguish:
+    - `invoked_ok` / `task_error` for **native** helper calls.
+    - `invoked_ok` / `task_error` for **generalPurpose** fallback calls.
+    - `not_applicable` / `skipped` when the host could not supply any Task channel and the helper was not mandatory for this profile.
+
+### 6. Guardrails to prevent capability “lies”
+
+- No agent MAY:
+  - Claim that `Task(roadmap)` or `Task(validator)` (or any other enumerated subagent) is unavailable **without**:
+    - A prior probe result in the capabilities cache, and
+    - A recorded `raw_errors[type]` / Task-Handoff-Comms pair showing the rejection.
+- No agent MAY:
+  - Report a pipeline run as fully `Success` when a **mandatory** nested helper for that run:
+    - Was not launched (no Task-Handoff-Comms pair, no ledger step), and
+    - Has no allowed reason code marking it as out-of-graph for this profile.
+- Any deviation from the ideal helper graph MUST:
+  - Be reflected in the parent status (`#review-needed` or `failure` rather than `Success`), and
+  - Leave a durable trail in **Errors.md**, `.technical/task-handoff-comms.jsonl`, `nested_subagent_ledger`, or `.technical/queue-continuation.jsonl` sufficient for later audit.
+
+### 7. Rollout phases (non-invasive → strict → profiled)
+
+- **Phase 1 — Non-invasive wrapper**
+  - Implement the Task harden pass as a pure wrapper:
+    - Run capability probes and maintain `available_subagents` / `raw_errors`.
+    - Decorate hand-offs and returns with `task_harden_metadata` / `task_harden_result`.
+    - Log `launch_mode` and basic degradation markers, but:
+      - **Do not** yet change success/failure semantics; treat metadata as advisory.
+
+- **Phase 2 — Strict gating**
+  - Enable strict enforcement for mandatory helpers:
+    - Block `Success` when `contract_satisfied: false` on a mandatory contract.
+    - Treat missing Task calls for mandated helpers as structural violations under strict nested gates.
+
+- **Phase 3 — Configurable profiles**
+  - Tie the helper graph and strictness into [[3-Resources/Second-Brain-Config|Second-Brain-Config]]:
+    - Use config keys such as `pipeline_mode` and `queue.strict_nested_return_gates` to select `fast` / `balance` / `extreme`.
+    - Allow high-safety profiles to require maximal helpers and strict gating.
+    - Allow experimental or low-safety profiles to run with a smaller helper set and softer fallbacks (while still never falsifying helper usage in logs).
+
+## Reusable Task-launch preamble (for hand-off prompts)
+
+When defining hand-off prompts for Task-based subagents (Layer 0 → Layer 1, Layer 1 → pipelines, Layer 2 → nested helpers), agents SHOULD include or reference the following preamble (adapted to the specific subagent name and type):
+
+> You MUST treat yourself as having been launched via the Cursor Task tool with `subagent_type: "<name>"`.  
+> Do NOT claim that the Task tool or this `subagent_type` is unavailable – you must assume the call succeeded, and if anything failed it will appear as a concrete Task error outside your context.  
+> Do NOT silently simulate other pipelines or helpers; if validation or repair work is required, it is performed only via your own skills or via nested Task calls that are recorded in the nested_subagent_ledger and Task-Handoff-Comms logs.
+
+Agent files under `.cursor/agents/` and queue / pipeline rules SHOULD reference this preamble (by name) instead of inventing new, weaker language about “trying” to call Task. All three observability pillars – `nested_subagent_ledger`, `Task-Handoff-Comms`, and Run-Telemetry – rely on this invariant.
+
+---
+
 ## Mandatory hand-off prompt structure
 
 When the main agent delegates, it MUST prefix the delegation with this structure (copy-paste into every delegation):
@@ -50,7 +305,7 @@ Execute the task. Return only:
 • **Optional:** A **chain_request** object (see § Subagent chaining) if this run needs work from another pipeline before it can finish; the primary will run dependencies then re-launch this subagent with results.
 • **RoadmapSubagent — queue continuation:** End the return with a **fenced YAML** block rooted at **`queue_continuation:`** per [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] (schema_version 1) on every run so Layer 1 can append **`.technical/queue-continuation.jsonl`** and run **empty-queue bootstrap** when configured.
 • **RoadmapSubagent — `queue_followups` (RESUME_ROADMAP):** When the queue entry is **`RESUME_ROADMAP`** (chain: **primary** segment) and **`params.queue_next !== false`** (absent = true) and you return **Success**, you **MUST** include **`queue_followups.next_entry`** in the Task return text so Layer 1 **A.5c** can **read-then-append** — unless a **terminal** stop in [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § **`effective_followup_required`** applies. Set **`queue_continuation.suppress_followup: false`** when **`next_entry`** is present. If **`next_entry`** is omitted without a terminal reason, Layer 1 **A.5c.1** may synthesize a line (Config **`queue.synthesize_followup_when_queue_next_true`**) and log **`queue_next_contract_violation_recovered`**. Full checklist: [[.cursor/agents/roadmap|agents/roadmap.md]] § Return.
-• **Pipeline return metadata (little val + validator):** When you are a **pipeline** subagent (ingest, roadmap, distill, express, archive, organize, research) and you return **Success**, you **MUST** include in your return: **(1)** `little_val_ok: true` or `little_val_ok: false` (true only when the final little val verdict for this run was `ok: true`). **(2)** When `little_val_ok: true`, a **validator_context** object that describes what you validated: `validation_type` (string, per Queue-Sources § Post-pipeline validator), `project_id` (or "-"), and the type-specific params required by the Validator rule for that validation_type (e.g. source_file, proposed_path, para_type, ingest_conf for ingest_classification; source_file for distill_readability; project_id and state paths for roadmap_handoff_auto; synth_note_paths for research_synthesis). You MAY also include `validator_first_pass` metadata (severity, recommended_action, report_path) from your nested validator call so the queue can compare its own hostile pass. Pipelines that do not use little val (e.g. research) set `little_val_ok: true` when the run succeeded and provide validator_context when a validation_type applies.
+• **Pipeline return metadata (little val + validator):** When you are a **pipeline** subagent (ingest, roadmap, distill, express, archive, organize, research) and you return **Success**, you **MUST** include in your return: **(1)** `little_val_ok: true` or `little_val_ok: false` (true only when the final little val verdict for this run was `ok: true`). **(2)** When `little_val_ok: true`, a **validator_context** object that describes what you validated: `validation_type` (string, per Queue-Sources § Post-pipeline validator), `project_id` (or "-"), and the type-specific params required by the Validator rule for that validation_type (e.g. source_file, proposed_path, para_type, ingest_conf for ingest_classification; source_file for distill_readability; project_id and state paths for roadmap_handoff_auto; synth_note_paths for research_synthesis). You MAY also include `validator_first_pass` metadata (severity, recommended_action, report_path) from your nested validator call so the queue can compare its own hostile pass. When **profile safety escalation** applies ([[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] §5), set **`validator_context.force_layer1_post_lv: true`** so Layer 1 **does not** profile-skip post–little-val on roadmap-class dispatches. Pipelines that do not use little val (e.g. research) set `little_val_ok: true` when the run succeeded and provide validator_context when a validation_type applies.
 • **Validator hard-block explanation (required when severity is high):** If your nested validator (or any validator you ran as part of the pipeline) returned **`severity: "high"`** or **`recommended_action: "block_destructive"`**, you MUST include **one sentence** in your return explaining **why** it is a hard block (e.g. “Hard block because contradictions make the plan non-executable.”). This applies even when your overall status is **#review-needed** (i.e., do not hide the rationale behind “validator_context omitted”). **Do not treat `recommended_action: "needs_work"` as a hard block**; it is non-blocking guidance.
 
 • **Tiered nested validator Success gate (pipelines):** After the **final** nested ValidatorSubagent pass for this run: **never** return **Success** if **`severity: "high"`** or **`recommended_action: "block_destructive"`**. When **Second-Brain-Config** `validator.tiered_blocks_enabled` is **true** (default), you **may** return **Success** if the final verdict is **`recommended_action: "needs_work"`** with **`severity: medium`** (or low) and **not** `block_destructive`, **and** final little val is `ok: true` (for CODE pipelines). This applies most strictly to **`roadmap_handoff_auto`** per [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Spec|Validator-Tiered-Blocks-Spec]] §3; other `validation_type`s use the same pattern when they emit `needs_work` without high/block. When **`validator.tiered_blocks_enabled`** is **false**, still block Success only on **`high`** / **`block_destructive`** (unchanged). **Return metadata on hard block:** include **`blocked_scope`** `{ project_id, phase_ids?, paths? }` and optional **`validator_primary_code`** when available.
@@ -235,7 +490,17 @@ chain_request:
 - **Queue clearing:** Only the Queue/Dispatcher (primary) agent removes processed entries from `.technical/prompt-queue.jsonl` (by omitting lines whose id is in processed_success_ids at step A.7). Subagents may **append** lines only; they must not remove or rewrite the entry they were invoked for. The primary must add that entry's id to processed_success_ids when the subagent returns success. **For chained runs:** the "processed" entry is the **original** chain entry; it is only added to processed_success_ids after the first subagent has been re-invoked (with resume_from_chain_request and collected dependency results) and has returned successfully the second time.
 - **Queue clearing / mutation:** Only the Queue/Dispatcher (primary) agent reads/writes `.technical/prompt-queue.jsonl` and `3-Resources/Task-Queue.md`. Subagents must not read or write queue files. The primary removes processed entries by omitting ids in `processed_success_ids` at step A.7. Any follow-ups (next RESUME_ROADMAP, RECAL-ROAD, dependencies for chain_request) are appended by the primary based on subagent return metadata.
 - **Run-Telemetry:** Before returning, subagents SHOULD write one Run-Telemetry note to `.technical/Run-Telemetry/` with **required** fields (actor, project_id, queue_entry_id, timestamp; parent_run_id from hand-off) and **any optional fields you have**; omit the rest. See [[3-Resources/Second-Brain/Vault-Layout]] § .technical/Run-Telemetry and [[3-Resources/Second-Brain/Logs#Run-Telemetry|Logs § Run-Telemetry]].
-- **Post–little-val hostile validator (queue-level double-check):** The queue **MUST** run the **ValidatorSubagent** once per pipeline run **after** the pipeline returns Success **and** `little_val_ok: true`, using `validator_context` from the pipeline’s return. This queue-driven validator pass is an **independent hostile check** (to detect validator drift or hallucinations) and runs before the queue adds the entry to processed_success_ids. It MUST be read-only on inputs and follow the same Validator contract. There is **no sampling and no config gate** for this pass; it is always executed when `little_val_ok: true` and `validator_context` are present. **Legacy path:** If `validator_context` is missing, `queue.mdc` may skip this pass and still consume the entry unless **`queue.strict_nested_return_gates`** is **true** (then consumption is refused; see Queue-Sources § Post-pipeline validator, Parameters § Queue nested attestation). See Queue-Sources § Post-pipeline validator and Parameters § Validator.
+- **Post–little-val hostile validator (queue-level double-check):** The queue **MUST** run the **ValidatorSubagent** once per pipeline run **after** the pipeline returns Success **and** `little_val_ok: true`, using `validator_context` from the pipeline’s return — **except** when **`queue.mdc` A.5 (b1a)** profile gate **skips** L1 for **roadmap-class** entries per [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] (`l1_post_lv_policy`). **Non-roadmap** pipelines and **`validator_context.force_layer1_post_lv: true`** always run L1 when other gates pass. This pass is an **independent hostile check**; it MUST be read-only on inputs. When L1 runs after **`force_layer1_post_lv`**, **Watcher-Result** (**`segment: VALIDATE`**) **`message`** **must** begin with **`profile_escalation_full_validation:`** (per `queue.mdc`). **Legacy path:** If `validator_context` is missing, `queue.mdc` may skip this pass and still consume the entry unless **`queue.strict_nested_return_gates`** is **true**. See Queue-Sources § Post-pipeline validator, `queue.mdc` **A.4z** / **(b1)**, Parameters § Pipeline validator profiles.
+
+---
+
+## Rollout and verification notes (Task force-attempt hardening)
+
+- **Phase 1 (roadmap + queue focus):** Prefer to test this contract first on `RESUME_ROADMAP` and related roadmap-class modes. After updating docs/rules, run EAT-QUEUE on a small test queue; confirm that:
+  - Every roadmap dispatch that claims to have invoked nested helpers has matching Task-Handoff-Comms rows and `nested_subagent_ledger` entries with `task_tool_invoked: true` or `outcome: task_error`.
+  - No run reports roadmap Success with `little_val_ok: true` when nested helpers were required but no Task-Handoff-Comms rows exist for them.
+- **Phase 2 (other pipelines):** Extend the same expectations to ingest, archive, organize, distill, express, and research where they are documented to call Validator / IRA / Research as nested helpers.
+- **Diagnostics:** When a run fails solely because a required Task call errored (e.g. `host_error_class: invalid_enum` or `nested_task_unavailable`), prefer clear Errors.md entries that name the failing `subagent_type` and recommend operator fixes, and ensure the originating queue entry is left unconsumed for later repair.
 
 ---
 

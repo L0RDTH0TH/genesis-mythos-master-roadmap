@@ -27,10 +27,11 @@ description: Advances roadmap to the next phase when gate conditions are met. Sn
 
 3. **Optional MOC check (before Gate):** Optionally verify the current phase roadmap note (path derived from roadmap-state current_phase) contains a Dataview block whose FROM path is that phase folder. If the phase folder has child notes and the phase note **lacks** the block, log to [Errors](3-Resources/Errors.md) with `error_type: roadmap-moc-missing` and `#review-needed`; do not update state; optionally create a Decision Wrapper under `Ingest/Decisions/Roadmap-Decisions/` ("Phase N missing MOC block"). See [roadmap-validate](.cursor/skills/roadmap-validate/SKILL.md) step 5 and [Roadmap-Quality-Guide](3-Resources/Second-Brain/Roadmap-Quality-Guide.md) § MOC violation check.
 
-4. **Gate (depth-aware; wrapper overrides)**:
+4. **Gate (depth-aware; wrapper overrides; dual-track per [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]] §3.2)**:
    - If **wrapper_approved** (user chose advance on a roadmap-next-step wrapper): proceed.
    - Else **current_phase ≤ 4:** Advance if **handoff-audit(current_phase) ≥ 70%** OR **depth ≥ 3 coverage ≥ 80%** (i.e. at least 80% of secondaries under current phase have at least one tertiary). If not met, abort and log; do not update state.
-   - Else **current_phase ≥ 5:** Require **handoff-audit(current_phase) ≥ 85%** AND at least one **depth-4 note with a pseudo-code block** under current phase (per canonical target). If not met, abort and log; do not update state.
+   - Else **current_phase ≥ 5** and **`active_track` === `conceptual`:** Require **handoff-audit(current_phase) ≥ 85%** only. **Do not** require a depth-4 pseudo-code block on the conceptual tree (NL / checklist completeness is sufficient per dual-track spec).
+   - Else **current_phase ≥ 5** and **`active_track` === `execution`:** Require **handoff-audit(current_phase) ≥ 85%** AND at least one **depth-4 note with a pseudo-code block** under current phase (per canonical target). If not met, abort and log; do not update state.
 
 5. **Update roadmap-state**:
    - Append current_phase to **completed_phases** (array).
