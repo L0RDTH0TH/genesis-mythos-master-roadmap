@@ -70,6 +70,37 @@ If either fails: skip the destructive action; log #review-needed; continue with 
 
 ---
 
+## Helper profiles, mandatory helpers, and honesty (no pretending)
+
+This section summarizes the **helper profile** rules from [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] and [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] so they are visible from one place.
+
+- **Profiles:** Every Task launch runs under a **pipeline profile**:
+  - `fast` — minimal helper set.
+  - `balance` — default helper set; recommended for normal runs.
+  - `extreme` — maximal helper set; strictest enforcement and observability.
+- **Helper graphs per profile:**
+  - For each pipeline mode, the helper graph defines which nested helpers (Validator, IRA, Research) are **selected** for that profile.
+  - Once a helper is **selected** for the active profile, it becomes **mandatory** for that run:
+    - The caller **must** attempt a real `Task(subagent_type: ...)` for that helper (**attempt-before-skip**).
+    - If the Task host rejects the call or the tool is missing, the step must be recorded as `outcome: task_error` with `host_error_class` / `host_error_raw` in `nested_subagent_ledger`, and the overall status must be `#review-needed` or `failure` — not Success.
+    - It is **never** permissible to silently skip a mandatory helper or to claim it ran without a real Task call.
+- **Profile semantics:**
+  - `balance` / `extreme`:
+    - All helpers selected in the helper graph for that profile are **hard mandatory** for the run.
+    - Skipping them is only permitted via recorded `task_error` with concrete host error details; Success is blocked when a mandatory helper is missing or only marked `skipped` without an allowed reason code.
+  - `fast`:
+    - May select a smaller helper graph, but for any helper that **is** selected, the same mandatory semantics apply.
+- **No misrepresentation / honesty gate:**
+  - No subagent may:
+    - Report **Success** with `little_val_ok: true` when a mandatory helper step was never actually attempted as a Task call and has no valid `task_error` ledger row.
+    - Use `outcome: invoked_ok` or `invoked_empty_ok` with `task_tool_invoked: false` on mandated helper steps (see [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] Attestation invariants).
+    - Use `outcome: skipped` + `task_tool_invoked: false` on a required helper step unless `detail.reason_code` is in the documented allowlist (material gate, legacy clean skip, chain consumables, etc.).
+  - When these honesty conditions are not met, the run **must** be treated as `#review-needed` or `failure`; Layer 1 strict gates (`queue.strict_nested_return_gates`) prevent queue entries from being cleared as successful in this state.
+
+These profile and honesty rules apply **in addition to** the backup, snapshot, and confidence-band invariants above; they do not weaken any existing safety guarantees.
+
+---
+
 ## No shell vault ops
 
 - **Never** use shell `cp`, `mv`, or `rm` to mutate Obsidian vault contents.
