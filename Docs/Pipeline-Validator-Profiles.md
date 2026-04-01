@@ -26,7 +26,7 @@ links:
 
 ## 1. Resolution order
 
-1. If merged queue entry has valid **`params.pipeline_mode`** ∈ `quality` | `balance` | `speed`, use it.
+1. If merged queue entry has valid **`params.pipeline_mode`** ∈ `fast` | `balance` | `extreme`, use it.
 2. Else use top-level **`pipeline_mode`** from [[3-Resources/Second-Brain-Config|Second-Brain-Config]] (default **`balance`**).
 3. Else treat as **`balance`**.
 4. Load **`validator_profiles[pipeline_mode]`** from Config. If the key is missing, use **`validator_profiles.balance`**.
@@ -62,9 +62,9 @@ Numeric thresholds are duplicated for operator visibility in [[3-Resources/Secon
 
 | `pipeline_mode` | `l1_post_lv_policy` | `nested_ira_policy` | `research_synthesis_depth` | `target_nested_validator_passes` |
 |-----------------|---------------------|---------------------|-----------------------------|----------------------------------|
-| **quality** | `always` | `always` | `full` | 4 |
+| **extreme** | `always` | `always` | `full` | 4 |
 | **balance** | `conditional_nonhard_skip` | `clean_skip` | `light` | 2 |
-| **speed** | `minimal` | `medium_or_higher` | `fast` | 2 |
+| **fast** | `minimal` | `medium_or_higher` | `fast` | 2 |
 
 ---
 

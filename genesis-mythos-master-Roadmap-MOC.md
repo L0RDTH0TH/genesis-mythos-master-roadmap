@@ -1,19 +1,22 @@
 ---
 title: genesis-mythos-master Roadmap MOC
-created: 2026-03-29
-tags: [roadmap, moc, genesis-mythos-master]
+created: 2026-03-30
+tags:
+  - roadmap
+  - moc
+  - genesis-mythos-master
 para-type: Project
 status: active
 project-id: genesis-mythos-master
 links:
-  - "[[genesis-mythos-master-Roadmap-2026-03-29-1730]]"
+  - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
 ---
 
 # genesis-mythos-master — Roadmap MOC
 
 ## Master roadmap
 
-- [[genesis-mythos-master-Roadmap-2026-03-29-1730]]
+- [[genesis-mythos-master-Roadmap-2026-03-30-0430]]
 
 ## All phase roadmaps
 
@@ -26,7 +29,7 @@ SORT phase-number ASC, subphase-index ASC, file.name ASC
 
 ## State & logs
 
-- [[Roadmap/roadmap-state]]
-- [[Roadmap/workflow_state]]
-- [[Roadmap/decisions-log]]
-- [[Roadmap/distilled-core]]
+- [[roadmap-state]]
+- [[workflow_state]]
+- [[decisions-log]]
+- [[distilled-core]]

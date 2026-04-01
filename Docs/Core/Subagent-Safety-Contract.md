@@ -18,6 +18,41 @@ When Layer 0, Layer 1, or a pipeline invokes the Cursor **Task** tool: **omit** 
 
 ---
 
+## Roadmap MCP vs inline-edit behavior (Task environments)
+
+- **Scope**: This section refines how the **roadmap subagent and its skills** (e.g. `roadmap-deepen`, structural little val, roadmap validators) behave when they run inside a Cursor **Task** environment where Obsidian MCP tools may or may not be available.
+- **Single capability probe per roadmap run**:
+  - At the **start** of each `Task(subagent_type: "roadmap")` invocation, the roadmap subagent MUST perform **one lightweight capability probe** to determine whether Obsidian MCP tools are usable in this environment (for example, a benign `obsidian_read_note` on a known-safe path or an equivalent no-op).
+  - It MUST interpret this as:
+    - `mcp_available: true` when the representative call succeeds, or
+    - `mcp_available: false` only when the host clearly rejects the MCP call or the Obsidian MCP server is unreachable.
+  - The probe result MUST be cached in a **per-run capabilities object** (e.g. `roadmap_capabilities: { mcp_available: boolean }`) and **passed down** to roadmap skills (`roadmap-deepen`, little-val structural checks, roadmap validator glue). Individual skills MUST NOT re-probe Obsidian MCP independently.
+- **Two-path contract (preferred vs fallback)**:
+  - When `mcp_available: true`:
+    - Roadmap skills **must** use the normal **MCP path**:
+      - All structural mutations to roadmap artifacts (phase notes, `roadmap-state.md`, `workflow_state.md`, decisions-log, etc.) go through `obsidian_*` tools with backup/snapshot/dry_run gates.
+      - Confidence bands, snapshot rules, and destructive-action guards from core-guardrails apply exactly as documented.
+  - When `mcp_available: false`:
+    - Roadmap skills **must switch to the inline-edit path**, treating Obsidian MCP as temporarily unavailable but **not** treating that as permission to skip the roadmap pipeline **or any mandated nested helper**:
+      - Use Cursor’s file tools (`Read`/`ApplyPatch` primitives) to read and write markdown files for roadmap artifacts, while honoring the **intent** of backups/snapshots and confidence bands from core-guardrails as best as the host allows.
+      - Continue to uphold the invariant that shell `cp`/`mv`/`rm` are never used on the vault; only inline text edits and non-destructive directory creation are allowed.
+      - Continue to run nested helpers (little val structural skill, nested `Task(validator)`, `Task(internal-repair-agent)`, and `Task(research)` when required) exactly as dictated by the helper graph and profile; MCP unavailability alone is **not** a reason to omit these helpers. When the filesystem has fallen back to inline edits (`run_mode: "full_run_inline"`), the roadmap subagent **must still attempt** all required nested helper `Task` calls; if the Task host rejects a helper `subagent_type` or the call fails for host reasons, that step must be recorded as `outcome: task_error` with a concrete `host_error_class` / `host_error_raw`, and the overall status must be `#review-needed` or `failure` rather than Success with helpers silently marked `not_applicable`.
+- **Run modes and honesty (roadmap)**:
+  - Every roadmap subagent run MUST classify its overall execution into one of:
+    - `run_mode: "full_run_mcp"` — representative MCP probe succeeded, all structural mutations were performed via Obsidian MCP tools, and all required nested helpers ran or failed with `task_error` in the ledger.
+    - `run_mode: "full_run_inline"` — representative MCP probe failed, structural mutations were applied via inline edits, and all required nested helpers ran or failed with `task_error` in the ledger.
+    - `run_mode: "analysis_only"` — neither MCP nor inline edits could safely mutate the required artifacts for this run; the subagent performed read-only analysis and returned `#review-needed` or `failure` without claiming that deepen/recal/other structural actions actually executed.
+  - The roadmap subagent MUST surface `run_mode` in its structured return (e.g. as part of `task_harden_result` or adjacent metadata), and Layer 1 MUST treat `analysis_only` as **non-success** for any queue entry that expected a structural action.
+- **Final-success invariants remain in force**:
+  - Even in `full_run_inline` mode, roadmap runs MUST:
+    - Obey the **little val final-success gate**: never return **Success** when the final little val verdict for this run is `ok: false`.
+    - Obey the **nested validator hard-block gate**: never return **Success** when the final nested validator verdict is a hard block (`severity: "high"` or `recommended_action: "block_destructive"`).
+  - When helper steps are required by the helper graph/profile but cannot run due to host limits, the ledger MUST record `outcome: task_error` or an allowlisted `not_applicable` reason on those steps; the subagent MUST return `#review-needed` or `failure` rather than pretending that helpers or roadmap-deepen ran successfully. **MCP transport failures are always treated as limits on the filesystem path only, not on the nested-helper path**: a broken or missing Obsidian MCP server **never** converts a required nested validator/IRA/Research step into a permanent `not_applicable`—at most it forces that step into `task_error` with a non-successful overall status.
+
+These roadmap-specific rules refine, but do not weaken, the global MCP & filesystem safety rules in `core-guardrails.mdc`: roadmap subagent and its skills are required to **continue doing the work** (via inline edits when MCP is down) while still upholding backup/snapshot intent, confidence bands, and nested-helper contracts as far as the host environment allows.
+
+---
+
 ## Task-`attempt-before-skip` invariant (all Task callers)
 
 - When this contract (or a pipeline / queue rule that cites it) says a subagent **must** be called – for example:
@@ -81,9 +116,9 @@ Every Task launch MUST pass through a small decision function controlled by:
 - `desired_subagent_type`: the intended subagent (`roadmap`, `validator`, `archive`, `research`, …).
 - `task_role`: role of the caller (e.g. `layer0_chat`, `layer1_queue`, `layer2_roadmap`, `helper_validator`).
 - `pipeline_profile`: the active safety/speed tier for this pipeline:
-  - `fast` — minimal helper set.
-  - `balance` — default helper set (recommended).
-  - `extreme` — maximal helper set (all helpers enabled).
+  - `fast` — minimal helper set, softest enforcement, may omit non-critical helpers when allowed by the helper graph.
+  - `balance` — default helper set (recommended); full enforcement of all selected helpers and step contracts.
+  - `extreme` — maximal helper set (all helpers enabled) with the strictest enforcement and observability.
 
 **Helper graph per profile**
 
@@ -92,6 +127,25 @@ Every Task launch MUST pass through a small decision function controlled by:
   - **not selected** (optional or unused for that profile).
 - Once a helper is selected for the current profile, it becomes **mandatory** for that run:
   - If it appears in the helper graph for this profile and step, failure to run it cleanly MUST block `Success` for that step, even when capability probes indicate the host cannot supply it.
+  - When `pipeline_profile === "balance"` or `pipeline_profile === "extreme"`, callers MUST treat **all** selected helpers as **hard mandatory** for that run; skipping them is only allowed via recorded `task_error` with `host_error_class` and `raw_errors[...]` evidence.
+  - When `pipeline_profile === "fast"`, callers MAY configure a smaller helper graph, but for any helper that **is** selected, the same mandatory semantics apply (attempt-before-skip + no fake Success).
+
+### 2a. Step-enumerated task descriptions (all profiles)
+
+- **Every Task hand-off MUST enumerate its work as ordered steps**, regardless of profile (`fast`, `balance`, or `extreme`):
+  - Use the format **`Step 1: …`**, **`Step 2: …`**, **`Step 3: …`** in execution order.
+  - Each step describes a single concrete action or tightly coupled micro-sequence (e.g. “Step 3: If X, do Y; otherwise do Z.”).
+  - The step list must cover the full contract for this invocation (including error-handling, logging, and metadata writes that the child is responsible for).
+- **Launchers (all layers) MUST**:
+  - Include a step-enumerated block in the hand-off for every `Task` invocation, including capability probes when they request any non-trivial work.
+  - Treat these steps as **normative** for what counts as the child’s contract on this run (alongside `expected_contract` and the helper graph).
+- **Subagents MUST**:
+  - Treat the step list as ordered requirements and execute them in sequence unless a hard safety gate or unrecoverable error forces early exit.
+  - Reflect any intentionally skipped or aborted step in their narrative summary and, when applicable, in `nested_subagent_ledger` and Run-Telemetry.
+- **Contract enforcement across profiles**:
+  - For **all profiles** (`fast` / `balance` / `extreme`), a child that claims `contract_satisfied: true` **MUST NOT** have silently skipped a numbered step it could have executed safely.
+  - When a numbered step is skipped due to safety gates or host limits, the child **MUST** set `contract_satisfied: false` (or downgrade status to **#review-needed** / **failure**) and surface the reason.
+  - Under **`balance`** and **`extreme`**, parents MUST treat **any** `contract_satisfied: false` due to a skipped numbered step as a **hard failure for that run** (no full Success), even if helpers would otherwise be optional; under **`fast`**, parents MAY allow softer behavior only for helpers that were never selected in the profile’s helper graph.
 
 **Branching logic (per launch)**
 
@@ -130,7 +184,7 @@ Given `desired_subagent_type` and the profile/helper graph:
 
 To make Task launches and their outcomes auditable, the harden pass MUST decorate both outbound prompts and inbound returns.
 
-**Outbound (hand-off decoration)**
+**Outbound (hand-off decoration — include speed/profile explicitly)**
 
 - For every Task launch (Layer 0, Layer 1, or Layer 2), prepend or append a small YAML block to the prompt that includes at least:
 
@@ -138,12 +192,14 @@ To make Task launches and their outcomes auditable, the harden pass MUST decorat
 task_harden_metadata:
   layer_role: layer0_chat | layer1_queue | layer2_roadmap | layer2_ingest | helper_validator | helper_research | helper_internal_repair_agent | ...
   launch_mode: native_subagent | generalPurpose_fallback
+  pipeline_profile: fast | balance | extreme
   expected_contract: "<short identifier, e.g. roadmap_handoff_auto, archive_candidate, distill_readability>"
 ```
 
 - This block is **advisory** for the child but **normative** for observability:
   - `layer_role` tells observability tools where in the stack the call originated.
   - `launch_mode` binds the invocation to the capability decision taken by the harden pass.
+  - `pipeline_profile` makes the **speed/safety tier explicit** on every Task call (`fast` minimal helpers, `balance` full helpers + complete enforcement, `extreme` maximal helpers + strictest enforcement).
   - `expected_contract` names the target contract so validators and auditors can align behavior with specs.
 
 **Inbound (child result decoration)**
@@ -153,12 +209,14 @@ task_harden_metadata:
 ```yaml
 task_harden_result:
   task_launch_mode: native_subagent | generalPurpose_fallback
+  pipeline_profile: fast | balance | extreme
   contract_satisfied: true | false
   nested_subagent_ledger_ref: "<optional pointer or summary>"  # when ledger is present
 ```
 
 - The child:
   - MUST set `task_launch_mode` to match the outbound `launch_mode` it observed in its hand-off.
+  - MUST set `pipeline_profile` to match the outbound `pipeline_profile` it observed in its hand-off (this is how Layer 2 **confirms** which speed tier it actually honored).
   - MUST set `contract_satisfied` to `false` whenever:
     - It skipped a mandatory step it was contracted to perform, or
     - It encountered an unrecoverable error that prevents it from fulfilling its contract.
@@ -494,6 +552,26 @@ chain_request:
 
 ---
 
+## Roadmap I/O abstraction (conceptual)
+
+- **Purpose**: To keep roadmap logic stable while allowing either Obsidian MCP or inline edits as the underlying mutation mechanism, roadmap skills should behave as if they are calling into a small, abstract “filesystem” interface rather than hard-coding MCP operations.
+- **Conceptual interface** (no concrete type required; this is a behavioral contract):
+  - `read_note(path)` → markdown string (or structured `{ frontmatter, body }` when needed).
+  - `write_note(path, new_content, options)` → write the full new content or a structured merge into the target note.
+  - `snapshot_intent(path, kind)` → best-effort signal that a per-change/batch snapshot should exist before/after a structural change (`kind: "per-change" | "batch"`), with the understanding that in MCP-less environments this may be implemented as an inline copy or logged intent instead of `obsidian-snapshot`.
+  - `ensure_structure(folder_path)` → ensure parent directories exist before a move/rename-equivalent change.
+- **Backends**:
+  - **MCP backend** (preferred when `mcp_available: true`):
+    - Implements `read_note` / `write_note` / `snapshot_intent` / `ensure_structure` using `obsidian_read_note`, `obsidian_update_note`, `obsidian-snapshot`, `obsidian_ensure_structure`, and related tools, with the full backup/snapshot gates.
+  - **Inline-edit backend** (fallback when `mcp_available: false`):
+    - Implements `read_note` / `write_note` using Cursor’s `Read`/`ApplyPatch` primitives on markdown files.
+    - Implements `snapshot_intent` and `ensure_structure` as best-effort, non-shell operations (e.g. creating lightweight copies or directories via safe file-tool calls) while respecting confidence bands and the “no shell cp/mv/rm” rule.
+- **Roadmap skills and helpers**:
+  - `roadmap-deepen`, structural little val integrations, and roadmap validator glue SHOULD be written to depend only on this conceptual I/O surface:
+    - They decide **what** to change (new workflow_state row, phase note edits, decisions-log bullet, etc.).
+    - The chosen backend (MCP or inline) decides **how** to apply those changes to the filesystem.
+  - This separation allows the roadmap subagent to switch backends based on the per-run capability probe without duplicating roadmap logic or relaxing any of the safety/validator contracts.
+
 ## Rollout and verification notes (Task force-attempt hardening)
 
 - **Phase 1 (roadmap + queue focus):** Prefer to test this contract first on `RESUME_ROADMAP` and related roadmap-class modes. After updating docs/rules, run EAT-QUEUE on a small test queue; confirm that:
@@ -501,6 +579,29 @@ chain_request:
   - No run reports roadmap Success with `little_val_ok: true` when nested helpers were required but no Task-Handoff-Comms rows exist for them.
 - **Phase 2 (other pipelines):** Extend the same expectations to ingest, archive, organize, distill, express, and research where they are documented to call Validator / IRA / Research as nested helpers.
 - **Diagnostics:** When a run fails solely because a required Task call errored (e.g. `host_error_class: invalid_enum` or `nested_task_unavailable`), prefer clear Errors.md entries that name the failing `subagent_type` and recommend operator fixes, and ensure the originating queue entry is left unconsumed for later repair.
+
+### Roadmap MCP fallback scenarios (verification)
+
+- **Scenario A — MCP-healthy Task environment (baseline)**:
+  - Conditions: `Task(roadmap)` runs in an environment where the Obsidian MCP probe succeeds (`mcp_available: true`).
+  - Expected behavior:
+    - Roadmap subagent reports `run_mode: "full_run_mcp"`.
+    - Structural mutations to roadmap artifacts use Obsidian MCP tools (`obsidian_*`), with snapshots and backups enforced per core-guardrails.
+    - Required nested helpers (little val, Validator, IRA, Research when applicable) appear as `invoked_ok` / `task_error` steps in `nested_subagent_ledger` with `task_tool_invoked: true`.
+- **Scenario B — MCP-broken Task environment with inline fallback (deepening succeeds)**:
+  - Conditions: The initial Obsidian MCP probe fails (`mcp_available: false`), but Cursor file tools can still read/write markdown files.
+  - Expected behavior:
+    - Roadmap subagent reports `run_mode: "full_run_inline"`.
+    - Structural mutations to roadmap artifacts are applied via inline edits (`Read`/`ApplyPatch` primitives), and no shell `cp`/`mv`/`rm` is used.
+    - Little val and nested Validator/IRA/Research still run (or fail with `task_error`) and are recorded in `nested_subagent_ledger`.
+    - Final-success gates are respected: Success only when the final little val verdict is `ok: true` and the final nested validator verdict is not a hard block.
+- **Scenario C — MCP-broken Task environment with no safe mutations (analysis-only)**:
+  - Conditions: The Obsidian MCP probe fails (`mcp_available: false`), and attempts to apply inline edits either fail or are blocked by safety gates (e.g. no write permissions, repeated patch conflicts).
+  - Expected behavior:
+    - Roadmap subagent reports `run_mode: "analysis_only"`.
+    - No roadmap files are mutated; any attempted structural changes are abandoned with clear error reporting.
+    - Status is `#review-needed` or `failure`, not Success; `little_val_ok` is `false` or omitted when little val could not complete.
+    - Layer 1 does **not** treat this entry as fully successful; if follow-up work is needed it is explicit (e.g. via wrappers or manual guidance), not implied.
 
 ---
 

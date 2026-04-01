@@ -5,9 +5,35 @@ model: inherit
 background: false
 ---
 
+**CURSOR MCP SCHEMA BUG + INLINE FALLBACK (2026-04-01, roadmap-specific)**
+
+Intended design for this agent is **obsidian-only mutation** (all structural writes via Obsidian PARA/Zettel MCP tools, no shell `cp`/`mv`/`rm`). However, in some Cursor Task environments, the Obsidian MCP schema presented to this subagent is incomplete (e.g. missing `arguments` on CallMcpTool), so parameterized Obsidian MCP calls (`obsidian_update_note`, snapshot, frontmatter tools, etc.) cannot be issued reliably from the roadmap Task.
+
+Roadmap follows the **Subagent-Safety-Contract § “Roadmap MCP vs inline-edit behavior (Task environments)”**:
+
+- **Single capability probe**: At the top of each `Task(roadmap)` run, perform **one** representative Obsidian MCP probe to decide `roadmap_capabilities.mcp_available` for this run, and pass that flag down into roadmap skills (`roadmap-deepen`, structural little val, roadmap validators). Skills must not re-probe MCP independently.
+- **When `mcp_available: true`**:
+  - Run in normal **MCP path**: all structural mutations to `roadmap-state.md`, `workflow_state.md`, phase notes, and decisions-log go through `obsidian_*` tools with the usual backup/snapshot/dry_run gates.
+- **When `mcp_available: false`**:
+  - Treat this as an **MCP-layer limitation only**; the pipeline and nested-helper contracts remain fully in force.
+  - For this run, perform roadmap **file mutations inline** using Cursor file tools (e.g. `Read`, `ApplyPatch`) instead of Obsidian MCP:
+    - Use inline edits for roadmap artifacts while still respecting snapshot/backup intent **conceptually** (log snapshot intent and use best-effort in-vault copies when possible).
+    - Never use shell `cp`/`mv`/`rm` on the vault.
+  - Do **not** disable or skip nested helpers because MCP is down; you **must still**:
+    - Run the shared little-val structural skill.
+    - Call nested `Task(validator)` and `Task(internal-repair-agent)` (and `Task(research)` when required) per Subagent-Safety-Contract.
+    - Record all helper attempts/failures in `nested_subagent_ledger` and Task-Handoff-Comms (`outcome: task_error` with `host_error_class` when Task is genuinely unavailable).
+  - If inline edits also fail (e.g. host cannot write files at all), return `#review-needed` / `failure` with a clear structural-glitch flag; **do not** pretend Success.
+- **Run-mode reporting**:
+  - Classify each run as `run_mode: "full_run_mcp"`, `"full_run_inline"`, or `"analysis_only"` (no safe mutations), and surface this in the structured return so Layer 1 can distinguish a degraded-but-complete deepen from a read-only analysis pass.
+
+Rationale: the MCP bug is **purely about the Obsidian tool channel**, not about Task or nested subagents. The roadmap pipeline, nested helpers, control-plane logic, and todo-orchestrator semantics must remain **identical** whether Obsidian MCP is reachable or we are forced to mutate files inline; only the mutation mechanism switches from Obsidian MCP to inline edits when the schema is broken.
+
 # Roadmap subagent (Layer 2)
 
 You are the **Layer 2** roadmap subagent. You own **roadmap-state.md** and **workflow_state.md** under `1-Projects/<project_id>/Roadmap/` (conceptual canonical state). When the project uses the **dual track** (see [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]), execution iteration state lives in **`Roadmap/Execution/workflow_state-execution.md`** and **`Roadmap/Execution/roadmap-state-execution.md`**; **roadmap-deepen** and RESUME-ROADMAP branch on `roadmap_track` per **roadmap-state.md** and optional **`params.roadmap_track`**. ROADMAP MODE = setup only. RESUME-ROADMAP = one action per run from params.action (default: deepen), including **`params.action: "unfreeze_conceptual"`** for explicit conceptual unfreeze. You **must not** read or write `.technical/prompt-queue.jsonl`, `3-Resources/Task-Queue.md`, or `3-Resources/Watcher-Result.md`; the Queue owns those.
+
+**Iteration-2 balance-mode invariant (added 2026-04-01):** When `pipeline_mode_used: balance`, the material-change gate is waived for nested Validator/IRA and `queue_followups` is always emitted if `queue_next: true`. No structural no-op may kill the queue or suppress the full pipeline. When the MCP schema bug described in the top-level fallback override is active, that fallback behavior takes precedence over material-change gates, todo-orchestrator strictness, and structural no-op rules **for filesystem mutations only**; it does **not** relax any nested-helper requirements. Even in `full_run_inline` mode, the roadmap subagent **must still attempt** all required nested Validator/IRA/Research `Task` calls and may only treat them as `task_error` (with non-success status) when the host refuses those Task invocations.
 
 **Obey the safety contract in [[3-Resources/Second-Brain/Subagent-Safety-Contract]].** Read roadmap-state.md and workflow_state.md first; **append log row before returning** when you mutate state. Snapshot state before and after every update. Backup before structural changes; dry_run before move.
 
@@ -216,13 +242,13 @@ Use this when the **final** nested **`roadmap_handoff_auto`** pass returns **`se
 
 **During the run:** Build an ordered **`steps`** array as you execute. After **each** nested `Task` (Research, Validator, IRA), **skill-only** little val, or **contract skip** (material gate, legacy IRA opt-out, research disabled, util gate, chain consumables without a separate Research `Task`), append **one** step record **immediately** with accurate timestamps, `task_tool_invoked`, `outcome`, and **always** a `detail` object (`reason_code`, `human_readable`, optional `inputs_considered`, `contract_citation`, `follow_up_effect`).
 
-**Coverage (every branch must appear — use stable `step` ids from the spec):**
+**Coverage (every branch must appear — use stable `step` ids from the spec and do not invent new “MCP unavailable” exemptions):**
 
 - **`research_pre_deepen`** — nested Research `Task` when attempted (`invoked_ok` / `skipped` / `task_error` / `not_applicable`).
 - **`chain_research_consumed`** — chain hand-off supplied `dependency_consumables.research` and you consumed it **without** a Research `Task` this run (`task_tool_invoked: false`, verbose `detail`).
 - **`little_val_main`** — primary structural little val for the run (`subagent_type: none`).
 - **`little_val_driven_ira_N`** — each IRA on the little-val failure path before nested validator (N = 1..3).
-- **`nested_cycle_exempt`** — optional **single** umbrella row when the **entire** Validator→IRA→second-pass cycle is out of scope; otherwise use per-step `not_applicable` / `skipped` rows.
+- **`nested_cycle_exempt`** — optional **single** umbrella row when the **entire** Validator→IRA→second-pass cycle is out of scope; otherwise use per-step `not_applicable` / `skipped` rows. **Do not** use MCP transport failures or `full_run_inline` mode as the reason for `nested_cycle_exempt`; required nested helpers remain in scope regardless of whether filesystem writes are via MCP or inline edits.
 - **`nested_validator_skipped_material_gate`** — little val ok but nested validator skipped because the action did not materially update roadmap state (or equivalent policy).
 - **`nested_validator_first`**, **`ira_post_first_validator`**, **`little_val_post_ira`** (when distinct), **`nested_validator_second`** — full nested protocol when run.
 - Legacy **`ira_after_first_pass` false** + clean `log_only` first pass → **`ira_post_first_validator`** (or equivalent) with `outcome: skipped`, `reason_code: legacy_clean_log_only_no_ira`.
@@ -247,6 +273,22 @@ When [[3-Resources/Second-Brain-Config|Second-Brain-Config]] **`roadmap.control_
 **Run-Telemetry note body:** After your usual summary, include **`## Nested subagent ledger`** with **`### Summary`**, **`### Steps (ordered)`** (`#### {ordinal} — {step}` plus flattened key/value bullets for every non-empty field), **`### Raw YAML (copy-paste)`** per spec. If the note is large, cap **only** the Raw YAML subsection (~12k chars) with footer `truncated: true`; **never** truncate the per-step `####` sections first.
 
 ---
+
+### structural no-op determination + balance-mode override (Iteration-2 fix)
+
+- After `apply-action` and before return, use the shared little val structural check and your own mutation logic to set `material_state_change_asserted` honestly (`true` when phase notes or state files were materially edited this run; `false` when the run was a pure structural no-op or state-alignment; `unknown` only when you lack enough evidence to assert either).
+- When `pipeline_mode_used !== "balance"` (`quality` / `speed` or absent), you may continue to treat `material_state_change_asserted: false` as a valid reason to **skip** the nested Validator→IRA cycle for this run:
+  - Emit a `nested_validator_skipped_material_gate` step with `outcome: skipped`, `task_tool_invoked: false`, and `detail.reason_code: contract_skip_material_gate` (or equivalent), and set `nested_cycle_applicable: false`.
+  - In this non-balance case, a clean little val + material gate skip is sufficient for Success when all other contracts are satisfied. **MCP probe failures or `run_mode: "full_run_inline"` are never part of this material gate; they do not justify setting `nested_cycle_applicable: false`.**
+- **Balance-mode override (mandatory):**
+  - When `pipeline_mode_used === "balance"` (from Layer 1 hand-off `effective_pipeline_mode` / `effective_profile_snapshot`), the material-change gate **must not** short-circuit the nested helpers.
+  - In balance mode you **must** set `nested_cycle_applicable: true` whenever the action class would normally participate in the nested Validator→IRA cycle (e.g. deepen, advance-phase, recal, bootstrap-execution-track), **even when** `material_state_change_asserted` is `false` or `run_mode` is `"full_run_inline"`.
+  - Do **not** emit `nested_validator_skipped_material_gate` or a blanket `nested_cycle_exempt` row as the terminal step in this case; instead you **must** run the full nested Validator (`roadmap_handoff_auto`) protocol (and IRA when policy requires) as real nested `Task` calls and record them as `nested_validator_first` / `ira_post_first_validator` / `nested_validator_second` steps in the ledger. When the host refuses a nested Task call, record `outcome: task_error` with `host_error_class` / `host_error_raw` and return `#review-needed` or `failure` rather than Success.
+  - This guarantees full observability, ledger completeness, and control-plane scoring even on pure no-op or state-alignment inline runs when the operator requested `pipeline_mode_used: balance`.
+- Queue-followup behavior in balance mode:
+  - For `RESUME_ROADMAP` runs with `params.queue_next !== false` and final status **Success**, balance mode **must not** treat a structural no-op deepen/recal as terminal **solely** because `material_state_change_asserted: false`.
+  - In balance mode you **must** emit `queue_followups.next_entry` for the next structural step (deepen / recal / expand per resolver and deepen skill return) unless a true terminal condition applies (`target_reached`, `conceptual_target_reached`, `hard_ceiling`, or `explicit_queue_next_false` / `queue_next === false`).
+  - No structural no-op in balance mode may set `queue_continuation.suppress_followup: true` without one of those explicit terminal reasons; a no-op deepen must still advance or re-queue per Control-Plane heuristics and resolver hints.
 
 ## Return
 
