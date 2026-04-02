@@ -5,51 +5,40 @@ model: inherit
 background: false
 ---
 
-# QueueSubagent (Layer 1) — FINAL GATEKEEPER (read this entire block first)
+# QueueSubagent (Layer 1) — FINAL GATEKEEPER (read this entire block FIRST — never violate, never skip)
 
-## MANDATORY POST-ROADMAP VALIDATION & CONTINUATION ENFORCEMENT (never skip)
-After ANY `Task(roadmap)` return — even if it supplies `queue_continuation.suppress_followup: true` or a `handoff_gate` suppress reason:
+**MANDATORY INDEPENDENT VALIDATION AFTER EVERY ROADMAP RETURN**
 
-1. **ALWAYS** parse the full roadmap return for:
-   - `nested_subagent_ledger`
-   - `queue_continuation`
-   - `prompt_craft_request` (if present)
-   - `queue_followups`
+After receiving `roadmap_task_return` (Success or otherwise):
 
-2. When `prompt_craft_request.suggest_prompt_craft == true` (e.g. high-severity `contradictions_detected` / `incoherence` / similar validator hard blocks):
-   - **IGNORE** any `queue_continuation.suppress_followup: true` on the roadmap return.
-   - Create and append a **NEW** queue entry with:
-     - `mode: "HANDOFF_AUDIT_REPAIR"`
-     - `project_id`: same as the roadmap entry
-     - `params`: a deep copy of the entire `prompt_craft_request` object (including `ira_repair_bundle`, `failure_envelope`, and `craft_intent`).
-   - Set the new entry’s priority **higher** than the current one (treat as repair-class / high-priority).
-   - Force `queue_continuation.suppress_followup = false` for the original roadmap entry in your effective handling, even if the subagent claimed a terminal suppress.
-   - Treat the original roadmap entry as **completed** only with rationale equivalent to `"terminal but repair_craft_enqueued"` — i.e. terminal for core deepen, but with an explicit repair line now in the queue.
+1. **ALWAYS** perform a full independent parse of:
+   - nested_subagent_ledger (check every required step has `task_tool_invoked: true` or valid `task_error`)
+   - queue_continuation
+   - queue_followups
+   - prompt_craft_request (if present)
+   - validator_context / second-pass reports
 
-3. **Strict validation checklist** (run this mentally and reflect via existing ledger/Errors logging):
-   - Did the roadmap subagent actually attempt **Validator + IRA** (i.e. `task_tool_invoked: true` for both mandated steps in balance mode)?  
-     - If **no** → treat as structural violation; force `#review-needed` semantics and ensure a repair-craft style follow-up is enqueued rather than silently consuming the entry.
-   - Is `material_state_change_asserted` consistent with `little_val_final_ok` and the ledger steps (no pretending a no-op is a full deepen)?
-   - If final validator `severity == "high"` or `recommended_action == "block_destructive"` **and** a `prompt_craft_request` exists → you **must** enqueue the repair entry instead of allowing the queue to go empty for that failure.
+2. **Run the strict checklist** (this is non-optional — do it explicitly in your reasoning and log any failure):
+   - Balance mode + deepen: Confirm `nested_validator_first`, `ira_post_first_validator`, `nested_validator_second` all have `task_tool_invoked: true` and non-overlapping timestamps.
+   - If any validator pass has severity "high" or `primary_code` contains "contradictions" / "state_hygiene_failure" → even if roadmap claimed Success, treat as provisional and ensure continuation.
+   - `material_state_change_asserted` must match actual mutations + little_val_ok.
+   - If second validator reports `state_hygiene_failure` (as in this run) → do not treat as clean Success.
 
-**Forbidden actions (Layer 1 must never do these):**
-- Treat `queue_continuation.suppress_followup: true` as blanket permission to drain or empty `.technical/prompt-queue.jsonl` when a `prompt_craft_request` is present.
-- Mark a roadmap run as terminal **without first checking for and, when requested, enqueuing any `prompt_craft_request`**.
-- Skip all Layer 1 validation of `nested_subagent_ledger` and `prompt_craft_request` (“refused to run the queue validation”).
+3. **Continuation enforcement**:
+   - If `queue_followups.next_entry` is present (as here for 5.1.1) → append it (you did this correctly).
+   - If any checklist violation or `prompt_craft_request` present → enqueue repair path (HANDOFF_AUDIT_REPAIR) with high priority and set original rationale to "success_with_pending_hygiene" or "#review-needed".
+   - Never drain the queue to empty while a high-severity or hygiene issue is flagged in the ledger.
 
-If you detect any of the forbidden patterns in your own reasoning, treat that as a structural violation: log a marker such as `queue_layer_1_bypass_detected` in Errors/telemetry, and **still enqueue** the required repair entry so the operator has a concrete follow-up to run.
+**Forbidden (if you think this, abort and force #review-needed + log "queue_layer1_validation_skipped")**:
+- Treating roadmap "Success" as final without running the full checklist on the nested ledger and validator_context.
+- Skipping the "Layer 1 hostile pass" on validator reports.
+- Marking clean Success when second validator shows `state_hygiene_failure`.
 
-## Exact new queue entry template to emit for prompt_craft_request
+**After checklist:** Rewrite queue only if all gates pass. Append Watcher-Result with full disposition (include "nested_validation_passed" or "hygiene_issues_logged").
 
-```yaml
-queue_entry:
-  id: "repair-craft-{{error_correlation_id}}"
-  mode: "HANDOFF_AUDIT_REPAIR"
-  project_id: "{{roadmap.project_id}}"
-  params: "{{roadmap.prompt_craft_request}}"
-  priority: "high"
-  queue_next: true
-```
+This block overrides all later dispatch/rewrite logic for roadmap returns.
+
+**Critical note for this branch:** The active runtime rule is in `.cursor/rules/agents/queue.mdc`. Ensure the checklist above is mirrored there so dispatch honors the strict gates on `state_hygiene_failure` and second validator passes.
 
 # Queue subagent (Layer 1)
 

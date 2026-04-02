@@ -4,6 +4,32 @@ globs: []
 alwaysApply: false
 ---
 
+# Queue Rule (Layer 1 Dispatcher) — FINAL GATEKEEPER (read this block FIRST — overrides all later logic)
+
+**MANDATORY INDEPENDENT VALIDATION ON EVERY ROADMAP RETURN (non-skippable)**
+
+After `Task(roadmap)` returns (even if it claims Success):
+
+1. Parse the full return: `nested_subagent_ledger`, `queue_continuation`, `queue_followups`, `validator_context`, second-pass reports.
+2. Run this **strict checklist** explicitly in reasoning (log any failure as `hygiene_issues_logged` or `nested_validation_provisional` in Watcher-Result):
+
+   - All required nested steps (`nested_validator_first`, `ira_post_first_validator`, `nested_validator_second`) have `task_tool_invoked: true` and non-overlapping timestamps?
+   - `material_state_change_asserted` consistent with `little_val_final_ok`?
+   - Any validator pass (especially second pass) shows `state_hygiene_failure`, severity >= medium, or `needs_work`? → treat as **provisional success** / `#review-needed` semantics. Do **not** mark as clean Success.
+   - If `state_hygiene_failure` present (as in decisions-log supersession cases) → log explicitly and consider enqueueing a lightweight HANDOFF_AUDIT or hygiene repair if actionable.
+
+3. Continuation:
+   - Append `queue_followups.next_entry` if present (correct behavior).
+   - If hygiene or provisional issues flagged → add note in Watcher-Result: "nested_validation_provisional — operator review recommended for remaining state_hygiene_failure".
+   - Never drain queue to empty while unresolved hygiene issues exist in the ledger.
+
+**Forbidden (abort to #review-needed + log `queue_layer1_validation_skipped` if thought):**
+- Treating roadmap "Success" as final without full checklist on ledger + validator_context.
+- Ignoring `state_hygiene_failure` or second-pass `needs_work`.
+- Clean Success disposition when second validator reports hygiene issues.
+
+This gate runs **before** A.7 queue rewrite and Watcher-Result final write.
+
 # Queue/Dispatcher Subagent (context rule)
 
 - **Subagent**: This rule is the **Queue/Dispatcher Subagent**. It is responsible for **both** (1) the **prompt queue** (`.technical/prompt-queue.jsonl` — EAT-QUEUE / EAT-CACHE) and (2) the **task/roadmap queue** (`3-Resources/Task-Queue.md` — PROCESS TASK QUEUE). The dispatcher ([always/dispatcher.mdc](.cursor/rules/always/dispatcher.mdc)) routes EAT-QUEUE and PROCESS TASK QUEUE to this rule.

@@ -22,11 +22,15 @@ When Layer 0, Layer 1, or a pipeline invokes the Cursor **Task** tool: **omit** 
 
 - **Scope**: This section refines how the **roadmap subagent and its skills** (e.g. `roadmap-deepen`, structural little val, roadmap validators) behave when they run inside a Cursor **Task** environment where Obsidian MCP tools may or may not be available.
 - **Single capability probe per roadmap run**:
-  - At the **start** of each `Task(subagent_type: "roadmap")` invocation, the roadmap subagent MUST perform **one lightweight capability probe** to determine whether Obsidian MCP tools are usable in this environment (for example, a benign `obsidian_read_note` on a known-safe path or an equivalent no-op).
-  - It MUST interpret this as:
+  - At the **start** of each `Task(subagent_type: "roadmap")` invocation, the roadmap subagent MUST perform **one lightweight capability probe** to determine whether Obsidian MCP tools are usable in this environment (for example, a benign `obsidian_read_note` on a known-safe path or an equivalent no-op) **in `mcp_probe_mode: "auto"`**.
+  - **Config toggle (skip/assume mode):**
+    - If `Second-Brain-Config.task_harden.mcp_probe_mode` is missing or set to `"auto"`, the roadmap subagent MUST perform the probe call and set `mcp_available` from the probe outcome.
+    - If it is set to `"assume_available"`, the roadmap subagent MUST skip the probe call and set `mcp_available: true`.
+    - If it is set to `"assume_unavailable"`, the roadmap subagent MUST skip the probe call and set `mcp_available: false`.
+  - When `mcp_probe_mode: "auto"`, the probe result MUST be interpreted as:
     - `mcp_available: true` when the representative call succeeds, or
     - `mcp_available: false` only when the host clearly rejects the MCP call or the Obsidian MCP server is unreachable.
-  - The probe result MUST be cached in a **per-run capabilities object** (e.g. `roadmap_capabilities: { mcp_available: boolean }`) and **passed down** to roadmap skills (`roadmap-deepen`, little-val structural checks, roadmap validator glue). Individual skills MUST NOT re-probe Obsidian MCP independently.
+  - The probe outcome MUST be cached in a **per-run capabilities object** (e.g. `roadmap_capabilities: { mcp_available: boolean }`, optionally including `probe_skipped: true|false` and `mcp_probe_mode: ...`) and **passed down** to roadmap skills (`roadmap-deepen`, little-val structural checks, roadmap validator glue). Individual skills MUST NOT re-probe Obsidian MCP independently.
 - **Two-path contract (preferred vs fallback)**:
   - When `mcp_available: true`:
     - Roadmap skills **must** use the normal **MCP path**:
@@ -39,8 +43,8 @@ When Layer 0, Layer 1, or a pipeline invokes the Cursor **Task** tool: **omit** 
       - Continue to run nested helpers (little val structural skill, nested `Task(validator)`, `Task(internal-repair-agent)`, and `Task(research)` when required) exactly as dictated by the helper graph and profile; MCP unavailability alone is **not** a reason to omit these helpers. When the filesystem has fallen back to inline edits (`run_mode: "full_run_inline"`), the roadmap subagent **must still attempt** all required nested helper `Task` calls; if the Task host rejects a helper `subagent_type` or the call fails for host reasons, that step must be recorded as `outcome: task_error` with a concrete `host_error_class` / `host_error_raw`, and the overall status must be `#review-needed` or `failure` rather than Success with helpers silently marked `not_applicable`.
 - **Run modes and honesty (roadmap)**:
   - Every roadmap subagent run MUST classify its overall execution into one of:
-    - `run_mode: "full_run_mcp"` — representative MCP probe succeeded, all structural mutations were performed via Obsidian MCP tools, and all required nested helpers ran or failed with `task_error` in the ledger.
-    - `run_mode: "full_run_inline"` — representative MCP probe failed, structural mutations were applied via inline edits, and all required nested helpers ran or failed with `task_error` in the ledger.
+    - `run_mode: "full_run_mcp"` — structural mutations were performed via Obsidian MCP tools, and all required nested helpers ran or failed with `task_error` in the ledger.
+    - `run_mode: "full_run_inline"` — structural mutations were applied via inline edits, and all required nested helpers ran or failed with `task_error` in the ledger.
     - `run_mode: "analysis_only"` — neither MCP nor inline edits could safely mutate the required artifacts for this run; the subagent performed read-only analysis and returned `#review-needed` or `failure` without claiming that deepen/recal/other structural actions actually executed.
   - The roadmap subagent MUST surface `run_mode` in its structured return (e.g. as part of `task_harden_result` or adjacent metadata), and Layer 1 MUST treat `analysis_only` as **non-success** for any queue entry that expected a structural action.
 - **Final-success invariants remain in force**:
@@ -644,20 +648,20 @@ chain_request:
 ### Roadmap MCP fallback scenarios (verification)
 
 - **Scenario A — MCP-healthy Task environment (baseline)**:
-  - Conditions: `Task(roadmap)` runs in an environment where the Obsidian MCP probe succeeds (`mcp_available: true`).
+  - Conditions: `Task(roadmap)` runs with `mcp_available: true` (either because `mcp_probe_mode: "auto"` and the probe succeeds, or because `mcp_probe_mode: "assume_available"`).
   - Expected behavior:
     - Roadmap subagent reports `run_mode: "full_run_mcp"`.
     - Structural mutations to roadmap artifacts use Obsidian MCP tools (`obsidian_*`), with snapshots and backups enforced per core-guardrails.
     - Required nested helpers (little val, Validator, IRA, Research when applicable) appear as `invoked_ok` / `task_error` steps in `nested_subagent_ledger` with `task_tool_invoked: true`.
 - **Scenario B — MCP-broken Task environment with inline fallback (deepening succeeds)**:
-  - Conditions: The initial Obsidian MCP probe fails (`mcp_available: false`), but Cursor file tools can still read/write markdown files.
+  - Conditions: `mcp_available: false` (either because `mcp_probe_mode: "auto"` and the probe fails, or because `mcp_probe_mode: "assume_unavailable"`), but Cursor file tools can still read/write markdown files.
   - Expected behavior:
     - Roadmap subagent reports `run_mode: "full_run_inline"`.
     - Structural mutations to roadmap artifacts are applied via inline edits (`Read`/`ApplyPatch` primitives), and no shell `cp`/`mv`/`rm` is used.
     - Little val and nested Validator/IRA/Research still run (or fail with `task_error`) and are recorded in `nested_subagent_ledger`.
     - Final-success gates are respected: Success only when the final little val verdict is `ok: true` and the final nested validator verdict is not a hard block.
 - **Scenario C — MCP-broken Task environment with no safe mutations (analysis-only)**:
-  - Conditions: The Obsidian MCP probe fails (`mcp_available: false`), and attempts to apply inline edits either fail or are blocked by safety gates (e.g. no write permissions, repeated patch conflicts).
+  - Conditions: `mcp_available: false`, and attempts to apply inline edits either fail or are blocked by safety gates (e.g. no write permissions, repeated patch conflicts).
   - Expected behavior:
     - Roadmap subagent reports `run_mode: "analysis_only"`.
     - No roadmap files are mutated; any attempted structural changes are abandoned with clear error reporting.

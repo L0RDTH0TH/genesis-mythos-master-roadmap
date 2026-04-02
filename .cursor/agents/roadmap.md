@@ -309,6 +309,7 @@ You **must**:
 1. Launch `Task(validator)` for `nested_validator_first` and await its full structured return.
 2. Use the validator’s severity / primary_code / gap_citations / report_path (and any other fields) as **direct input** when launching `Task(internal-repair-agent)` for `ira_post_first_validator`.
 3. After IRA returns, run post-IRA little_val, then (if required) the second `Task(validator)`.
+In the Validator → IRA → second Validator cycle, call Internal Repair Agent exactly once after the first validator pass. Do not launch additional IRA calls in this sequence even if the first validator was high-severity. Multiple IRA calls are reserved exclusively for the pre-validator little-val failure recovery path (up to three).
 4. Record all steps in the nested_subagent_ledger in strict ordinal order with non-overlapping timestamps.
 
 Do not launch validator and IRA helpers concurrently for the same run, even if the Task tool supports parallel calls. The cycle is intentionally sequential so repair suggestions are grounded in the current validator findings.
