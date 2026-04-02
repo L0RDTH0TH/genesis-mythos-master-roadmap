@@ -10,10 +10,15 @@
 !.technical/queue-continuation.jsonl
 !.technical/prompt-queue-audit.jsonl
 !.technical/queue-gate-state.json
+!.technical/task-handoff-comms.jsonl
 !.technical/Run-Telemetry/
 !.technical/Run-Telemetry/**
 !.technical/Validator/
 !.technical/Validator/**
+!.technical/Internal-Repair-Agent/
+!.technical/Internal-Repair-Agent/**
+!.technical/scripts/
+!.technical/scripts/**
 !3-Resources/Watcher-Result.md
 
 # Root-level technical files (must stay at root; Syncthing/Cursor read them here)

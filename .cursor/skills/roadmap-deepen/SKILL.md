@@ -52,7 +52,11 @@ description: Performs one deepen step for multi-run roadmap — reads workflow_s
 ## Return payload (to caller)
 
 - **`queue_followups`** — per step 7 (when **`params.queue_next !== false`** and context gates allow).
-- **`next_structural_target_hint`** — optional; **conceptual** track only; see **§6a**. RoadmapSubagent uses this for **Conceptual subphase exit** ([[3-Resources/Second-Brain/Parameters|Parameters]] § Conceptual subphase exit).
+- **`next_structural_target_hint`** — optional; **conceptual** track only; see **§6a**. RoadmapSubagent uses this for **Conceptual subphase exit** ([[3-Resources/Second-Brain/Parameters|Parameters]] § Conceptual subphase exit). When **`conceptual_deepen_cap_reached`** or **`stagnation_suspected`**, still return a hint; if the recomputed next pass would stay on the same slice, set **`same_slice_repeat: true`** but RoadmapSubagent **must** still derive **`params.next_subphase_index`** from Roadmap Structure / MOC order (hint may be stale).
+- **`stagnation_suspected`** (bool) — **true** when **§77b** fires; else omit or **false**.
+- **`stagnation_severity`** — **`none`** \| **`mild`** \| **`moderate`** \| **`chronic`** per **§77c** (control plane v2).
+- **`stagnation_cluster_id`** — string or **`null`**; set when Config **`roadmap.control_plane_v2.stagnation_v2`** drives clustering (else **`null`**).
+- **`conceptual_deepen_cap_reached`** (bool) — **true** when **§2.5** forced structural forward due to **`roadmap.conceptual_max_deepen_per_subphase`**; else omit or **false**.
 - **`conceptual_decision_record`** — per step **6b** when applicable.
 
 ## Dual track (conceptual vs execution)
@@ -70,7 +74,7 @@ description: Performs one deepen step for multi-run roadmap — reads workflow_s
 
 **Frozen conceptual guard:** Before any destructive write to a path under `Roadmap/` that is **not** under `Roadmap/<execution_subfolder>/`, read target note frontmatter if the file exists; if **`frozen: true`** and **`roadmap_track: conceptual`**, **do not** write; log to Errors.md, #review-needed, return without advancing state.
 
-**Pre-create gate (step 4):** Run **handoff-audit / confidence** gate before creating depth ≥4 children **on the execution track** as the primary “actual completion” gate; on **conceptual** track, keep existing gate behavior unless Config narrows it later.
+**Pre-create gate (step 4):** Run **handoff-audit / confidence** gate before creating depth ≥4 children **on the execution track** as the primary “actual completion” gate. On **conceptual** track, **do not** apply the execution-only pre-create block (no Decision Wrapper **solely** for missing pseudo-code / technical depth-4 readiness); see [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]] §3.3. §2.5 cap-vs-gate conflicts still favor hard quality gates.
 
 **New execution notes:** Set frontmatter **`roadmap_track: execution`**, **`conceptual_counterpart`** (wikilink to the mirrored conceptual note path when known), **`project-id`**, and mirror **`subphase-index`** / **`phase-number`** from the conceptual sibling when minting a counterpart.
 
@@ -81,6 +85,41 @@ When **`prompt_defaults.roadmap.diminishing_returns_advisory_enabled`** is true:
 1. Parse the last **`diminishing_returns_window_runs`** data rows (same table).
 2. If **≥ `diminishing_returns_same_target_streak`** consecutive rows share the same **Target** cell (or same `current_subphase_index` in frontmatter across those runs), **and** **Confidence** values are numeric with max increase &lt; **`diminishing_returns_confidence_epsilon`** across those rows — **or** `iterations_per_phase[current_phase]` exceeds the **ceiling** of `iteration_guidance_ranges` for **current_depth** — append to **Status / Next**: `advisory: diminishing-returns-suspected (<short reason>)`.
 3. Never block deepen solely on this advisory; do not auto-flip `roadmap_track`. Optional: one-line to Mobile-Pending-Actions per operator preference.
+
+### §77b — Stagnation flag (structured return; anti-circle)
+
+Read from [[3-Resources/Second-Brain-Config|Second-Brain-Config]] **`roadmap`** block: **`stagnation_window_runs`** (default **3** when absent), **`stagnation_confidence_delta_max_percent`** (default **5** when absent).
+
+**After** step **6** appends the new **## Log** data row (so the window includes this run):
+
+1. Parse the last **`stagnation_window_runs`** **data** rows of the first **`## Log`** table (exclude header + separator).
+2. Require every row’s **Target** cell (fallback: **Iter Phase** if Target column missing) to match the same normalized subphase key (e.g. same `4.1.5` or same phase note slug — be consistent with **Iter Phase** / **`current_subphase_index`** for the active conceptual cursor).
+3. Parse **Confidence** from each row (numeric **0–100**). If any row is non-numeric, skip stagnation (do not set the flag).
+4. If **`max(Confidence) - min(Confidence) < stagnation_confidence_delta_max_percent`**, set **`stagnation_suspected: true`** on the **overall skill return** to RoadmapSubagent / caller.
+
+This flag is **computed** in deepen; ValidatorSubagent **need not** emit a stagnation code. RoadmapSubagent uses it for slice-exit **(3d)** per [[3-Resources/Second-Brain/Parameters|Parameters]] § Conceptual subphase exit.
+
+### §77c — `stagnation_severity` and `stagnation_cluster_id` (control plane v2)
+
+Always set on the skill return (RoadmapSubagent forwards into **`control_plane_observability`** / **`queue_continuation`**):
+
+1. If **`stagnation_suspected`** is **false** or unset: **`stagnation_severity: none`**, **`stagnation_cluster_id: null`**.
+2. If **`stagnation_suspected`** is **true** **and** **`conceptual_deepen_cap_reached`** is **true**: **`stagnation_severity: chronic`**.
+3. Else if **`stagnation_suspected`** is **true**: **`stagnation_severity: mild`** (upgrade to **`moderate`** when the same normalized subphase key appears in **≥ `cluster_repeat_threshold`** of the last **`cluster_window_m`** workflow_state Log data rows — read from Config **`roadmap.control_plane_v2.stagnation_v2`**; use defaults **3** / **8** when keys absent).
+4. **`stagnation_cluster_id`:** When severity is **`moderate`** or **`chronic`**, set a short stable id e.g. `stag-<project_id>-<current_subphase_index>`; else **`null`**.
+
+### §2.5 — Per-subphase deepen cap (conceptual)
+
+Read **`roadmap.conceptual_max_deepen_per_subphase`** from Second-Brain-Config (**0** or absent = disabled).
+
+**Immediately after** step **2** (paths + reads), **before** **§3.1** conceptual checklist branch:
+
+1. If **`active_track !== conceptual`** or cap is **0**, skip (**`conceptual_deepen_cap_reached`** = false).
+2. Else count **existing** data rows in the first **`## Log`** table whose **Iter Phase** cell (trimmed) equals **`current_subphase_index`** from **active** workflow_state frontmatter (string compare).
+3. If **`count ≥ conceptual_max_deepen_per_subphase`**: set **`conceptual_deepen_cap_reached: true`** in run context.
+4. When **true**, in **§3.1** do **not** enter **`refining_existing_conceptual_target: true`** from NL checklist gaps alone — treat the deepen step as **structural advance**: in **§3 — Compute next target**, prefer the **next sibling** / next structural node per Roadmap Structure (advance **`current_subphase_index`** toward the next MOC child or peer), and in **§5** update the **next** roadmap note / cursor rather than polishing the same slice. Append **`Status / Next`** cue e.g. `subphase_cap_exit: forward` for auditability.
+
+If cap logic conflicts with a hard quality gate (e.g. parent confidence &lt; 75% in **§4**), the existing gate **wins** — log **`#review-needed`** and do not bypass **Decision Wrapper** exits.
 
 ## Depth from subphase-index
 
@@ -147,7 +186,9 @@ Call **obsidian_ensure_structure** with `folder_path` = parent of the execution 
   - If any checklist row is missing or underfilled (word-count < `gap_min_words` and no explicit “none/empty/TBD with contract” phrasing), set an in-run flag in context such as `refining_existing_conceptual_target: true` and treat the **next target** as the same `current_subphase_index` note (i.e. refine in place) instead of creating deeper children.
   - Only advance `current_subphase_index` after the conceptual-checklist gaps for that resolved note are resolved in the refine draft.
 
-4. **Pre-create quality gate (when current_depth ≥ 4):** Before creating a new subphase note at depth ≥ 4, run a quick **handoff-audit** (or equivalent confidence check) on the **parent** secondary/tertiary note (confidence on "technical completeness"). **When active_track is `execution`**, treat this gate as the primary blocker for minting depth-4+ children until confidence ≥ 75%. **When active_track is `conceptual`**, keep the same gate unless operator policy relaxes it later. If **confidence < 75%**: do **not** create the new subphase. Instead, create a **Decision Wrapper** under `Ingest/Decisions/Roadmap-Decisions/` with **rationale callout** (e.g. `> Architect: Parent 1.2.3 technical completeness 72%; below 75% gate. Wrapper time.`) and options: **A:** Create anyway | **B:** Refine parent first | **C:** Skip to next secondary. Ensure folder (obsidian_ensure_structure for Ingest/Decisions/Roadmap-Decisions/); append CHECK_WRAPPERS and Watcher-Result; exit. If **confidence ≥ 75%**: proceed to step 4.5.
+4. **Pre-create quality gate (when current_depth ≥ 4):** Before creating a new subphase note at depth ≥ 4:
+   - **When `active_track` is `execution`:** Run a quick **handoff-audit** (or equivalent confidence check) on the **parent** secondary/tertiary note (confidence on "technical completeness"). Treat this gate as the primary blocker for minting depth-4+ children until confidence ≥ 75%. If **confidence < 75%**: do **not** create the new subphase. Instead, create a **Decision Wrapper** under `Ingest/Decisions/Roadmap-Decisions/` with **rationale callout** (e.g. `> Architect: Parent 1.2.3 technical completeness 72%; below 75% gate. Wrapper time.`) and options: **A:** Create anyway | **B:** Refine parent first | **C:** Skip to next secondary. Ensure folder (obsidian_ensure_structure for Ingest/Decisions/Roadmap-Decisions/); append CHECK_WRAPPERS and Watcher-Result; exit. If **confidence ≥ 75%**: proceed to step 4.5.
+   - **When `active_track` is `conceptual`:** **Skip** this pre-create wrapper gate (proceed to step 4.5). Conceptual deepening uses §3.1 NL checklist and caps; execution-only pseudo-code pre-create does not apply. Log optional `Status / Next` cue `pre_create_gate: skipped_conceptual_track` when useful for audit.
 
 4.5. **Gap analysis and optional gap-fill research (before final write)**  
    - **Hook location**: After the draft content for the new roadmap note(s) is prepared (the in-memory or assembled draft for the target phase/subphase) and **before** step 5 writes the note(s) to the vault. No snapshot or append has occurred yet.

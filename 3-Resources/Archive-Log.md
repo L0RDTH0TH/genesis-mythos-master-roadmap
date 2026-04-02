@@ -260,3 +260,11 @@ Flag: #ghost-sweep
 **Ghost sweep (2026-03-10):** Removed 16 empty folders via `obsidian_remove_empty_folder` (dry_run then commit): Phase-6, Phase-5; Phase-4-2-DM-Controls (after deleting leftover Phase-4-2-2-Depth4-Section.tmp), Phase-4-1-Player-Perspective, Phase-4-Perspective-Split-Control-Systems; Phase-3-2, Phase-3-1, Phase-3-Living-Simulation-Dynamic-Agency; Phase-2-2, Phase-2-1, Phase-2-Procedural-Generation-World-Building; Phase-1-4, Phase-1-3, Phase-1-2, Phase-1-1, Phase-1-Conceptual-Foundation-Core-Architecture. Roadmap/ retained (contains excluded Source file).
 
 Flag: none.
+
+---
+
+**2026-03-30 — genesis-mythos-master test Roadmap tree (operator)**
+
+Moved **24** notes from `1-Projects/genesis-mythos-master/Roadmap/` to `4-Archives/genesis-mythos-master-roadmap-test-2026-03-30/Roadmap/` (master roadmap, phase trees, Conceptual-Decision-Records, state/logs). **Left at project root:** `1-Projects/genesis-mythos-master/Genesis-mythos-master-goal.md`. **Backups:** batch `20260330-041016` / `20260330-041017` in `Second-Brain-oops-Backups/`. **New pointer:** `1-Projects/genesis-mythos-master/Roadmap/README-roadmap-archived-2026-03-30.md`. MOC and PMG link to archived `decisions-log` where needed. Empty `Roadmap/` ghost folders removed via `obsidian_remove_empty_folder`.
+
+**2026-03-30 (follow-up):** Moved `1-Projects/genesis-mythos-master/genesis-mythos-master-Roadmap-MOC.md` → `4-Archives/genesis-mythos-master-roadmap-test-2026-03-30/genesis-mythos-master-Roadmap-MOC.md`. Backup `20260330-041845-genesis-mythos-master-Roadmap-MOC.md`. Frontmatter `para-type: Archive`, `status: archived`. Archived master roadmap + README pointer updated to link MOC by full path.

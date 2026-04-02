@@ -1,0 +1,26 @@
+---
+title: Workflow State (lightweight pre-marker) — genesis-mythos-master
+created: 2026-04-02
+tags:
+  - roadmap
+  - workflow-state
+  - genesis-mythos-master
+  - safety-marker
+para-type: Project
+project-id: genesis-mythos-master
+---
+
+## Lightweight safety marker
+
+This is a minimal snapshot marker for `1-Projects/genesis-mythos-master/Roadmap/workflow_state.md` around the Phase 5 secondary `5.1` re-mint.
+
+Pre-change values (before this run's edits):
+- `current_subphase_index`: `"5.1"`
+- `iterations_per_phase["5"]`: `5`
+- `last_ctx_util_pct`: `75`
+- `last_conf`: `86`
+- `last_injected_tokens`: `122000`
+- End-of-log placeholders existed (`| 155:` / `| 156:`) with no completed secondary `5.1` row yet.
+
+Note: this marker does not store the full pre-image content (use git/backup tooling for full restore).
+

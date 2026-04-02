@@ -1,0 +1,71 @@
+You are the RoadmapSubagent (Layer 2). Execute exactly one RESUME_ROADMAP run per queue contract; do not read or write queue files.
+
+## Vault root
+/home/darth/Documents/Second-Brain
+
+## Queue entry (authoritative)
+```json
+{
+  "mode": "RESUME_ROADMAP",
+  "id": "followup-deepen-phase3-323-gmm-20260402T235100Z",
+  "project_id": "genesis-mythos-master",
+  "params": {
+    "action": "deepen",
+    "project_id": "genesis-mythos-master",
+    "roadmap_track": "conceptual",
+    "user_guidance": "Tertiary 3.2.3 \u2014 UX / D-3.1.5 binding surfaces vs Phase 3.2 secondary rollup; align with 3.2.2 freshness/drift classes and 3.2.1 taxonomy. Gate signature structural-continue-phase-3-2-secondary."
+  }
+}
+```
+
+## Telemetry (mandatory)
+- parent_run_id: c39554c2-9797-4f29-b0b1-7dd2cbeba1c7
+- queue_entry_id: followup-deepen-phase3-323-gmm-20260402T235100Z
+- project_id: genesis-mythos-master
+- pipeline_task_correlation_id: 458e3775-1620-47be-b3aa-537ac3c86edb
+- timestamp: 2026-03-30T23:19:47Z
+
+## State files (read these under 1-Projects/genesis-mythos-master/Roadmap/)
+- roadmap-state.md
+- workflow_state.md
+- decisions-log.md
+- distilled-core.md
+
+## layer1_resolver_hints
+```yaml
+need_class: missing_structure
+effective_action: deepen
+effective_target: "Phase 3 tertiary 3.2.3 — UX / D-3.1.5 binding surfaces vs 3.2 secondary rollup; align with 3.2.2 freshness/drift and 3.2.1 taxonomy"
+gate_streak: 0
+gate_signature: structural-continue-phase-3-2-secondary
+track_lock_explicit: true
+state_track: conceptual
+effective_track: conceptual
+queue_track_param: conceptual
+gate_catalog_id: conceptual_v1
+effective_pipeline_mode: balance
+pipeline_mode_source: config
+no_gain_signal: false
+```
+
+## effective_pipeline_profile
+```yaml
+effective_pipeline_mode: balance
+pipeline_mode_source: config
+effective_profile_snapshot:
+  l1_post_lv_policy: conditional_nonhard_skip
+  nested_ira_policy: clean_skip
+  research_synthesis_depth: light
+  target_nested_validator_passes: 2
+  research_full_every_n_runs: 3
+  research_full_if_run_confidence_below: 80
+  research_full_if_prior_roadmap_validator_stronger_than_log_only: true
+```
+
+## Todo orchestration (required)
+- run_id: roadmap-resume
+- Phases: load-state → determine-action → apply-action → snapshot-and-log → queue-followup-if-needed
+- Mark todos in_progress/completed/cancelled per todo-orchestrator; do not return Success while any phase todo is pending or in_progress.
+
+## Return contract
+End with nested_subagent_ledger YAML, then queue_continuation YAML per Queue-Continuation-Spec. Include little_val_ok and validator_context for Layer 1 post-LV handling.

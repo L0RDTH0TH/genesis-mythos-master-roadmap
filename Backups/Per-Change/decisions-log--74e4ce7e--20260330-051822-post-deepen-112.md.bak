@@ -1,0 +1,47 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/decisions-log.md
+original_title: post-mutate snapshot
+pipeline: roadmap
+snapshot_type: per-change
+snapshot_created: 2026-03-30T05:18:22.481957Z
+snapshot_hash: 74e4ce7ef3a8664868c412c1dd71700f570fc8fef546e311f3553c5185fc4e99
+confidence: 87
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+---
+title: Decisions Log — genesis-mythos-master
+created: 2026-03-30
+tags:
+  - roadmap
+  - decisions
+  - genesis-mythos-master
+para-type: Project
+project-id: genesis-mythos-master
+status: active
+---
+
+# Decisions log — genesis-mythos-master
+
+## Decisions
+
+- Phase 0: initialized (workflow_state + roadmap-state + distilled-core + master roadmap + phase stubs + MOC) via ROADMAP_MODE `roadmap-setup-gmm-20260330T043000Z`
+- Track: **conceptual** (`roadmap-state.md` `roadmap_track: conceptual`) for design authority before execution iteration
+
+**Operator picks:** For grep-stable machine preflight ([[3-Resources/Second-Brain/Docs/Decisions-Log-Operator-Pick-Convention|Decisions-Log-Operator-Pick-Convention]]), log dated sub-bullets under each **D-*** row, e.g. `**Operator pick logged (YYYY-MM-DD):** … — **Option A** | **Option B**`.
+
+## Conceptual autopilot
+
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-primary-2026-03-30-0435]] — queue_entry_id: (workflow 2026-03-30 04:35 deepen) — validation: pattern_only
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-layering-2026-03-30-0500]] — queue_entry_id: (prior run) — validation: pattern_only
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-1-tertiary-2026-03-30-0431]] — queue_entry_id: resume-deepen-gmm-20260330T043100Z — validation: pattern_only
+- **Deepen (resume-deepen-gmm-20260330T043100Z):** Minted tertiary **1.1.1** — [[Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-03-30-0431]]; `handoff_readiness` 79; cursor advanced to **1.1.2** for next deepen (continue layering slice under **1.1**).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-2-tertiary-2026-03-30-1325]] — queue_entry_id: resume-gmm-followup-20260330T132500Z — validation: pattern_only
+- **Deepen (resume-gmm-followup-20260330T132500Z):** Minted tertiary **1.1.2** — [[Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-03-30-1325]]; `handoff_readiness` 78; cursor advanced to **1.1.3** for next deepen (continue layering slice under **1.1**).
+
+## Handoff notes
+
+- Add `#handoff-review` and `#handoff-needed` bullets here when hand-off-audit flags issues.

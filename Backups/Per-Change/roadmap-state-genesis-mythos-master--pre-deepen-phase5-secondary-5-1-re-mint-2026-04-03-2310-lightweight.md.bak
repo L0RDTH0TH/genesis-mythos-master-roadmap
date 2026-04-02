@@ -1,0 +1,22 @@
+---
+title: Roadmap State (lightweight pre-marker) — genesis-mythos-master
+created: 2026-04-02
+tags:
+  - roadmap
+  - roadmap-state
+  - genesis-mythos-master
+  - safety-marker
+para-type: Project
+project-id: genesis-mythos-master
+---
+
+## Lightweight safety marker
+
+This is a minimal snapshot marker for `1-Projects/genesis-mythos-master/Roadmap/roadmap-state.md` around the Phase 5 secondary `5.1` re-mint.
+
+Pre-change Phase 5 summary tail (before this run's edits):
+- `workflow_state current_subphase_index: "5.1"` (next — **re-mint secondary 5.1** deepen)
+- No explicit mention yet of the newly-created secondary note `Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310`.
+
+Note: this marker does not store the full pre-image content (use git/backup tooling for full restore).
+

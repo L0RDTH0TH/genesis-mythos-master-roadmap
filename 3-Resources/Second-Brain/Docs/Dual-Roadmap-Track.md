@@ -50,6 +50,10 @@ Use **`RESUME_ROADMAP`** with **`params.action: "unfreeze_conceptual"`** (see [[
 
 Advisory flags in `workflow_state` ## Log **Status / Next** (config: `prompt_defaults.roadmap.diminishing_returns_*`). Informational only — does not auto-switch tracks.
 
+## Control plane v2 (progression gates)
+
+**Conceptual** track does **not** require execution-only artifacts (e.g. depth-4 pseudo-code blocks) for **advance-phase** on phases 5–6 or for deepen **pre-create** at depth ≥4. **Execution** track keeps those gates. Deterministic rules and observability fields live in [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]]; Config: `roadmap.control_plane_v2`.
+
 ## Related
 
 - [[3-Resources/Second-Brain/Docs/Conceptual-Execution-Handoff-Checklist|Conceptual-Execution-Handoff-Checklist]]

@@ -67,6 +67,8 @@ Per [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-
 
 **Ledger attestation:** Follow the spec’s **Attestation invariants**. For **`nested_validator_first`**, **`ira_post_first_validator`**, and **`nested_validator_second`**, **`invoked_ok`** / **`invoked_empty_ok`** **must** pair with **`task_tool_invoked: true`** when that helper actually ran; exempt rows only when the spec allows (**`skipped`**, **`not_applicable`**, **`task_error`**, material gate, legacy IRA opt-out). **Success** with **`little_val_ok: true`** is **forbidden** if a required nested helper was faked (e.g. **`invoked_ok`** + **`task_tool_invoked: false`** on those steps).
 
+**Attempt before skip:** When the nested Validator→IRA cycle is **required** for this run, you **must** invoke nested **`Task(validator)`** / **`Task(internal-repair-agent)`** or record **`outcome: task_error`** with **`host_error_raw`** and **`host_error_class`** on the step — **not** **`outcome: skipped`** + **`task_tool_invoked: false`** without an allowlisted **`detail.reason_code`**. Do not skip based on inspecting `available_functions` (or equivalent) without calling **`Task`**.
+
 **Pre-return checklist:** If you would return **Success** with **`little_val_ok: true`**, you must have completed the nested Validator → IRA → apply → little val → second Validator cycle **when applicable**, **or** recorded **`outcome: task_error`** with **`host_error_raw`** (sanitized) for failed nested **`Task`** calls — **never** omit **`validator_context`** or the ledger to “finish.” If nested **`Task`** failed irrecoverably, return **`failure`** or **`#review-needed`**, not **Success**.
 
 ## Batch and return

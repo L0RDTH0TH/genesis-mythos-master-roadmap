@@ -1,0 +1,61 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/distilled-core.md
+original_title: Distilled Core — genesis-mythos-master
+pipeline: roadmap
+snapshot_type: per-change
+snapshot_created: 2026-03-30T21:20:45.000Z
+snapshot_hash: pre-ira-distilled-core-rollup
+confidence: 88
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+---
+title: Distilled Core — genesis-mythos-master
+created: 2026-03-30
+tags:
+  - roadmap
+  - distilled-core
+  - genesis-mythos-master
+para-type: Project
+project-id: genesis-mythos-master
+status: active
+core_decisions:
+  - "Phase 1 (conceptual): decouple world state, simulation, rendering, and input; procedural generation as ordered pipeline with intent injection points; modularity seams (stages, rule hooks, event bus); safety invariants — snapshot + dry-run before destructive world replacement."
+---
+
+# Distilled core — genesis-mythos-master
+
+## Phase 0 anchors
+
+- Master goal: [[Source-genesis-mythos-master-goal-2026-03-30-0430]]
+- Roadmap state: [[roadmap-state]]
+- Workflow state: [[workflow_state]]
+- Decisions log: [[decisions-log]]
+
+## Core decisions (🔵)
+
+- **Phase 1 (conceptual):** Four-layer separation (world state / simulation / rendering / input); procedural generation graph with intent injection; named seams for stages, rule hooks, and event bus; safety hooks for snapshot + dry-run before destructive world replacement. Detail: [[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]].
+- **Execution rollup / registry / CI:** Not claimed on the **conceptual** track; closure artifacts belong to **execution** iteration per [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] (aligns with advisory `missing_roll_up_gates` — waived for conceptual design authority when deferrals are explicit).
+
+## Phase 1.2 procedural graph slice (**1.2.1–1.2.5** minted — tertiary chain complete)
+
+Secondary **1.2** ([[Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-03-30-1605]]) defines the DAG skeleton; tertiary **1.2.1** ([[Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-03-30-1705]]) defines **node taxonomy**, **edge kinds**, and **topological evaluation order**; tertiary **1.2.2** ([[Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-03-30-1805]]) defines **graph execution semantics**, **subgraph selection**, and **parallelism posture** (serial-by-default); tertiary **1.2.3** ([[Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-03-30-1905]]) defines **stage families** (**structure** / **entities** / **glue** / **commit**) and **pipeline roles**; tertiary **1.2.4** ([[Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-03-30-1930]]) defines **seed bundles**, **stable node identity**, **determinism contracts**, and **replay intent**; tertiary **1.2.5** ([[Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-03-30-2015]]) defines **graph definition versioning**, **interchange manifests**, and **pre-run static validation**. Phase 1 **primary glue** row (safety invariants + dry-run hooks) is **NL-complete** on [[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]] (queue `resume-gmm-deepen-glue-primary-20260330T201500Z`); **not** a default **1.2.6** unless PMG expands scope. Next structural focus: **advance-phase** / Phase 2 or operator polish.
+
+## Phase 1.1 layering slice (1.1.1–1.1.5 — closed)
+
+Secondary **1.1** is **conceptually closed** for the layering / interface-contract spine: **commit pipeline + layer boundaries** ([[Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-03-30-0431]]), **observation + cache + invalidation** ([[Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-03-30-1325]]), **dependency direction + lifecycle** ([[Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-03-30-1420]]), **error boundaries + propagation** ([[Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-03-30-1430]]), **observability + test seams + slice handoff** ([[Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-03-30-1431]]). Cross-layer **correlation** and **boundary test hooks** are named at **documented seams** only; **slice-complete** means tertiaries **1.1.1–1.1.5** meet the NL checklist at the conceptual floor; workflow advanced through **1.2** (procedural graph — see Phase 1.2 section below). Layer identities are not re-litigated during **1.2.x** work.
+
+## Dependency graph
+
+```mermaid
+flowchart LR
+  Phase0[Phase 0 anchors] --> P1[Phase 1]
+  P1 --> P2[Phase 2]
+  P2 --> P3[Phase 3]
+  P3 --> P4[Phase 4]
+  P4 --> P5[Phase 5]
+  P5 --> P6[Phase 6]
+```

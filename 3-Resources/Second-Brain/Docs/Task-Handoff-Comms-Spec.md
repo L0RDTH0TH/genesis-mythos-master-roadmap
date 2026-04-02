@@ -68,6 +68,9 @@ Both lines share the same **`task_correlation_id`** (new UUID per `Task` invocat
 | `vault_root` | string | yes | Absolute or workspace path for the vault |
 | `body` | string | yes | Verbatim prompt (`handoff_out`) or return / error (`return_in`), after sanitization |
 | `sanitization_rules_applied` | string[] | yes | e.g. `["strip_secrets", "redact_home"]`; empty array if none |
+| `launch_mode` | string | no but recommended | `native_subagent` \| `generalPurpose_fallback` — copied from Task harden metadata when available; omitted for legacy calls. |
+| `contract_satisfied` | boolean \| null | no but recommended on `return_in` | When the callee emits a `task_harden_result` footer, callers SHOULD project its `contract_satisfied` value here (`null` or omit when unknown). |
+| `fallback_reason` | string | no | Short machine code such as `helper_not_selected_for_profile`, `task_enum_missing`, `generalPurpose_fallback_failed` when a fallback or profile-based skip occurs. |
 
 **Optional (large payloads):**
 
@@ -116,7 +119,20 @@ List applied rules in **`sanitization_rules_applied`**.
 {"schema_version":1,"task_correlation_id":"550e8400-e29b-41d4-a716-446655440000","parent_task_correlation_id":null,"record_type":"return_in","iso_timestamp":"2026-03-22T12:05:00.000Z","from_actor":"layer1_queue","to_actor":"layer2_roadmap","subagent_type":"roadmap","queue_entry_id":"q-abc","parent_run_id":"pr-xyz","project_id":"my-project","vault_root":"/path/to/vault","body":"Summary: ... Success\n...","sanitization_rules_applied":[]}
 ```
 
-**Nested helper** example: same `queue_entry_id` / `parent_run_id`, new `task_correlation_id`, `parent_task_correlation_id` = the `pipeline_task_correlation_id` from the L1→roadmap dispatch, `from_actor` e.g. `layer2_roadmap`, `to_actor` / `subagent_type` for `validator`.
+**Nested helper** example: same `queue_entry_id` / `parent_run_id`, new `task_correlation_id`, `parent_task_correlation_id` = the `pipeline_task_correlation_id` from the L1→roadmap dispatch, `from_actor` e.g. `layer2_roadmap`, `to_actor` / `subagent_type` for `validator`, and `launch_mode` set to the value chosen by the Task harden pass (`native_subagent` for a normal helper call).
+
+**Compliant nested attempts (validator / IRA / research):** For each mandated nested **`Task`**, Layer 2 should emit paired **`handoff_out`** / **`return_in`** rows with **`parent_task_correlation_id`** = that run’s **`pipeline_task_correlation_id`**, **`from_actor`** naming the pipeline (e.g. `layer2_ingest`, `layer2_roadmap`), **`subagent_type`** = `validator` \| `internal-repair-agent` \| `research`, and **`launch_mode`** consistent with the Task harden decision (`native_subagent` or `generalPurpose_fallback`). A real attempt (or a host **`task_error`** transcript) supports **`queue.mdc` A.5 (b0)(iv)** and [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] attestation; **skipped** without **`Task`** on a required step is non-compliant unless **`detail.reason_code`** is allowlisted.
+
+---
+
+## Compliance checks (Task calls vs. comms / ledger)
+
+- When [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] marks a Task call as **required** (Layer 0 → `queue`, Layer 1 → pipeline subagents, Layer 2 → nested `validator` / `internal-repair-agent` / `research` helpers), a compliant run **must** leave three aligned traces:
+  - A `handoff_out` / `return_in` pair in `.technical/task-handoff-comms.jsonl` with the expected `subagent_type` and a `task_correlation_id` (or `parent_task_correlation_id` for nested helpers) matching the run’s `pipeline_task_correlation_id`.
+  - A `nested_subagent_ledger` step row (for pipelines that emit it) with `task_tool_invoked: true` or `outcome: task_error` on the mandated `step` id (see [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] § Attestation invariants).
+  - Run-Telemetry / queue dispatch_ledger entries that record the same `task_correlation_id` as having been invoked.
+- If a pipeline claims in its ledger that a required helper was `invoked_ok` (or `invoked_empty_ok`) but there is **no** matching Task-Handoff-Comms pair for that helper and `subagent_type`, treat this as a structural contract violation (non-compliant attestation).
+- If Layer 1 records a pipeline dispatch as successful but there is **no** Task-Handoff-Comms pair with `subagent_type` equal to that pipeline name and the expected `task_correlation_id`, treat that as a dispatch bug rather than an absent pipeline.
 
 ---
 

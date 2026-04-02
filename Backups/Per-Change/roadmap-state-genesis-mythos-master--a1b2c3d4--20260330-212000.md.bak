@@ -1,0 +1,59 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/roadmap-state.md
+original_title: Roadmap State — genesis-mythos-master
+pipeline: roadmap
+snapshot_type: per-change
+snapshot_created: 2026-03-30T21:20:00.000Z
+snapshot_hash: pre-advance-phase-embed-v1
+confidence: 90
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+---
+
+---
+title: Roadmap State — genesis-mythos-master
+created: 2026-03-30
+tags:
+  - roadmap
+  - state
+  - genesis-mythos-master
+para-type: Project
+project-id: genesis-mythos-master
+status: generating
+current_phase: 1
+completed_phases: []
+version: 1
+last_run: 2026-03-30-2115
+drift_score_last_recal: 0.0
+handoff_drift_last_recal: 0.0
+roadmap_track: conceptual
+---
+
+# Roadmap state — genesis-mythos-master
+
+## Phase summaries
+
+- Phase 1: in-progress — **primary checklist complete** (layering **1.1**, procedural graph **1.2** + tertiaries **1.2.1–1.2.5**, **glue row** NL finalized on [[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]]); next structural focus **advance-phase to Phase 2** or operator-scoped polish (no default **1.2.6** unless PMG expands)
+- Phase 2: pending
+- Phase 3: pending
+- Phase 4: pending
+- Phase 5: pending
+- Phase 6: pending
+
+## Notes
+
+- **Conceptual track waiver (rollup / CI / HR):** This project’s **design authority** on the **conceptual** track does **not** claim execution rollup, registry/CI closure, or HR-style proof rows; those are **execution-deferred** per [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]. Advisory validator codes (`missing_roll_up_gates`) do **not** block conceptual completion when deferrals are explicit in phase notes and distilled-core.
+
+- Source master goal: [[Source-genesis-mythos-master-goal-2026-03-30-0430]]
+
+### Status vocabulary (rollup vs workflow session)
+
+- **`status` in this file (`generating` | …):** describes the **roadmap tree / phase rollup** lifecycle for the project roadmap.
+- **`status` in `workflow_state.md` (`in-progress` | …):** describes the **automation session** for deepen/resume iterations. These are **orthogonal** axes — not duplicate conflicting lifecycles.
+
+## Consistency reports (RECAL-ROAD)
+
+> [!note]
+> RECAL-ROAD outputs (drift, handoff drift, recommendations) can be appended here.

@@ -59,7 +59,13 @@ Pipelines may read exact thresholds and ranges from `3-Resources/Second-Brain/Pa
 
 ## MCP & Filesystem Safety
 
-All rules and skills that interact with Obsidian via MCP must obey the following guardrails:
+All rules and skills that interact with Obsidian via MCP must obey the following guardrails.
+
+**Environment note (Cursor agents and subagents)**: When Obsidian MCP tools are **not available in the current Cursor run** (for example, a Task subagent or chat agent that cannot see `obsidian_*` tools), you MUST treat the following safety rules as applying to **any file-mutation mechanism that *is* available** (e.g. Cursor’s own `Read`/`ApplyPatch` style inline edits), rather than blocking work waiting for MCP. In other words:
+
+- Backups/snapshots and confidence bands still conceptually apply, but may be implemented as best-effort within the tools the environment exposes.
+- **Do not refuse to mutate files solely because Obsidian MCP is missing.** In MCP-less contexts, direct inline edits to `.md` files in this vault are allowed and are treated as the primary mutation path.
+- Shell `cp`/`mv`/`rm` on the vault remain forbidden (see below); use inline text edits and, where absolutely necessary, non-destructive copies only.
 
 - **Backups first**:
   - Before any destructive operation (move, rename, delete, or large overwrite), ensure a recent backup exists via:
@@ -86,12 +92,19 @@ All rules and skills that interact with Obsidian via MCP must obey the following
 
 - **No shell file operations on the vault**:
   - Never use shell `cp`, `mv`, or `rm` to mutate the Obsidian vault contents.
-  - All moves/renames/deletes must go through MCP tools (e.g. `obsidian_move_note`, `obsidian_rename_note`, `obsidian_delete_note`) with backup and snapshot gates.
-  - The only exception is the dedicated, user-invoked attachment move skill, which must still obey backup and logging rules.
+  - When Obsidian MCP tools **are available**, moves/renames/deletes must go through MCP tools (e.g. `obsidian_move_note`, `obsidian_rename_note`, `obsidian_delete_note`) with backup and snapshot gates.
+  - When Obsidian MCP tools **are not available**, agents MAY perform content mutations and lightweight structural changes (e.g. creating or removing files/directories) using the host environment’s safe file tools (such as Cursor’s `Read`/`ApplyPatch` primitives), while still honoring confidence bands and snapshot/backup intent as best as the environment allows.
+  - The only exception for shell is the dedicated, user-invoked attachment move skill, which may run `mv` only for Ingest → 5-Attachments/ and must still obey backup and logging rules.
 
 - **Backups and snapshot directories**:
   - `BACKUP_DIR` (external backup) and `Backups/Per-Change/`, `Backups/Batch/` (in-vault snapshots) are treated as **append-only**; rules and skills must not overwrite or delete files here except via explicit, user-triggered retention/restore flows.
   - Snapshot and backup retention behavior is described in `snapshot-sweep.mdc` and `3-Resources/Second-Brain/Logs.md`.
+
+- **Roadmap-specific note**:
+  - The **roadmap subagent and its skills** follow this same intent when Obsidian MCP is unavailable in a Task environment:
+    - Structural mutations to roadmap artifacts MAY be applied via inline edits (`Read`/`ApplyPatch`) instead of `obsidian_*` tools, but backups/snapshots and confidence bands MUST still be treated as conceptual gates (best-effort approximations when snapshot/backup tools cannot be called).
+    - Shell `cp`/`mv`/`rm` remain forbidden for roadmap just as for other pipelines.
+    - Nested helpers (little val, Validator, Internal Repair Agent, Research) remain required or optional exactly as defined in the roadmap contracts; lack of MCP does not relax those helper obligations.
 
 - **Structure before move**:
   - Before any `obsidian_move_note` to a new directory:

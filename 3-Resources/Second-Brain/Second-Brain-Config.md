@@ -41,6 +41,33 @@ Single source of truth for pipeline and skill configuration. Skills and rules th
 - **auto_cleanup_after_process**: true | false — when true, run queue-cleanup skill after each EAT-QUEUE run (auto-mark failed entries, append to Errors.md). When false, cleanup only when user runs "Clear queue" or "Queue cleanup".
 - **re_try_max_loops**: 3 — cap on re-try spins per thread (e.g. same section/phase_path). When exceeded, abort re-try and create cap-hit wrapper (A: Force approve, B: Prune branch, 0: Re-wrap full phase). Document in Parameters.md.
 
+## task_harden (capability probing)
+
+- **mcp_probe_mode**: "assume_unavailable" — controls whether the roadmap subagent runs the lightweight Obsidian MCP availability capability probe at the start of each `Task(subagent_type: "roadmap")` invocation.
+  - **auto**: perform the probe and set `mcp_available` from the probe outcome.
+  - **assume_available**: skip the probe and set `mcp_available: true`.
+  - **assume_unavailable**: skip the probe and set `mcp_available: false` (force inline-edit backend).
+
+## pipeline_mode and validator_profiles
+
+- **pipeline_mode**: balance  # fast | balance | extreme — default validator/safety profile for roadmap/research
+- **validator_profiles**:
+  - extreme:
+    - l1_post_lv_policy: always
+    - nested_ira_policy: always
+    - research_synthesis_depth: full
+    - target_nested_validator_passes: 4
+  - balance:
+    - l1_post_lv_policy: conditional_nonhard_skip
+    - nested_ira_policy: clean_skip
+    - research_synthesis_depth: light
+    - target_nested_validator_passes: 2
+  - fast:
+    - l1_post_lv_policy: minimal
+    - nested_ira_policy: medium_or_higher
+    - research_synthesis_depth: fast
+    - target_nested_validator_passes: 2
+
 ## crafting (prompt-crafter)
 
 - **tmp_prompt_path**: ".technical/tmp-prompt.json" — machine-only scratchpad for the question-led Prompt-Crafter. Used to track which params have been asked, which values were chosen explicitly (A-path/manual), and C-choice reasoning across a crafting session. Treated as implementation detail; excluded from Obsidian and not surfaced in PARA notes.

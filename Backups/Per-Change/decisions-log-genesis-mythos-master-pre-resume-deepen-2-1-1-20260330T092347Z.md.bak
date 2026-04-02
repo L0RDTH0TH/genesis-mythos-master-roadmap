@@ -1,0 +1,65 @@
+---
+title: Decisions Log — genesis-mythos-master
+created: 2026-03-30
+tags:
+  - roadmap
+  - decisions
+  - genesis-mythos-master
+para-type: Project
+project-id: genesis-mythos-master
+status: active
+---
+
+# Decisions log — genesis-mythos-master
+
+## Decisions
+
+- **Conceptual deferral (2026-03-30):** Phase 1 primary checklist item “Safety invariants: seed snapshots + dry-run validation hooks” remains **execution-deferred** — NL contract is already stated on the primary note (snapshot + dry-run before destructive replace); tooling, CI, and closure artifacts are **out of scope** for conceptual completion. Validator ref `safety_unknown_gap` / queue `resume-gmm-deepen-12-20260330T160500Z`. See [[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]].
+- Phase 0: initialized (workflow_state + roadmap-state + distilled-core + master roadmap + phase stubs + MOC) via ROADMAP_MODE `roadmap-setup-gmm-20260330T043000Z`
+- Track: **conceptual** (`roadmap-state.md` `roadmap_track: conceptual`) for design authority before execution iteration
+
+**Operator picks:** For grep-stable machine preflight ([[3-Resources/Second-Brain/Docs/Decisions-Log-Operator-Pick-Convention|Decisions-Log-Operator-Pick-Convention]]), log dated sub-bullets under each **D-*** row, e.g. `**Operator pick logged (YYYY-MM-DD):** … — **Option A** | **Option B**`.
+
+## Conceptual autopilot
+
+- **Deepen (resume-gmm-deepen-phase2-post-advance-20260330T212100Z):** Phase 2 **primary** NL checklist **completed in place** on [[Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-03-30-0430]] — staged pipeline + intent hooks + collaboration loop (NL); `handoff_readiness` **76**; cursor advanced to **2.1** (first secondary). Resolver: `need_class: missing_structure`, `effective_target`: Phase 2 structural deepen post-advance, `gate_signature: phase-2-entry-post-advance`, `effective_track: conceptual`.
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-2-primary-checklist-2026-03-30-2121]] — `queue_entry_id: resume-gmm-deepen-phase2-post-advance-20260330T212100Z` — validation: pattern_only
+- **Deepen (resume-gmm-deepen-2-1-realign-20260330T220000Z):** Phase 2 **secondary 2.1** minted — stage pipeline that turns a deterministic seed bundle into staged world deltas (seed expansion → intent resolve → stage evaluation → simulation bootstrap packaging) with a dry-run validation gate; `handoff_readiness` **76**; cursor advanced to **2.1.1** (next tertiary). Resolver: `need_class: phase_gate_ready`, `effective_target`: Phase 2.1 (mint secondary 2.1), `gate_signature: phase-2-entry-post-advance`, `effective_track: conceptual`.
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-2-1-secondary-2026-03-30-2205]] — `queue_entry_id: resume-gmm-deepen-2-1-realign-20260330T220000Z` — validation: pattern_only
+- **Advance-phase (resume-gmm-advance-p2-post-glue-20260330T212000Z):** Phase **1 → 2** on **conceptual** track; Layer 1 `need_class: phase_gate_ready`, `gate_signature: structural-continue-phase-1-primary-glue`; gates: Phase 1 primary `handoff_readiness` **82** (≥70), secondary depth≥3 coverage **100%** (secondaries **1.1**, **1.2** each with tertiaries); `roadmap-state.md` `current_phase: 2`, `completed_phases: [1]`; workflow cursor reset for Phase 2 deepen.
+- **Operator pick logged (2026-03-30):** Phase 1.2.4 (determinism / seed bundles / stable identity / replay) — **pattern-only conceptual grounding accepted** for this tertiary slice; closes validator `safety_unknown_gap` for queue_entry_id `resume-gmm-deepen-124-20260330T193000Z`.
+- **Operator pick logged (2026-03-30):** Phase 1.2.1 (node taxonomy / edge kinds / topological order) — **pattern-only conceptual grounding accepted** for this tertiary slice; closes validator `safety_unknown_gap` for queue_entry_id `resume-gmm-deepen-121-20260330T170500Z` (see `.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260330T173800Z-conceptual-v1.md` when present).
+- **Operator pick logged (2026-03-30):** Phase 1.1.5 (observability / test seams / slice handoff) — **pattern-only conceptual grounding accepted** for this tertiary slice; closes validator `safety_unknown_gap` for queue_entry_id `resume-gmm-deepen-115-20260330T143100Z` (see `.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260330T150500Z-conceptual-v1.md`).
+- **Operator pick logged (2026-03-30):** Phase 1.1.2 (observation / cache / invalidation) — **pattern-only conceptual grounding accepted** for this tertiary slice; closes validator `safety_unknown_gap` for queue_entry_id `resume-gmm-followup-20260330T132500Z` (see `.technical/Validator/roadmap-auto-validation-20260330T134500Z.md`).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-primary-2026-03-30-0435]] — queue_entry_id: (workflow 2026-03-30 04:35 deepen) — validation: pattern_only
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-layering-2026-03-30-0500]] — queue_entry_id: (prior run) — validation: pattern_only
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-1-tertiary-2026-03-30-0431]] — queue_entry_id: resume-deepen-gmm-20260330T043100Z — validation: pattern_only
+- **Deepen (resume-deepen-gmm-20260330T043100Z):** Minted tertiary **1.1.1** — [[Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-03-30-0431]]; `handoff_readiness` 79; cursor advanced to **1.1.2** for next deepen (continue layering slice under **1.1**).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-2-tertiary-2026-03-30-1325]] — queue_entry_id: resume-gmm-followup-20260330T132500Z — validation: pattern_only
+- **Deepen (resume-gmm-followup-20260330T132500Z):** Minted tertiary **1.1.2** — [[Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-03-30-1325]]; `handoff_readiness` 78; cursor advanced to **1.1.3** for next deepen (continue layering slice under **1.1**).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-3-tertiary-2026-03-30-1420]] — queue_entry_id: resume-gmm-deepen-113-20260330T142000Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-113-20260330T142000Z):** Minted tertiary **1.1.3** — [[Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-03-30-1420]]; `handoff_readiness` 77; cursor advanced to **1.1.4** for next deepen (continue layering slice under **1.1**).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-4-tertiary-2026-03-30-1430]] — queue_entry_id: resume-gmm-deepen-114-20260330T142100Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-114-20260330T142100Z):** Minted tertiary **1.1.4** — [[Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-03-30-1430]]; `handoff_readiness` 76; cursor advanced to **1.1.5** for next deepen (continue layering slice under **1.1**).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-1-5-tertiary-2026-03-30-1431]] — queue_entry_id: resume-gmm-deepen-115-20260330T143100Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-115-20260330T143100Z):** Minted tertiary **1.1.5** — [[Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-03-30-1431]]; `handoff_readiness` 75; cursor advanced to **1.2** for next deepen (procedural generation graph secondary).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-2-secondary-2026-03-30-1605]] — queue_entry_id: resume-gmm-deepen-12-20260330T160500Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-12-20260330T160500Z):** Minted secondary **1.2** — [[Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-03-30-1605]]; `handoff_readiness` 76; cursor advanced to **1.2.1** for next deepen (first tertiary under **1.2**). Resolver: `need_class: missing_structure`, `effective_target`: Phase 1.2 procedural generation graph skeleton.
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-2-1-tertiary-2026-03-30-1705]] — queue_entry_id: resume-gmm-deepen-121-20260330T170500Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-121-20260330T170500Z):** Minted tertiary **1.2.1** — [[Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-03-30-1705]]; `handoff_readiness` 77; cursor advanced to **1.2.2** for next deepen (continue procedural graph slice under **1.2**). Resolver: `need_class: missing_structure`, `effective_target`: Tertiary 1.2.1 under Phase 1.2.
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-2-2-tertiary-2026-03-30-1805]] — queue_entry_id: resume-gmm-deepen-122-20260330T180500Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-122-20260330T180500Z):** Minted tertiary **1.2.2** — [[Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-03-30-1805]]; `handoff_readiness` 77; cursor advanced to **1.2.3** for next deepen (continue procedural graph slice under **1.2**). Resolver: `need_class: missing_structure`, `effective_target`: **1.2.2** under Phase 1 secondary **1.2** (procedural graph slice).
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-2-3-tertiary-2026-03-30-1905]] — queue_entry_id: resume-gmm-deepen-123-20260330T190500Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-123-20260330T190500Z):** Minted tertiary **1.2.3** — [[Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-03-30-1905]]; `handoff_readiness` 78; cursor advanced to **1.2.4** for next deepen (continue procedural graph slice under **1.2**). Resolver: `need_class: missing_structure`, `effective_target`: **1.2.3**, `gate_signature`: resolver-pre-dispatch, `effective_track`: conceptual.
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-2-4-tertiary-2026-03-30-1930]] — queue_entry_id: resume-gmm-deepen-124-20260330T193000Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-124-20260330T193000Z):** Minted tertiary **1.2.4** — [[Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-03-30-1930]]; `handoff_readiness` 78; cursor advanced to **1.2.5** for next deepen (continue procedural graph slice under **1.2**). Resolver: `need_class: missing_structure`, `effective_target`: Phase 1.2.4 procedural graph slice, `gate_signature`: structural_target_1.2.4, `effective_track`: conceptual.
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-2-5-tertiary-2026-03-30-2015]] — queue_entry_id: resume-gmm-deepen-125-20260330T201500Z — validation: pattern_only
+- **Deepen (resume-gmm-deepen-125-20260330T201500Z):** Minted tertiary **1.2.5** — [[Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-03-30-2015]]; `handoff_readiness` 77; **1.2** tertiary chain **1.2.1–1.2.5** complete (mirrors **1.1** breadth). Next: Phase 1 **primary** checklist **glue / integration** row (safety invariants + dry-run hooks) — not a default **1.2.6** unless PMG expands. Resolver: `need_class: missing_structure`, `effective_target`: Mint tertiary 1.2.5 — continue procedural graph slice, `gate_signature`: structural-continue-1-2-5, `effective_track`: conceptual.
+- **Decision record (deepen):** [[Conceptual-Decision-Records/deepen-phase-1-primary-glue-invariants-2026-03-30-2115]] — `queue_entry_id: resume-gmm-deepen-glue-primary-20260330T201500Z` — validation: pattern_only
+- **Deepen (resume-gmm-deepen-glue-primary-20260330T201500Z):** Phase 1 **primary glue** checklist row **completed in place** on [[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]] — safety invariants + dry-run validation hooks (NL); `handoff_readiness` 82; cursor **1** (Phase 1 rollup). Next: **advance-phase** to Phase 2 or scoped polish. Resolver: `need_class: missing_structure`, `effective_target`: Phase 1 primary glue row, `gate_signature`: structural-continue-phase-1-primary-glue, `effective_track`: conceptual.
+- **Validator follow-up (2026-03-30):** Nested `roadmap_handoff_auto` reported `missing_roll_up_gates` / `safety_unknown_gap` (medium); addressed by **prose rollup waivers** in [[roadmap-state]] + [[distilled-core]], **`progress` / `phase1_primary_checklist` frontmatter** cleanup, and **GMM-EXEC-TBD-001/002** block on primary note — **no RECAL** solely for execution-advisory codes. `queue_entry_id: resume-gmm-deepen-glue-primary-20260330T201500Z`.
+
+## Handoff notes
+
+- Add `#handoff-review` and `#handoff-needed` bullets here when hand-off-audit flags issues.
+

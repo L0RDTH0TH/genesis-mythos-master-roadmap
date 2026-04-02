@@ -9,6 +9,22 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/Logs]]"]
 
 # Feedback Log
 
+`2026-03-31T12:20:00Z` — **conceptual_execution_gate_advisory** — queue_entry_id `followup-deepen-phase4-41-rollup-gmm-20260403T211500Z` — effective_track conceptual — primary_code `safety_unknown_gap` — A.5b.0 no repair JSONL append (L1 post-LV report `.technical/Validator/roadmap-handoff-auto-gmm-20260403T213500Z-followup-deepen-phase4-41-rollup-ledger.md`).
+
+`2026-03-30T22:05:00Z` — **queue_blocking_repair_preflight** — queue_entry_id `resume-recal-contradictions-gmm-20260330T221500Z` — project_id `genesis-mythos-master` — forward_first initial pass scheduled blocking repair before forward deepen (informational).
+
+`2026-03-30T22:00:00Z` — **validator_context_missing_soft** — queue_entry_id `resume-deepen-gmm-255-20260331T234500Z-forward` — Roadmap Task return: deepen material work + `little_val_ok` true; **`validator_context` absent** (nested `Task(validator)` unavailable in Layer 2). `strict_nested_return_gates: false` — legacy skip of L1 **Task(validator)** per queue.mdc A.5 (b1) legacy branch; **A.5c** appended `queue_followups.next_entry` (`resume-deepen-gmm-26-mint-followup-20260401T000000Z`); consumed triggering line.
+
+`2026-03-30T05:30:00Z` — **conceptual_execution_gate_advisory** — queue_entry_id `roadmap-setup-gmm-20260330T043000Z` — effective_track conceptual — primary_code `safety_unknown_gap` — A.5b.0 skip auto-repair append (L1 post-LV report `.technical/Validator/roadmap-auto-validation-20260330T051500Z-secondpass.md`).
+
+`2026-03-29T19:10:00Z` — **conceptual_execution_gate_advisory** — queue_entry_id `resume-deepen-gmm-begin-buildout-20260329T180000Z` — effective_track conceptual — primary_code `safety_unknown_gap` — A.5b.0 skip auto-repair append (L1 post-LV report `.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260329T183500Z-layer1-postlv.md`).
+
+`2026-03-29T18:50:00Z` — **conceptual_execution_gate_advisory** — queue_entry_id `roadmap-setup-gmm-restart-20260329T160000Z` — effective_track conceptual — primary_code `safety_unknown_gap` — A.5b.0 skip auto-repair append (L1 post-LV after ROADMAP_MODE setup; report `.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260329T183500Z-conceptual-v1-second-pass-compare.md`).
+
+`2026-03-29T00:20:00Z` — **conceptual_execution_gate_advisory** — queue_entry_id `followup-deepen-post-d133-bounded-415-gmm-20260329T000500Z` — effective_track conceptual — primary_code `missing_roll_up_gates` — A.5b.0 skip auto-repair append (L1 post-LV report `.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260329T001500Z-conceptual-v1-post-d133-bounded-l1-dispatch.md`).
+
+`2026-03-29T00:20:00Z` — **ledger_semantic_attestation_soft** — queue_entry_id `followup-deepen-post-d133-bounded-415-gmm-20260329T000500Z` — Roadmap return: `nested_validator_first` skipped / `task_tool_invoked: false` (L2 Task unavailable); strict_nested_return_gates false — L1 ran Task(validator) for post-LV; consumption per A.5b.0 advisory path.
+
 `2026-03-28T22:20:00Z` — **conceptual_execution_gate_advisory** — queue_entry_id `followup-deepen-post-d129-workflow-log-reconcile-gmm-20260328T220800Z` — effective_track conceptual — primary_code `missing_roll_up_gates` (+ `safety_unknown_gap` in reason_codes) — A.5b.0 skip auto-repair append (L1 post-LV report `.technical/Validator/roadmap-handoff-auto-genesis-mythos-master-20260328T221000Z-layer1-postlv-d129.md`).
 
 `2026-03-28T22:20:00Z` — **ledger_semantic_attestation_soft** — queue_entry_id `followup-deepen-post-d129-workflow-log-reconcile-gmm-20260328T220800Z` — Roadmap return: `nested_validator_first` outcome `not_applicable` / `task_tool_invoked: false` (L2 Task(validator) unavailable); strict_nested_return_gates false — consumption allowed per queue.mdc A.5 (b0)(iii) soft path.
@@ -61,3 +77,9 @@ One line or short block per run; no PII. Example fields:
 - [Logs](3-Resources/Second-Brain/Logs.md) — all log destinations and rotation
 - [Parameters](3-Resources/Second-Brain/Parameters.md) — Async-Loop Flow, confidence bands
 - [Queue-Sources](3-Resources/Second-Brain/Queue-Sources.md) — queue modes and Commander-Sourced
+
+2026-03-28T20:26:33Z | EAT-QUEUE L1 | error_type: conceptual_execution_gate_advisory | queue_entry_id: followup-deepen-gmm-415-post-d147-bounded-20260329T040000Z | primary_code: missing_roll_up_gates | effective_track: conceptual | A.5b.0 skip auto-repair
+
+- 2026-03-30T01:19:27Z | queue | inline_forward_followup_pending | genesis-mythos-master | follow-up on disk after Pass3 wave2; run EAT-QUEUE to continue drain
+
+- **2026-03-31T01:14:15Z** — `conceptual_execution_gate_advisory`: L1 post-LV primary_code `missing_roll_up_gates` + `safety_unknown_gap` on conceptual track; A.5b.0 skip repair append; queue_entry_id `followup-deepen-phase4-413-gmm-20260331T001700Z`.

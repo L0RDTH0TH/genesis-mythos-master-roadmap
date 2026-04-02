@@ -1,0 +1,20 @@
+---
+title: Decisions Log (lightweight pre-marker) — genesis-mythos-master
+created: 2026-04-02
+tags:
+  - roadmap
+  - decisions-log
+  - safety-marker
+para-type: Project
+project-id: genesis-mythos-master
+---
+
+## Lightweight safety marker
+
+This is a minimal snapshot marker for `1-Projects/genesis-mythos-master/Roadmap/decisions-log.md` around the Phase 5 secondary `5.1` re-mint.
+
+Pre-change context:
+- The conceptual autopilot section did not yet include an entry for queue `followup-deepen-phase5-51-mint-gmm-20260403T231000Z`.
+
+Note: this marker does not store the full pre-image content (use git/backup tooling for full restore).
+

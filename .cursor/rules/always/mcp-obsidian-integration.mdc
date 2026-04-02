@@ -6,6 +6,14 @@ alwaysApply: true
 
 # MCP Obsidian integration
 
+> **Environment scope**
+>
+> These rules describe how to behave **when Obsidian MCP tools are actually available** (e.g. Obsidian + obsidian-para-zettel-autopilot server).  
+> When a Cursor agent or Task subagent **cannot see any `obsidian_*` tools**, treat this file as **advisory only** and:
+> - **Do not block** mutations waiting for MCP.
+> - Apply the safety ideas (backups, snapshots, confidence bands) *as best you can* using the host’s own file tools (e.g. Cursor `Read` + `ApplyPatch`), and
+> - Prefer inline edits over shell `cp`/`mv`/`rm` for this vault.
+
 ## Folder blacklist & canonical names (this vault only)
 
 **BLACKLIST — never use or reference:** `00 Inbox`, `10 Zettelkasten`, `99 Attachments`, `99 Templates`. Do not create or propose any new PARA or folder patterns; use only what is defined here and in [[3-Resources/Second-Brain/Vault-Layout]].

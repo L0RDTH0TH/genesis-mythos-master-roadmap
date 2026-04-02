@@ -1,0 +1,54 @@
+---
+original_path: 1-Projects/genesis-mythos-master/Roadmap/distilled-core.md
+pipeline: roadmap
+snapshot_type: per-change
+snapshot_created: 2026-03-30T10:47:00Z
+ira_cycle: pre_apply
+immutable: true
+---
+
+---
+title: Distilled Core — genesis-mythos-master
+created: 2026-03-30
+tags:
+  - roadmap
+  - distilled-core
+  - genesis-mythos-master
+para-type: Project
+project-id: genesis-mythos-master
+status: active
+core_decisions:
+  - "Phase 1 (conceptual): decouple world state, simulation, rendering, and input; procedural generation as ordered pipeline with intent injection points; modularity seams (stages, rule hooks, event bus); safety invariants — snapshot + dry-run before destructive world replacement."
+  - "Phase 2 (conceptual, primary): staged worldgen pipeline (seed/graph → terrain → biomes → POIs → entities → sim bootstrap); intent resolver → systemic hooks; collaborative scaffold→refine→commit; major regen stays intentional — execution formats deferred."
+  - "Conceptual track waiver (rollup / CI / HR): This project’s design authority on the conceptual track does not claim execution rollup, registry/CI closure, or HR-style proof rows; those are execution-deferred."
+---
+
+# Distilled core — genesis-mythos-master
+
+## Phase 0 anchors
+
+- Master goal: [[Source-genesis-mythos-master-goal-2026-03-30-0430]]
+- Roadmap state: [[roadmap-state]]
+- Workflow state: [[workflow_state]]
+- Decisions log: [[decisions-log]]
+
+## Core decisions (🔵)
+
+- **Phase 1 (conceptual):** Four-layer separation (world state / simulation / rendering / input); procedural generation graph with intent injection; named seams for stages, rule hooks, and event bus; safety hooks for snapshot + dry-run before destructive world replacement. Detail: [[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]].
+- **Conceptual track waiver (rollup / CI / HR):** This project’s design authority on the conceptual track does not claim execution rollup, registry/CI closure, or HR-style proof rows; those are execution-deferred per [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]. Advisory validator codes (`missing_roll_up_gates`) do not block conceptual completion when deferrals are explicit in phase notes and distilled-core.
+
+## Phase 1.1 layering slice (1.1.1–1.1.5 — closed; next **1.2**)
+
+Secondary **1.1** is **conceptually closed** for the layering / interface-contract spine: **commit pipeline + layer boundaries** ([[Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-03-30-0431]]), **observation + cache + invalidation** ([[Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-03-30-1325]]), **dependency direction + lifecycle** ([[Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-03-30-1420]]), **error boundaries + propagation** ([[Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-03-30-1430]]), **observability + test seams + slice handoff** ([[Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-03-30-1431]]). Cross-layer **correlation** and **boundary test hooks** are named at **documented seams** only; **slice-complete** means tertiaries **1.1.1–1.1.5** meet the NL checklist at the conceptual floor, and the workflow cursor advances to **1.2** (procedural generation graph skeleton) without re-litigating layer identities.
+
+## Dependency graph
+
+```mermaid
+flowchart LR
+  Phase0[Phase 0 anchors] --> P1[Phase 1]
+  P1 --> P2[Phase 2]
+  P2 --> P3[Phase 3]
+  P3 --> P4[Phase 4]
+  P4 --> P5[Phase 5]
+  P5 --> P6[Phase 6]
+```

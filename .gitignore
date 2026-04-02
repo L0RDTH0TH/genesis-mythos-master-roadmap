@@ -13,8 +13,6 @@ Thumbs.db
 .git-clones/
 # Extracted starter kit (has its own .git; use zip or add as submodule if needed)
 Second-Brain-Starter-Kit/
-# Nested clone under Archives (own .git; do not track as submodule)
-4-Archives/test-2-genesis-mythos-master/
 
 # Trash
 .trash/

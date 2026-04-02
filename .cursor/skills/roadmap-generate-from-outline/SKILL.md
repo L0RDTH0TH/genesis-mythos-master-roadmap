@@ -17,7 +17,7 @@ This skill **does not** run from ingest. It:
 1. Creates a project folder and `Roadmap/` subtree.
 2. Creates a **master roadmap** note (no checkboxes).
 3. Creates **phase roadmap** notes (tasks allowed).
-4. Moves the original seed into `Roadmap/` as a source note.
+4. **Relocates or preserves** the original seed (see step 9): Ingest-only seeds move into `Roadmap/Source-…`; a **canonical Project Master Goal** file that already lives at `1-Projects/<project-id>/` is **never moved** (stays the stable PMG path for links and state).
 5. Sets provenance and generation status on the master.
 
 ## Inputs
@@ -31,7 +31,7 @@ This skill **does not** run from ingest. It:
 
 1. **Backup & snapshot safety**
    - Ensure `obsidian_create_backup` has already been called for `original_note` in the ingest/apply pipeline (per `mcp-obsidian-integration` and `para-zettel-autopilot`). If not, run it before any structural writes.
-   - Before **moving** the original seed note, create a **per-change snapshot** via the `obsidian-snapshot` skill (`type: "per-change"`) so the original state is recoverable.
+   - Before **moving** the original seed note (when step 9 applies a move — not when preserving a project-root PMG), create a **per-change snapshot** via the `obsidian-snapshot` skill (`type: "per-change"`) so the original state is recoverable.
 
 2. **Normalize seed if master goal**
    - After backup/snapshot, read the seed note once. If it is a **Project Master Goal** (`is_master_goal: true` in frontmatter **or** filename/path matches `*Master*Goal*` / `*MasterGoal*`), run the **normalize-master-goal** skill on `original_note` so the body follows [[Templates/Roadmap/Master-Goal]] (One-line, Vision, Phases, Technical Integration, TL;DR, Related). Then re-read the note for parsing. This ensures phase detection (step 3) sees a consistent structure; phases are expected under `## Phases` as `### Phase N — <Name>` or as top-level `## Phase N — <Name>`.
@@ -245,15 +245,23 @@ For each detected phase `N` with display name `<PhaseName>` and seed sentence:
   ```
   ```
 
-9. **Move the original seed note**
+9. **Relocate or preserve the original seed note**
 
-- After master + phases + MOC are written successfully:
-  - Move `original_note` from `Ingest/...` to:
-    - `1-Projects/<ProjectName>/Roadmap/Source-<OriginalSlug>-YYYY-MM-DD-HHMM.md`
-  - Use:
-    - `obsidian_ensure_structure` for the `Roadmap/` folder (already ensured above).
-    - `obsidian_move_note` with `dry_run: true` then `dry_run: false`.
-  - Do **not** alter the original seed content (beyond what ingest may already have done); treat it as a historical source.
+After master + phases + MOC are written successfully, choose **one** path:
+
+- **A — Canonical Project Master Goal at project root (default: preserve; do not move)**  
+  If **all** of the following hold:
+  - `original_note` is a vault path **directly under** `1-Projects/<ProjectName>/` (the note file sits in the project folder, not only under `Roadmap/` or deeper subfolders), **and**
+  - The note is a **Project Master Goal** (`is_master_goal: true` in frontmatter **or** filename matches `*Master*Goal*` / `*MasterGoal*`),
+  
+  then **do not** call `obsidian_move_note` on this file. The PMG **remains** the canonical note at project root (this is the stable anchor for PMG links, `roadmap-state` / `distilled-core` `source_master_goal`, and human habit). Use this **vault path** as `<SourceNote>` everywhere in step 6 (provenance, `Source:`, Related). **Do not** delete or replace it with a Roadmap-only copy.
+
+- **B — Seed still in Ingest (or non-PMG outline you are archiving under Roadmap)**  
+  If `original_note` is under `Ingest/` **or** path A does not apply and the operator expects the classic “source under Roadmap” layout: move `original_note` to  
+  `1-Projects/<ProjectName>/Roadmap/Source-<OriginalSlug>-YYYY-MM-DD-HHMM.md`  
+  using `obsidian_ensure_structure` for `Roadmap/`, then `obsidian_move_note` with `dry_run: true` then `dry_run: false`. Snapshot before move (step 1). Do **not** alter the moved note’s body beyond prior steps (normalize-master-goal, etc.).
+
+**Invariant:** Roadmap generation **must not** remove the project-root Master Goal from `1-Projects/<project-id>/` when that file was the seed (path A).
 
 10. **Optional polish (future-safe hooks)**
 
@@ -269,7 +277,7 @@ Current implementation may skip these in the first version; the important part i
 11. **Logging and wrapper cleanup**
 
 - Log a `CHECK_WRAPPERS` entry in `3-Resources/Ingest-Log.md`, e.g.:
-  - `CHECK_WRAPPERS: <timestamp> | Roadmap created for <ProjectName> (Option A) | Project | created master + N phases + MOC; moved original to Roadmap/Source; wrapper archived | 85% | 1-Projects/<ProjectName>/Roadmap/ | `
+  - `CHECK_WRAPPERS: <timestamp> | Roadmap created for <ProjectName> (Option A) | Project | created master + N phases + MOC; PMG preserved at project root OR moved original to Roadmap/Source; wrapper archived | 85% | 1-Projects/<ProjectName>/Roadmap/ | `
 - After success:
   - Set `used_at` and/or `processed: true` on the wrapper.
   - Move the wrapper to `4-Archives/Ingest-Decisions/` (per auto-eat-queue and para-zettel-autopilot).
@@ -304,8 +312,8 @@ Use **drift_score_threshold** and **conf_phase_complete_threshold** (85) from Pa
 - `obsidian_ensure_structure` — ensure project root, `Roadmap/`, and phase folders exist.
 - `obsidian_update_note` — create/update master roadmap, phase notes, and MOC.
 - `obsidian_create_backup` — ensure backup exists before structural operations (if ingest did not already run it in this apply-mode cycle).
-- `obsidian_move_note` — move the original seed from `Ingest/` to the project `Roadmap/Source-...` path (dry_run then commit).
-- `obsidian-snapshot` skill — per-change snapshot before moving the original or performing other destructive changes.
+- `obsidian_move_note` — **only when step 9 path B applies** — move the seed from `Ingest/` (or non-preserved paths) to `Roadmap/Source-...` (dry_run then commit). **Never** use move to pull a canonical PMG off the project root (step 9 path A).
+- `obsidian-snapshot` skill — per-change snapshot before moving the original (path B) or performing other destructive changes.
 
 ## Confidence gate
 
