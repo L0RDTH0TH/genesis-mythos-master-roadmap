@@ -47,11 +47,20 @@ rsync -a --delete "/home/darth/Documents/Second-Brain/3-Resources/Second-Brain/D
 mkdir -p "Docs/Core"
 
 cd /home/darth/Documents/Second-Brain/3-Resources/Second-Brain
-for f in Queue-Sources.md Parameters.md Rules.md Skills.md Pipelines.md Cursor-Skill-Pipelines-Reference.md User-Questions-and-Options-Reference.md Prompt-Crafter-Param-Table.md Subagent-Safety-Contract.md; do
+for f in Queue-Sources.md Parameters.md Rules.md Skills.md Pipelines.md Cursor-Skill-Pipelines-Reference.md User-Questions-and-Options-Reference.md Prompt-Crafter-Param-Table.md Subagent-Safety-Contract.md Vault-Layout.md Queue-Alias-Table.md Roadmap-Quality-Guide.md Roadmap-Upgrade-Plan.md Second-Brain-Config.md Backbone.md Logs.md; do
   if [ -f "$f" ]; then
     cp "$f" "/home/darth/Documents/gmm-roadmap-export/Docs/Core/$f"
   fi
 done
+#
+# Roadmap Structure lives at the vault workspace root (not under 3-Resources/Second-Brain/).
+cp "/home/darth/Documents/Second-Brain/Roadmap Structure.md" "/home/darth/Documents/gmm-roadmap-export/Docs/Core/Roadmap Structure.md"
+#
+# Mirror additional global system docs that roadmap runtime depends on.
+# (These live outside the `3-Resources/Second-Brain/` subtree.)
+cp "/home/darth/Documents/Second-Brain/3-Resources/Errors.md" "/home/darth/Documents/gmm-roadmap-export/Docs/Core/Errors.md"
+cp "/home/darth/Documents/Second-Brain/3-Resources/Watcher-Result.md" "/home/darth/Documents/gmm-roadmap-export/Docs/Core/Watcher-Result.md"
+cp "/home/darth/Documents/Second-Brain/3-Resources/Watcher-Signal.md" "/home/darth/Documents/gmm-roadmap-export/Docs/Core/Watcher-Signal.md"
 cd /home/darth/Documents/gmm-roadmap-export
 
 # Mirror roadmap + project anchors
