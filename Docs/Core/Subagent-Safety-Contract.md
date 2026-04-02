@@ -71,6 +71,56 @@ These roadmap-specific rules refine, but do not weaken, the global MCP & filesys
 
 ---
 
+## Mandatory helper proof-of-attempt (ledger + contract)
+
+This section makes explicit the **proof-of-attempt requirement** for **mandatory** nested helpers (Validator, IRA, Research) and ties it to the top-level `contract_satisfied` flag. It refines, but does not replace, the honesty rules in [[3-Resources/Second-Brain/Docs/Safety-Invariants|Safety-Invariants]] § Helper profiles and the attestation rules in [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]].
+
+For every queue-dispatched pipeline run that emits a `nested_subagent_ledger`:
+
+- The top-level ledger object **must** include at least:
+  - `helper_mandatory` (implicit in the helper graph / profile and per-step “required this run” rules in the ledger spec),
+  - `material_state_change_asserted` (`true` \| `false` \| `unknown`),
+  - `little_val_final_ok` (boolean),
+  - `little_val_attempts` (int),
+  - `ira_after_first_pass_effective` (boolean),
+  - `nested_cycle_applicable` (boolean),
+  - `pipeline_mode_used` (when available: `fast` \| `balance` \| `extreme` or equivalent),
+  - `effective_profile_snapshot` (when available),
+  - and an ordered `steps[]` array of step records as in Nested-Subagent-Ledger-Spec.
+
+For any **step** where the helper is **mandatory for this run** (selected in the helper graph for the active profile and marked “required this run” by the ledger heuristics), the following invariants apply:
+
+- It is **illegal** to record:
+  - `outcome: invoked_ok` or `invoked_empty_ok` **unless** `task_tool_invoked: true` and a real `Task(subagent_type)` call for that helper occurred in this run.
+  - `outcome: skipped` with `task_tool_invoked: false` **unless** `detail.reason_code` is in the documented allowlist for genuine N/A cases (material gate, unfreeze-only, legacy clean log-only IRA skip, chain consumables, etc.).
+  - `outcome: not_applicable` on a helper that the helper graph/profile selected as mandatory for this profile and branch.
+
+- When a mandatory helper **cannot** be launched (Task enum rejection, missing tool, resource exhaustion, etc.), the only valid ledger shape is:
+  - `task_tool_invoked: false`,
+  - `outcome: task_error`,
+  - non-empty `host_error_class` / `host_error_raw`,
+  - and an appropriate `detail.reason_code` (e.g. `nested_task_unavailable`, `task_enum_rejected`).
+  In this case the pipeline **must not** return **Success** for that run; the overall status must be `#review-needed` or `failure`.
+
+Analysis-only or advisory runs (no full helper cycle) **must** make this explicit:
+
+- Set `material_state_change_asserted: false` (or `unknown` when you truly cannot tell), `little_val_final_ok: false` (or omit little val fields when it was never run), and `nested_cycle_applicable: false` when the entire nested cycle was out of scope.
+- For helpers that would normally be mandatory under the profile, record **blocked** or **analysis-only** skip rows with:
+  - `task_tool_invoked: false`,
+  - `outcome: blocked` or `not_applicable`,
+  - `detail.reason_code: analysis_only_contract_not_evaluated` (or equivalent),
+  - and prose that clearly labels the run as **advisory / analysis-only**, never as a completed deepen / handoff.
+
+Roll-up invariant (parent-facing):
+
+- A pipeline may set `contract_satisfied: true` in its `task_harden_result` **only if all of the following hold**:
+  - Every helper that is mandatory under the active profile has a ledger row with `task_tool_invoked: true` and `outcome: invoked_ok | invoked_empty_ok | failed` (or `task_error` when the host rejected the call but the contract allowed a degraded, non-successful exit).
+  - No mandatory helper appears only as `skipped` or `not_applicable` without an allowlisted `detail.reason_code`.
+  - `nested_cycle_applicable` and `material_state_change_asserted` are consistent with the helper graph and the pipeline’s own contracts for this mode.
+- When any mandatory helper violates these conditions, the pipeline **must** set `contract_satisfied: false` in its `task_harden_result` and return a non-success status (`#review-needed` or `failure`); Layer 1 strict gates (`queue.strict_nested_return_gates`) then prevent the queue from consuming the entry as a successful run.
+
+---
+
 ## Task harden pass (capability probing, profiles, and launch modes)
 
 All `Task` callers (Layer 0, Layer 1, and Layer 2 nested helpers) MUST route their Task invocations through a **Task harden pass**. The harden pass is a **pure wrapper** around the Cursor Task tool that:

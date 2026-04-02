@@ -150,6 +150,108 @@ In the **Run-Telemetry** note for the pipeline run (roadmap, ingest, archive, or
 
 ---
 
+## Examples (valid vs forbidden patterns)
+
+These minimal examples illustrate how the attestation and proof-of-attempt rules are expected to appear in real ledgers.
+
+### Example A — Valid ledger with mandatory validator run
+
+```yaml
+nested_subagent_ledger:
+  ledger_schema_version: 1
+  pipeline: RESUME_ROADMAP
+  params_action: deepen
+  material_state_change_asserted: true
+  little_val_final_ok: true
+  little_val_attempts: 1
+  ira_after_first_pass_effective: true
+  nested_cycle_applicable: true
+  pipeline_mode_used: balance
+  steps:
+    - step: little_val_main
+      ordinal: 1
+      started_iso: "2026-04-03T23:10:01.000Z"
+      ended_iso: "2026-04-03T23:10:01.500Z"
+      subagent_type: none
+      task_tool_invoked: false
+      outcome: invoked_ok
+      detail:
+        reason_code: structural_check_ok
+        human_readable: "little val structural check passed for this run."
+    - step: nested_validator_first
+      ordinal: 2
+      started_iso: "2026-04-03T23:10:01.500Z"
+      ended_iso: "2026-04-03T23:10:02.200Z"
+      subagent_type: validator
+      task_tool_invoked: true
+      outcome: invoked_ok
+      host_error_raw: ""
+      host_error_class: ""
+      handoff_summary:
+        validation_type: roadmap_handoff_auto
+        model_passed_to_task: omitted
+      return_summary:
+        severity: low
+        recommended_action: log_only
+        primary_code: "-"
+        report_path: ".technical/Validator/roadmap-auto-validation-20260403T231000Z.md"
+      detail:
+        reason_code: validator_first_pass_complete
+        human_readable: "First nested roadmap_handoff_auto validator pass completed cleanly."
+```
+
+This ledger is **valid** because:
+
+- The helper graph/profile made `nested_validator_first` mandatory (roadmap, balance mode, `nested_cycle_applicable: true`).
+- The validator step has `task_tool_invoked: true` and `outcome: invoked_ok`; a real `Task(validator)` call is implied and documented.
+- There are no `skipped` / `not_applicable` rows for required steps without allowlisted reason codes.
+
+### Example B — Forbidden ledger (skip without attempt on required validator)
+
+```yaml
+nested_subagent_ledger:
+  ledger_schema_version: 1
+  pipeline: RESUME_ROADMAP
+  params_action: deepen
+  material_state_change_asserted: true
+  little_val_final_ok: true
+  little_val_attempts: 1
+  ira_after_first_pass_effective: false
+  nested_cycle_applicable: true
+  pipeline_mode_used: balance
+  steps:
+    - step: little_val_main
+      ordinal: 1
+      started_iso: "2026-04-03T23:10:01.000Z"
+      ended_iso: "2026-04-03T23:10:01.500Z"
+      subagent_type: none
+      task_tool_invoked: false
+      outcome: invoked_ok
+      detail:
+        reason_code: structural_check_ok
+        human_readable: "little val structural check passed for this run."
+    - step: nested_validator_first
+      ordinal: 2
+      started_iso: "2026-04-03T23:10:01.500Z"
+      ended_iso: "2026-04-03T23:10:01.600Z"
+      subagent_type: validator
+      task_tool_invoked: false
+      outcome: skipped
+      detail:
+        reason_code: helper_unavailable_but_not_attempted
+        human_readable: "Validator was assumed unavailable and skipped without attempting Task."
+```
+
+This ledger is **forbidden** under the attestation and proof-of-attempt rules because:
+
+- `nested_validator_first` is a **mandated** helper step for this run (`nested_cycle_applicable: true`, roadmap, balance mode).
+- The row has `task_tool_invoked: false` and `outcome: skipped` with a non-allowlisted `reason_code`.
+- No `task_error` row exists documenting a real `Task(validator)` failure (`host_error_class` / `host_error_raw`).
+
+When a pipeline produces a ledger like this, Layer 2 must not claim Success with `little_val_ok: true`, and Layer 1 strict nested return gates must not consume the queue entry as a successful run. The correct shape, when the helper really cannot be invoked, is a `task_error` row with `host_error_class` (e.g. `nested_task_unavailable`) plus a non-successful overall status.
+
+---
+
 ## Layer 1 `dispatch_ledger` (recommended)
 
 One record per Queue-initiated `Task` in the EAT-QUEUE run:

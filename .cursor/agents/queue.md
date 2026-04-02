@@ -116,6 +116,28 @@ Respect task-queue exclusions (Watcher-protected paths, Backups/).
 
 ---
 
+## Post-return validation for roadmap nested helpers
+
+After any `Task(roadmap)` dispatch that returns Success, you must treat the roadmap result as **provisional** until its nested helper ledger passes basic attestation checks:
+
+- Parse the returned `nested_subagent_ledger` block when present. When [[3-Resources/Second-Brain-Config|Second-Brain-Config]] `queue.strict_nested_return_gates` or `queue.strict_nested_ledger_all_pipelines` is **true**, treat **missing or unparseable** ledgers on gated modes as a structural violation (see Subagent-Safety-Contract and [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]]).
+- For roadmap-class entries in a **balanced** profile (`pipeline_mode_used === "balance"` in the ledger or `task_harden_result.pipeline_profile === "balance"`):
+  - Identify helper steps that are **required this run** per Nested-Subagent-Ledger-Spec § Attestation invariants (e.g. `nested_validator_first`, `nested_validator_second`, `ira_post_first_validator`, `research_pre_deepen` when in scope).
+  - If any such step has `task_tool_invoked: false` and:
+    - `outcome` is `invoked_ok` or `invoked_empty_ok`, **or**
+    - `outcome` is `skipped` or `not_applicable` with a `detail.reason_code` that is **not** in the documented allowlist for that pipeline,
+    then the run **must not** be treated as a clean Success, even if the roadmap subagent claimed `contract_satisfied: true`.
+- In these violation cases you must:
+  - **Not** add the queue entry id to `processed_success_ids` at A.7.
+  - Treat the disposition as structural failure or `#review-needed`:
+    - Append a Watcher-Result line with `status: failure` (or `success` plus a machine tag when Config prefers soft-fail), with a short marker in `message` or `trace` such as `nested_attestation_failure` or `balance_mode_helper_skip_detected`.
+    - Append or update an entry in `3-Resources/Errors.md` that cites the violating step ids and links to Nested-Subagent-Ledger-Spec and Subagent-Safety-Contract § Mandatory helper proof-of-attempt.
+  - Preserve or synthesize continuation as appropriate (e.g. keep the entry in the queue for later repair, or respect any `queue_followups` / `queue_continuation` instructions from the roadmap return without marking the run as successful).
+
+This post-return gate is the last line of defense against “pretend Success” runs: even when a roadmap subagent mislabels a run, strict nested return gates at Layer 1 must prevent those entries from being cleared as successful when mandatory helpers were skipped or falsely attested.
+
+---
+
 ## Return
 
 When you finish a run, return to the main agent:
