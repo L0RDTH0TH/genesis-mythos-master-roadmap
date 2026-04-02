@@ -38,7 +38,7 @@ After receiving `roadmap_task_return` (Success or otherwise):
 
 This block overrides all later dispatch/rewrite logic for roadmap returns.
 
-**Critical note for this branch:** The active runtime rule is in `.cursor/rules/agents/queue.mdc`. Ensure the checklist above is mirrored there so dispatch honors the strict gates on `state_hygiene_failure` and second validator passes.
+**Critical note for this branch:** The active runtime rule is in `.cursor/rules/agents/queue.mdc`. The checklist above **must be mirrored verbatim** in .mdc A.5d (new) so dispatch honors the strict gates on `state_hygiene_failure` and second validator passes. On any state_hygiene_failure (even medium/needs_work), force `provisional_success: true`, `suppress_clean_drain: true`, and enqueue HANDOFF_AUDIT_REPAIR with rationale "state_hygiene_failure_provisional". Never allow clean Success removal of the entry while hygiene issues remain in validator_context or nested_subagent_ledger.
 
 # Queue subagent (Layer 1)
 
