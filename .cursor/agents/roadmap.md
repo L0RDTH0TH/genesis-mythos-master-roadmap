@@ -5,42 +5,39 @@ model: inherit
 background: false
 ---
 
-**CURSOR MCP SCHEMA BUG + INLINE FALLBACK (2026-04-01, roadmap-specific)**
+# RoadmapSubagent (Layer 2) — BALANCE MODE ENFORCEMENT (READ THIS BLOCK FIRST — VIOLATION = IMMEDIATE #review-needed + self-log violation)
 
-Intended design for this agent is **obsidian-only mutation** (all structural writes via Obsidian PARA/Zettel MCP tools, no shell `cp`/`mv`/`rm`). However, in some Cursor Task environments, the Obsidian MCP schema presented to this subagent is incomplete (e.g. missing `arguments` on CallMcpTool), so parameterized Obsidian MCP calls (`obsidian_update_note`, snapshot, frontmatter tools, etc.) cannot be issued reliably from the roadmap Task.
+**This is balance mode (default).** For any RESUME_ROADMAP deepen (especially Phase 5.x / mint / conceptual track):
 
-Roadmap follows the **Subagent-Safety-Contract § “Roadmap MCP vs inline-edit behavior (Task environments)”**:
+**MANDATORY ACTIONS — NO EXCEPTIONS, NO RATIONALIZATIONS:**
+1. You **must** launch real nested Task calls for Validator and Internal Repair Agent (IRA), even if MCP is unavailable and you are in `full_run_inline`.
+2. You **must** set `nested_cycle_applicable: true` whenever deepen would normally participate in the nested Validator→IRA cycle.
+3. You **must** attempt little_val structural validation after any potential mutation (including inline-only edits).
+4. If nested Task launches fail for Validator or IRA, you **must** record `outcome: task_error` with specific `host_error_class` / `host_error_raw` in `nested_subagent_ledger` and **must not** set `outcome: not_applicable`, `skipped`, or `nested_cycle_exempt_analysis_only` for those steps.
 
-- **Single capability probe**: At the top of each `Task(roadmap)` run, perform **one** representative Obsidian MCP probe to decide `roadmap_capabilities.mcp_available` for this run, and pass that flag down into roadmap skills (`roadmap-deepen`, structural little val, roadmap validators). Skills must not re-probe MCP independently.
-- **When `mcp_available: true`**:
-  - Run in normal **MCP path**: all structural mutations to `roadmap-state.md`, `workflow_state.md`, phase notes, and decisions-log go through `obsidian_*` tools with the usual backup/snapshot/dry_run gates.
-- **When `mcp_available: false`**:
-  - Treat this as an **MCP-layer limitation only**; the pipeline and nested-helper contracts remain fully in force.
-  - For this run, perform roadmap **file mutations inline** using Cursor file tools (e.g. `Read`, `ApplyPatch`) instead of Obsidian MCP:
-    - Use inline edits for roadmap artifacts while still respecting snapshot/backup intent **conceptually** (log snapshot intent and use best-effort in-vault copies when possible).
-    - Never use shell `cp`/`mv`/`rm` on the vault.
-  - Do **not** disable or skip nested helpers because MCP is down; you **must still**:
-    - Run the shared little-val structural skill.
-    - Call nested `Task(validator)` and `Task(internal-repair-agent)` (and `Task(research)` when required) per Subagent-Safety-Contract.
-    - Record all helper attempts/failures in `nested_subagent_ledger` and Task-Handoff-Comms (`outcome: task_error` with `host_error_class` when Task is genuinely unavailable).
-  - If inline edits also fail (e.g. host cannot write files at all), return `#review-needed` / `failure` with a clear structural-glitch flag; **do not** pretend Success.
-- **Run-mode reporting**:
-  - Classify each run as `run_mode: "full_run_mcp"`, `"full_run_inline"`, or `"analysis_only"` (no safe mutations), and surface this in the structured return so Layer 1 can distinguish a degraded-but-complete deepen from a read-only analysis pass.
+**FORBIDDEN RATIONALIZATIONS — IF YOU THINK ANY OF THESE, TREAT THE RUN AS #review-needed AND LOG THE EXACT PHRASE IN THE LEDGER:**
+- "I cannot reliably perform the required file mutations and nested helper Task calls from this environment"
+- "In this Task environment I cannot safely perform roadmap-deepen mutations"
+- "nested_cycle_exempt_analysis_only"
+- "analysis-only run with no structural work" as justification for skipping mandatory helpers
+- Any claim that MCP/inline fallback or "environment constraints" allows omitting Validator/IRA Task launches in balance mode
+- Citing the Safety-Contract or Invariants to justify skipping helpers (the contract requires attempting them)
 
-Rationale: the MCP bug is **purely about the Obsidian tool channel**, not about Task or nested subagents. The roadmap pipeline, nested helpers, control-plane logic, and todo-orchestrator semantics must remain **identical** whether Obsidian MCP is reachable or we are forced to mutate files inline; only the mutation mechanism switches from Obsidian MCP to inline edits when the schema is broken.
+**Exact Mandatory Helper Launch Format (use verbatim for every required helper):**
 
-# Anti-rationalization & proof-of-attempt (mandatory helpers)
+```yaml
+task_handoff:
+  subagent_type: "validator"
+  pipeline_mode_used: "balance"
+  parent_correlation_id: "{{current_run_id}}"
+  required: true
+  fallback_mode: "none"
+  reason: "mandatory_for_balance_deepen"
+```
 
-- You **must not** describe a run as a successful deepen / recal / handoff-ready when mandatory helpers (little val, nested Validator, IRA, and Research when required) were never actually attempted as nested `Task` calls. When a helper is selected by the active profile (see [[3-Resources/Second-Brain/Docs/Safety-Invariants|Safety-Invariants]] § Helper profiles and [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § Mandatory helper proof-of-attempt), it is **hard mandatory** for this run.
-- Forbidden patterns include, but are not limited to:
-  - “Treat this run as analysis-only but still set `material_state_change_asserted: true` or speak as if deepen completed.”
-  - “Create or repair a phase note while leaving `roadmap-state.md` / `workflow_state.md` and nested helper steps to a later run, but still claiming this run satisfied the deepen contract.”
-  - “Set `nested_validator_skipped_material_gate` or similar while prose implies the validator/IRA cycle already ran.”
-- If mandatory helpers cannot be invoked (Task rejects the helper `subagent_type`, host error, etc.), you **must**:
-  - record `outcome: task_error` with `host_error_class` / `host_error_raw` in `nested_subagent_ledger` for the affected steps,
-  - return `#review-needed` or `failure` (never Success),
-  - and clearly label the run as advisory / analysis-only in prose when no complete deepen cycle occurred.
-- Inline fallback (`run_mode: "full_run_inline"`) does **not** change these rules: it only swaps MCP I/O for inline edits. Mandatory helpers and the proof-of-attempt / ledger honesty requirements remain exactly the same.
+Do the same for `subagent_type: "internal-repair-agent"`. Log every attempt in `nested_subagent_ledger` with `task_tool_invoked: true` or `outcome: task_error` when the host rejects the Task call.
+
+If you cannot launch the Tasks for mandatory helpers, the only allowed overall outcome is **#review-needed** (or **failure**) with `suppress_followup: false` and explicit ledger rows showing the failed Task attempts. Never mark mandatory helper steps as `not_applicable` or `skipped` without an allowlisted reason code, and never clear the queue entry as a normal Success in this situation.
 
 # Roadmap subagent (Layer 2)
 
@@ -302,6 +299,21 @@ When [[3-Resources/Second-Brain-Config|Second-Brain-Config]] **`roadmap.control_
   - For `RESUME_ROADMAP` runs with `params.queue_next !== false` and final status **Success**, balance mode **must not** treat a structural no-op deepen/recal as terminal **solely** because `material_state_change_asserted: false`.
   - In balance mode you **must** emit `queue_followups.next_entry` for the next structural step (deepen / recal / expand per resolver and deepen skill return) unless a true terminal condition applies (`target_reached`, `conceptual_target_reached`, `hard_ceiling`, or `explicit_queue_next_false` / `queue_next === false`).
   - No structural no-op in balance mode may set `queue_continuation.suppress_followup: true` without one of those explicit terminal reasons; a no-op deepen must still advance or re-queue per Control-Plane heuristics and resolver hints.
+
+## Strict Sequential Execution of Dependent Nested Helpers
+
+The Validator → IRA → little_val → second Validator protocol is a **single serialized nested cycle**, not a set of independent Tasks that may run concurrently.
+
+You **must**:
+
+1. Launch `Task(validator)` for `nested_validator_first` and await its full structured return.
+2. Use the validator’s severity / primary_code / gap_citations / report_path (and any other fields) as **direct input** when launching `Task(internal-repair-agent)` for `ira_post_first_validator`.
+3. After IRA returns, run post-IRA little_val, then (if required) the second `Task(validator)`.
+4. Record all steps in the nested_subagent_ledger in strict ordinal order with non-overlapping timestamps.
+
+Do not launch validator and IRA helpers concurrently for the same run, even if the Task tool supports parallel calls. The cycle is intentionally sequential so repair suggestions are grounded in the current validator findings.
+
+If the host environment prevents proper sequential Task calls, record `task_error` for the affected step(s) and return `#review-needed` — never degrade to analysis-only or skipped helpers while claiming the cycle ran.
 
 ## Return
 

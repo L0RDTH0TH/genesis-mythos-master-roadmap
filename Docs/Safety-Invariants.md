@@ -64,9 +64,25 @@ If either fails: skip the destructive action; log #review-needed; continue with 
 - **Depth and fan-out limits**:
   - Recommended maximum depth: **3 levels** — main agent → Queue/Dispatcher → pipeline subagent → nested helper subagent (IRA / Validator / Research).
   - Fan-out: parents may call several nested helpers in parallel for **local analysis** (e.g. multiple research lookups), but must not chain nested agents to re-orchestrate pipelines.
+- **Dependent nested helper serialization (invariant):**
+  - For roadmap and research pipelines, the validator report is a required input to IRA. Dependent helpers (Validator → IRA → second Validator) must be launched and awaited sequentially. IRA must see the final validator output from this run. Parallel execution of this chain is not permitted; violation must be recorded as `task_error` or surfaced as `#review-needed`.
 - **Prompt-level safeguard**:
   - Each pipeline subagent’s high-level instructions must reinforce:
     - *“You may ONLY call the specific nested subagent types listed in your 'Subagent nesting' section, and ONLY for the narrow purposes described. NEVER write to queues, watcher logs, roadmap files, or create decision wrappers — those are RESERVED for the top-level orchestrator. Return results as structured data only.”*
+
+---
+
+## Analysis-Only Runs
+
+Analysis-only runs are **strictly limited**. They may **not** be used for RESUME_ROADMAP deepen, mint, or any action that normally triggers nested helpers in **balance** mode.
+
+If the environment prevents real Task launches for mandatory helpers (Validator, IRA, or Research when selected), the run **must** fail with `task_error` rows recorded in `nested_subagent_ledger` — it must **not** gracefully degrade to `analysis_only` while silently skipping those helpers.
+
+**Forbidden in balance mode for deepen-class tasks:**
+
+- Treating "cannot safely perform mutations" as a reason to set `nested_cycle_applicable: false`.
+- Using `environment_inline_only_no_safe_mutation` (or similar reason codes) to skip mandatory Validator/IRA Task launches.
+- Claiming that citing the Safety-Contract or this document allows an exemption when the contract actually requires attempting the helper Task calls.
 
 ---
 

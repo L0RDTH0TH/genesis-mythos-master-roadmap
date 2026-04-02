@@ -546,6 +546,17 @@ After Layer 1 has **appended** PromptCraft lines and EAT-QUEUE has **executed** 
   It must never touch queue files, Decision Wrappers, or Watcher-Result.
 - Outputs: When called as a nested helper, ResearchSubagent must return structured **research consumables** (e.g. `injection_block_markdown`, `synth_note_paths`, `key_takeaways`) only; the caller is responsible for integrating these into its artifacts or queuing follow-ups, under the existing safety and validator contracts.
 
+### Dependent Helper Serialization Rule
+
+Dependent chains such as Validator → IRA → second Validator (and any Research validator→IRA→validator synthesis cycle) **must execute sequentially within a single pipeline invocation**.
+
+- Launch `Task(validator)` for the first pass and **await its full structured return** (including severity, primary_code, reason_codes, gap_citations, report_path).
+- Use that validator output as **direct input** when launching `Task(internal-repair-agent)` for `ira_post_first_validator`.
+- After the IRA returns, run post-IRA little_val, then (when required) launch the second `Task(validator)`.
+- Parallel fan-out remains allowed **only** for truly independent local analysis (e.g. multiple unrelated research lookups). It is **not** permitted for the Validator/IRA dependent protocol in balance or extreme modes.
+
+Ledger steps (`nested_validator_first`, `ira_post_first_validator`, `nested_validator_second`) must show non-overlapping `started_iso` / `ended_iso` windows consistent with sequential execution. Overlapping or out-of-order dependent helper timestamps are a contract violation and must be surfaced as `#review-needed` with `detail.reason_code: nested_helper_order_violation`.
+
 **Nested helper ledger attestation:** Pipeline subagents that emit **`nested_subagent_ledger`** must record nested IRA, Validator, and Research **`Task`** invocations honestly per [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] **Attestation invariants**; false-green combinations (e.g. **`invoked_ok`** or **`invoked_empty_ok`** with **`task_tool_invoked: false`** on mandated helper steps when those helpers were required) are **invalid** and must not accompany **Success** with **`little_val_ok: true`**. The same applies to **`skipped`** + **`task_tool_invoked: false`** on a **required** step unless **`detail.reason_code`** is allowlisted; use **`task_error`** + **`host_error_raw`** / **`host_error_class`** when **`Task`** is missing or fails (`queue.mdc` **A.5 (b0)(iv)**).
 
 **Rule (Cursor limitation):** Aside from the explicit **IRA**, **Validator**, and **Research** nested-call exceptions above, no subagent ever runs another pipeline or \"calls\" another subagent. If it needs work from another pipeline, it (1) creates the queue items that will produce the required results, (2) pauses and returns a **chain_request** to the primary with current pipeline results up to the request and requested context, (3) primary runs the requested subagent(s), (4) primary re-launches the first subagent with the second agent's results so it can complete its steps, (5) primary continues execution (clear entry, Watcher-Result, next entry).

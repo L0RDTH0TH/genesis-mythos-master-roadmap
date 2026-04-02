@@ -250,28 +250,3 @@ This ledger is **forbidden** under the attestation and proof-of-attempt rules be
 
 When a pipeline produces a ledger like this, Layer 2 must not claim Success with `little_val_ok: true`, and Layer 1 strict nested return gates must not consume the queue entry as a successful run. The correct shape, when the helper really cannot be invoked, is a `task_error` row with `host_error_class` (e.g. `nested_task_unavailable`) plus a non-successful overall status.
 
----
-
-## Layer 1 `dispatch_ledger` (recommended)
-
-One record per Queue-initiated `Task` in the EAT-QUEUE run:
-
-- `ordinal`, `started_iso`, `ended_iso`
-- `role`: `dispatch_pipeline` \| `post_little_val_validator` \| `prompt_craft_a5b` \| `prompt_craft_a5d` \| `empty_queue_bootstrap`
-- `queue_entry_id`
-- `subagent_type_requested`
-- `outcome`: `invoked_ok` \| `task_error`
-- `host_error_raw`, `host_error_class` when failed
-- Optional: `pipeline_return_excerpt` (first ~500 chars) or `return_had_nested_ledger: true`
-
----
-
-## Changelog
-
-| Version | Date | Change |
-|---------|------|--------|
-| 1 | 2026-03-22 | Initial schema (roadmap-first). |
-| 2 | 2026-03-21 | Normative scope extended to all queue-dispatched pipelines using nested helpers; `pipeline` / `params_action` rules; `no_synthesis_skip_validator`; Run-Telemetry for all normative pipelines. |
-| 3 | 2026-03-21 | **Attestation invariants:** forbidden `invoked_ok` / `invoked_empty_ok` with `task_tool_invoked: false` on mandated helper steps; `chain_research_consumed` vs `research_pre_deepen`; `ledger_invalid_invoked_ok_without_task`, `nested_task_unavailable`; Layer 1 semantic gate (see queue.mdc A.5 b0 iii). |
-| 4 | 2026-03-29 | **Skip-without-attempt:** forbidden `skipped` + `task_tool_invoked: false` when step required; `nested_helper_skip_without_task_attempt`; `nested_task_unavailable` only as `host_error_class` on `task_error`; per-step required heuristics; Layer 1 **A.5 (b0)(iv)** + `#review-needed` path when strict (queue.mdc). |
-| 5 | 2026-03-29 | **Pipeline validator profiles:** optional top-level `pipeline_mode_used`, `effective_profile_snapshot`; allowlist `pipeline_mode_medium_or_higher_ira_skipped`, `research_synthesis_light_skip`, `profile_escalation_full_validation` (see Pipeline-Validator-Profiles). |
