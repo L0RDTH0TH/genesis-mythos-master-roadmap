@@ -1,4 +1,10 @@
-"""Central micro_workflow tables for eat_queue_core (schema v2)."""
+"""Central micro_workflow tables for eat_queue_core (schema v2).
+
+Inline Pass 3 drain: when the prompt-queue snapshot already contains both a forward
+RESUME_ROADMAP line and a repair-class line for the same project, ``build_plan`` emits
+Pass 1 then Pass 3 intents in one ``intents`` array and sets ``EatQueueRunPlan.inline_pass3_drain``.
+Layer 1 must execute both in the **same** EAT-QUEUE invocation (no separate run for repair).
+"""
 
 from __future__ import annotations
 

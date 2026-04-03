@@ -44,3 +44,5 @@ class EatQueueRunPlan(BaseModel):
     parent_run_id: str
     intents: list[DispatchIntent]
     consumed_ids: list[str]
+    # True when the plan schedules Pass 3 repair dispatches in the same manifest as Pass 1 — Layer 1 must run all intents before returning (same EAT-QUEUE iteration).
+    inline_pass3_drain: bool = False

@@ -56,7 +56,8 @@ Keep **`false`** (default) until you have **tested a full EAT-QUEUE cycle** with
 ## Plan schema (v2 — micro_workflow)
 
 - **`schema_version`:** **`2`** — current. **`1`** may still be read for older manifests; intents without **`micro_workflow`** are **legacy** orchestrator shape (no strict micro-workflow enforcement).
-- **`EatQueueRunPlan`:** **`parent_run_id`**, **`intents`**, **`consumed_ids`** (unchanged from v1).
+- **`EatQueueRunPlan`:** **`parent_run_id`**, **`intents`**, **`consumed_ids`**, **`inline_pass3_drain`** (boolean).
+- **`inline_pass3_drain`:** **`true`** when the plan includes at least one **`pass_id: pass3`** intent (repair-class) alongside Pass 1. Layer 1 must run **all** intents in order in the **same** EAT-QUEUE invocation — forward deepen first, then repair — and apply **A.7** using **`consumed_ids`** (all dispatched **`queue_entry_id`** values) so the queue does not require a second EAT-QUEUE for the repair line.
 - **`DispatchIntent` (each intent):** **`micro_workflow`** (required non-empty list of strings when **`schema_version` is `2`**), optional **`allowed_sub_steps`**, **`strict_mode`** (boolean, default **true** in Python models when omitted from JSON — callers should pass explicitly in JSON for clarity).
 
 **Central tables** (single source of truth): **`scripts/eat_queue_core/workflows.py`**

@@ -104,6 +104,7 @@ def print_plan_success_summary(plan: EatQueueRunPlan, decisions_log_path: Path) 
     n = len(plan.intents)
     print(f"✅ eat_queue_run_plan.json generated successfully for parent_run_id: {plan.parent_run_id}")
     print(f"   Intents: {n} total ({num_repair} repair)")
+    print(f"   inline_pass3_drain: {plan.inline_pass3_drain}")
     print(f"   Consumed IDs: {plan.consumed_ids}")
     print(f"   Decisions appended to: {decisions_log_path.resolve()}")
 
@@ -158,7 +159,6 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
 
     st = _transition(st, "plan_pass1", decisions, parent_run_id)
     intents: list[DispatchIntent] = []
-    consumed: list[str] = []
     ordinal = 0
 
     for proj in order:
@@ -180,8 +180,6 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
                     allowed_sub_steps=allowed,
                 )
             )
-        if repairs and forwards:
-            consumed.append(forwards[0].id)
 
     st = _transition(st, "plan_pass3", decisions, parent_run_id)
     for proj in order:
@@ -201,7 +199,33 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
                 )
             )
 
-    plan = EatQueueRunPlan(parent_run_id=parent_run_id, intents=intents, consumed_ids=consumed)
+    inline_pass3_drain = any(i.pass_id == "pass3" for i in intents)
+    # Every dispatched intent’s queue line is removed in one A.7 pass after the full orchestrated run (Pass 1 then inline Pass 3 when present).
+    consumed = [i.queue_entry_id for i in intents]
+
+    if inline_pass3_drain:
+        decisions.append(
+            {
+                "ts": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "parent_run_id": parent_run_id,
+                "rule_id": "fsm:inline_pass3_drain",
+                "from_state": "pass3_scheduled",
+                "to_state": "emit",
+                "queue_entry_id": None,
+                "reason": "inline_pass3_drain",
+                "detail": {
+                    "pass3_intent_count": sum(1 for i in intents if i.pass_id == "pass3"),
+                    "same_eat_queue_iteration": True,
+                },
+            }
+        )
+
+    plan = EatQueueRunPlan(
+        parent_run_id=parent_run_id,
+        intents=intents,
+        consumed_ids=consumed,
+        inline_pass3_drain=inline_pass3_drain,
+    )
     st = _transition(st, "emit", decisions, parent_run_id)
     assert st == _FsmState.EMITTED
     return plan, decisions
