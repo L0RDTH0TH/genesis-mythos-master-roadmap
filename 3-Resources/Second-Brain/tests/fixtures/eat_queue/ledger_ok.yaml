@@ -1,0 +1,25 @@
+nested_subagent_ledger:
+  ledger_schema_version: 1
+  pipeline: RESUME_ROADMAP
+  params_action: deepen
+  material_state_change_asserted: true
+  little_val_final_ok: true
+  little_val_attempts: 1
+  ira_after_first_pass_effective: true
+  nested_cycle_applicable: true
+  steps:
+    - step: nested_validator_first
+      ordinal: 1
+      subagent_type: validator
+      task_tool_invoked: true
+      outcome: invoked_ok
+    - step: ira_post_first_validator
+      ordinal: 2
+      subagent_type: internal-repair-agent
+      task_tool_invoked: true
+      outcome: invoked_ok
+    - step: nested_validator_second
+      ordinal: 3
+      subagent_type: validator
+      task_tool_invoked: true
+      outcome: invoked_ok

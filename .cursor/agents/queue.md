@@ -36,9 +36,19 @@ After receiving `roadmap_task_return` (Success or otherwise):
 
 **After checklist:** Rewrite queue only if all gates pass. Append Watcher-Result with full disposition (include "nested_validation_passed" or "hygiene_issues_logged").
 
+**Dispositions & Watcher-Result hygiene (one authoritative story per `requestId`)** — normative detail: [[.cursor/rules/agents/queue.mdc|queue.mdc]] (same heading after the top gatekeeper block).
+
+- `read_only_analysis` is **forbidden** as any disposition (primary or intermediate) on a run that also claims `Task(roadmap)` Success, ledger append, repair line, or `nested_validation_provisional`. It is internal rationalization noise only — **never** emit it in the final Watcher-Result.
+- Layer 1 `Task(validator)` post–little-val **must** be invoked in **this run** (the “hostile” L1 validator step). Nested `roadmap_handoff_auto` (Layer 2) does **not** satisfy **(b1)** in `queue.mdc`. Historical Watcher lines or previous runs do **not** satisfy **(b1)**. Allowed skips only: profile gates (`conditional_nonhard_skip` / `minimal`) or **Legacy skip**, logged with `suppress_reason` and `force_layer1_post_lv` not set.
+- **One** coherent primary story per `requestId` (when **(b1)** ran: **VALIDATE** line + primary line per watcher-result-append). Never both `read_only_analysis` and Success / repair / provisional for the same request.
+
 This block overrides all later dispatch/rewrite logic for roadmap returns.
 
-**Critical note for this branch:** The active runtime rule is in `.cursor/rules/agents/queue.mdc`. The checklist above **must be mirrored verbatim** in .mdc A.5d (new) so dispatch honors the strict gates on `state_hygiene_failure` and second validator passes. On any state_hygiene_failure (even medium/needs_work), force `provisional_success: true`, `suppress_clean_drain: true`, and enqueue HANDOFF_AUDIT_REPAIR with rationale "state_hygiene_failure_provisional". Never allow clean Success removal of the entry while hygiene issues remain in validator_context or nested_subagent_ledger.
+**Authority (single source of truth):** The normative Layer 1 post-roadmap gate is **A.5d** in [[.cursor/rules/agents/queue.mdc|queue.mdc]] (*MANDATORY INDEPENDENT Layer 1 FINAL GATEKEEPER CHECKLIST*). That block is already implemented and overrides later dispatch/rewrite logic for roadmap returns; it is written to match this file’s top-of-file FINAL GATEKEEPER. If wording ever diverges between this agent doc and the rule, **follow queue.mdc A.5d** — do not treat this file as instructions that still need to be “mirrored into” the rule.
+
+**Hygiene disposition:** On any `state_hygiene_failure` (even medium/needs_work), force `provisional_success: true`, `suppress_clean_drain: true`, and enqueue HANDOFF_AUDIT_REPAIR with rationale `state_hygiene_failure_provisional`. Never allow clean Success removal of the entry while hygiene issues remain in `validator_context` or `nested_subagent_ledger`.
+
+**Runtime reference (illustrative trace):** For a concrete end-to-end narrative walkthrough (Layer 0→2, one `RESUME_ROADMAP` deepen scenario), see [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]]. That document is **subordinate** to this FINAL GATEKEEPER block and to [[.cursor/rules/agents/queue.mdc|queue.mdc]] (A.5d); it does not replace safety rules, balance-mode enforcement, or normative dispatch behavior.
 
 # Queue subagent (Layer 1)
 
@@ -122,6 +132,10 @@ If you are invoked without these basics (vault root and queue paths), state clea
 ---
 
 ## Prompt queue behavior (Part A)
+
+### Python orchestrator bridge (optional; Config `queue.python_orchestrator_enabled`)
+
+When **`python_orchestrator_enabled`** is **true**, the plan file exists, **`parent_run_id`** matches the hand-off, and parsing succeeds: parse **`intents`** and dispatch **`Task(subagent_type=...)`** **exactly in array order** with **`queue_pass_phase`**, **`pass_id`**, **`dispatch_ordinal`**, and (schema v2) **`micro_workflow`** / **`strict_mode`** / optional **`allowed_sub_steps`** / **`is_anticipatory_drain`** from the JSON — **never** override or reinterpret them. If **`inline_pass3_drain: true`**, run **Pass 1** and **Pass 3** repair intents **in the same EAT-QUEUE run** (do not stop after Pass 1). If **`has_anticipatory_repair_slot: true`**, **re-read** the queue after Pass 1 and **resolve** synthetic Pass 3 **`queue_entry_id`** to the real repair line before **`Task(roadmap)`** for Pass 3 (see **A.0.5**). After each roadmap return under **`strict_mode: true`**, verify **`executed_micro_workflow`** / ledger steps vs manifest or fail with **`orchestrator_micro_workflow_violation`** (see **A.0.5**); after **all** dispatches, **rewrite** `.technical/prompt-queue.jsonl` per **A.7** to remove **`consumed_ids`** (all dispatched line IDs, forward + repair). **If** **`parent_run_id` mismatches**, parsing **fails**, the flag is **false**, or the plan is **missing** → Watcher-Result advisory when applicable + **legacy** Part A (no breaking change). **Normative:** [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]].
 
 Follow the **Part A** behavior from [[.cursor/rules/agents/queue.mdc]]:
 
