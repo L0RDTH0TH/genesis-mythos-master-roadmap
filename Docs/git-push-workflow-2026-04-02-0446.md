@@ -64,7 +64,14 @@ cp "/home/darth/Documents/Second-Brain/3-Resources/Watcher-Signal.md" "/home/dar
 cd /home/darth/Documents/gmm-roadmap-export
 
 # Mirror roadmap + project anchors
-rsync -a --delete "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/Roadmap/" "/home/darth/Documents/gmm-roadmap-export/Roadmap/"
+# Phase 5-1 subfolder (WIP): do NOT publish — exclude from rsync, then remove any stale copy.
+P5_1_REL='Phase-5-Rule-System-Integration-and-Extensibility/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence'
+rsync -a --delete \
+  --exclude="${P5_1_REL}/" \
+  "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/Roadmap/" \
+  "/home/darth/Documents/gmm-roadmap-export/Roadmap/"
+rm -rf "/home/darth/Documents/gmm-roadmap-export/Roadmap/${P5_1_REL}"
+
 cp "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/Genesis-mythos-master-goal.md" "/home/darth/Documents/gmm-roadmap-export/Genesis-mythos-master-goal.md"
 cp "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/genesis-mythos-master-Roadmap-MOC.md" "/home/darth/Documents/gmm-roadmap-export/genesis-mythos-master-Roadmap-MOC.md"
 ```
@@ -108,5 +115,6 @@ Then verify the updated tree on GitHub if needed:
 
 ## Gotchas
 - The export repo is treated as a mirror: `rsync --delete` can remove files in `gmm-roadmap-export` if they’re removed from the vault tree.
+- **Phase 5-1 directory** (`…/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence/`) is **intentionally omitted** from the export (work in progress). Always use the `rsync --exclude` + `rm -rf` of that path under `gmm-roadmap-export/Roadmap/` so GitHub never receives that subtree until you remove this policy.
 - Do **not** push the main `Second-Brain` repo to GitHub as part of this workflow; the intent is “vault → mirror repo → published branch”.
 
