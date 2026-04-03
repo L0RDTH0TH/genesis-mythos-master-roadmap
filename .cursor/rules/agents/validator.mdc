@@ -35,6 +35,7 @@ This subagent **depends on** and does not duplicate: core-guardrails.mdc, confid
 ## Subagent nesting
 
 - ValidatorSubagent is a **terminal hostile-review helper**. It is never allowed to call other pipeline subagents; it runs only the validation types described here and returns a structured verdict.
+- **Orchestrator chain (nested `Task` from Roadmap):** When the hand-off indicates **orchestrator strict** / **`micro_workflow`** context (e.g. from **eat_queue_run_plan** schema v2), perform **one** validation pass per **`Task(validator)`** invocation — **do not** spawn additional Validator **`Task`** calls or nested validators from inside this subagent.
 - **You may ONLY** run checks for the `validation_type` present in the current hand-off; you may not delegate that work to other subagents or attempt to chain pipelines from inside ValidatorSubagent.
 - **You MUST NEVER**:
   - Read or write `.technical/prompt-queue.jsonl` or `3-Resources/Task-Queue.md`.

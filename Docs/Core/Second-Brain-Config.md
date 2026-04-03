@@ -40,12 +40,12 @@ Single source of truth for pipeline and skill configuration. Skills and rules th
 - **queue_nudge_enabled**: true | false — when true, nudge is allowed when queue has pending entries.
 - **auto_cleanup_after_process**: true | false — when true, run queue-cleanup skill after each EAT-QUEUE run (auto-mark failed entries, append to Errors.md). When false, cleanup only when user runs "Clear queue" or "Queue cleanup".
 - **re_try_max_loops**: 3 — cap on re-try spins per thread (e.g. same section/phase_path). When exceeded, abort re-try and create cap-hit wrapper (A: Force approve, B: Prune branch, 0: Re-wrap full phase). Document in Parameters.md.
-- **python_orchestrator_enabled**: false — when `true`, Layer 1 EAT-QUEUE may read `.technical/eat_queue_run_plan.json` produced by `python -m eat_queue_core plan` and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Default **false** (legacy LLM-driven ordering). Flip to `true` only after validating a full cycle (e.g. repair scenario).
+- **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read `.technical/eat_queue_run_plan.json` produced by `python -m eat_queue_core plan` and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
 
 The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above):
 
 queue:
-  python_orchestrator_enabled: false
+  python_orchestrator_enabled: true
 
 ## task_harden (capability probing)
 

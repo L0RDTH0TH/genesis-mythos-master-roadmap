@@ -34,10 +34,13 @@ class DispatchIntent(BaseModel):
     queue_pass_phase: str
     pass_id: Literal["pass1", "pass3"]
     dispatch_ordinal: int
+    micro_workflow: list[str]
+    allowed_sub_steps: dict[str, list[str]] | None = None
+    strict_mode: bool = True
 
 
 class EatQueueRunPlan(BaseModel):
-    schema_version: int = 1
+    schema_version: int = 2
     parent_run_id: str
     intents: list[DispatchIntent]
     consumed_ids: list[str]

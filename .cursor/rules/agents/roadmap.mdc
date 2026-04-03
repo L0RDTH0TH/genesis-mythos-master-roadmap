@@ -33,6 +33,17 @@ alwaysApply: false
   - Treat IRA, Research, and Validator as **pure helpers**: pass explicit inputs, consume only their structured outputs (repair plans, research consumables, validation reports), and let the Queue/Dispatcher own queue append + chaining behavior.
   - Return roadmap results to the orchestrator; all queue mutation, wrapper lifecycle, and watcher logging must remain in the main agent / Queue rule per the Subagent-Safety-Contract and Safety-Invariants.
 
+## Orchestrator strict mode (micro_workflow; eat_queue_run_plan schema v2)
+
+When the Queue hand-off includes **`micro_workflow`** (non-empty list, from **`.technical/eat_queue_run_plan.json`**) and **`strict_mode`** is **true** (default when omitted):
+
+1. Execute **only** the nested roadmap steps implied by **`micro_workflow`** **in order**. Canonical label mapping and tables live in **`scripts/eat_queue_core/workflows.py`** (e.g. deepen forward vs repair: **`validator`** → first nested Validator ledger step **`nested_validator_first`**; **`ira`** → **`ira_post_first_validator`**; **`final_validator`** → **`nested_validator_second`**).
+2. **Skip** legacy branches that would add **extra** nested Validator/IRA cycles or **L1 post–little-val** work **inside** this roadmap **`Task`** when those steps are **not** listed (e.g. **`l1_post_lv`** is normally **Queue** unless the manifest lists it).
+3. **Narrative conflict:** Elsewhere this rule and [[.cursor/agents/roadmap|agents/roadmap.md]] describe a longer **Validator→IRA→apply→little val→final validator** path. **Orchestrator strict** **overrides** that breadth for this hand-off so the run matches the **manifest** — do not silently add nested steps not in **`micro_workflow`**.
+4. **Return:** In addition to **`nested_subagent_ledger`** (per [Nested-Subagent-Ledger-Spec](3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec.md)), include top-level **`executed_micro_workflow`** in the final fenced YAML (array of strings, **same order** as completed micro steps). Layer 1 may validate with **`eat_queue_core.ledger_validate.validate_ledger_steps_executed`**.
+
+When **`strict_mode`** is **false** or **`micro_workflow`** is absent, use **legacy** nested-helper behavior.
+
 ## Todo orchestration (todo-orchestrator)
 
 - For each **ROADMAP_MODE** or **RESUME_ROADMAP** run, treat the run as a small todo set managed via the shared **todo-orchestrator** pattern (see `.cursor/skills/todo-orchestrator/SKILL.md`):

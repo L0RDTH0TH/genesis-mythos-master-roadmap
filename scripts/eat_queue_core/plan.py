@@ -10,6 +10,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from .models import DispatchIntent, EatQueueRunPlan, QueueEntry, ValidationResult
+from .workflows import micro_workflow_for_entry
 
 
 class _FsmState(str, Enum):
@@ -167,6 +168,7 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
         if forwards:
             f0 = forwards[0]
             ordinal += 1
+            mw, allowed = micro_workflow_for_entry(f0, is_repair_dispatch=False)
             intents.append(
                 DispatchIntent(
                     queue_entry_id=f0.id,
@@ -174,6 +176,8 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
                     queue_pass_phase="initial",
                     pass_id="pass1",
                     dispatch_ordinal=ordinal,
+                    micro_workflow=mw,
+                    allowed_sub_steps=allowed,
                 )
             )
         if repairs and forwards:
@@ -184,6 +188,7 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
         repairs = [e for e in by[proj]["repair"] if _is_roadmap(e)]
         for r in repairs:
             ordinal += 1
+            mw, allowed = micro_workflow_for_entry(r, is_repair_dispatch=True)
             intents.append(
                 DispatchIntent(
                     queue_entry_id=r.id,
@@ -191,6 +196,8 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
                     queue_pass_phase="repair",
                     pass_id="pass3",
                     dispatch_ordinal=ordinal,
+                    micro_workflow=mw,
+                    allowed_sub_steps=allowed,
                 )
             )
 

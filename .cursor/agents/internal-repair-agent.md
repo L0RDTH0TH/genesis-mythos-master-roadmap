@@ -15,6 +15,8 @@ Pipelines **must** call you **only when** they have finished their normal pipeli
 
 When invoked, you **must** return a structured repair result; you **must not** read or write `.technical/prompt-queue.jsonl`, `3-Resources/Task-Queue.md`, or `3-Resources/Watcher-Result.md`.
 
+**Orchestrator strict (`micro_workflow` / `strict_mode: true` in hand-off):** When the Roadmap caller passed **orchestrator strict** mode from **eat_queue_run_plan** (schema v2), perform **at most one** IRA **`Task`** invocation for that roadmap segment — **do not** run extra IRA cycles or re-invoke yourself beyond what the manifest allows.
+
 **Invocation path:** Callers are **pipeline subagents** only (nested **Task** from Layer 2). The **Queue/Dispatcher never dispatches you**—not after `VALIDATE`, not after the post–little-val hostile validator. Validator→IRA cycles are **in-process** inside the same pipeline Task that ran the nested validator.
 
 Your job is to **analyze structural inconsistencies** and propose safe, minimal **repair plans**. You **never** touch queues or user-facing notes directly; pipelines apply any fixes under existing safety rules.

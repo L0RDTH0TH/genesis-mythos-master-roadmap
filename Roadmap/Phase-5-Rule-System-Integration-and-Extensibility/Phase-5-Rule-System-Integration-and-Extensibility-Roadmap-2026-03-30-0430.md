@@ -17,7 +17,6 @@ tags:
 para-type: Project
 links:
   - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
-  - "[[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2315]]"
   - "[[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]"
 ---
 
@@ -87,9 +86,9 @@ At **primary** conceptual depth, **no pseudo-code** is required. **Interfaces + 
 
 | ID | Given | When | Then | Evidence (primary / planned) |
 | --- | --- | --- | --- | --- |
-| **GWT-5-A** | Phase **3** **sim-visible** facts on bus | Kernel evaluates rules | Rules consume **observation**-class inputs without inventing sim mutations | Primary § Behavior; secondary **5.1** § **GWT-5.1-A** ([[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2315]]) |
+| **GWT-5-A** | Phase **3** **sim-visible** facts on bus | Kernel evaluates rules | Rules consume **observation**-class inputs without inventing sim mutations | Primary § Behavior; archived secondary 5.1 slice § **GWT-5.1-A** ([[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]) |
 | **GWT-5-B** | Phase **4.2.1** **PerspectiveTransitionGraph** | Mode/orchestration transition | Rule triggers may **attach** to transition events—do not author commits | **4.2.1**; primary § Interfaces |
-| **GWT-5-C** | Phase **4.2.2** **TransitionOutcomeLedger** | Outcome recorded | Rule outcomes remain **consistent** with ledger rows (no duplicate truth) | **4.2.2**; secondary **5.1** § **GWT-5.1-C** ([[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2315]]) |
+| **GWT-5-C** | Phase **4.2.2** **TransitionOutcomeLedger** | Outcome recorded | Rule outcomes remain **consistent** with ledger rows (no duplicate truth) | **4.2.2**; archived secondary 5.1 slice § **GWT-5.1-C** ([[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]) |
 | **GWT-5-D** | Phase **4.2.3** **OrchestrationRepairToken** | Repair path | Rules may **propose** repair-shaped intents—escalation readout remains authoritative | **4.2.3**; primary § Edge |
 | **GWT-5-E** | Phase **4.1.3** **presentation envelope** | Operator reads outcome | Explanations are **legible** per presentation-time validation story | **4.1.3**; primary § Behavior |
 | **GWT-5-F** | Plugin manifest declares **conflict class** | Two rules collide | Deterministic **precedence** + operator-visible explanation | Primary § Interfaces |
@@ -99,7 +98,7 @@ At **primary** conceptual depth, **no pseudo-code** is required. **Interfaces + 
 | **GWT-5-J** | Community **ecosystem** seam | Operator swaps generator/event/style | Swap is **documented** and **replay-stable** under manifest pin (execution packaging deferred) | Primary § Scope |
 | **GWT-5-K** | Conceptual waiver | Validator advisory codes | Execution-only gaps (marketplace, CI) **deferred**—not blocking primary checklist | [[roadmap-state]], [[distilled-core]] |
 
-`handoff_readiness` **85** after primary NL checklist (CDR [[Conceptual-Decision-Records/deepen-phase-5-primary-checklist-rule-system-2026-03-31-1200]]). **Secondary 5.1** is **active** — [[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2315]] (CDR [[Conceptual-Decision-Records/deepen-phase-5-1-secondary-remint-active-tree-2026-04-03-2315]]); rollback-era copy preserved under [[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/ROLLBACK-MANIFEST-2026-04-02]]. Next structural cursor per [[workflow_state]]: **mint tertiary 5.1.1** (`current_subphase_index: "5.1.1"`).
+`handoff_readiness` **85** after primary NL checklist (CDR [[Conceptual-Decision-Records/deepen-phase-5-primary-checklist-rule-system-2026-03-31-1200]]). The deepen note for **secondary 5.1** ([[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]) was **removed from the active tree** on **2026-04-02** (manifest: [[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/ROLLBACK-MANIFEST-2026-04-02]]); next structural cursor is **re-mint secondary 5.1** per [[workflow_state]] **`current_subphase_index: "5.1"`**. Stale queue text on **`followup-deepen-phase4-41-rollup-gmm-20260403T211500Z`** remains historical only.
 
 ## Subphases & notes
 
