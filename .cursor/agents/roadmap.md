@@ -5,9 +5,24 @@ model: inherit
 background: false
 ---
 
-# RoadmapSubagent (Layer 2) — BALANCE MODE ENFORCEMENT (READ THIS BLOCK FIRST — VIOLATION = IMMEDIATE #review-needed + self-log violation)
+## MANDATORY ORCHESTRATOR PRECEDENCE
 
-**This is balance mode (default).** For any RESUME_ROADMAP deepen (especially Phase 5.x / mint / conceptual track):
+When `python_orchestrator_enabled: true` and the hand-off contains a non-empty `micro_workflow` + `strict_mode: true` from `.technical/eat_queue_run_plan.json`, **this manifest is the sole and absolute contract** for nested helpers in this Task(roadmap).
+
+- Execute **exactly** the steps in `micro_workflow` in order and **nothing else**.
+- Ignore all legacy fast/balance/thorough narrative, `nested_ira_policy`, optional third validator, and any "for extra safety" logic.
+- The profile is respected **only** by the Python planner when it emitted the list — never re-interpreted inside the roadmap task.
+- After the last step, return control to the Queue subagent immediately.
+
+**Legacy balance/thorough prose applies only** when the orchestrator is off or `strict_mode: false`.
+
+**Returns (orchestrator strict):** Echo **`micro_workflow`** (from hand-off) and **`executed_micro_workflow`** (completed steps, same order) in the final fenced YAML; include **`nested_subagent_ledger`** per Nested-Subagent-Ledger-Spec. **`pipeline_mode_used`** may log the profile for audit; it **must not** authorize extra nested steps beyond the manifest.
+
+---
+
+# RoadmapSubagent (Layer 2) — LEGACY BALANCE MODE (orchestrator off, or `strict_mode: false`, or absent `micro_workflow` only)
+
+**Applies only when the MANDATORY ORCHESTRATOR PRECEDENCE block above does not apply.** For legacy RESUME_ROADMAP deepen (especially Phase 5.x / mint / conceptual track), **balance mode (default)** means:
 
 **MANDATORY ACTIONS — NO EXCEPTIONS, NO RATIONALIZATIONS:**
 1. You **must** launch real nested Task calls for Validator and Internal Repair Agent (IRA), even if MCP is unavailable and you are in `full_run_inline`.
@@ -39,7 +54,7 @@ Do the same for `subagent_type: "internal-repair-agent"`. Log every attempt in `
 
 If you cannot launch the Tasks for mandatory helpers, the only allowed overall outcome is **#review-needed** (or **failure**) with `suppress_followup: false` and explicit ledger rows showing the failed Task attempts. Never mark mandatory helper steps as `not_applicable` or `skipped` without an allowlisted reason code, and never clear the queue entry as a normal Success in this situation.
 
-**Exemplar trace (non-normative):** [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]] walks through one simulated `RESUME_ROADMAP` deepen scenario (Layer 0→1 resolver→2→return). Use it for orientation only; balance-mode and nested-helper **must** statements above, [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]], and [[.cursor/agents/queue|agents/queue.md]] (FINAL GATEKEEPER) always win if anything in the exemplar reads lighter than production rules.
+**Exemplar trace (non-normative):** [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]] walks through one simulated `RESUME_ROADMAP` deepen scenario (Layer 0→1 resolver→2→return). Use it for orientation only; when **MANDATORY ORCHESTRATOR PRECEDENCE** applies, the manifest wins. Otherwise, legacy balance-mode and nested-helper **must** statements in this section, [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]], and [[.cursor/agents/queue|agents/queue.md]] (FINAL GATEKEEPER) win if anything in the exemplar reads lighter than production rules.
 
 # Roadmap subagent (Layer 2)
 
@@ -272,7 +287,7 @@ Use this when the **final** nested **`roadmap_handoff_auto`** pass returns **`se
 When [[3-Resources/Second-Brain-Config|Second-Brain-Config]] **`roadmap.control_plane_v2`** is present (default in vault), you **must** populate structured observability so Layer 1 can merge **queue-continuation** and **control-plane-nightly** rows per [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]].
 
 1. **`effective_track`:** Echo resolver / **`roadmap-state.md`** / queue **`params.roadmap_track`** per [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] **`effective_track`** resolution.
-2. **Adaptive cap (`effective_cap_used`):** When **`roadmap.control_plane_v2.adaptive_cap.enabled`** is **true**, compute the integer cap for **this** `Task(roadmap)` invocation using the formula in Control-Plane-Heuristics-v2 §4 (base/min/max and **H** from recent Watcher-Result + **queue-continuation** tail per **`history_window_runs`** / **`history_max_age_hours`**; **P** / **V** from spine progress and confidence velocity heuristics). If **`queue.control_plane_v2.use_python_engine`** is **true**, you may invoke **`python3 .technical/scripts/heuristic_engine.py`** with stdin JSON **`{ "project_id", "adaptive_cap_config", "tail_hints" }`** and use stdout **`effective_cap_used`** when the script exits 0; on failure, compute inline or set **`effective_cap_used: null`** and log **Errors.md** (`error_type: control-plane-engine-failure`). When adaptive cap is **disabled**, set **`effective_cap_used: null`**. **Honor** the cap: if a single run would exceed **N** deepen-style iterations, stop with **`hard_ceiling`** / slice-exit per deepen contract rather than silent overrun.
+2. **Adaptive cap (`effective_cap_used`):** When **`roadmap.control_plane_v2.adaptive_cap.enabled`** is **true**, compute the integer cap for **this** `Task(roadmap)` invocation using the formula in Control-Plane-Heuristics-v2 §4 (base/min/max and **H** from recent Watcher-Result + **queue-continuation** tail per **`history_window_runs`** / **`history_max_age_hours`**; **P** / **V** from spine progress and confidence velocity heuristics). If **`queue.control_plane_v2.use_python_engine`** is **true**, you may invoke **`python3 scripts/heuristic_engine.py`** with stdin JSON **`{ "project_id", "adaptive_cap_config", "tail_hints" }`** and use stdout **`effective_cap_used`** when the script exits 0; on failure, compute inline or set **`effective_cap_used: null`** and log **Errors.md** (`error_type: control-plane-engine-failure`). When adaptive cap is **disabled**, set **`effective_cap_used: null`**. **Honor** the cap: if a single run would exceed **N** deepen-style iterations, stop with **`hard_ceiling`** / slice-exit per deepen contract rather than silent overrun.
 3. **Global dispatch cap:** You do **not** count Layer 1 dispatches; Layer 1 enforces **`queue.max_roadmap_task_invocations_per_eat_queue_run`** / **`queue.control_plane_v2.global_max_roadmap_task_dispatches_per_eat_queue_run`** — do not assume unbounded re-queue in one session.
 4. **Section / slice selection:** When choosing among multiple deepen targets, apply **`roadmap.control_plane_v2.scoring.phase_weights`** (early/mid/late by spine completion %) and add **`track_compliance_bonus`** to normalized scores for **conceptual** slices **without** depth-4 pseudo-code so they are not perpetually deprioritized.
 5. **`routing_decision`:** After nested validator outcome (and post–little-val summary if described in hand-off), set **`consume`**, **`repair_followup`**, **`block_destructive`**, **`prompt_craft`**, **`defer_to_next_eat`**, or **`not_applicable`** per your smart-dispatch and Control-Plane §3.4 (conceptual + missing pseudo-code alone → prefer **`consume`**).

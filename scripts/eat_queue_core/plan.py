@@ -10,7 +10,6 @@ from typing import Any
 from pydantic import ValidationError
 
 from .models import DispatchIntent, EatQueueRunPlan, QueueEntry, ValidationResult
-from .workflows import anticipatory_repair_drain_queue_entry_id, micro_workflow_for_entry
 
 
 class _FsmState(str, Enum):
@@ -37,30 +36,7 @@ def _is_repair(e: QueueEntry) -> bool:
 
 def _is_roadmap(e: QueueEntry) -> bool:
     u = (e.mode or "").upper()
-    return "RESUME_ROADMAP" in u or "ROADMAP_MODE" in u
-
-
-def _action_str(e: QueueEntry) -> str:
-    p = e.params or {}
-    if not isinstance(p, dict):
-        return ""
-    a = p.get("action")
-    return str(a).strip().lower() if a else ""
-
-
-def _is_anticipatory_trigger(e: QueueEntry) -> bool:
-    """Forward roadmap line that may trigger an A.5b repair append during Pass 1 (deepen or mint/setup)."""
-    if _is_repair(e) or not _is_roadmap(e):
-        return False
-    mu = (e.mode or "").upper()
-    if "ROADMAP_MODE" in mu:
-        return True
-    if "RESUME_ROADMAP" not in mu:
-        return False
-    a = _action_str(e)
-    if not a:
-        return True
-    return a == "deepen"
+    return "RESUME_ROADMAP" in u
 
 
 def parse_queue_jsonl(text: str) -> list[QueueEntry]:
@@ -127,8 +103,6 @@ def print_plan_success_summary(plan: EatQueueRunPlan, decisions_log_path: Path) 
     n = len(plan.intents)
     print(f"✅ eat_queue_run_plan.json generated successfully for parent_run_id: {plan.parent_run_id}")
     print(f"   Intents: {n} total ({num_repair} repair)")
-    print(f"   inline_pass3_drain: {plan.inline_pass3_drain}")
-    print(f"   has_anticipatory_repair_slot: {plan.has_anticipatory_repair_slot}")
     print(f"   Consumed IDs: {plan.consumed_ids}")
     print(f"   Decisions appended to: {decisions_log_path.resolve()}")
 
@@ -183,96 +157,44 @@ def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueR
 
     st = _transition(st, "plan_pass1", decisions, parent_run_id)
     intents: list[DispatchIntent] = []
+    consumed: list[str] = []
     ordinal = 0
 
-    # Per project: Pass 1 (deepen) then Pass 3 (repair drain) immediately — order [p1,p3,p1,p3,…].
-    # Pass 3 uses snapshot repair id(s) when present; otherwise one anticipatory slot (repair
-    # line is expected to appear after L1 work during/after Pass 1).
     for proj in order:
         b = by[proj]
         forwards = [e for e in b["forward"] if _is_roadmap(e)]
         repairs = [e for e in b["repair"] if _is_roadmap(e)]
-        if not forwards:
-            continue
-        f0 = forwards[0]
-        ordinal += 1
-        mw, allowed = micro_workflow_for_entry(f0, is_repair_dispatch=False)
-        intents.append(
-            DispatchIntent(
-                queue_entry_id=f0.id,
-                project_id=proj if proj != "_none" else _pid(f0),
-                queue_pass_phase="initial",
-                pass_id="pass1",
-                dispatch_ordinal=ordinal,
-                micro_workflow=mw,
-                allowed_sub_steps=allowed,
-            )
-        )
-        if repairs:
-            for r in repairs:
-                ordinal += 1
-                mw_r, allowed_r = micro_workflow_for_entry(r, is_repair_dispatch=True)
-                intents.append(
-                    DispatchIntent(
-                        queue_entry_id=r.id,
-                        project_id=proj if proj != "_none" else _pid(r),
-                        queue_pass_phase="repair",
-                        pass_id="pass3",
-                        dispatch_ordinal=ordinal,
-                        micro_workflow=mw_r,
-                        allowed_sub_steps=allowed_r,
-                        is_anticipatory_drain=False,
-                    )
-                )
-        elif _is_anticipatory_trigger(f0):
+        if forwards:
+            f0 = forwards[0]
             ordinal += 1
-            mw_r, allowed_r = micro_workflow_for_entry(f0, is_repair_dispatch=True)
-            synthetic = anticipatory_repair_drain_queue_entry_id(parent_run_id, f0.id)
             intents.append(
                 DispatchIntent(
-                    queue_entry_id=synthetic,
+                    queue_entry_id=f0.id,
                     project_id=proj if proj != "_none" else _pid(f0),
+                    queue_pass_phase="initial",
+                    pass_id="pass1",
+                    dispatch_ordinal=ordinal,
+                )
+            )
+        if repairs and forwards:
+            consumed.append(forwards[0].id)
+
+    st = _transition(st, "plan_pass3", decisions, parent_run_id)
+    for proj in order:
+        repairs = [e for e in by[proj]["repair"] if _is_roadmap(e)]
+        for r in repairs:
+            ordinal += 1
+            intents.append(
+                DispatchIntent(
+                    queue_entry_id=r.id,
+                    project_id=proj if proj != "_none" else _pid(r),
                     queue_pass_phase="repair",
                     pass_id="pass3",
                     dispatch_ordinal=ordinal,
-                    micro_workflow=mw_r,
-                    allowed_sub_steps=allowed_r,
-                    is_anticipatory_drain=True,
                 )
             )
 
-    st = _transition(st, "plan_pass3", decisions, parent_run_id)
-
-    inline_pass3_drain = any(i.pass_id == "pass3" for i in intents)
-    has_anticipatory_repair_slot = any(i.is_anticipatory_drain for i in intents)
-    # Every dispatched intent’s queue line is removed in one A.7 pass after the full orchestrated run (Pass 1 then inline Pass 3 when present).
-    consumed = [i.queue_entry_id for i in intents]
-
-    if inline_pass3_drain:
-        decisions.append(
-            {
-                "ts": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-                "parent_run_id": parent_run_id,
-                "rule_id": "fsm:inline_pass3_drain",
-                "from_state": "pass3_scheduled",
-                "to_state": "emit",
-                "queue_entry_id": None,
-                "reason": "inline_pass3_drain",
-                "detail": {
-                    "pass3_intent_count": sum(1 for i in intents if i.pass_id == "pass3"),
-                    "same_eat_queue_iteration": True,
-                    "has_anticipatory_repair_slot": has_anticipatory_repair_slot,
-                },
-            }
-        )
-
-    plan = EatQueueRunPlan(
-        parent_run_id=parent_run_id,
-        intents=intents,
-        consumed_ids=consumed,
-        inline_pass3_drain=inline_pass3_drain,
-        has_anticipatory_repair_slot=has_anticipatory_repair_slot,
-    )
+    plan = EatQueueRunPlan(parent_run_id=parent_run_id, intents=intents, consumed_ids=consumed)
     st = _transition(st, "emit", decisions, parent_run_id)
     assert st == _FsmState.EMITTED
     return plan, decisions
