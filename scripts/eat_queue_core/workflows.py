@@ -1,10 +1,16 @@
 """Central micro_workflow tables for eat_queue_core (schema v2).
 
-Inline Pass 3 drain: ``build_plan`` always schedules Pass 1 then Pass 3 in one manifest
-when a forward RESUME_ROADMAP line exists: either Pass 3 targets a repair line already in
-the snapshot, or an **anticipatory** Pass 3 slot (``anticipatory-pass3-drain:<forward_id>``)
-for repair lines appended mid-run during Pass 1. Layer 1 resolves the anticipatory slot
-to the real repair line after re-reading the queue.
+Inline Pass 3 drain: ``build_plan`` emits Pass 1 then Pass 3 in one ``intents`` array.
+
+- **Snapshot repair:** If the queue already lists a repair-class line, Pass 3 binds to that
+  line’s ``id`` (``is_anticipatory_drain: false``).
+
+- **Anticipatory drain:** If only a forward RESUME_ROADMAP deepen exists, Pass 3 is still
+  pre-allocated with a **synthetic** ``queue_entry_id`` (``is_anticipatory_drain: true``).
+  L1 appends the real repair during/after Pass 1; Queue re-reads the queue and resolves the
+  Pass 3 ``Task`` to that line before dispatching.
+
+Layer 1 must run all intents in the **same** EAT-QUEUE invocation.
 """
 
 from __future__ import annotations
@@ -38,15 +44,6 @@ WORKFLOW_RESUME_ROADMAP_REPAIR_HANDOFF_AUDIT: list[str] = [
     "final_validator",
 ]
 
-# Prefix for pre-allocated Pass 3 intents when no repair line exists in the queue snapshot yet.
-ANTICIPATORY_PASS3_QUEUE_ENTRY_PREFIX = "anticipatory-pass3-drain:"
-
-
-def anticipatory_pass3_queue_entry_id(forward_queue_entry_id: str) -> str:
-    """Stable synthetic id for the repair drain slot; Layer 1 maps to the real repair line after Pass 1."""
-    return f"{ANTICIPATORY_PASS3_QUEUE_ENTRY_PREFIX}{forward_queue_entry_id}"
-
-
 # Other RESUME_ROADMAP actions (recal, expand, etc.) — explicit default.
 WORKFLOW_RESUME_ROADMAP_OTHER: list[str] = [
     "roadmap_core",
@@ -79,6 +76,11 @@ def micro_workflow_for_entry(e: Any, *, is_repair_dispatch: bool) -> tuple[list[
         # Forward-slot handoff-audit (non-repair) uses full pipeline.
         return (list(WORKFLOW_RESUME_ROADMAP_DEEPEN), None)
     return (list(WORKFLOW_RESUME_ROADMAP_OTHER), None)
+
+
+def anticipatory_repair_drain_queue_entry_id(parent_run_id: str, deepen_queue_entry_id: str) -> str:
+    """Stable synthetic id for Pass 3 when no repair line exists in the pre-run queue snapshot."""
+    return f"anticipatory-repair-drain::{parent_run_id}::{deepen_queue_entry_id}"
 
 
 def ledger_steps_from_micro(micro: list[str]) -> list[str]:

@@ -11,7 +11,7 @@ from .plan import append_decisions, build_plan, parse_queue_jsonl
 from .workflows import (
     WORKFLOW_RESUME_ROADMAP_DEEPEN,
     WORKFLOW_RESUME_ROADMAP_REPAIR_HANDOFF_AUDIT,
-    anticipatory_pass3_queue_entry_id,
+    anticipatory_repair_drain_queue_entry_id,
     ledger_steps_from_micro,
     micro_workflow_for_entry,
 )
@@ -23,7 +23,7 @@ __all__ = [
     "ValidationResult",
     "WORKFLOW_RESUME_ROADMAP_DEEPEN",
     "WORKFLOW_RESUME_ROADMAP_REPAIR_HANDOFF_AUDIT",
-    "anticipatory_pass3_queue_entry_id",
+    "anticipatory_repair_drain_queue_entry_id",
     "append_decisions",
     "build_plan",
     "ledger_steps_from_micro",

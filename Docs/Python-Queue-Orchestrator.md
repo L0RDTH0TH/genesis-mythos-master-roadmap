@@ -56,11 +56,10 @@ Keep **`false`** (default) until you have **tested a full EAT-QUEUE cycle** with
 ## Plan schema (v2 — micro_workflow)
 
 - **`schema_version`:** **`2`** — current. **`1`** may still be read for older manifests; intents without **`micro_workflow`** are **legacy** orchestrator shape (no strict micro-workflow enforcement).
-- **`EatQueueRunPlan`:** **`parent_run_id`**, **`intents`**, **`consumed_ids`**, **`inline_pass3_drain`**, **`has_anticipatory_repair_slot`** (boolean).
-- **`inline_pass3_drain`:** **`true`** when the plan includes at least one **`pass_id: pass3`** intent (repair-class) alongside Pass 1. Layer 1 must run **all** intents in order in the **same** EAT-QUEUE invocation — forward deepen first, then repair — without a second EAT-QUEUE.
-- **`has_anticipatory_repair_slot`:** **`true`** when a Pass 3 intent uses a **synthetic** **`queue_entry_id`** (`anticipatory-pass3-drain:<forward_id>`) because the repair line was **not** in the queue file at plan generation time. Layer 1 **re-reads** the queue after Pass 1, resolves the real repair **`id`**, then runs Pass 3 and **A.7** removes forward + repair lines.
-- **`consumed_ids`:** Real queue **`id`**s only (omits synthetic anticipatory ids). Layer 1 merges the resolved repair **`id`** into the **A.7** removal set when **`has_anticipatory_repair_slot`** is true.
-- **`DispatchIntent` (each intent):** **`micro_workflow`** (required non-empty list of strings when **`schema_version` is `2`**), optional **`allowed_sub_steps`**, **`strict_mode`**, **`is_anticipatory_drain`** (boolean — Pass 3 placeholder for mid-run repair append).
+- **`EatQueueRunPlan`:** **`parent_run_id`**, **`intents`**, **`consumed_ids`**, **`inline_pass3_drain`**, **`has_anticipatory_repair_slot`** (booleans).
+- **`inline_pass3_drain`:** **`true`** when the plan includes at least one **`pass_id: pass3`** intent (repair-class) alongside Pass 1. Layer 1 must run **all** intents in order in the **same** EAT-QUEUE invocation — forward deepen first, then repair — and apply **A.7** using **`consumed_ids`** (all dispatched **`queue_entry_id`** values) so the queue does not require a second EAT-QUEUE for the repair line.
+- **`has_anticipatory_repair_slot`:** **`true`** when Pass 3 was **pre-allocated** because the pre-run snapshot had **only** a deepen line (no repair yet). The matching **`DispatchIntent`** has **`is_anticipatory_drain: true`** and a **synthetic** **`queue_entry_id`**. Layer 1 **re-reads** the queue after Pass 1 and binds Pass 3 to the real repair line when L1 has appended it. See **A.0.5** in `queue.mdc`.
+- **`DispatchIntent` (each intent):** **`micro_workflow`** (required non-empty list of strings when **`schema_version` is `2`**), optional **`allowed_sub_steps`**, **`strict_mode`** (boolean, default **true** in Python models when omitted from JSON — callers should pass explicitly in JSON for clarity).
 
 **Central tables** (single source of truth): **`scripts/eat_queue_core/workflows.py`**
 
