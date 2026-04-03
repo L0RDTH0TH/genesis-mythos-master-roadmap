@@ -11,6 +11,8 @@ Inline Pass 3 drain: ``build_plan`` emits Pass 1 then Pass 3 in one ``intents`` 
   Pass 3 ``Task`` to that line before dispatching.
 
 Layer 1 must run all intents in the **same** EAT-QUEUE invocation.
+
+Cursor rules reference **MICRO_WORKFLOW_*** / **MICRO_WORKFLOW_STEP_ALIASES** for strict manifest mapping.
 """
 
 from __future__ import annotations
@@ -52,6 +54,19 @@ WORKFLOW_RESUME_ROADMAP_OTHER: list[str] = [
     "nested_validator_second",
     "l1_post_lv",
 ]
+
+# Aliases for roadmap.mdc / agents/roadmap.md (immutable tuples; same order as lists above).
+MICRO_WORKFLOW_DEEPEN_FORWARD: tuple[str, ...] = tuple(WORKFLOW_RESUME_ROADMAP_DEEPEN)
+MICRO_WORKFLOW_REPAIR_PASS3: tuple[str, ...] = tuple(WORKFLOW_RESUME_ROADMAP_REPAIR_HANDOFF_AUDIT)
+MICRO_WORKFLOW_STEP_ALIASES: dict[str, str] = {
+    "validator": "nested_validator_first",
+    "final_validator": "nested_validator_second",
+}
+
+
+def resolve_step_id(label: str) -> str:
+    """Resolve a manifest label to a canonical first-class step id (ledger alignment)."""
+    return MICRO_WORKFLOW_STEP_ALIASES.get(label, label)
 
 
 def _action(e: Any) -> str:
