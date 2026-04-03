@@ -37,6 +37,8 @@ class DispatchIntent(BaseModel):
     micro_workflow: list[str]
     allowed_sub_steps: dict[str, list[str]] | None = None
     strict_mode: bool = True
+    # Pre-allocated Pass 3 slot when repair line is not in the pre-run queue snapshot (repair may be appended during Pass 1). queue_entry_id uses prefix anticipatory-pass3-drain:
+    is_anticipatory_drain: bool = False
 
 
 class EatQueueRunPlan(BaseModel):
@@ -46,3 +48,5 @@ class EatQueueRunPlan(BaseModel):
     consumed_ids: list[str]
     # True when the plan schedules Pass 3 repair dispatches in the same manifest as Pass 1 — Layer 1 must run all intents before returning (same EAT-QUEUE iteration).
     inline_pass3_drain: bool = False
+    # True when at least one intent is anticipatory (repair line not in snapshot; resolve real repair id after Pass 1).
+    has_anticipatory_repair_slot: bool = False

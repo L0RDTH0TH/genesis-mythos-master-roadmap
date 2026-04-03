@@ -1,9 +1,10 @@
 """Central micro_workflow tables for eat_queue_core (schema v2).
 
-Inline Pass 3 drain: when the prompt-queue snapshot already contains both a forward
-RESUME_ROADMAP line and a repair-class line for the same project, ``build_plan`` emits
-Pass 1 then Pass 3 intents in one ``intents`` array and sets ``EatQueueRunPlan.inline_pass3_drain``.
-Layer 1 must execute both in the **same** EAT-QUEUE invocation (no separate run for repair).
+Inline Pass 3 drain: ``build_plan`` always schedules Pass 1 then Pass 3 in one manifest
+when a forward RESUME_ROADMAP line exists: either Pass 3 targets a repair line already in
+the snapshot, or an **anticipatory** Pass 3 slot (``anticipatory-pass3-drain:<forward_id>``)
+for repair lines appended mid-run during Pass 1. Layer 1 resolves the anticipatory slot
+to the real repair line after re-reading the queue.
 """
 
 from __future__ import annotations
@@ -36,6 +37,15 @@ WORKFLOW_RESUME_ROADMAP_REPAIR_HANDOFF_AUDIT: list[str] = [
     "ira",
     "final_validator",
 ]
+
+# Prefix for pre-allocated Pass 3 intents when no repair line exists in the queue snapshot yet.
+ANTICIPATORY_PASS3_QUEUE_ENTRY_PREFIX = "anticipatory-pass3-drain:"
+
+
+def anticipatory_pass3_queue_entry_id(forward_queue_entry_id: str) -> str:
+    """Stable synthetic id for the repair drain slot; Layer 1 maps to the real repair line after Pass 1."""
+    return f"{ANTICIPATORY_PASS3_QUEUE_ENTRY_PREFIX}{forward_queue_entry_id}"
+
 
 # Other RESUME_ROADMAP actions (recal, expand, etc.) — explicit default.
 WORKFLOW_RESUME_ROADMAP_OTHER: list[str] = [
