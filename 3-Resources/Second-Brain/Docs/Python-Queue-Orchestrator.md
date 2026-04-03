@@ -19,6 +19,8 @@ Deterministic **`eat_queue_run_plan.json`** is produced by the **`scripts/eat_qu
 
 From the vault root, generate the plan **before** EAT-QUEUE. If `plan` exits non-zero, **stop** and fix the queue or plan; do not invoke **`Task(queue)`** with a stale or missing manifest.
 
+**Reactive full cycle (Pass 3 drain / `queue_rewrite_ids`):** Prefer **`python3 -m scripts.eat_queue_core.full_cycle`** (repo root, **`PYTHONPATH=.`**) with **`--action`**, **`--profile`**, **`--max-passes=2`** — see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. Re-invoke after Layer 1 mid-run repair append when pass 1 had no Pass 3 intents.
+
 ```bash
 python -m eat_queue_core plan \
   --queue .technical/prompt-queue.jsonl \
@@ -52,44 +54,6 @@ Keep **`false`** (default) until you have **tested a full EAT-QUEUE cycle** with
 
 - **Flag off** or **plan file missing** → Layer 1 uses **legacy** LLM-driven ordering (**A.1** onward); no breaking change.
 - **Flag on** and plan present → Layer 1 must follow **A.0.5** in `queue.mdc` (exact **`intents`** order; no overriding **`queue_pass_phase`**, **`pass_id`**, or **`dispatch_ordinal`** from the manifest).
-
-## Plan schema (v2 — micro_workflow)
-
-- **`schema_version`:** **`2`** — current. **`1`** may still be read for older manifests; intents without **`micro_workflow`** are **legacy** orchestrator shape (no strict micro-workflow enforcement).
-- **`EatQueueRunPlan`:** **`parent_run_id`**, **`intents`**, **`consumed_ids`**, **`inline_pass3_drain`**, **`has_anticipatory_repair_slot`** (booleans).
-- **`inline_pass3_drain`:** **`true`** when the plan includes at least one **`pass_id: pass3`** intent (repair-class) alongside Pass 1. Layer 1 must run **all** intents in order in the **same** EAT-QUEUE invocation — forward deepen first, then repair — and apply **A.7** using **`consumed_ids`** (all dispatched **`queue_entry_id`** values) so the queue does not require a second EAT-QUEUE for the repair line.
-- **`has_anticipatory_repair_slot`:** **`true`** when Pass 3 was **pre-allocated** because the pre-run snapshot had **only** a deepen line (no repair yet). The matching **`DispatchIntent`** has **`is_anticipatory_drain: true`** and a **synthetic** **`queue_entry_id`**. Layer 1 **re-reads** the queue after Pass 1 and binds Pass 3 to the real repair line when L1 has appended it. See **A.0.5** in `queue.mdc`.
-- **`DispatchIntent` (each intent):** **`micro_workflow`** (required non-empty list of strings when **`schema_version` is `2`**), optional **`allowed_sub_steps`**, **`strict_mode`** (boolean, default **true** in Python models when omitted from JSON — callers should pass explicitly in JSON for clarity), **`is_anticipatory_drain`** (when **`true`**, **`queue_entry_id`** is synthetic until Layer 1 resolves the real repair line after Pass 1 — see **A.0.5**).
-
-**Central tables** (single source of truth): **`scripts/eat_queue_core/workflows.py`**
-
-| Flow | Example `micro_workflow` |
-|------|---------------------------|
-| RESUME_ROADMAP deepen (forward / initial) | `roadmap_core`, `nested_validator_first`, `ira`, `nested_validator_second`, `l1_post_lv` |
-| RESUME_ROADMAP repair-class dispatch (Pass 3 repair) | `validator`, `ira`, `final_validator` |
-| Other actions | Same default as “other” row in code (non-empty; never an empty workflow) |
-
-Logical labels map to **`nested_subagent_ledger`** **`steps[].step`** ids (e.g. **`validator`** → **`nested_validator_first`**, **`final_validator`** → **`nested_validator_second`**) — see **`MICRO_TO_LEDGER_STEP`** in **`workflows.py`**.
-
-**Post-hoc validation:** **`eat_queue_core.ledger_validate.validate_ledger_steps_executed(expected_micro, yaml_text)`** checks ledger YAML against the expected sequence; **`validate_executed_micro_workflow`** checks top-level **`executed_micro_workflow`** in the roadmap return.
-
-## Limitations (enforcement boundary)
-
-- **`Task(roadmap)`**, **`Task(validator)`**, and **`Task(internal-repair-agent)`** remain **LLM subagents**. Python emits an exact manifest; Cursor rules and hand-offs narrow deviation, but **there is no compile-time guarantee** of “zero LLM deviation.” Enforcement is: (1) rule text + hand-off, (2) **post-hoc** checks (golden tests, optional CLI), (3) Layer 1 **`orchestrator_micro_workflow_violation`** when returns do not match **`micro_workflow`** under **`strict_mode: true`**.
-
-## Runtime diagram
-
-```mermaid
-flowchart TD
-  plan[eat_queue_run_plan.json v2]
-  queue[Task queue Layer1]
-  rm[Task roadmap]
-  helpers[Nested Task validator IRA]
-  plan --> queue
-  queue -->|"handoff + micro_workflow"| rm
-  rm --> helpers
-  rm -->|"ledger YAML + executed_micro_workflow"| queue
-```
 
 ## Related
 

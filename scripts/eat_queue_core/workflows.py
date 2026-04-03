@@ -85,6 +85,9 @@ def micro_workflow_for_entry(e: Any, *, is_repair_dispatch: bool) -> tuple[list[
     action = _action(e)
     if is_repair_dispatch:
         return (list(WORKFLOW_RESUME_ROADMAP_REPAIR_HANDOFF_AUDIT), None)
+    if action == "pass3_repair_drain":
+        # Fast repair-drain micro (validator → IRA → final validator); same as Pass 3 repair dispatch.
+        return (list(WORKFLOW_RESUME_ROADMAP_REPAIR_HANDOFF_AUDIT), None)
     if action == "deepen":
         return (list(WORKFLOW_RESUME_ROADMAP_DEEPEN), None)
     if action in ("handoff-audit", "handoff_audit"):
