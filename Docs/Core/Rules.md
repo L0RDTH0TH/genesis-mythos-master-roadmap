@@ -172,6 +172,7 @@ flowchart TD
 
 - **Say "INGEST MODE" or "Process Ingest"** → always-ingest-bootstrap + para-zettel-autopilot apply; agent lists Ingest notes and runs full-autonomous-ingest (backup → classify_para → frontmatter-enrich → subfolder-organize → … → move_note → log_action).
 - **Say "EAT-QUEUE" with queue populated** → **dispatcher.mdc** applies: the parent agent launches the **Queue/Dispatcher subagent** via **`Task(subagent_type: queue)`** with a hand-off (vault paths, which queue, pasted EAT-CACHE payload if any). The Queue subagent runs **auto-eat-queue** behavior (read `.technical/prompt-queue.jsonl` or EAT-CACHE payload, Step 0 wrappers, validate/dedup/sort, dispatch each entry by mode via further **`Task`** calls, append Watcher-Result per id). The parent does not run queue steps inline.
+- **Illustrative RESUME_ROADMAP deepen trace** → [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]] (Layer 0→2 railroad exemplar; subordinate to `.cursor/agents/queue.md` FINAL GATEKEEPER and `queue.mdc` A.5d).
 - **Open a note in 1-Projects/… and say "DISTILL MODE – safe batch autopilot"** → auto-distill runs autonomous-distill on that note (backup → optional auto-layer-select → distill layers → distill-highlight-color → layer-promote → callout-tldr-wrap → readability-flag).
 
 ---

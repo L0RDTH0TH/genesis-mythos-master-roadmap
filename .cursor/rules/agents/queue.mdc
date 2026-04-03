@@ -30,6 +30,12 @@ After `Task(roadmap)` returns (even if it claims Success):
 
 This gate runs **before** A.7 queue rewrite and Watcher-Result final write.
 
+**Dispositions & Watcher-Result hygiene (one authoritative story per `requestId`)**
+
+- `read_only_analysis` is **forbidden** as any disposition (primary or intermediate) on a run that also claims `Task(roadmap)` Success, ledger append, repair line, or `nested_validation_provisional`. It is internal rationalization noise only — **never** emit it in the final Watcher-Result.
+- Layer 1 `Task(validator)` post–little-val **must** be invoked in **this run** (the “hostile” L1 validator step). Nested `roadmap_handoff_auto` (Layer 2, first + second pass, IRA, etc.) does **not** satisfy **(b1)**. Historical Watcher-Result lines or previous runs also do **not** satisfy **(b1)**. The **only** allowed skips are the documented profile gates: `conditional_nonhard_skip` / `minimal` **or** explicit **Legacy skip** (no `little_val_ok` / bad `validator_context`), and the skip **must** be logged with the correct `suppress_reason` tag and `force_layer1_post_lv` not set.
+- Always emit **exactly one** coherent primary disposition story per `requestId` (when **(b1)** post–little-val ran: **two** lines sharing the same `requestId` — **`segment: VALIDATE`** first, then the primary pipeline line per [[.cursor/rules/always/watcher-result-append|watcher-result-append]]). **Never** emit both `read_only_analysis` and a Success / repair / `nested_validation_provisional` line for the same request.
+
 # Queue/Dispatcher Subagent (context rule)
 
 - **Subagent**: This rule is the **Queue/Dispatcher Subagent**. It is responsible for **both** (1) the **prompt queue** (`.technical/prompt-queue.jsonl` — EAT-QUEUE / EAT-CACHE) and (2) the **task/roadmap queue** (`3-Resources/Task-Queue.md` — PROCESS TASK QUEUE). The dispatcher ([always/dispatcher.mdc](.cursor/rules/always/dispatcher.mdc)) routes EAT-QUEUE and PROCESS TASK QUEUE to this rule.
@@ -314,7 +320,8 @@ If **`post_little_val_repair_use_prompt_craft`** is **false**, go directly to **
 
 Then **re-sort** the **remaining** in-memory queue list for this run (entries not yet dispatched) using **A.4 repair-first sub-sort**. When **`queue.inline_a5b_repair_drain_enabled`** is not **false**, set run memory **`inline_repair_pending: true`** after a successful append (so **Pass 3** will drain the new line in the same EAT-QUEUE run after passes 1–2, within caps — see **A.5.0**). Log to **Feedback-Log** or **Prompt-Log** per [[3-Resources/Second-Brain/Logs|Logs]] § Tiered validator / queue pivot when a repair line is appended.
 
-**A.5d — MANDATORY INDEPENDENT Layer 1 FINAL GATEKEEPER CHECKLIST (post-roadmap validation — run on EVERY roadmap_task_return)**
+**A.5d — MANDATORY INDEPENDENT Layer 1 FINAL GATEKEEPER CHECKLIST (post-roadmap validation — run on EVERY roadmap_task_return)**  
+(This checklist is **non-skippable** by “nested already ran” or historical lines — see **Dispositions & Watcher-Result hygiene** at the top of this rule.)
 
 After any roadmap/RESUME_ROADMAP Task return (Success or otherwise), **ALWAYS** perform full independent parse of:
 - nested_subagent_ledger (verify every required step has task_tool_invoked: true or valid task_error)

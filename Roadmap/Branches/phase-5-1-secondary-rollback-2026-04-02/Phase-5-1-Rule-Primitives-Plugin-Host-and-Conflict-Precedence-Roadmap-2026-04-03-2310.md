@@ -9,6 +9,8 @@ priority: high
 progress: 100
 handoff_readiness: 85
 created: 2026-04-03
+archived_from_active_tree: 2026-04-02
+archive_reason: operator rollback — stabilize Second-Brain / regen cadence; next authoritative secondary 5.1 will be re-minted from clean RESUME_ROADMAP
 tags:
   - roadmap
   - genesis-mythos-master
