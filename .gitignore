@@ -1,0 +1,4 @@
+# Python bytecode / caches (eat_queue_core and local runs)
+__pycache__/
+*.py[cod]
+*.pyo

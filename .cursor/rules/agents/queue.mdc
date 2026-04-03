@@ -97,6 +97,19 @@ When the instruction contains **EAT-QUEUE**, **Process queue**, **EAT-CACHE**, o
 
 *(Full Step 0 semantics — re-try cap, re-wrap creation, path-apply by wrapper_type/pipeline, orphan/true-orphan idempotency, CHECK_WRAPPERS Ingest-Log format, vault search — are as specified in [auto-eat-queue.mdc](.cursor/rules/context/auto-eat-queue.mdc) §§ Wrapper-check requeue semantics and Always-check wrappers. Follow that rule verbatim for every branch.)*
 
+## A.0.5 Python orchestrator bridge (optional; deterministic plan)
+
+- Read **Second-Brain-Config** **`queue.python_orchestrator_enabled`** (default **false**; machine-readable `queue:` block in Config). If **`false`** or **`python_orchestrator_enabled` is absent** → **skip** this section and continue with **A.1** (legacy LLM-driven ordering). **No breaking change.**
+- If **`.technical/eat_queue_run_plan.json` is missing** or unreadable → **skip** this section and continue with **A.1** onward.
+- If plan **`parent_run_id` mismatches** the current EAT-QUEUE run (when the hand-off includes **`parent_run_id`**) **or** plan **JSON parsing fails** (invalid JSON, wrong **`schema_version`**, malformed **`intents`**, etc.) → **append Watcher-Result** with an **advisory** + **fall back** to legacy **A.1** onward (do not silently ignore mismatch or parse errors).
+- When **`python_orchestrator_enabled` is true** and the plan file **exists**, **`parent_run_id` matches** the hand-off (when present), and parsing **succeeds**:
+  - Parse the **`intents`** array and dispatch **exactly in array order** — for each **`op: "dispatch"`** intent, call the appropriate **`Task(subagent_type=...)`** (e.g. **`roadmap`** → `Task(subagent_type: roadmap)`), passing **`queue_pass_phase`**, **`pass_id`**, and **`dispatch_ordinal`** from the JSON into the hand-off **verbatim** (with full hand-off + telemetry as usual).
+  - **Never** override or reinterpret **`queue_pass_phase`** or **`pass_id`** from the plan (do not substitute `initial` / `inline` / inferred phase from the LLM).
+  - For **`queue_pass_phase: "repair"`** (Pass 3 repair-class): roadmap hand-off must tag **`queue_pass_phase`** as **`repair`** so nested roadmap / **Validator** / **IRA** runs follow **repair** semantics (same intent as **A.5.0** Pass 3 repair drain).
+  - **LLM role**: Fill Task prompts from templates + vault paths only; **never** reinterpret phase or dispatch order from natural language.
+  - **After all dispatches** complete for this orchestrated path: **rewrite** `.technical/prompt-queue.jsonl` per **A.7** to **remove** all queue lines whose **`id`** is listed in **`consumed_ids`** (or mark them processed per **A.7**, same parity as **`processed_success_ids`**).
+- **Reference:** [Python-Queue-Orchestrator](3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator.md) pre-run hook.
+
 ## A.1. Read queue
 
 - **From file**: Read `.technical/prompt-queue.jsonl`. If missing or unreadable, treat as empty; optionally append to Watcher-Result; exit.

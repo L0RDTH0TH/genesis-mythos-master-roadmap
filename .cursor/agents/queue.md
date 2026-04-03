@@ -133,6 +133,10 @@ If you are invoked without these basics (vault root and queue paths), state clea
 
 ## Prompt queue behavior (Part A)
 
+### Python orchestrator bridge (optional; Config `queue.python_orchestrator_enabled`)
+
+When **`python_orchestrator_enabled`** is **true**, the plan file exists, **`parent_run_id`** matches the hand-off, and parsing succeeds: parse **`intents`** and dispatch **`Task(subagent_type=...)`** **exactly in array order** with **`queue_pass_phase`**, **`pass_id`**, and **`dispatch_ordinal`** from the JSON — **never** override or reinterpret them; after **all** dispatches, **rewrite** `.technical/prompt-queue.jsonl` per **A.7** to remove **`consumed_ids`** (or mark processed per **A.7**). **If** **`parent_run_id` mismatches**, parsing **fails**, the flag is **false**, or the plan is **missing** → Watcher-Result advisory when applicable + **legacy** Part A (no breaking change). **Normative:** [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]].
+
 Follow the **Part A** behavior from [[.cursor/rules/agents/queue.mdc]]:
 
 1. **Step 0 — Always-check wrappers**: Scan `Ingest/Decisions/**` for approved/re-wrap/re-try wrappers and apply them (ingest apply-mode, phase-direction, handoff-readiness, organize/archive/distill/express apply-from-wrapper, low-confidence, error) per `auto-eat-queue.mdc`. Update wrappers and move processed ones under `4-Archives/Ingest-Decisions/`.
