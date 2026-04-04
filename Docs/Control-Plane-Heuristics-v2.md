@@ -123,7 +123,7 @@ Eight components: `pri`, `unc`, `iter`, `stag`, `decay`, `bal`, `rb`, `cont` →
 
 ## 8. Optional Python engine
 
-**Path:** `scripts/heuristic_engine.py` (vault root; alongside `scripts/queue-gate-compute.py`) — reads JSON stdin with **`adaptive_cap_config`** (from **`roadmap.control_plane_v2.adaptive_cap`**) and optional **`tail_hints`** (`circling_score`, `progress_mult`, `velocity_mult`); prints JSON with **`effective_cap_used`**, **`H`**, **`P`**, **`V`**. Used when **`queue.control_plane_v2.use_python_engine: true`**; **inline** computation remains valid when the script is absent or fails.
+**Path:** `.technical/scripts/heuristic_engine.py` — reads JSON stdin with **`adaptive_cap_config`** (from **`roadmap.control_plane_v2.adaptive_cap`**) and optional **`tail_hints`** (`circling_score`, `progress_mult`, `velocity_mult`); prints JSON with **`effective_cap_used`**, **`H`**, **`P`**, **`V`**. Used when **`queue.control_plane_v2.use_python_engine: true`**; **inline** computation remains valid when the script is absent or fails.
 
 ---
 

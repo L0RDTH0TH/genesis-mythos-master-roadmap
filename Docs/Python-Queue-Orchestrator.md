@@ -19,6 +19,8 @@ Deterministic **`eat_queue_run_plan.json`** is produced by the **`scripts/eat_qu
 
 From the vault root, generate the plan **before** EAT-QUEUE. If `plan` exits non-zero, **stop** and fix the queue or plan; do not invoke **`Task(queue)`** with a stale or missing manifest.
 
+**Reactive full cycle (Pass 3 drain / `queue_rewrite_ids`):** Prefer **`python3 -m scripts.eat_queue_core.full_cycle`** (repo root, **`PYTHONPATH=.`**) with **`--action`**, **`--profile`**, **`--max-passes=2`** — see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. Re-invoke after Layer 1 mid-run repair append when pass 1 had no Pass 3 intents.
+
 ```bash
 python -m eat_queue_core plan \
   --queue .technical/prompt-queue.jsonl \

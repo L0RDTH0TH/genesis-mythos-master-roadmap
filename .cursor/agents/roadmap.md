@@ -18,6 +18,21 @@ When `python_orchestrator_enabled: true` and the hand-off contains a non-empty `
 
 **Returns (orchestrator strict):** Echo **`micro_workflow`** (from hand-off) and **`executed_micro_workflow`** (completed steps, same order) in the final fenced YAML; include **`nested_subagent_ledger`** per Nested-Subagent-Ledger-Spec. **`pipeline_mode_used`** may log the profile for audit; it **must not** authorize extra nested steps beyond the manifest.
 
+### Step → primitive mapping (normative)
+
+Execute **only** labels from **`micro_workflow`** in order. **Aliases:** **`validator`** = **`nested_validator_first`**; **`final_validator`** = **`nested_validator_second`** (see **`scripts/eat_queue_core/workflows.py`**).
+
+| Label | Call |
+|-------|------|
+| `roadmap_core` | Deepen / resume / recal / other **core** skill work for **`params.action`**. |
+| `nested_validator_first` or `validator` | **`Task(subagent_type: "validator")`** — `roadmap_handoff_auto` hand-off. |
+| `ira` | **`Task(subagent_type: "internal-repair-agent")`**. |
+| `nested_validator_second` or `final_validator` | **`Task(subagent_type: "validator")`** with compare / second pass. |
+| `l1_post_lv` | Roadmap little val + **`validator_context`** for Layer 1 post-LV — **no** extra in-task Validator unless listed. |
+| `inline_pass3` / repair row | Only the repair chain in the manifest — **inline Pass 3 drain**, no duplicate validators. |
+
+**Anti-regression:** The **`Task` tool is available** here. **Do not** output **`nested_task_unavailable`** unless you **attempted** the corresponding **`Task`** and the host returned an error — then use **`task_error`** + **`host_error_raw`**, not a skip.
+
 ---
 
 # RoadmapSubagent (Layer 2) — LEGACY BALANCE MODE (orchestrator off, or `strict_mode: false`, or absent `micro_workflow` only)

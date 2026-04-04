@@ -33,16 +33,29 @@ alwaysApply: false
   - Treat IRA, Research, and Validator as **pure helpers**: pass explicit inputs, consume only their structured outputs (repair plans, research consumables, validation reports), and let the Queue/Dispatcher own queue append + chaining behavior.
   - Return roadmap results to the orchestrator; all queue mutation, wrapper lifecycle, and watcher logging must remain in the main agent / Queue rule per the Subagent-Safety-Contract and Safety-Invariants.
 
-## Orchestrator strict mode (micro_workflow; eat_queue_run_plan schema v2)
+## STRICT MANIFEST ENFORCEMENT (Python nervous system wins; eat_queue_run_plan schema v2)
 
-When the Queue hand-off includes **`micro_workflow`** (non-empty list, from **`.technical/eat_queue_run_plan.json`**) and **`strict_mode`** is **true** (default when omitted):
+When **`.technical/eat_queue_run_plan.json`** is reflected in the Queue hand-off with **`micro_workflow`** (non-empty list) and **`strict_mode`** is **true** (treat omitted as **true** when **`micro_workflow`** is present):
 
-1. Execute **only** the nested roadmap steps implied by **`micro_workflow`** **in order**. Canonical label mapping and tables live in **`scripts/eat_queue_core/workflows.py`** (e.g. deepen forward vs repair: **`validator`** → first nested Validator ledger step **`nested_validator_first`**; **`ira`** → **`ira_post_first_validator`**; **`final_validator`** → **`nested_validator_second`**).
-2. **Skip** legacy branches that would add **extra** nested Validator/IRA cycles or **L1 post–little-val** work **inside** this roadmap **`Task`** when those steps are **not** listed (e.g. **`l1_post_lv`** is normally **Queue** unless the manifest lists it).
-3. **Narrative conflict:** Elsewhere this rule and [[.cursor/agents/roadmap|agents/roadmap.md]] describe a longer **Validator→IRA→apply→little val→final validator** path. **Orchestrator strict** **overrides** that breadth for this hand-off so the run matches the **manifest** — do not silently add nested steps not in **`micro_workflow`**.
-4. **Return:** In addition to **`nested_subagent_ledger`** (per [Nested-Subagent-Ledger-Spec](3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec.md)), include top-level **`executed_micro_workflow`** in the final fenced YAML (array of strings, **same order** as completed micro steps). Layer 1 may validate with **`eat_queue_core.ledger_validate.validate_ledger_steps_executed`**.
+1. **Parse** **`micro_workflow`** **exactly** — do **not** deviate, do **not** add steps, do **not** fall back to legacy balance/thorough prose, **`nested_ira_policy`**, or inferred “extra safety” passes.
+2. **Execute in list order.** Canonical step ids and alias tables live in **`scripts/eat_queue_core/workflows.py`** (`MICRO_WORKFLOW_*`, `MICRO_WORKFLOW_STEP_ALIASES`). **Aliases** (repair Pass 3 rows may use short names): **`validator`** → same primitive as **`nested_validator_first`**; **`final_validator`** → same as **`nested_validator_second`**.
+3. **Nested `Task` invocations (mandatory):** The Cursor **`Task` tool is available** in this Roadmap subagent run. For each helper step below, **call `Task`** with the given **`subagent_type`** — **never** claim **`nested_task_unavailable`** / **`nested_task_unavailable_host`** without first attempting the nested **`Task`** and, on host refusal only, recording **`task_error`** with verbatim **`host_error_raw`** per [Nested-Subagent-Ledger-Spec](3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec.md). Do **not** skip helpers based on sandbox introspection or assumed tool absence.
 
-When **`strict_mode`** is **false** or **`micro_workflow`** is absent, use **legacy** nested-helper behavior.
+| Step label | Exact primitive |
+|------------|-----------------|
+| **`roadmap_core`** | Core action for **`params.action`** (e.g. **roadmap-deepen**, **roadmap-audit**, …) — structural roadmap work for this entry **before** listed nested helpers unless the manifest orders otherwise. |
+| **`nested_validator_first`** | **`Task(subagent_type: "validator", …)`** — first **`roadmap_handoff_auto`** pass (`validation_type` + state paths + report path in hand-off). Ledger id **`nested_validator_first`**. |
+| **`validator`** | Same as **`nested_validator_first`** (repair-drain manifests). |
+| **`ira`** | **`Task(subagent_type: "internal-repair-agent", …)`** — single-cycle IRA with validator outputs; ledger **`ira_post_first_validator`** when post-first-pass. |
+| **`nested_validator_second`** | **`Task(subagent_type: "validator", …)`** — second pass; include **`compare_to_report_path`** when comparing to the first report. Ledger id **`nested_validator_second`**. |
+| **`final_validator`** | Same as **`nested_validator_second`** (repair-drain manifests). |
+| **`l1_post_lv`** | Complete roadmap-side little val + emit **`validator_context`** so **Layer 1** runs post–little-val hostile validator per Queue **A.5b** / **A.6** — do **not** add an extra nested Validator **`Task`** inside roadmap for this unless the manifest lists it. |
+| **`inline_pass3`** (or repair-drain-only rows) | When **`queue_pass_phase: "repair"`** / **`pass_id: "pass3"`**, run **only** the listed repair chain (e.g. **`validator`→`ira`→`final_validator`**) — **no** duplicate cycles, **no** third pass. |
+
+4. **After the final manifest step:** Finish **`nested_subagent_ledger`**, **`executed_micro_workflow`** (completed step strings, **same order**), echo hand-off **`micro_workflow`**; return so **Queue** can run **A.7** consumption + ledger checks.
+5. **Precedence:** **`micro_workflow` + `strict_mode`** **override** all legacy prose in this file and in [[.cursor/agents/roadmap|agents/roadmap.md]] for nested helpers **for this hand-off**.
+
+When **`strict_mode`** is **false** or **`micro_workflow`** is absent, use **legacy** nested-helper behavior (Validator→IRA single-cycle, **`nested_ira_policy`**, etc.).
 
 ## Todo orchestration (todo-orchestrator)
 

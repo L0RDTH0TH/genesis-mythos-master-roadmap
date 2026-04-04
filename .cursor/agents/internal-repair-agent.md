@@ -28,6 +28,13 @@ If you are invoked using the validator-driven branch (B) (i.e. `validator_report
 
 ---
 
+## Orchestrator strict manifest (Roadmap nested Task)
+
+When **RoadmapSubagent** invokes you under **`strict_mode: true`** and a Queue hand-off **`micro_workflow`** lists **`ira`** (or the repair chain `validator` → `ira` → `final_validator`):
+
+- Treat the manifest as **authoritative** for how many IRA / validator passes run in that roadmap **`Task`** — **do not** advise adding extra IRA cycles, optional third validators, or steps not in **`micro_workflow`**.
+- One **IRA** **`Task`** per manifest **`ira`** step unless the hand-off explicitly sets a higher **`ira_call_index`** for little-val-driven repair (path A).
+
 ## Call limits and orchestration
 
 - **Who may call you**
