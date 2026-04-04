@@ -23,6 +23,7 @@ Concrete usage: INGEST MODE, RESUME-ROADMAP deepen, DISTILL LENS, EAT-QUEUE, RES
 2. Dispatcher loads the **Queue rule**. Queue runs **Step 0**, then reads `.technical/prompt-queue.jsonl`, parses/validates/orders, and dispatches the RESUME-ROADMAP entry to the **Roadmap subagent**.
 3. Roadmap subagent resolves project_id, reads roadmap-state.md and workflow_state.md, merges params with Config, runs **one deepen step** (roadmap-deepen), updates workflow_state (and optionally appends a follow-up RESUME-ROADMAP line when queue_next !== false), then returns a summary and appends a Watcher-Result line for requestId req-1.
 4. **Example:** One EAT-QUEUE run can process one or more queue lines; each RESUME-ROADMAP entry triggers one action (e.g. one deepen step).
+5. **Deepen exemplar (railroad):** [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]] — illustrative Layer 0→2 trace for one `RESUME_ROADMAP` / deepen line; subordinate to [[.cursor/agents/queue|agents/queue.md]] FINAL GATEKEEPER and [[.cursor/rules/agents/queue.mdc|queue.mdc]].
 
 ---
 

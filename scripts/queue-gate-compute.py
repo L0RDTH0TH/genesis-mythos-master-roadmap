@@ -21,6 +21,7 @@ from typing import Any
 
 DEFAULT_THRESHOLD = 2
 DEFAULT_COOLDOWN = 1
+DEFAULT_ORCHESTRATOR_PLAN = ".technical/eat_queue_run_plan.json"
 TRACKS = frozenset({"conceptual", "execution"})
 # Only these keys are read from Second-Brain-Config.md queue: block (ignore nested blocks like decisions_preflight).
 CONFIG_QUEUE_KEYS = frozenset(
@@ -33,6 +34,7 @@ CONFIG_QUEUE_KEYS = frozenset(
         "deterministic_gate_script_path",
         "gate_block_same_track_cooldown_runs",
         "gate_key_includes_track",
+        "python_orchestrator_enabled",
     }
 )
 
@@ -89,6 +91,19 @@ def parse_queue_config(config_path: Path) -> dict[str, Any]:
     return out
 
 
+def warn_orchestrator_plan_missing(cfg: dict[str, Any], vault_root: Path) -> None:
+    """If python orchestrator is enabled but the plan file is absent, warn on stderr (non-fatal)."""
+    if cfg.get("python_orchestrator_enabled") is not True:
+        return
+    plan_path = vault_root / DEFAULT_ORCHESTRATOR_PLAN
+    if not plan_path.is_file():
+        print(
+            "queue-gate-compute: warning: queue.python_orchestrator_enabled is true but "
+            f"eat_queue_run_plan.json is missing: {plan_path}",
+            file=sys.stderr,
+        )
+
+
 def gate_state_path(vault_root: Path, cfg: dict[str, Any]) -> Path:
     rel = cfg.get("gate_state_path") or ".technical/queue-gate-state.json"
     return vault_root / rel
@@ -134,6 +149,7 @@ def cmd_report(args: argparse.Namespace) -> int:
     vault = Path(args.vault_root).resolve()
     cfg_path = vault / "3-Resources" / "Second-Brain-Config.md"
     cfg = parse_queue_config(cfg_path)
+    warn_orchestrator_plan_missing(cfg, vault)
     threshold = int(cfg.get("gate_block_streak_threshold", DEFAULT_THRESHOLD))
     prefer_pivot = cfg.get("prefer_track_shift_on_gate_block", True) is not False
     state_path = gate_state_path(vault, cfg)
@@ -177,6 +193,7 @@ def cmd_validate_line(args: argparse.Namespace) -> int:
     vault = Path(args.vault_root).resolve()
     cfg_path = vault / "3-Resources" / "Second-Brain-Config.md"
     cfg = parse_queue_config(cfg_path)
+    warn_orchestrator_plan_missing(cfg, vault)
     threshold = int(cfg.get("gate_block_streak_threshold", DEFAULT_THRESHOLD))
     prefer_pivot = cfg.get("prefer_track_shift_on_gate_block", True) is not False
     state_path = gate_state_path(vault, cfg)
@@ -238,6 +255,7 @@ def cmd_record_outcome(args: argparse.Namespace) -> int:
     vault = Path(args.vault_root).resolve()
     cfg_path = vault / "3-Resources" / "Second-Brain-Config.md"
     cfg = parse_queue_config(cfg_path)
+    warn_orchestrator_plan_missing(cfg, vault)
     threshold = int(cfg.get("gate_block_streak_threshold", DEFAULT_THRESHOLD))
     cooldown = int(cfg.get("gate_block_same_track_cooldown_runs", DEFAULT_COOLDOWN))
     prefer_pivot = cfg.get("prefer_track_shift_on_gate_block", True) is not False

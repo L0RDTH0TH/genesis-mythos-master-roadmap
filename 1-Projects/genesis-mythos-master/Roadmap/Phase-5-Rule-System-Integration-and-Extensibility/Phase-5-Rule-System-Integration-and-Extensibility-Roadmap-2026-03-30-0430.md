@@ -6,9 +6,10 @@ subphase-index: "5"
 project-id: genesis-mythos-master
 status: active
 priority: high
-progress: 50
+progress: 72
 phase5_primary_checklist: complete
-handoff_readiness: 85
+phase5_primary_rollup_nl_gwt: complete
+handoff_readiness: 86
 created: 2026-03-30
 tags:
   - roadmap
@@ -17,7 +18,9 @@ tags:
 para-type: Project
 links:
   - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
-  - "[[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]"
+  - "[[Phase-5-2-Ecosystem-Generator-Event-Style-Swap-Documentation-Seam-Roadmap-2026-04-04-2100]]"
+  - "[[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]]"
+  - "[[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]"
 ---
 
 ## Phase 5 — Rule System Integration and Extensibility
@@ -80,25 +83,25 @@ Integrate a **core rules engine** with **plugin rulesets**, demonstrate **determ
 
 At **primary** conceptual depth, **no pseudo-code** is required. **Interfaces + slot graph** for secondaries start at **5.1**.
 
-## Phase-level **GWT-5-A–K** (primary checklist scaffold — evidence tightens after secondaries **5.1+**)
+## Phase-level **GWT-5-A–K** (primary rollup — evidence bound to rolled-up secondary **5.1** + chain **5.1.1–5.1.3**)
 
-> **Primary checklist:** This table binds **phase-level** hooks to **upstream** Phase **3–4** contracts. Rows cite **planned** secondary **5.1** as the first structural home for engine/plugin NL unless otherwise noted.
+> **Primary rollup:** NL checklist reaffirmed; **GWT-5-A–K** **Evidence** column cites **active** secondary **5.1** (rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-1-secondary-rollup-nl-gwt-2026-04-04-1815]]) and tertiaries **5.1.1–5.1.3** where rows delegate typed bodies. Archive copy of pre-reset **5.1** remains under [[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]] for diff-only audit.
 
-| ID | Given | When | Then | Evidence (primary / planned) |
+| ID | Given | When | Then | Evidence (primary / secondary 5.1 rollup) |
 | --- | --- | --- | --- | --- |
-| **GWT-5-A** | Phase **3** **sim-visible** facts on bus | Kernel evaluates rules | Rules consume **observation**-class inputs without inventing sim mutations | Primary § Behavior; [[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]] § **GWT-5.1-A** |
+| **GWT-5-A** | Phase **3** **sim-visible** facts on bus | Kernel evaluates rules | Rules consume **observation**-class inputs without inventing sim mutations | Primary § Behavior; **5.1** rollup § **GWT-5.1-A** + **5.1.1** manifest/seam admission ([[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]], [[Phase-5-1-1-Ruleset-Manifest-Seam-Admission-and-Deterministic-Evaluation-Order-Roadmap-2026-04-04-0010]]); rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-1-secondary-rollup-nl-gwt-2026-04-04-1815]]; archive ([[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]) |
 | **GWT-5-B** | Phase **4.2.1** **PerspectiveTransitionGraph** | Mode/orchestration transition | Rule triggers may **attach** to transition events—do not author commits | **4.2.1**; primary § Interfaces |
-| **GWT-5-C** | Phase **4.2.2** **TransitionOutcomeLedger** | Outcome recorded | Rule outcomes remain **consistent** with ledger rows (no duplicate truth) | **4.2.2**; [[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]] § **GWT-5.1-C** |
+| **GWT-5-C** | Phase **4.2.2** **TransitionOutcomeLedger** | Outcome recorded | Rule outcomes remain **consistent** with ledger rows (no duplicate truth) | **4.2.2**; **5.1** rollup § **GWT-5.1-C** + **5.1.2** evaluation schedule / ledger-shaped outcomes ([[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]], [[Phase-5-1-2-Kernel-Evaluation-Schedule-and-Rule-Ordering-Roadmap-2026-04-04-0715]]); rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-1-secondary-rollup-nl-gwt-2026-04-04-1815]]; archive ([[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]) |
 | **GWT-5-D** | Phase **4.2.3** **OrchestrationRepairToken** | Repair path | Rules may **propose** repair-shaped intents—escalation readout remains authoritative | **4.2.3**; primary § Edge |
 | **GWT-5-E** | Phase **4.1.3** **presentation envelope** | Operator reads outcome | Explanations are **legible** per presentation-time validation story | **4.1.3**; primary § Behavior |
-| **GWT-5-F** | Plugin manifest declares **conflict class** | Two rules collide | Deterministic **precedence** + operator-visible explanation | Primary § Interfaces |
-| **GWT-5-G** | Ruleset **version pin** | Load requested | Kernel **rejects** incompatible pins with deterministic error class | Primary § Edge |
+| **GWT-5-F** | Plugin manifest declares **conflict class** | Two rules collide | Deterministic **precedence** + operator-visible explanation | Primary § Interfaces; **5.1.3** conflict matrix + **4.1.3** explanation handles ([[Phase-5-1-3-Precedence-Conflict-Matrix-and-Cross-Seam-Resolution-Roadmap-2026-04-04-1209]]); rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-1-secondary-rollup-nl-gwt-2026-04-04-1815]] |
+| **GWT-5-G** | Ruleset **version pin** | Load requested | Kernel **rejects** incompatible pins with deterministic error class | Primary § Edge; **5.1** host § manifest pin + failure classes ([[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]]); rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-1-secondary-rollup-nl-gwt-2026-04-04-1815]] |
 | **GWT-5-H** | Phase **2** commit boundary | Rule proposes world change | Proposal routes through **structural regen** / validation story—no bypass | Primary § Behavior; **2.4.x** refs via decisions-log |
 | **GWT-5-I** | **D-3.4-*** consumer granularity rows | Bundle policy applies | Rules respect **SeamId** rows—no second consumer truth | [[decisions-log]]; **3.4.1** |
 | **GWT-5-J** | Community **ecosystem** seam | Operator swaps generator/event/style | Swap is **documented** and **replay-stable** under manifest pin (execution packaging deferred) | Primary § Scope |
 | **GWT-5-K** | Conceptual waiver | Validator advisory codes | Execution-only gaps (marketplace, CI) **deferred**—not blocking primary checklist | [[roadmap-state]], [[distilled-core]] |
 
-`handoff_readiness` **85** after primary NL checklist (CDR [[Conceptual-Decision-Records/deepen-phase-5-primary-checklist-rule-system-2026-03-31-1200]]). **Secondary 5.1** minted — [[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]] (**GWT-5.1-A–K**); next structural cursor **5.1.1** per [[workflow_state]] **`current_subphase_index: "5.1.1"`**. Queue **`user_guidance`** on **`followup-deepen-phase4-41-rollup-gmm-20260403T211500Z`** that referenced **Phase 4.1 secondary rollup** was **stale**; Layer 1 reconciled to **mint secondary 5.1** (`gate_signature: structural-phase-5-secondary-5.1`).
+**Primary rollup closure:** `phase5_primary_rollup_nl_gwt: complete`; `handoff_readiness` **86** (checklist CDR [[Conceptual-Decision-Records/deepen-phase-5-primary-checklist-rule-system-2026-03-31-1200]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-primary-rollup-nl-gwt-2026-04-04-1930]]). **Open decision (non-blocking here):** **D-5.1.3-matrix-vs-manifest** remains **open** per [[decisions-log]] — **not** closed by this primary rollup; target **5.2+** / execution. **Secondary 5.1 (rolled up):** [[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]] — **GWT-5.1-A–K** vs **5.1.1–5.1.3**; rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-1-secondary-rollup-nl-gwt-2026-04-04-1815]]; rollback archive ([[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/ROLLBACK-MANIFEST-2026-04-02]]). **Canonical cursor:** [[workflow_state]] **`current_subphase_index: "5"`** — **secondary 5.2 rolled up** after tertiaries **5.2.1–5.2.3** — [[Phase-5-2-Ecosystem-Generator-Event-Style-Swap-Documentation-Seam-Roadmap-2026-04-04-2100]] (`handoff_readiness` **86**; **GWT-5.2-A–K** parity vs **5.2.1–5.2.3**; rollup CDR [[Conceptual-Decision-Records/deepen-phase-5-2-secondary-rollup-nl-gwt-2026-04-05-0005]]; mint CDR [[Conceptual-Decision-Records/deepen-phase-5-2-secondary-ecosystem-swap-documentation-seam-2026-04-04-2100]]); next **`advance-phase`** Phase **5→6** when operator affirms Phase **5** structurally complete; optional **RECAL-ROAD** at high ctx util.
 
 ## Subphases & notes
 

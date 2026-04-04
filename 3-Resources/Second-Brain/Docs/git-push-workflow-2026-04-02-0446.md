@@ -11,6 +11,7 @@ This vault publishes roadmap + system contracts to GitHub using an **isolated ex
 
 ## What we push (always)
 - **Local vault:** `/home/darth/Documents/Second-Brain`
+- **Python queue “nervous system”:** `scripts/eat_queue_core/` (mirrored to export `scripts/eat_queue_core/`) plus `scripts/queue-gate-compute.py`
 - **Export repo (mirror checkout):** `/home/darth/Documents/gmm-roadmap-export`
 - **GitHub remote + branch:**
   - Remote repo: `https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap.git`
@@ -40,6 +41,12 @@ rsync -a --delete "/home/darth/Documents/Second-Brain/.cursor/agents/" ".cursor/
 rsync -a --delete "/home/darth/Documents/Second-Brain/.cursor/rules/" ".cursor/rules/"
 rsync -a --delete "/home/darth/Documents/Second-Brain/.cursor/skills/" ".cursor/skills/"
 
+# Python EAT-QUEUE “nervous system” (`eat_queue_core` package + queue gate helper)
+mkdir -p "scripts"
+rsync -a --delete --exclude='__pycache__/' \
+  "/home/darth/Documents/Second-Brain/scripts/eat_queue_core/" "scripts/eat_queue_core/"
+cp "/home/darth/Documents/Second-Brain/scripts/queue-gate-compute.py" "scripts/queue-gate-compute.py"
+
 # Mirror user-facing system docs (3-Resources → Docs/)
 rsync -a --delete "/home/darth/Documents/Second-Brain/3-Resources/Second-Brain/Docs/" "Docs/"
 
@@ -64,7 +71,14 @@ cp "/home/darth/Documents/Second-Brain/3-Resources/Watcher-Signal.md" "/home/dar
 cd /home/darth/Documents/gmm-roadmap-export
 
 # Mirror roadmap + project anchors
-rsync -a --delete "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/Roadmap/" "/home/darth/Documents/gmm-roadmap-export/Roadmap/"
+# Phase 5-1 subfolder (WIP): do NOT publish — exclude from rsync, then remove any stale copy.
+P5_1_REL='Phase-5-Rule-System-Integration-and-Extensibility/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence'
+rsync -a --delete \
+  --exclude="${P5_1_REL}/" \
+  "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/Roadmap/" \
+  "/home/darth/Documents/gmm-roadmap-export/Roadmap/"
+rm -rf "/home/darth/Documents/gmm-roadmap-export/Roadmap/${P5_1_REL}"
+
 cp "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/Genesis-mythos-master-goal.md" "/home/darth/Documents/gmm-roadmap-export/Genesis-mythos-master-goal.md"
 cp "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/genesis-mythos-master-Roadmap-MOC.md" "/home/darth/Documents/gmm-roadmap-export/genesis-mythos-master-Roadmap-MOC.md"
 ```
@@ -74,12 +88,12 @@ cp "/home/darth/Documents/Second-Brain/1-Projects/genesis-mythos-master/genesis-
 git status --short
 ```
 
-You should see modifications under `.cursor/`, `Docs/`, `Roadmap/`, and/or the two GMM anchor files.
+You should see modifications under `.cursor/`, `scripts/` (Python `eat_queue_core`), `Docs/`, `Roadmap/`, and/or the two GMM anchor files.
 
 ## Step 3: Stage, commit, and push
 Typical staging set:
 ```bash
-git add -A .cursor Docs Roadmap Genesis-mythos-master-goal.md genesis-mythos-master-Roadmap-MOC.md
+git add -A .cursor scripts Docs Roadmap Genesis-mythos-master-goal.md genesis-mythos-master-Roadmap-MOC.md
 ```
 
 Commit (use a descriptive message that mentions the intent of the surgery/harden pass, not just “sync”):
@@ -108,5 +122,8 @@ Then verify the updated tree on GitHub if needed:
 
 ## Gotchas
 - The export repo is treated as a mirror: `rsync --delete` can remove files in `gmm-roadmap-export` if they’re removed from the vault tree.
+- Python: `eat_queue_core` is synced with `--exclude='__pycache__/'`; the export repo root `.gitignore` ignores `__pycache__/` and `*.pyc` so bytecode is not committed.
+- Do **not** run `rsync --delete` on `Docs/` alone and stop: that removes `Docs/Core/*` (those files come from `cp`, not from `3-Resources/Second-Brain/Docs/`). Always run Step 1 in order, or restore `Docs/` from git before fixing.
+- **Phase 5-1 directory** (`…/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence/`) is **intentionally omitted** from the export (work in progress). Always use the `rsync --exclude` + `rm -rf` of that path under `gmm-roadmap-export/Roadmap/` so GitHub never receives that subtree until you remove this policy.
 - Do **not** push the main `Second-Brain` repo to GitHub as part of this workflow; the intent is “vault → mirror repo → published branch”.
 
