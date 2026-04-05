@@ -18,7 +18,7 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 | Trigger Phrase | Pipeline | Rule(s) that fire | Confidence Gate | Safety Step First |
 |----------------|----------|-------------------|------------------|--------------------|
 | INGEST MODE, Process Ingest | full-autonomous-ingest | always-ingest-bootstrap, para-zettel-autopilot | Phase 1 low → wrapper | create_backup |
-| EAT-QUEUE, Process queue, EAT-CACHE | Queue processor | auto-eat-queue | — | Step 0 wrappers first; dry_run pattern |
+| EAT-QUEUE, Process queue, EAT-CACHE; **`EAT-QUEUE lane <name>`** | Queue processor | auto-eat-queue; **Layer 0** [[.cursor/rules/always/dispatcher.mdc|dispatcher.mdc]] → **`Task(queue)`**; normative steps in [[.cursor/rules/agents/queue.mdc|queue.mdc]] (**A.0x** resolves **PQ**) | — | Step 0 wrappers first (**A.0** / **`queue_lane`** vs **`queue_lane_filter`** when parallel); dual-track checklist [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]] |
 | DISTILL MODE | autonomous-distill | auto-distill | ≥85% destructive | create_backup, snapshot before rewrite |
 | ARCHIVE MODE | autonomous-archive | auto-archive | ≥85% move | create_backup, snapshot before move |
 | EXPRESS MODE | autonomous-express | auto-express | ≥85% appends | version-snapshot, backup |
@@ -27,6 +27,7 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 | ROADMAP_HANDOFF_VALIDATE (queue) | validator (roadmap_handoff) | agents/validator, queue | read-only except report | model from Config § validator.roadmap_handoff.model; manual trigger only |
 | We are making a prompt / CODE / ROADMAP | Question-led crafting | plan-mode-prompt-crafter | — | Validate before append; read-then-append only |
 | REPAIR CRAFT, PROMPT CRAFT RECOVERY | PromptCraftSubagent (recovery JSONL suggestions) | dispatcher → Task(prompt_craft); agents/prompt-craft | — | Read-mostly; Layer 0 does not append queue; Layer 1 **A.5d** / optional **A.5b** / optional **A.1b** empty-queue bootstrap (queue.mdc); see [[3-Resources/Second-Brain/Docs/Prompt-Craft-Subagent|Prompt-Craft-Subagent]], [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] |
+| (post–EAT-QUEUE success path) | GitForge (git/export tail) | queue.mdc **A.7a** → **`Task(gitforge)`**; [[.cursor/agents/gitforge.md|agents/gitforge.md]] + [[.cursor/rules/agents/gitforge.mdc|gitforge.mdc]] | — | When **`gitforge.enabled`** and **`effective_pipeline_mode`** is **`balance`** or **`quality`** (not **`speed`**); **once** after **A.7**; parallel tracks: **`scripts/gitforge_lock.py`** + **`.technical/.gitforge.lock`** per agent doc; [[3-Resources/Second-Brain/Docs/git-audit-log|git-audit-log]], [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|git-push-workflow]], [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]] |
 
 ---
 
@@ -171,7 +172,7 @@ flowchart TD
 ## Examples / Triggers
 
 - **Say "INGEST MODE" or "Process Ingest"** → always-ingest-bootstrap + para-zettel-autopilot apply; agent lists Ingest notes and runs full-autonomous-ingest (backup → classify_para → frontmatter-enrich → subfolder-organize → … → move_note → log_action).
-- **Say "EAT-QUEUE" with queue populated** → **dispatcher.mdc** applies: the parent agent launches the **Queue/Dispatcher subagent** via **`Task(subagent_type: queue)`** with a hand-off (vault paths, which queue, pasted EAT-CACHE payload if any). The Queue subagent runs **auto-eat-queue** behavior (read `.technical/prompt-queue.jsonl` or EAT-CACHE payload, Step 0 wrappers, validate/dedup/sort, dispatch each entry by mode via further **`Task`** calls, append Watcher-Result per id). The parent does not run queue steps inline.
+- **Say "EAT-QUEUE" with queue populated** → **dispatcher.mdc** applies: the parent agent launches the **Queue/Dispatcher subagent** via **`Task(subagent_type: queue)`** with a hand-off (vault paths, which queue, optional **`## queue_lane_filter`** / **`## parallel_context`**, pasted EAT-CACHE payload if any). The Queue subagent runs **auto-eat-queue** behavior (Read **PQ** per queue.mdc **A.0x** — not always the legacy path — or EAT-CACHE payload; Step 0 wrappers; validate/dedup/sort; dispatch each entry by mode via further **`Task`** calls; append Watcher-Result per id). The parent does not run queue steps inline. Two parallel chats: **`EAT-QUEUE lane sandbox`** vs **`EAT-QUEUE lane godot`** — see [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]].
 - **Illustrative RESUME_ROADMAP deepen trace** → [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]] (Layer 0→2 railroad exemplar; subordinate to `.cursor/agents/queue.md` FINAL GATEKEEPER and `queue.mdc` A.5d).
 - **Open a note in 1-Projects/… and say "DISTILL MODE – safe batch autopilot"** → auto-distill runs autonomous-distill on that note (backup → optional auto-layer-select → distill layers → distill-highlight-color → layer-promote → callout-tldr-wrap → readability-flag).
 
@@ -214,7 +215,7 @@ User-facing questions and option labels (Plan-mode, Decision Wrappers, cap-hit, 
 
 ## Cross-references
 
-- **Canonical rule text:** `.cursor/rules/always/*.mdc`, `.cursor/rules/context/*.mdc`
+- **Canonical rule text:** `.cursor/rules/always/*.mdc`, `.cursor/rules/context/*.mdc`, `.cursor/rules/agents/*.mdc` (Queue, Validator, GitForge, etc. — mirrored under `.cursor/sync/rules/agents/` per [[.cursor/rules/always/backbone-docs-sync.mdc|backbone-docs-sync]])
 - **Trigger → pipeline detail:** [[3-Resources/Second-Brain/Pipelines|Pipelines]]; [[3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference|Cursor-Skill-Pipelines-Reference]]
 - **Questions and options:** [[3-Resources/Second-Brain/User-Questions-and-Options-Reference|User-Questions-and-Options-Reference]] §1
 - **Parameters and confidence bands:** [[3-Resources/Second-Brain/Parameters|Parameters]]; [[.cursor/rules/always/confidence-loops|confidence-loops]]
