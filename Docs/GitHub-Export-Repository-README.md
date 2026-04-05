@@ -19,24 +19,28 @@ The detailed vision and phases live in the **Project Master Goal** and **`Roadma
 | Area | Role |
 |------|------|
 | **`Roadmap/`** | Phase tree, decision records, execution track under `Roadmap/Execution/` when present, coordination state |
-| **`Docs/`** | Second Brain **automation** docs (Cursor subagents, queue, pipelines, safety) |
-| **`Docs/Core/`** | Core reference copies (Queue-Sources, Parameters, Backbone, Watcher, Errors, …) |
-| **`.cursor/`** | Agents, rules, skills mirrored from the vault |
-| **`scripts/eat_queue_core/`** | Python queue orchestration helper |
+| **`Docs/`** | Second Brain **automation** docs (Cursor subagents, queue, pipelines, safety, operator flows) |
+| **`Docs/Core/`** | **Full** dev backbone: **all** top-level `3-Resources/Second-Brain/*.md` from the vault (parameters, queue sources, rules index, MCP, templates, prompt-crafter refs, …) plus `Roadmap Structure`, Watcher, Errors copies — **how the system is built and run** |
+| **`Docs/Second-Brain-User-Flows/`** | Supplemental user-flow notes (e.g. prompt crafter) mirrored from the vault |
+| **`.cursor/`** | Agents, rules, skills **and** **`.cursor/sync/`** (`.md` mirrors of rules/skills for diff-friendly collaboration) |
+| **`scripts/eat_queue_core/`** | Python queue orchestration package (plan, lanes, pool sync, tests) |
+| **`scripts/gitforge_lock.py`** | Cross-track GitForge lock helper |
+| **`scripts/queue-gate-compute.py`** | Queue gate helper |
 
 **How to run** ingest, roadmap, EAT-QUEUE, and related flows: start at **[`Docs/README.md`](Docs/README.md)**.
 
 ## Branches on GitHub
 
 - **`main`** — default line; may lag the active iteration.
-- **`iteration-2-roadmap-rules`** — current integration iteration for roadmap / rules work.
+- **`iteration-2-roadmap-rules`** — **canonical integration branch**: full **`.cursor/`** (including **`.cursor/sync/`**), full queue **`scripts/`**, complete **`Docs/`** + **`Docs/Core/`** backbone + user-flow supplements. Use this branch to **collaborate on the automation system itself**.
+- **`sandbox-genesis-mythos-master`** / **`godot-genesis-mythos-master`** — **engine roadmap lines** (sandbox vs Godot); spine should match integration; content emphasis is **`Roadmap/`** + project anchors.
 
-**Why you might only see those two:** GitHub lists **remote** branches. Any extra line (e.g. per-engine) must be **created locally** from your chosen tip (often `iteration-2-roadmap-rules`) and published with **`git push -u origin <new-branch-name>`**. Until that push happens, the branch does not exist on GitHub.
+**Why you might only see some branches:** GitHub lists **remote** branches. Any extra line must be **created locally** from your chosen tip (often `iteration-2-roadmap-rules`) and published with **`git push -u origin <new-branch-name>`**.
 
 ## Clone expectations
 
-- **Full spine (agents, rules, skills, automation docs):** Prefer cloning or checking out **`iteration-2-roadmap-rules`** (or the current integration branch named in the maintainer workflow). That line is the **canonical** mirror of **`.cursor/`** and the shared **`Docs/`** layout.
-- **Engine-only branches** may emphasize **`Roadmap/`** and project anchors for a specific engine line; **`.cursor/`** on those branches should match the **integration tip** at publish time (maintainers use a **rule-sterile** export procedure — see **`Docs/git-push-workflow-2026-04-02-0446.md`** § Rule-sterile engine branches). If you need the latest queue or subagent contracts, **merge or compare against `iteration-2-roadmap-rules`** rather than assuming an engine branch is the rules source of truth.
+- **Complete system reference (build + run):** Clone or check out **`iteration-2-roadmap-rules`**. This is the **authoritative** mirror for agents, rules, skills, **sync**, Python queue tooling, and **full** documentation backbone — not a trimmed “core only” subset.
+- **Engine-only branches** emphasize **`Roadmap/`** and anchors for one engine line; **`.cursor/`** and **`Docs/`** on those branches should match **`origin/iteration-2-roadmap-rules`** at publish time (**rule-sterile** procedure in **`Docs/git-push-workflow-2026-04-02-0446.md`**). For queue contracts or subagent behavior, **always** use the **integration** branch as source of truth.
 
 ## Operator mirror workflow
 
