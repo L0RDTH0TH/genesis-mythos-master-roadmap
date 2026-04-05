@@ -3,7 +3,7 @@ title: Phase 4.1.2 — Cross-lane coherence and emphasis reconciliation
 roadmap-level: tertiary
 phase-number: 4
 subphase-index: "4.1.2"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 58
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-4
 para-type: Project
 links:
@@ -104,7 +104,7 @@ This **tertiary** extends **4.1.1** by naming **what must stay aligned** when th
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-1-Narrative-Rendering-and-Consumer-Surface-Lanes"
+FROM "1-Projects/godot-genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-1-Narrative-Rendering-and-Consumer-Surface-Lanes"
 WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

@@ -4,9 +4,9 @@ created: 2026-03-30
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-3-2-3-UX-D3-1-5-Binding-Surfaces-Roadmap-2026-03-30-2319]]"
 queue_entry_id: followup-deepen-phase3-323-gmm-20260402T235100Z
 validation_status: pattern_only

@@ -8,13 +8,13 @@ tags:
   - master-goal
   - restored-from-unaltered-capture
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 is_master_goal: true
 source:
   - - Backups/Per-Change/Source-genesis-mythos-master-goal-unaltered-capture-2026-03-07-0033-2026-03-08-0900-2026-03-11-0533-2026-03-14-1200--a8815e27--20260314-120000.md.bak
 links:
-  - "[[genesis-mythos-master-Roadmap-MOC]]"
+  - "[[godot-genesis-mythos-master-Roadmap-MOC]]"
 ---
 
 # Genesis Mythos Master Goal
@@ -110,5 +110,5 @@ Open-source, modular first-person 3D VTT generator: collaborative procedural wor
 
 ## Related
 
-- [[genesis-mythos-master-Roadmap-MOC]]
+- [[godot-genesis-mythos-master-Roadmap-MOC]]
 - Prior capture and snapshots preserved under `Backups/Per-Change/` and external backup from pipeline runs.

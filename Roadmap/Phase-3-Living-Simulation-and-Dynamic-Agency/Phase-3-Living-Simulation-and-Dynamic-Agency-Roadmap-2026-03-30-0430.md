@@ -3,7 +3,7 @@ title: Phase 3 — Living Simulation and Dynamic Agency
 roadmap-level: primary
 phase-number: 3
 subphase-index: "0"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 85
@@ -13,11 +13,11 @@ handoff_readiness: 86
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase
 para-type: Project
 links:
-  - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
+  - "[[godot-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
 ---
 
 ## Phase 3 — Living Simulation and Dynamic Agency
@@ -115,7 +115,7 @@ At **primary** conceptual depth, **no pseudo-code** is required. Readers should 
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency"
+FROM "1-Projects/godot-genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```

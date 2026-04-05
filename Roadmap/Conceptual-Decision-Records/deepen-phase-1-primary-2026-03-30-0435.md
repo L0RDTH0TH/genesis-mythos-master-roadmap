@@ -4,13 +4,13 @@ created: 2026-03-30
 tags:
   - conceptual-decision-record
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]]"
 decision_kind: deepen
 queue_entry_id: resume-deepen-gmm-20260330T043100Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-godot-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---
@@ -37,7 +37,7 @@ Aligns the modular “foundation” story with the PMG: decoupled world/sim/rend
 ## Validation evidence
 
 - Pattern: layered architecture + pipeline DAG conventions common in game engines and VTT-adjacent tools (no external cite this run).
-- Parent note path: `1-Projects/genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430.md`
+- Parent note path: `1-Projects/godot-genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430.md`
 
 > [!note] Execution-deferred
 > External citations and execution-track proof are explicitly deferred; **`pattern_only`** documents analogy-style grounding for this conceptual slice—not a claim of empirical validation.

@@ -3,7 +3,7 @@ title: Phase 3.4.1 — Handoff seam catalog and consumer contract rows
 roadmap-level: tertiary
 phase-number: 3
 subphase-index: "3.4.1"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 52
@@ -11,7 +11,7 @@ handoff_readiness: 85
 created: 2026-04-03
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-3
 para-type: Project
 links:
@@ -149,7 +149,7 @@ ConsumerContractRow =
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency/Phase-3-4-Downstream-Handoff-and-Phase-4-Readiness"
+FROM "1-Projects/godot-genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency/Phase-3-4-Downstream-Handoff-and-Phase-4-Readiness"
 WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

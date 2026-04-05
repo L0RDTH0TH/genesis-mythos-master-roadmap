@@ -43,6 +43,33 @@ def _repair_line() -> dict:
 
 
 class FullCycleGoldenTest(unittest.TestCase):
+    def test_lane_filter_includes_only_matching_track(self) -> None:
+        sandbox = {
+            "id": "lane-sandbox-1",
+            "mode": "RESUME_ROADMAP",
+            "project_id": PROJECT,
+            "queue_lane": "sandbox",
+            "params": {"action": "deepen", "project_id": PROJECT},
+        }
+        godot = {
+            "id": "lane-godot-1",
+            "mode": "RESUME_ROADMAP",
+            "project_id": PROJECT,
+            "queue_lane": "godot",
+            "params": {"action": "deepen", "project_id": PROJECT},
+        }
+        text = json.dumps(sandbox) + "\n" + json.dumps(godot) + "\n"
+        entries = load_queue_file_from_text(text)
+        plan_s, _ = build_plan(entries, "lane-test", lane_filter="sandbox")
+        ids_s = {i.queue_entry_id for i in plan_s.intents}
+        self.assertIn("lane-sandbox-1", ids_s)
+        self.assertNotIn("lane-godot-1", ids_s)
+
+        plan_g, _ = build_plan(entries, "lane-test", lane_filter="godot")
+        ids_g = {i.queue_entry_id for i in plan_g.intents}
+        self.assertIn("lane-godot-1", ids_g)
+        self.assertNotIn("lane-sandbox-1", ids_g)
+
     def test_queue_rewrite_ids_includes_pass3(self) -> None:
         text = json.dumps(_deepen_line()) + "\n" + json.dumps(_repair_line()) + "\n"
         entries = load_queue_file_from_text(text)

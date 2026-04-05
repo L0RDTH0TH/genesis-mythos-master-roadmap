@@ -260,3 +260,28 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Rollup content may be in vault but attestation and hostile pass are provisional; operator must run repair handoff-audit and reconcile state files before treating Phase 5.2 as closed.
 - **Suggested fixes:** Process repair queue line next EAT-QUEUE; patch `distilled-core.md` and Phase 5.2 secondary note frontmatter per validator report; re-run deepen only after nested Task surface works or profile adjusted per ops policy.
 - **Recovery:** Validator report path above; per-change snapshots if user restores prior vault versions.
+
+### 2026-04-05 18:20 — EAT-QUEUE lane sandbox: Phase 6.1 mint — balance nested gate provisional + L1 state_hygiene_failure
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-05T18:20:00Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl`; **queue_lane_filter:** `sandbox`; **parallel_track:** `sandbox`.
+- **Consumed id:** `followup-deepen-phase6-61-mint-slice-manifest-sandbox-gmm-20260405T151000Z` (`RESUME_ROADMAP` deepen, `pipeline_mode: balance`, `project_id: sandbox-genesis-mythos-master`).
+- **Roadmap `Task` return:** `#review-needed`; `nested_validator_first` → `task_error` / `nested_task_unavailable` in L2 host; `ira_post_first_validator` / `nested_validator_second` skipped (prerequisite); **A.5d** balance deepen checklist **not** fully satisfied (provisional).
+- **L1 `Task(validator)` `roadmap_handoff_auto`:** report `.technical/Validator/roadmap-auto-validation-20260405T181500Z.md`; **high** / `block_destructive`; **primary_code:** `state_hygiene_failure` (distilled-core vs `workflow_state` / Phase 6.1 cursor; plus `safety_unknown_gap` for missing L2 nested validator artifact).
+- **A.5b:** Appended **repair** `repair-l1postlv-sandbox-gmm-distilled-hygiene-6-61-20260405T182000Z` (`handoff-audit`) and roadmap **forward** `followup-deepen-phase6-611-tertiary-sandbox-gmm-20260405T160500Z` to sandbox PQ; **GitForge** skipped (`invoke_only_on_clean_success`).
+
+#### Summary
+
+- **Root cause:** L2 roadmap host could not run nested `Task(validator)`; L1 hostile pass then flagged **state hygiene** (rollup / distilled-core narrative vs live cursor after 6.1 mint).
+- **Impact:** Phase 6.1 secondary note may exist on disk, but closure is **provisional** until handoff-audit repair runs and distilled-core is reconciled.
+- **Suggested fixes:** Run **EAT-QUEUE lane sandbox** again (repair first); patch `distilled-core.md` per validator report; ensure future roadmap runs use a **Task-capable** host for balance nested cycles.
+- **Recovery:** Validator report path above; Watcher-Result pair for same `requestId` (VALIDATE + RESUME_ROADMAP segments).

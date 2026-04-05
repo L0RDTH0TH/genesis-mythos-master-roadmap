@@ -4,14 +4,14 @@ created: 2026-04-03
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-5
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-5-2-3-Worked-Examples-Replay-Narratives-Roadmap-2026-04-03-2135]]"
 decision_kind: deepen
 queue_entry_id: followup-deepen-phase5-523-worked-examples-replay-gmm-20260403T213500Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-godot-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

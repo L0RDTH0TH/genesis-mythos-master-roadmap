@@ -4,13 +4,13 @@ created: 2026-04-04
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-5-1-2-Kernel-Evaluation-Schedule-and-Rule-Ordering-Roadmap-2026-04-04-0715]]"
 decision_kind: deepen
 queue_entry_id: followup-deepen-phase5-512-kernel-eval-gmm-20260404T071500Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-godot-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

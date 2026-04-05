@@ -27,6 +27,7 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 | ROADMAP_HANDOFF_VALIDATE (queue) | validator (roadmap_handoff) | agents/validator, queue | read-only except report | model from Config § validator.roadmap_handoff.model; manual trigger only |
 | We are making a prompt / CODE / ROADMAP | Question-led crafting | plan-mode-prompt-crafter | — | Validate before append; read-then-append only |
 | REPAIR CRAFT, PROMPT CRAFT RECOVERY | PromptCraftSubagent (recovery JSONL suggestions) | dispatcher → Task(prompt_craft); agents/prompt-craft | — | Read-mostly; Layer 0 does not append queue; Layer 1 **A.5d** / optional **A.5b** / optional **A.1b** empty-queue bootstrap (queue.mdc); see [[3-Resources/Second-Brain/Docs/Prompt-Craft-Subagent|Prompt-Craft-Subagent]], [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] |
+| (post–EAT-QUEUE success path) | GitForge (git/export tail) | queue.mdc **A.7a** → Task(gitforge); agents/gitforge | — | When **`gitforge.enabled`** and **`effective_pipeline_mode`** is **`balance`** or **`quality`** (not **`speed`**); **once** after prompt-queue **A.7**; see [[3-Resources/Second-Brain/Docs/git-audit-log|git-audit-log]], [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|git-push-workflow]] |
 
 ---
 

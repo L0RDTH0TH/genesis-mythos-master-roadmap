@@ -3,7 +3,7 @@ title: Phase 4.2 - Session orchestration and perspective control coherence
 roadmap-level: secondary
 phase-number: 4
 subphase-index: "4.2"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: complete
 priority: high
 progress: 100
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-04-03
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-4
 para-type: Project
 links:

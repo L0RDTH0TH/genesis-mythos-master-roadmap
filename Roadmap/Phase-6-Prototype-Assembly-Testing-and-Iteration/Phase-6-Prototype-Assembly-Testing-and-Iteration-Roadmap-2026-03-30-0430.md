@@ -3,21 +3,22 @@ title: Phase 6 — Prototype Assembly, Testing, and Iteration
 roadmap-level: primary
 phase-number: 6
 subphase-index: "1"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
-progress: 28
+progress: 52
 phase6_primary_checklist: complete
 handoff_readiness: 86
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase
 para-type: Project
 links:
-  - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
+  - "[[godot-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
   - "[[Phase-5-Rule-System-Integration-and-Extensibility-Roadmap-2026-03-30-0430]]"
+  - "[[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]]"
   - "[[Phase-4-Perspective-Split-and-Control-Systems-Roadmap-2026-03-30-0430]]"
   - "[[Phase-3-Living-Simulation-and-Dynamic-Agency-Roadmap-2026-03-30-0430]]"
   - "[[Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-03-30-0430]]"
@@ -88,27 +89,27 @@ At **primary** conceptual depth, **no pseudo-code** is required. **Typed bodies*
 
 > **Primary rollup (future):** When secondaries **6.1+** exist, **GWT-6-A–K** **Evidence** column will cite those notes + CDRs; this primary row establishes **NL** anchors only.
 
-| ID | Given | When | Then | Evidence (primary — secondary TBD) |
+| ID | Given | When | Then | Evidence (primary — bound to secondary **6.1**) |
 | --- | --- | --- | --- | --- |
-| **GWT-6-A** | **2.7.x** admission + first committed tick | Slice starts | World enters sim under **2.7** contracts—**no** ad hoc bypass of entry gates | Primary § Behavior; future **6.1** |
-| **GWT-6-B** | **3.x** tick + **sim-visible** facts | Slice runs ticks | Events stay **sim-visible**-classified; **3.1.4** checkpoint story **respected** | Primary § Interfaces; [[Phase-3-Living-Simulation-and-Dynamic-Agency-Roadmap-2026-03-30-0430]] |
-| **GWT-6-C** | **4.x** lanes + **ObservationChannel** | Operator observes | Presentation respects **preview_shadow** vs **committed_session** + **4.1.3** legibility | Primary § Behavior; [[Phase-4-Perspective-Split-and-Control-Systems-Roadmap-2026-03-30-0430]] |
-| **GWT-6-D** | **4.2.x** transition / repair tokens | Orchestration fires | Tokens are **inputs** to rules / UX—**not** alternate persistence writers | Primary § Behavior; **4.2.1–4.2.3** |
-| **GWT-6-E** | **5.x** **RuleOutcome** + pinned ruleset | Rules evaluate | Outcomes **consume** **SeamId** rows—**no** second consumer truth; **no** **2.x** commit bypass | Primary § Interfaces; [[Phase-5-Rule-System-Integration-and-Extensibility-Roadmap-2026-03-30-0430]] |
-| **GWT-6-F** | Phase **6** scope | Operator runs **Horizon-Q3** slice | One **named** vertical path is **documented** end-to-end at NL | Primary § Scope |
-| **GWT-6-G** | Hotspot loci (gen / sim / rules) | Dry-run / lab pass | **InstrumentationIntent** names **probe attach points** (execution tools deferred) | Primary § Scope / Edge |
-| **GWT-6-H** | **FeedbackRecord** | Iteration | Findings route to [[roadmap-state]] / [[decisions-log]] **without** rewriting upstream phase authority | Primary § Behavior |
-| **GWT-6-I** | **3.4.1** **SeamId** catalog | Slice references seams | Only **catalog** seams appear in slice glue—**forbidden** reinterpretation rows | [[Phase-3-4-1-Handoff-Seam-Catalog-and-Consumer-Contract-Rows-Roadmap-2026-04-03-0115]] |
-| **GWT-6-J** | **3.1.3** DM overwrite classes | DM acts in slice | **Live** vs **structural regen** labels persist through slice narrative | Primary § Edge; Phase **3** primary |
-| **GWT-6-K** | Conceptual waiver | Validator advisory codes | Execution-only gaps (perf SLAs, CI, marketplace) **deferred**—not blocking primary checklist | [[roadmap-state]], [[distilled-core]] |
+| **GWT-6-A** | **2.7.x** admission + first committed tick | Slice starts | World enters sim under **2.7** contracts—**no** ad hoc bypass of entry gates | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Slice manifest + **GWT-6.1-A** |
+| **GWT-6-B** | **3.x** tick + **sim-visible** facts | Slice runs ticks | Events stay **sim-visible**-classified; **3.1.4** checkpoint story **respected** | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Behavior + **GWT-6.1-B** |
+| **GWT-6-C** | **4.x** lanes + **ObservationChannel** | Operator observes | Presentation respects **preview_shadow** vs **committed_session** + **4.1.3** legibility | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Behavior + **GWT-6.1-C** |
+| **GWT-6-D** | **4.2.x** transition / repair tokens | Orchestration fires | Tokens are **inputs** to rules / UX—**not** alternate persistence writers | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Behavior + **GWT-6.1-D** |
+| **GWT-6-E** | **5.x** **RuleOutcome** + pinned ruleset | Rules evaluate | Outcomes **consume** **SeamId** rows—**no** second consumer truth; **no** **2.x** commit bypass | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Interfaces + **GWT-6.1-E** |
+| **GWT-6-F** | Phase **6** scope | Operator runs **Horizon-Q3** slice | One **named** vertical path is **documented** end-to-end at NL | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Scope + manifest + **GWT-6.1-F** |
+| **GWT-6-G** | Hotspot loci (gen / sim / rules) | Dry-run / lab pass | **InstrumentationIntent** names **probe attach points** (execution tools deferred) | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § InstrumentationIntent bundle + **GWT-6.1-G** |
+| **GWT-6-H** | **FeedbackRecord** | Iteration | Findings route to [[roadmap-state]] / [[decisions-log]] **without** rewriting upstream phase authority | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Feedback + **GWT-6.1-H** |
+| **GWT-6-I** | **3.4.1** **SeamId** catalog | Slice references seams | Only **catalog** seams appear in slice glue—**forbidden** reinterpretation rows | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Interfaces + **GWT-6.1-I** |
+| **GWT-6-J** | **3.1.3** DM overwrite classes | DM acts in slice | **Live** vs **structural regen** labels persist through slice narrative | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Edge + **GWT-6.1-J** |
+| **GWT-6-K** | Conceptual waiver | Validator advisory codes | Execution-only gaps (perf SLAs, CI, marketplace) **deferred**—not blocking primary checklist | [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Open questions + **GWT-6.1-K** |
 
-**Primary checklist closure:** `phase6_primary_checklist: complete`; `handoff_readiness` **86** (CDR [[Conceptual-Decision-Records/deepen-phase-6-primary-checklist-prototype-assembly-2026-04-05-1510]]). **Canonical cursor:** [[workflow_state]] **`current_subphase_index: "6.1"`** — next **mint** first secondary **6.1** (slice manifest + instrumentation bundle **NL**). **No** `Roadmap/Execution/**` edits on conceptual track unless execution bootstrapped.
+**Primary checklist closure:** `phase6_primary_checklist: complete`; `handoff_readiness` **86** (CDR [[Conceptual-Decision-Records/deepen-phase-6-primary-checklist-prototype-assembly-2026-04-05-1510]]). **Secondary 6.1 minted:** [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] (CDR [[Conceptual-Decision-Records/deepen-phase-6-1-vertical-slice-manifest-instrumentation-2026-04-05-1615]]). **Canonical cursor:** [[workflow_state]] **`current_subphase_index: "6.1.1"`** — next **mint** first tertiary **6.1.1**. **No** `Roadmap/Execution/**` edits on conceptual track unless execution bootstrapped.
 
 ## Subphases & notes
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-6-Prototype-Assembly-Testing-and-Iteration"
+FROM "1-Projects/godot-genesis-mythos-master/Roadmap/Phase-6-Prototype-Assembly-Testing-and-Iteration"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```

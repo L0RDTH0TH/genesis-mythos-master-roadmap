@@ -3,7 +3,7 @@ title: Phase 4.2.2 — Transition outcome ledger and lane projection parity
 roadmap-level: tertiary
 phase-number: 4
 subphase-index: "4.2.2"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 55
@@ -12,7 +12,7 @@ handoff_readiness: 86
 created: 2026-03-31
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-4
 para-type: Project
 links:

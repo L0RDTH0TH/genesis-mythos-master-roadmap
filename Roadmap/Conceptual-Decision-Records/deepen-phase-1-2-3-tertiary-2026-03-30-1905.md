@@ -4,13 +4,13 @@ created: 2026-03-30
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-03-30-1905]]"
 decision_kind: deepen
 queue_entry_id: resume-gmm-deepen-123-20260330T190500Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-godot-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

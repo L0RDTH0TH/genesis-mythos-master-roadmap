@@ -3,7 +3,7 @@ title: Phase 4.1.1 — Lane adapters, emphasis, and GWT narrowing
 roadmap-level: tertiary
 phase-number: 4
 subphase-index: "4.1.1"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 55
@@ -11,7 +11,7 @@ handoff_readiness: 85
 created: 2026-04-03
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-4
 para-type: Project
 links:

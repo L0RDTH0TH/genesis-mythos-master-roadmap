@@ -4,13 +4,13 @@ created: 2026-03-31
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
-project-id: genesis-mythos-master
+  - godot-genesis-mythos-master
+project-id: godot-genesis-mythos-master
 para-type: Project
 roadmap_track: conceptual
 decision_type: deepen
 queue_entry_id: resume-deepen-gmm-235-20260331T021800Z-forward
-parent_roadmap_note: 1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-3-Pipeline-Validation-and-Pre-Commit-Verification/Phase-2-3-5-Projection-Ordering-Rollup-Companion-and-Commit-Block-Parity-Roadmap-2026-03-31-0218.md
+parent_roadmap_note: 1-Projects/godot-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-3-Pipeline-Validation-and-Pre-Commit-Verification/Phase-2-3-5-Projection-Ordering-Rollup-Companion-and-Commit-Block-Parity-Roadmap-2026-03-31-0218.md
 validation_status: pattern_only
 ---
 
