@@ -53,7 +53,7 @@ This tertiary **implements [[Phase-6-1-Vertical-Slice-Manifest-and-Instrumentati
 
 **Upstream (Phase 3.1.x):** Read-only — **3.1.2** work queue / defer-merge; **3.1.3** classification + DM channels; **3.1.4** checkpoints.
 
-**Downstream (6.1.3+):** May attach **ObservationChannel** + **4.1.3** readout matrices; must reference these **`slice_tick_window_scenario_id`** values when extending tick-adjacent operator surfaces.
+**Downstream (6.1.3+):** [[Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-06-2130]] attaches **ObservationChannel** + **4.1.3** readout matrices; must reference these **`slice_tick_window_scenario_id`** values when extending tick-adjacent operator surfaces.
 
 **Outward guarantees:**
 

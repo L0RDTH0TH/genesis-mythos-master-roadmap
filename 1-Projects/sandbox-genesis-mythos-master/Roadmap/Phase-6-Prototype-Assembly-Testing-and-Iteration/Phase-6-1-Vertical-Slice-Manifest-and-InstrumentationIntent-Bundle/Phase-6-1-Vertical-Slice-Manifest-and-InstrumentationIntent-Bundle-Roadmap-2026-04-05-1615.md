@@ -76,6 +76,7 @@ Subsections below are the **structural homes** referenced by the **GWT-6 → 6.1
 ### Operator readout (ObservationChannel + 4.1.3 co-display)
 
 - **Pinned:** [[Phase-3-2-1-Observation-Channel-Taxonomy-Roadmap-2026-03-30-2310]]; [[Phase-4-1-3-Consumer-Surface-Framing-and-Presentation-Time-Validation-Roadmap-2026-04-03-2110]].
+- **Lane/readout matrix:** [[Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-06-2130]] — **`slice_operator_readout_id`** catalog + **channel → PresentationEnvelope** matrix (**GWT-6.1.3-A–K**); satisfies **GWT-6-C** via narrowed evidence table.
 
 ### Orchestration inputs (4.2.x tokens as inputs only)
 
@@ -122,7 +123,7 @@ Subsections below are the **structural homes** referenced by the **GWT-6 → 6.1
 | --- | --- | --- |
 | **GWT-6-A** | Manifest **admission** subsection pins **2.7.x** + first committed tick story | [[Phase-6-1-1-Manifest-Admission-Row-Bindings-and-Admission-Ticket-Vocabulary-Roadmap-2026-04-05-1918]] — `manifest_admission_row_id` ↔ **2.7.x** ticket vocabulary (**GWT-6.1.1-***) |
 | **GWT-6-B** | Manifest **tick window** + **sim-visible** classification pins **3.x** | [[Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-0800]] — **`slice_tick_window_scenario_id`** + matrix (**GWT-6.1.2-***) |
-| **GWT-6-C** | **ObservationChannel** + **4.1.3** co-display pinned in manifest **operator readout** subsection | **6.1.x** — lane/readout matrix |
+| **GWT-6-C** | **ObservationChannel** + **4.1.3** co-display pinned in manifest **operator readout** subsection | [[Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-06-2130]] — **`slice_operator_readout_id`** + envelope matrix (**GWT-6.1.3-***) |
 | **GWT-6-D** | **4.2.x** tokens listed as **inputs** only in manifest **orchestration inputs** table | **6.1.x** — trigger vocabulary closure |
 | **GWT-6-E** | **Ruleset pin** + **RuleOutcome** rows referenced; **SeamId** catalog pins **3.4.1** | **6.1.x** — outcome ↔ seam row binding |
 | **GWT-6-F** | **Horizon-Q3** **slice_id** + end-to-end **story ordering** paragraph | Rollup narrative vs **6.1.x** chain |

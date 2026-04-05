@@ -2,7 +2,7 @@
 title: Phase 6 — Prototype Assembly, Testing, and Iteration
 roadmap-level: primary
 phase-number: 6
-subphase-index: "1"
+subphase-index: "6"
 project-id: godot-genesis-mythos-master
 status: active
 priority: high
