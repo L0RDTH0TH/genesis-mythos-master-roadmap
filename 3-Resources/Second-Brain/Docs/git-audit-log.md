@@ -255,3 +255,22 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded (30s budget; first attempt). **Vault:** amended commit on `iteration-2-roadmap-rules` — `chore(vault): godot lane A.7a — EAT-QUEUE Part A success; PQ/telemetry/validator/Watcher (balance)` (22 files incl. this audit line; `git log -1 --oneline` for hash). **Clarifier:** operator/Layer-1 hand-off (godot-lane post-queue tail; `lane_project_id` godot-genesis-mythos-master). **Push:** attempted (`git push --dry-run`) — **no configured push destination** on vault (`fatal: No configured push destination`). **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine policy (Step 1b):** would target `GMM_PROJECT_ROOT=…/godot-genesis-mythos-master` on branch `godot-genesis-mythos-master` in export after spine refresh from `origin/iteration-2-roadmap-rules` — **not executed** this pass (export_sync disabled). Export checkout observed on integration line only. **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. Submodule roots `4-Archives/test-2-genesis-mythos-master`, `Second-Brain-Starter-Kit` left unstaged (dirty submodule state). |
 | error_excerpt | vault push: no configured push destination |
+
+### 2026-04-05 19:24 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| eat_queue_run_id | — |
+| result | **Lock:** `acquire` succeeded (30s budget; first attempt). **Vault:** commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE — RESUME_ROADMAP deepen Phase6 rollup (balance)` (17 files incl. this audit line; `git log -1 --oneline` for hash). **Scope:** sandbox lane only — staged `parallel/sandbox` bundle, legacy `prompt-queue.jsonl`, sandbox Phase-6 roadmap note, canonical + sandbox Watcher-Result, IRA follow-up, Run-Telemetry (sandbox + sandbox validator paths), Validator reports; **excluded** unstaged godot parallel deltas, `Watcher-Result-godot.md`, godot Run-Telemetry untracked, dirty submodule roots. **Clarifier:** operator **Context** (one RESUME_ROADMAP deepen consumed). **Push:** attempted — **no `origin` remote** on vault (`git remote get-url origin` fails). **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine Step 1b** to `parallel_export_path` / branch `sandbox-genesis-mythos-master`: not run (export_sync disabled; contract documented in Config only). **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
+| error_excerpt | vault push: no origin remote |

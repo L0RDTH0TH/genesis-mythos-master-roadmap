@@ -2,7 +2,7 @@
 title: Phase 6 — Prototype Assembly, Testing, and Iteration
 roadmap-level: primary
 phase-number: 6
-subphase-index: "1"
+subphase-index: "6"
 project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
@@ -42,6 +42,8 @@ Assemble the **Q3 2026** **vertical slice**: one **replay-stable** path from **w
 ### Progress semantics (frontmatter)
 
 `progress` is **0–100** for this note’s conceptual slice depth: **~25** = primary NL checklist complete enough to mint secondaries (**6.1+**); **~50+** = secondaries drafted; **100** = phase-ready for execution handoff (instrumentation closure still execution-deferred).
+
+- **Cursor authority:** For **RESUME_ROADMAP** / Layer 1 routing, **`[[workflow_state]]` frontmatter `current_subphase_index`** is authoritative. This note’s **`subphase-index`** is aligned to that cursor after **Phase 6 primary rollup** (**2026-04-06**) so Dataview / tooling does not split-brain against **`"6"`** vs **`"1"`**.
 
 ## Scope
 
