@@ -38,6 +38,12 @@ last_injected_tokens: 128000
 
 Automation **status** here tracks the deepen/resume **session**; **`roadmap-state.md`** `status` tracks the **roadmap tree** rollup — see [[roadmap-state#Status vocabulary (rollup vs workflow session)]].
 
+## Phase 6 primary rollup — context preflight (operator)
+
+- Terminal deepen row for **`followup-deepen-phase61-rollup-sandbox-gmm-20260406T214500Z`** (**2026-04-06 22:45**) records **`128000 / 128000`** estimated tokens — **no** model window headroom at rollup completion.
+- Before the next **Phase 6 primary rollup** **`deepen`**, pick one **ctx / token strategy** and reflect it in queue **`user_guidance`** or a follow-on row: **RECAL-ROAD** (hygiene), tighter **`token_cap`** / scoped sub-runs, split primary rollup into staged queue entries, or operator pause until a fresh chat window.
+- Validator handoff cite (nested pass, post-rollup): `.technical/Validator/l1postlv-roadmap-handoff-auto-sandbox-phase61-rollup-20260406T214500Z.md`.
+
 - **`current_subphase_index` (frontmatter):** the **next RESUME deepen target** when no operator override applies. When a queued **`user_guidance`** scopes a slice (e.g. mint secondary **5.1**), **align this field to that scope** so Layer 1 `effective_target` and vault cursor agree — avoids “restore whole Phase 5” reconcile when the queue is authoritative.
 - **`iterations_per_phase["3"]` vs `iteration_guidance_ranges.depth_3`:** the **depth_3** band caps *per-node* deepen-style iterations for **3.x.y** slices; **`iterations_per_phase["3"]`** is a **phase-wide** counter across **3.1 → 3.2 → 3.3** secondaries and tertiaries — it may exceed the **depth_3** max when the phase spans many minted notes; not a contradiction.
 

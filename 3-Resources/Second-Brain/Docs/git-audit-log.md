@@ -217,3 +217,22 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded (30s budget; first attempt). **Vault:** amended single commit on `iteration-2-roadmap-rules` — `chore(vault): godot EAT-QUEUE — RESUME_ROADMAP deepen; Watcher-Result; PQ follow-up (balance)` (45 files incl. this audit line; `git log -1 --oneline` for hash). **Clarifier:** from Layer 1 hand-off **summary** (one RESUME_ROADMAP deepen consumed; Watcher-Result; PQ follow-up deepen line; no separate `clarifier_input`). **Push:** attempted (`git push --dry-run`) — **no configured push destination** on vault (`fatal: No configured push destination`). **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine mirror (Step 1b)** to `parallel_export_path`: not run (export_sync disabled). **Tag:** not created (same convention as prior balance passes). Submodule roots `4-Archives/test-2-genesis-mythos-master`, `Second-Brain-Starter-Kit` left unstaged (dirty submodule state). |
 | error_excerpt | vault push: no push destination |
+
+### 2026-04-05 19:02 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| eat_queue_run_id | — |
+| result | **Lock:** `acquire` succeeded (30s budget; first attempt). **Vault:** commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox A.7a — 2x RESUME_ROADMAP ok; Phase6 deepen PQ (balance)` (21 files incl. this audit line; `git log -1 --oneline` for hash). **Clarifier:** Layer 1 hand-off **Context** (handoff-audit repair + deepen; follow-up Phase 6 primary rollup to sandbox PQ + pool). **Push:** attempted — **no git remotes** on vault (`git remote -v` empty). **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Integration Step 1 / engine Step 1b** mirror to `gmm-roadmap-export`: not run. **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. Submodule roots `4-Archives/test-2-genesis-mythos-master`, `Second-Brain-Starter-Kit` left unstaged (dirty submodule state). |
+| error_excerpt | vault push: no remotes configured |
