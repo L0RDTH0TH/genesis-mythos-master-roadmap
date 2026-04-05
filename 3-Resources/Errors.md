@@ -360,3 +360,29 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Entry **not consumed**; next **EAT-QUEUE lane godot** should prefer **handoff-audit** repair (consider tagging `queue_priority: repair` or **`forward_first`** in Config for blocking repairs before forward deepen).
 - **Suggested fixes:** Reconcile `workflow_state.md` / `distilled-core.md` per validator report; run **handoff-audit** repair line first; use host where nested `Task(validator)` works for balance roadmap runs.
 - **Recovery:** Validator report path above; Watcher-Result + `Watcher-Result-godot.md` (VALIDATE + primary **failure** for same `requestId`).
+
+### 2026-04-05 10:26 — EAT-QUEUE lane godot: Task(roadmap) not exposed to Layer 1 host
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1 godot track) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-05T10:26:30Z |
+| error_type | mcp-dispatch |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/godot/prompt-queue.jsonl`; **central pool:** `.technical/prompt-queue.jsonl`; **queue_lane_filter:** `godot`; **parallel_track:** `godot`.
+- **Step 0:** No `Ingest/Decisions/**` wrapper had frontmatter `approved: true` (no apply-from-wrapper work).
+- **A.0.4:** `pool_sync` **ok** (`copied_count: 2`; ids `repair-l1postlv-distilled-core-contradiction-godot-20260405T233500Z`, `followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z`).
+- **EQPLAN:** `.technical/parallel/godot/eat_queue_run_plan.json` **missing** → legacy LLM/dispatch path (Config `python_orchestrator_enabled: true` but no plan file).
+- **Dispatch:** Cursor Queue subagent session has **no** callable `Task` tool → **no** `Task(subagent_type: roadmap)` per entry; **A.7** **not** applied (`processed_success_ids` empty).
+- **Watcher-Result:** canonical + `Watcher-Result-godot.md` failure lines for both queue `id`s; **eat_queue_run_id** `eatq-20260405T102630Z-godot-l1`.
+
+#### Summary
+
+- **Root cause:** Layer 1 orchestrator cannot invoke nested pipeline subagents without the host `Task` tool; this run stopped after hydration and ordering.
+- **Impact:** Both godot RESUME_ROADMAP lines remain in **PQ** and pool; no roadmap mutations from this pass.
+- **Suggested fixes:** Re-run **EAT-QUEUE lane godot** from a parent Cursor agent where `Task(queue)` / nested `Task(roadmap)` is available, or generate **EQPLAN** via `scripts.eat_queue_core.full_cycle` if using the Python orchestrator bridge.
+- **Recovery:** No vault rollback needed; duplicate **Watcher-Result** lines for the same `requestId` are acceptable for audit when re-dispatching after a host fix.

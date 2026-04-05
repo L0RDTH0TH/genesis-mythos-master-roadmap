@@ -10,7 +10,7 @@ project-id: godot-genesis-mythos-master
 status: in-progress
 automation_level: semi
 current_phase: 6
-current_subphase_index: "6.1" # Next: **secondary 6.1 rollup** (NL + **GWT-6.1** vs tertiary **6.1.1**); tertiary **6.1.1** minted **2026-04-05 23:42** — [[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-Taxonomy-and-Instrumentation-Envelope-Roadmap-2026-04-05-2342]].
+current_subphase_index: "6" # Next: **Phase 6 primary rollup** (NL + **GWT-6** vs rolled-up secondary **6.1** + tertiary **6.1.1**); secondary **6.1 rollup** complete **2026-04-06** — CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-0130]].
 last_auto_iteration: ""
 iterations_per_phase:
   "1": 14
@@ -18,7 +18,7 @@ iterations_per_phase:
   "3": 20
   "4": 14
   "5": 16
-  "6": 5
+  "6": 6
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -26,9 +26,9 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 88
-last_conf: 87
-last_injected_tokens: 126500
+last_ctx_util_pct: 89
+last_conf: 86
+last_injected_tokens: 127800
 ---
 
 # Workflow state — godot-genesis-mythos-master
@@ -174,4 +174,6 @@ Automation **status** here tracks the deepen/resume **session**; **`roadmap-stat
 | 2026-04-05 22:15 | deepen | Phase-6-1-materialize-reconcile | 93 | 6.1 | 87 | 13 | 80 | 124000 / 128000 | 1 | 88 | **Disk materialization + rollup reconcile** for queue `followup-deepen-phase6-61-mint-slice-manifest-godot-gmm-20260405T151000Z`: confirmed **6.1** secondary + CDR on vault paths; patched [[roadmap-state]], [[distilled-core]], primary Phase **6** **GWT-6** delegation rows; **`current_subphase_index: "6.1.1"`**; `iterations_per_phase["6"]: 4`. **Nested `Task(validator)` / `Task(internal-repair-agent)`** not exposed in roadmap subagent session — `task_error` in ledger; Layer 1 **post–little-val** + comms path `.technical/parallel/godot/task-handoff-comms.jsonl`. **No** `Roadmap/Execution/**` mutations. queue_entry_id: followup-deepen-phase6-61-mint-slice-manifest-godot-gmm-20260405T151000Z \| gaps: 0 \| resolver: `need_class: missing_structure`, `effective_action: deepen`, `effective_track: conceptual`, `gate_catalog_id: conceptual_v1` \| `queue_lane: godot` \| `parallel_track: godot` \| `parent_run_id: eatq-layer1-godot-20260405T220500Z` \| `monotonic_log_timestamp: 2026-04-05 22:15` — strictly after 2026-04-05 21:15 \| `pipeline_mode_used: balance` \| `nested_helpers: task_unavailable_in_subagent_session` |
 | 2026-04-05 23:42 | deepen | Phase-6-1-1-Manifest-Registry-Taxonomy-Envelope | 94 | 6.1.1 | 88 | 12 | 80 | 126500 / 128000 | 1 | 87 | Phase 6 **tertiary 6.1.1** minted — [[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-Taxonomy-and-Instrumentation-Envelope-Roadmap-2026-04-05-2342]]: **VerticalSliceManifest** field registry + **FeedbackRecord** taxonomy + **InstrumentationIntentEnvelope** NL for **II-6.1-***; **GWT-6.1.1-A–K**; CDR [[Conceptual-Decision-Records/deepen-phase-6-1-1-manifest-field-registry-feedbackrecord-instrumentation-envelope-2026-04-05-2342]]; **`current_subphase_index: "6.1"`** — next **secondary 6.1 rollup** (NL + **GWT-6.1** vs **6.1.1**). `iterations_per_phase["6"]: 5`. **No** `Roadmap/Execution/**`. queue_entry_id: followup-deepen-phase611-mint-first-tertiary-godot-gmm-20260405T224800Z \| gaps: 0 \| resolver: `gate_signature: structural-continue-6-1-1`, `effective_track: conceptual`, `gate_catalog_id: conceptual_v1` \| `queue_lane: godot` \| `parallel_track: godot` \| `parent_run_id: eatq-godot-layer1-20260405T234200Z` \| `pipeline_task_correlation_id: a1b2c3d4-e5f6-4789-a012-3456789abcde` \| `telemetry_utc: 2026-04-05T23:42:00.000Z` \| `monotonic_log_timestamp: 2026-04-05 23:42` — strictly after 2026-04-05 22:15 \| `research_pre_deepen: skipped_not_enabled` \| `pipeline_mode_used: balance` \| `nested_helpers: task_unavailable_in_subagent_session` |
 | 2026-04-05 23:59 | handoff-audit | workflow_state-Phase5-callout-hygiene | 95 | 6.1 | 87 | 13 | 80 | 124000 / 128000 | -1 | 88 | **Post–nested-validator IRA apply (duplicate-drain pass):** superseded stale **22:15** clause in [[workflow_state]] Phase 5 reset callout that contradicted frontmatter + **23:42** row (still read **mint 6.1.1** / **`"6.1.1"`**). Validator: `.technical/Validator/roadmap-handoff-auto-gmm-duplicate-drain-611-20260405.md`. **No** tertiary remint; **`current_subphase_index: "6.1"`** — next **secondary 6.1 rollup**. queue_entry_id: followup-deepen-phase611-mint-first-tertiary-godot-gmm-20260405T224800Z \| `parent_run_id: eat-queue-godot-20260405-layer1` \| `dispatch_ordinal: 2` \| `material_change: workflow_state_body` \| `idempotent_mint: true` (6.1.1 already on disk) \| `telemetry_utc: 2026-04-05T23:59:00.000Z` \| `monotonic_log_timestamp: 2026-04-05 23:59` — strictly after 2026-04-05 23:42 \| `nested_helpers: Task(validator)` + `Task(internal-repair-agent)` + compare pass \| `pipeline_mode_used: balance` \| `queue_lane: godot` \| `parallel_track: godot` |
+| 2026-04-06 00:15 | handoff-audit | distilled-core-L1postlv-cursor-verify | 96 | 6.1 | 88 | 12 | 80 | 126500 / 128000 | 0 | 88 | **Repair queue — L1 `contradictions_detected` closure verify:** `repair-l1postlv-distilled-core-contradiction-godot-20260405T233500Z` — confirmed [[distilled-core]] **authoritative** [[workflow_state]] cursor **`current_phase: 6`**, **`current_subphase_index: "6.1"`** matches YAML; tertiary **6.1.1** = **minted slice** (not duplicate YAML authority). Cites `.technical/Validator/roadmap-handoff-auto-gmm-l1postlv-phase6-1-godot-20260405.md`. **No** edits to secondary **6.1** note body. Appended [[roadmap-state]] consistency row **2026-04-06**. `#handoff-review` \| `parent_run_id: eat-queue-godot-20260405-layer1` \| `dispatch_ordinal: 1` \| `telemetry_utc: 2026-04-06T00:15:00.000Z` \| `monotonic_log_timestamp: 2026-04-06 00:15` — strictly after 2026-04-05 23:59 \| `nested_helpers: Task(validator)/Task(IRA) not invocable in roadmap subagent session — ledger task_error` \| `pipeline_mode_used: balance` \| `queue_lane: godot` \| `parallel_track: godot` |
+| 2026-04-06 01:30 | deepen | Phase-6-1-secondary-rollup-NL-GWT | 97 | 6.1 | 89 | 11 | 80 | 127800 / 128000 | 1 | 86 | Phase 6 **secondary 6.1 rollup** — **NL checklist** + **GWT-6.1-A–K** parity vs tertiary **6.1.1** on [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1510]]; instrumentation / CI / perf gates **execution-deferred** per conceptual waiver + operator `user_guidance`; CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-0130]]; `handoff_readiness` **86**; **`current_subphase_index: "6"`** — next **Phase 6 primary rollup**. `iterations_per_phase["6"]: 6`. **No** `Roadmap/Execution/**`. queue_entry_id: followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z \| gaps: 0 \| resolver: `gate_signature: structural-phase-6-secondary-6-1-rollup-nl-gwt`, `effective_track: conceptual`, `gate_catalog_id: conceptual_v1` \| `queue_lane: godot` \| `parallel_track: godot` \| `parent_run_id: eat-queue-godot-20260405-layer1` \| `dispatch_ordinal: 2` \| `telemetry_utc: 2026-04-06T01:30:00.000Z` \| `monotonic_log_timestamp: 2026-04-06 01:30` — strictly after 2026-04-06 00:15 \| `research_pre_deepen: skipped_not_enabled` \| `pipeline_mode_used: balance` |
 

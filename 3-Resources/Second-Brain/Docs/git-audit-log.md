@@ -87,3 +87,21 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Acquire:** first `acquire` timed out on stale lock (dead PID in `.technical/.gitforge.lock`); `release` cleared it; second `acquire` succeeded. **Vault:** commit `e8fa7d8` on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE — RESUME_ROADMAP deepen; A.5d PQ hygiene` (642 files; clarifier from operator Context). **Hygiene:** removed `.technical/.gitforge.lock` from index, added to `.gitignore`, amended commit so the lock is never tracked. **Push:** not attempted — vault has **no git remotes** (`git remote` empty); no upstream. **export_sync:** skipped (Config `balance.export_sync: false`). **Tag:** not created (no per-run tag convention in repo). **Engine export path** (`parallel_export_path`) noted for policy; mirror not run this pass. |
 | error_excerpt | — |
+
+### 2026-04-05 10:40 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| eat_queue_run_id | — |
+| result | **Lock:** `acquire` succeeded on first attempt; `release` succeeded. **Vault:** new commit on `iteration-2-roadmap-rules` — `chore(vault): repair-l1-postlv wflog hygiene sandbox + handoff-audit validator repass` (34 files incl. this audit line; use `git log -1` for hash). Context: consumed `repair-l1-postlv-wflog-hygiene-sandbox-gmm-20260405T224500Z` after RESUME_ROADMAP handoff-audit wflog backfill + L1 `Task(validator)` repass. **Push:** attempted — **`origin` missing on vault** (`fatal: 'origin' does not appear to be a git repository`); operator must add `origin` or push manually. **export_sync:** skipped (Config `gitforge.modes.balance.export_sync: false`). **Engine mirror (Step 1b):** not run — export sync disabled for balance; export checkout was `iteration-2-roadmap-rules` (integration line). **Tag:** not created. |
+| error_excerpt | vault push: no origin remote |

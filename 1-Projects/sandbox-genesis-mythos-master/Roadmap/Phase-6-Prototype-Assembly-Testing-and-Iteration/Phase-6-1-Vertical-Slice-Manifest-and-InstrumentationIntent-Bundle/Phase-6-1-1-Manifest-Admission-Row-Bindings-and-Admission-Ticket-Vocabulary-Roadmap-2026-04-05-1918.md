@@ -4,9 +4,9 @@ roadmap-level: tertiary
 phase-number: 6
 subphase-index: "6.1.1"
 project-id: sandbox-genesis-mythos-master
-status: in-progress
+status: complete
 priority: high
-progress: 40
+progress: 100
 handoff_readiness: 86
 created: 2026-04-05
 tags:
@@ -24,6 +24,9 @@ links:
 ---
 
 ## Phase 6.1.1 — Manifest admission row IDs ↔ admission ticket vocabulary
+
+> [!note] Slice lifecycle vocabulary (state hygiene)
+> Frontmatter **`status: complete`** + **`progress: 100`** mean this **tertiary slice is minted** (catalog + binding + GWT table on disk), consistent with [[roadmap-state]] “tertiary **6.1.1** minted” and **`handoff_readiness: 86`**. **`progress`** is **slice fill / mint completeness** (0–100), not context utilization. Secondary **6.1** NL+GWT rollup closure remains **explicitly deferred** to the **6.1.x** tertiary chain per conceptual track policy (`missing_roll_up_gates` advisory — not a blocker for this note’s mint-complete story). Repairs: queue `followup-l1-a5b-handoff-audit-611-sandbox-20260405T221600Z` (L1 post-LV `state_hygiene_failure`).
 
 This tertiary **implements [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] § Manifest — Admission** for **Horizon-Q3** (`slice_id: horizon_q3_v1`): it assigns **stable manifest row IDs** to the NL admission story and **binds** each row to the **Phase 2.7.x admission ticket vocabulary** (`admission_ticket_id`, **SimulationEntryBootstrap**, **FirstCommittedTickTrace** redemption narrative) so **GWT-6-A** evidence can cite **one table** without re-deriving **2.7.3** semantics.
 
@@ -66,11 +69,11 @@ This tertiary **implements [[Phase-6-1-Vertical-Slice-Manifest-and-Instrumentati
 
 ## Binding — manifest rows ↔ 2.7.x admission ticket vocabulary
 
-| manifest_admission_row_id | 2.7.x vocabulary cluster (read-only) | Binding sentence (NL) |
-| --- | --- | --- |
-| `mar.hq3.slice_identity` | [[Phase-2-7-1-Simulation-Entry-Bootstrap-and-Deterministic-First-Tick-Contract-Roadmap-2026-04-01-0116]] — **SimulationEntryBootstrap** identity family | Manifest **slice_id** labels the **same** bootstrap envelope family **2.7.1** uses for admission gates — not a second identity scheme. |
-| `mar.hq3.pin.2_7_3` | [[Phase-2-7-3-Shadow-to-Live-Parity-Admission-Ticket-Redemption-and-First-Committed-Tick-Trace-Roadmap-2026-03-30-1800]] — `admission_ticket_id` redemption + **FirstCommittedTickTrace** | Pin row is the slice-local **index** into **2.7.3** redemption + trace invariants; operators cite **`mar.hq3.pin.2_7_3`** when claiming “ticket redeemed for this slice.” |
-| `mar.hq3.pin.2_7_1` | [[Phase-2-7-1-Simulation-Entry-Bootstrap-and-Deterministic-First-Tick-Contract-Roadmap-2026-04-01-0116]] — Admission gates + hook-order contract | Pin row is the slice-local **index** into **2.7.1** “admit before live” gate story; does not relax **2.7.2** shadow prerequisites. |
+| manifest_admission_row_id | 2.7.x vocabulary cluster (read-only) | Explicit heading anchor (GWT-6.1.1-G audit grep) | Binding sentence (NL) |
+| --- | --- | --- | --- |
+| `mar.hq3.slice_identity` | [[Phase-2-7-1-Simulation-Entry-Bootstrap-and-Deterministic-First-Tick-Contract-Roadmap-2026-04-01-0116]] — **SimulationEntryBootstrap** identity family | **2.7.1** — `## Behavior` + `## Interfaces` (simulation entry bootstrap + first-tick contract) | Manifest **slice_id** labels the **same** bootstrap envelope family **2.7.1** uses for admission gates — not a second identity scheme. |
+| `mar.hq3.pin.2_7_3` | [[Phase-2-7-3-Shadow-to-Live-Parity-Admission-Ticket-Redemption-and-First-Committed-Tick-Trace-Roadmap-2026-03-30-1800]] — `admission_ticket_id` redemption + **FirstCommittedTickTrace** | **2.7.3** — `## Behavior` (redemption + first committed tick trace) | Pin row is the slice-local **index** into **2.7.3** redemption + trace invariants; operators cite **`mar.hq3.pin.2_7_3`** when claiming “ticket redeemed for this slice.” |
+| `mar.hq3.pin.2_7_1` | [[Phase-2-7-1-Simulation-Entry-Bootstrap-and-Deterministic-First-Tick-Contract-Roadmap-2026-04-01-0116]] — Admission gates + hook-order contract | **2.7.1** — `## Behavior` (admission gates + hook-order preamble) | Pin row is the slice-local **index** into **2.7.1** “admit before live” gate story; does not relax **2.7.2** shadow prerequisites. |
 
 ## GWT-6.1.1-A–K (narrowed vs GWT-6-A / secondary delegation)
 

@@ -4,10 +4,10 @@ roadmap-level: secondary
 phase-number: 6
 subphase-index: "6.1"
 project-id: godot-genesis-mythos-master
-status: active
+status: complete
 priority: high
-progress: 45
-handoff_readiness: 85
+progress: 88
+handoff_readiness: 86
 created: 2026-04-05
 tags:
   - roadmap
@@ -20,12 +20,13 @@ links:
   - "[[decisions-log]]"
   - "[[distilled-core]]"
   - "[[workflow_state]]"
+  - "[[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-0130]]"
 ---
 
 > [!note] #handoff-review
-> `handoff_readiness: 85` — **Mint (2026-04-05):** NL home for **VerticalSliceManifest** (**Horizon-Q3**) plus a bundled **InstrumentationIntent** set (four named probe loci). **Honors** primary **GWT-6** delegation: Evidence for **A/D/F/G/H** cites this secondary; remaining primary rows stay **TBD** until **6.1+** / rollup. **No** `Roadmap/Execution/**` authority on conceptual track unless execution is bootstrapped.
+> `handoff_readiness: 86` — **Rollup (2026-04-06):** **NL checklist** + **GWT-6.1-A–K** parity vs tertiary **6.1.1** on [[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-Taxonomy-and-Instrumentation-Envelope-Roadmap-2026-04-05-2342]]; CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-0130]]. Instrumentation wire formats, CI perf gates, dashboards, and marketplace packaging remain **execution-deferred** per conceptual waiver + queue `user_guidance`. **Honors** primary **GWT-6** delegation: Evidence **A/D/F/G/H** still cite this secondary until Phase **6 primary rollup** refreshes primary **GWT-6** Evidence rows. **No** `Roadmap/Execution/**` unless execution track is bootstrapped.
 >
-> **Queue:** `followup-deepen-phase6-61-mint-slice-manifest-godot-gmm-20260405T151000Z` · `parallel_track: godot` · disk materialization reconciles prior **## Log** claim when workspace lacked the file.
+> **Mint queue (historical):** `followup-deepen-phase6-61-mint-slice-manifest-godot-gmm-20260405T151000Z` · `parallel_track: godot`. **Rollup queue:** `followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z` · `parent_run_id: eat-queue-godot-20260405-layer1`.
 
 ## Phase 6.1 — Vertical slice manifest + InstrumentationIntent bundle
 
@@ -43,6 +44,14 @@ This secondary **names and binds** the **Horizon-Q3** slice as a **manifest-leve
 
 - Concrete profilers, dashboards, CI perf gates, soak harnesses, or marketplace packaging (**execution-deferred** per conceptual waiver).
 - Redefining **3.4.1** **SeamId** rows, **5.1** evaluation order, or **2.x** commit envelopes—**6.1** **consumes** them by reference only.
+
+## NL checklist (rollup closure)
+
+- [x] **VerticalSliceManifest** row documents **slice_id**, narrative spine, pinned refs, **SeamId** discipline, and **D-5.1.3-matrix-vs-manifest** stance (**open**, non-blocking).
+- [x] **Four** **InstrumentationIntent** rows name **II-6.1-*** loci with attach locus, metric class (name only), and upstream gate citations (**execution-deferred** wire stub).
+- [x] **FeedbackRecord** routing defers taxonomy detail to tertiary **6.1.1** without upstream body overwrite.
+- [x] **GWT-6.1-A–K** table present and mapped to **GWT-6.1.1-A–K** evidence (see § GWT parity).
+- [x] **Conceptual waiver** explicit for perf/CI/dashboard/marketplace gaps (**not** authoritative open gates on conceptual track).
 
 ## Behavior (natural language)
 
@@ -95,7 +104,7 @@ This secondary **names and binds** the **Horizon-Q3** slice as a **manifest-leve
 ## Open questions
 
 - **Resolved (tertiary 6.1.1):** **FeedbackRecord** taxonomy rows + **InstrumentationIntentEnvelope** shape vs **II-6.1-*** — see [[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-Taxonomy-and-Instrumentation-Envelope-Roadmap-2026-04-05-2342]] (**GWT-6.1.1-A–K**).
-- **Remaining:** **Secondary 6.1 rollup** — NL checklist + **GWT-6.1** parity vs **6.1.1** (queue **deepen** with rollup `user_guidance`).
+- **Resolved (secondary 6.1 rollup, 2026-04-06):** NL checklist + **GWT-6.1-A–K** parity vs **6.1.1** — CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-0130]]; queue `followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z`.
 - **Per-subsystem** instrumentation cards beyond the **single envelope** row-set — **execution-deferred** when packaging splits land.
 
 ## Pseudo-code readiness
@@ -117,6 +126,22 @@ At **secondary** conceptual depth, **no pseudo-code**. Typed manifests / enums s
 | **GWT-6.1-I** | **3.4.1** **SeamId** | Slice references seams | Only catalog seams in glue | § VerticalSliceManifest |
 | **GWT-6.1-J** | **3.1.3** DM classes | DM acts | Manifest spine preserves **live** vs **structural regen** labels | § Behavior; Phase **3** primary |
 | **GWT-6.1-K** | Conceptual waiver | Validator advisory | Execution perf / CI / marketplace gaps **deferred** explicitly | [[roadmap-state]], [[distilled-core]] |
+
+## GWT-6.1 ↔ GWT-6.1.1 parity (rollup)
+
+| **GWT-6.1** | Parity claim (secondary NL) | **GWT-6.1.1** evidence row (tertiary) |
+| --- | --- | --- |
+| **A** | **Horizon-Q3** cites **2.7.3** as slice entry | **A** — registry columns for manifest doc |
+| **B** | Pins **3.1** + **3.1.4** checkpoint boundary | **B** — **deferred_legs** vs omitted rows |
+| **C** | **4.1.3** + **3.2.1** in spine | **I** — **II-6.1-PRESENT** cites **4.1.3** / **3.2.1** |
+| **D** | **4.2.x** inputs only (no persistence authority) | **F** — **upstream_gate_citation** resolves |
+| **E** | Pinned **5.1**/**5.2** — no second truth | **J** — **II-6.1-RULEFRAME** cites **5.1.2** / **5.1.3** |
+| **F** | Manifest row + spine exists | **A** + **B** (manifest + partial pass) |
+| **G** | Four **InstrumentationIntent** rows | **E** — four **InstrumentationIntentEnvelope** rows |
+| **H** | **FeedbackRecord** routing without upstream overwrite | **C** + **D** — taxonomy + **FR-6.1-CONTRADICTION** routing |
+| **I** | Only **3.4.1** catalog seams | **H** — glue **SeamId** keys only |
+| **J** | **3.1.3** live vs structural regen labels | **F** / spine alignment via upstream citations |
+| **K** | Conceptual waiver explicit | **K** — perf/CI/dashboard **execution-deferred** |
 
 ## Research integration
 
