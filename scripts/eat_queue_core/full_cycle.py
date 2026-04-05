@@ -21,6 +21,7 @@ from typing import Any, Callable
 
 from pydantic import BaseModel, Field
 
+from .lanes import FALLBACK_ALLOWED_LANES, filter_entries_by_lane, validate_lane_filter_token
 from .plan import append_decisions, build_plan, emit_plan_json, load_queue_file
 from .workflows import micro_workflow_for_entry
 from .models import EatQueueRunPlan, QueueEntry
@@ -211,6 +212,7 @@ def run_full_eat_queue_cycle(
     parent_run_id: str | None = None,
     simulate_post_pass1_repair: Callable[[], None] | None = None,
     apply_cleanup: bool = False,
+    lane_filter: str | None = None,
 ) -> FullCycleResult:
     """
     Build up to ``max_passes`` plans, re-reading the queue between passes.
@@ -220,11 +222,14 @@ def run_full_eat_queue_cycle(
 
     When ``apply_cleanup`` is True, after each pass ``execute_roadmap_with_plan`` summary,
     ``queue_rewrite_ids`` are removed from the queue file (simulates A.7 with leak fix).
+
+    When ``lane_filter`` is set, ``build_plan`` and ``enrich_plan_dict`` use the same subset
+    as ``eat_queue_core plan --lane`` (track ∪ shared; ``shared`` / ``default`` only).
     """
     root = vault_root or Path.cwd()
     qpath = queue_path or (root / ".technical" / "prompt-queue.jsonl")
-    ppath = plan_path or (root / ".technical" / "eat_queue_run_plan.json")
-    dpath = decisions_path or (root / ".technical" / "eat-queue-decisions.jsonl")
+    ppath = plan_path or (qpath.parent / "eat_queue_run_plan.json")
+    dpath = decisions_path or (qpath.parent / "eat-queue-decisions.jsonl")
     prid = parent_run_id or f"eatq-fullcycle-{uuid.uuid4().hex[:12]}"
 
     messages: list[str] = []
@@ -234,12 +239,13 @@ def run_full_eat_queue_cycle(
 
     for pass_idx in range(max(1, max_passes)):
         entries = load_queue_file(qpath) if qpath.is_file() else []
-        plan, decisions = build_plan(entries, prid)
+        plan, decisions = build_plan(entries, prid, lane_filter=lane_filter)
         append_decisions(dpath, decisions)
 
+        entries_lane = filter_entries_by_lane(entries, lane_filter)
         enriched = enrich_plan_dict(
             plan,
-            entries,
+            entries_lane,
             initial_action=initial_action,
             initial_profile=initial_profile,
             strict_mode=strict_mode,
@@ -309,8 +315,18 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Reactive full EAT-QUEUE plan cycle (eat_queue_core)")
     p.add_argument("--vault-root", type=Path, default=None, help="Vault root (default: cwd)")
     p.add_argument("--queue", type=Path, default=None, help="prompt-queue.jsonl path")
-    p.add_argument("--emit", type=Path, default=None, help="eat_queue_run_plan.json path")
-    p.add_argument("--decisions-log", type=Path, default=None)
+    p.add_argument(
+        "--emit",
+        type=Path,
+        default=None,
+        help="eat_queue_run_plan.json path (default: dirname(--queue)/eat_queue_run_plan.json)",
+    )
+    p.add_argument(
+        "--decisions-log",
+        type=Path,
+        default=None,
+        help="eat-queue-decisions.jsonl path (default: dirname(--queue)/eat-queue-decisions.jsonl)",
+    )
     p.add_argument("--parent-run-id", default=None)
     p.add_argument("--action", default="deepen", help="Initial queue semantic action (e.g. deepen, pass3_repair_drain)")
     p.add_argument("--profile", default="balance", help="effective_pipeline_mode hint (balance|quality|speed)")
@@ -321,9 +337,27 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Remove queue_rewrite_ids from queue after each pass (simulated A.7; use with care)",
     )
+    p.add_argument(
+        "--lane",
+        type=str,
+        default=None,
+        help="queue_lane_filter for build_plan (must be in allowed_lanes)",
+    )
     args = p.parse_args(argv)
 
     root = (args.vault_root or Path.cwd()).resolve()
+    lane_filter: str | None = None
+    if args.lane is not None:
+        token = args.lane.strip().lower()
+        if not validate_lane_filter_token(token, FALLBACK_ALLOWED_LANES):
+            print(
+                f"full_cycle error: lane {token!r} not in allowed_lanes "
+                f"({sorted(FALLBACK_ALLOWED_LANES)})",
+                file=sys.stderr,
+            )
+            return 1
+        lane_filter = token
+
     try:
         result = run_full_eat_queue_cycle(
             initial_action=args.action,
@@ -335,6 +369,7 @@ def main(argv: list[str] | None = None) -> int:
             plan_path=args.emit,
             decisions_path=args.decisions_log,
             parent_run_id=args.parent_run_id,
+            lane_filter=lane_filter,
             apply_cleanup=args.apply_cleanup,
         )
     except (OSError, ValueError) as e:

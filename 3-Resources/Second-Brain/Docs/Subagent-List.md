@@ -10,7 +10,7 @@ Quick reference: all subagents and the Queue rule — when each is used and main
 
 | Name | Description | Triggers | Responsibilities |
 |------|-------------|----------|-------------------|
-| **Queue (Dispatcher)** | Processes prompt queue and task queue; Step 0 wrappers, read/validate/order, dispatch by mode, Watcher-Result, clear passed | EAT-QUEUE, Process queue, EAT-CACHE (**optional `lane <name>`**), PROCESS TASK QUEUE | Step 0 always-check wrappers (**A.0** / **`queue_lane`** vs **`queue_lane_filter`**); read **PQ** where [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x** resolves it (legacy `.technical/prompt-queue.jsonl` or per-track **`.technical/parallel/<track>/prompt-queue.jsonl`**) or `3-Resources/Task-Queue.md`; **`## parallel_context`** / per-track **task-handoff-comms** per dispatcher; parse, validate, dedup, order; dispatch each entry; append Watcher-Result per id; post–**A.7** optional **A.7a** **`Task(gitforge)`**; clear passed entries. Operator checklist: [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]] |
+| **Queue (Dispatcher)** | Processes prompt queue and task queue; Step 0 wrappers, read/validate/order, dispatch by mode, Watcher-Result, clear passed | EAT-QUEUE, Process queue, EAT-CACHE, PROCESS TASK QUEUE | Step 0 always-check wrappers; read `.technical/prompt-queue.jsonl` or `3-Resources/Task-Queue.md`; parse, validate, dedup, order; dispatch each entry; append Watcher-Result per id; clear passed entries |
 | **Ingest** | Full-autonomous-ingest: Phase 1 propose + Decision Wrapper, Phase 2 apply-mode | INGEST MODE, Process Ingest, run ingests; queue mode INGEST MODE | List Ingest; non-MD handling; Phase 1 classify, frontmatter-enrich, propose path, Decision Wrapper (no move); Phase 2 apply when approved (move/rename); backup + snapshot before destructive steps |
 | **Distill** | Autonomous-distill: progressive summarization, highlights, TL;DR, readability; distill-apply-from-wrapper | DISTILL MODE, distill this note, DISTILL LENS, HIGHLIGHT PERSPECTIVE; queue DISTILL MODE, BATCH-DISTILL | Backup; optional auto-layer-select; distill layers; distill-highlight-color; layer-promote; distill-perspective-refine; callout-tldr-wrap; readability-flag; confidence bands and Decision Wrappers for mid/low |
 | **Express** | Autonomous-express: related content, outline, CTA, version snapshots; express-apply-from-wrapper | EXPRESS MODE, express this note, EXPRESS VIEW; queue EXPRESS MODE, BATCH-EXPRESS | Backup; version-snapshot; related-content-pull; research-scope (PMG); express-mini-outline; call-to-action-append; confidence bands and Decision Wrappers for mid/low |
@@ -47,7 +47,7 @@ Only the following **caller → nested subagent** pairs are allowed. Nested suba
 
 ## Example invocations
 
-- **Queue:** "EAT-QUEUE" or "EAT-QUEUE lane sandbox" / "EAT-QUEUE lane godot" (dual-track)
+- **Queue:** "EAT-QUEUE"
 - **Ingest:** "INGEST MODE" or `{"mode":"INGEST MODE","source_file":"Ingest/Note.md"}`
 - **Distill:** "DISTILL LENS: beginner"
 - **Express:** "EXPRESS VIEW: stakeholder"

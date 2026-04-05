@@ -20,6 +20,10 @@
 !.technical/scripts/
 !.technical/scripts/**
 !3-Resources/Watcher-Result.md
+!3-Resources/Watcher-Result-sandbox.md
+!3-Resources/Watcher-Result-godot.md
+!.technical/parallel/sandbox/prompt-queue.jsonl
+!.technical/parallel/godot/prompt-queue.jsonl
 
 # Root-level technical files (must stay at root; Syncthing/Cursor read them here)
 .stignore

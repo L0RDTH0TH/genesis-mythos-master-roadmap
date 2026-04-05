@@ -5,6 +5,7 @@ import sys
 import traceback
 from pathlib import Path
 
+from .lanes import FALLBACK_ALLOWED_LANES, validate_lane_filter_token
 from .plan import (
     append_decisions,
     build_plan,
@@ -28,6 +29,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     pl.add_argument("--parent-run-id", default="eatq-local", help="Telemetry parent_run_id")
     pl.add_argument(
+        "--lane",
+        type=str,
+        default=None,
+        help="queue_lane_filter (sandbox/godot/core ∪ shared; shared only; default only). Must be in allowed_lanes.",
+    )
+    pl.add_argument(
         "--verbose",
         action="store_true",
         default=False,
@@ -43,8 +50,19 @@ def main(argv: list[str] | None = None) -> int:
         dlog = Path(".technical/eat-queue-decisions.jsonl")
 
     try:
+        lane_filter: str | None = None
+        if args.lane is not None:
+            token = args.lane.strip().lower()
+            if not validate_lane_filter_token(token, FALLBACK_ALLOWED_LANES):
+                print(
+                    f"eat_queue_core plan error: lane {token!r} not in allowed_lanes "
+                    f"({sorted(FALLBACK_ALLOWED_LANES)})",
+                    file=sys.stderr,
+                )
+                return 1
+            lane_filter = token
         entries = load_queue_file(args.queue)
-        plan, decisions = build_plan(entries, args.parent_run_id)
+        plan, decisions = build_plan(entries, args.parent_run_id, lane_filter=lane_filter)
         emit_plan_json(plan, args.emit)
         append_decisions(dlog, decisions)
     except (OSError, ValueError) as e:
