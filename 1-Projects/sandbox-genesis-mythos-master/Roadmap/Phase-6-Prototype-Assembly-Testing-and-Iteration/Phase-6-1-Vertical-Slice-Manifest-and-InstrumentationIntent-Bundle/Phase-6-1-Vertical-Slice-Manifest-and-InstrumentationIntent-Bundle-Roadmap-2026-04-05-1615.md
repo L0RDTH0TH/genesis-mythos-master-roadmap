@@ -6,7 +6,7 @@ subphase-index: "6.1"
 project-id: sandbox-genesis-mythos-master
 status: in-progress
 priority: high
-progress: 42
+progress: 55
 handoff_readiness: 85
 created: 2026-04-05
 tags:
@@ -15,6 +15,7 @@ tags:
   - phase-6
 para-type: Project
 links:
+  - "[[Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-0800]]"
   - "[[Phase-6-1-1-Manifest-Admission-Row-Bindings-and-Admission-Ticket-Vocabulary-Roadmap-2026-04-05-1918]]"
   - "[[Phase-6-Prototype-Assembly-Testing-and-Iteration-Roadmap-2026-03-30-0430]]"
   - "[[Conceptual-Decision-Records/deepen-phase-6-1-vertical-slice-manifest-instrumentation-2026-04-05-1615]]"
@@ -69,7 +70,8 @@ Subsections below are the **structural homes** referenced by the **GWT-6 → 6.1
 
 ### Tick window + sim-visible classification (manifest subsection)
 
-- **Pinned:** [[Phase-3-1-3-Sim-Visible-Classification-and-DM-Overwrite-Channel-Mapping-Roadmap-2026-04-02-0035]]; [[Phase-3-1-4-Persistence-Checkpoint-Boundaries-Roadmap-2026-04-02-2240]].
+- **Bounded scenarios + matrix:** [[Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-0800]] — **`slice_tick_window_scenario_id`** catalog + **sim-visible × checkpoint** matrix (**GWT-6.1.2-A–K**); satisfies **GWT-6-B** via narrowed evidence table.
+- **Pinned:** [[Phase-3-1-3-Sim-Visible-Classification-and-DM-Overwrite-Channel-Mapping-Roadmap-2026-04-02-0035]]; [[Phase-3-1-4-Persistence-Checkpoint-Boundaries-Roadmap-2026-04-02-2240]]; [[Phase-3-1-2-Tick-Scheduling-Defer-Merge-and-Work-Queue-Policy-Roadmap-2026-04-02-0020]] (defer-merge / work-queue closure).
 
 ### Operator readout (ObservationChannel + 4.1.3 co-display)
 
@@ -119,7 +121,7 @@ Subsections below are the **structural homes** referenced by the **GWT-6 → 6.1
 | Primary ID | Delegation to **6.1** (this note) | Tertiary follow-up (TBD) |
 | --- | --- | --- |
 | **GWT-6-A** | Manifest **admission** subsection pins **2.7.x** + first committed tick story | [[Phase-6-1-1-Manifest-Admission-Row-Bindings-and-Admission-Ticket-Vocabulary-Roadmap-2026-04-05-1918]] — `manifest_admission_row_id` ↔ **2.7.x** ticket vocabulary (**GWT-6.1.1-***) |
-| **GWT-6-B** | Manifest **tick window** + **sim-visible** classification pins **3.x** | **6.1.x** — bounded tick scenario binding |
+| **GWT-6-B** | Manifest **tick window** + **sim-visible** classification pins **3.x** | [[Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-0800]] — **`slice_tick_window_scenario_id`** + matrix (**GWT-6.1.2-***) |
 | **GWT-6-C** | **ObservationChannel** + **4.1.3** co-display pinned in manifest **operator readout** subsection | **6.1.x** — lane/readout matrix |
 | **GWT-6-D** | **4.2.x** tokens listed as **inputs** only in manifest **orchestration inputs** table | **6.1.x** — trigger vocabulary closure |
 | **GWT-6-E** | **Ruleset pin** + **RuleOutcome** rows referenced; **SeamId** catalog pins **3.4.1** | **6.1.x** — outcome ↔ seam row binding |

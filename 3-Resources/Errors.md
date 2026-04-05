@@ -413,3 +413,31 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** deepen line and remaining repair lines stay on **PQ** and central pool; Watcher-Result canonical + `Watcher-Result-godot.md` (VALIDATE then primary **failure**).
 - **Suggested fixes:** Run balance roadmap from a Cursor configuration where roadmap subagent can call nested `Task`, or temporarily use **speed** profile / Config that does not require nested helper proof for this host.
 - **Recovery:** Review validator report; optional manual hygiene edit to `roadmap-state` consistency bullet cited in report.
+
+### 2026-04-06 16:20 — EAT-QUEUE sandbox: nested_attestation_failure + L1 state_hygiene_failure (deepen 6.1.2)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1 sandbox track) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-06T16:20:00Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **queue_entry_id:** `followup-deepen-phase612-sandbox-gmm-20260406T004500Z`
+- **parent_run_id:** `l1-sandbox-eatq-20260406T150000Z`
+- **A.0.4:** `pool_sync` hydrated sandbox **PQ** from central pool
+- **Task(roadmap):** balance deepen; `nested_validator_first` / `ira_post_first_validator` / `nested_validator_second` → `task_tool_invoked: false`, `task_error` `helper_launch_surface_missing` / `task_tool_not_available_in_context`
+- **Task(validator) L1 (b1):** `roadmap_handoff_auto` → `severity: medium`, `recommended_action: needs_work`, `primary_code: state_hygiene_failure`, `reason_codes` include `missing_roll_up_gates`, `safety_unknown_gap`
+- **Report:** `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-20260406T160500Z-l1postlv-b1-deepen-612.md`
+- **Queue writes:** appended `followup-deepen-phase613-sandbox-gmm-20260406T083000Z`, `repair-l1-handoff-audit-sandbox-gmm-612-hygiene-20260406T161500Z` to central pool; re-ran `pool_sync` for sandbox **PQ**
+- **A.7:** **did not** add `612` to `processed_success_ids` (FINAL GATEKEEPER + nested attestation + hygiene provisional)
+
+#### Summary
+
+- **Root cause:** Roadmap subagent host cannot nest `Task(validator)` / `Task(internal-repair-agent)`; L1 hostile validator still found `state_hygiene_failure` (workflow_state callout vs live cursor).
+- **Impact:** Entry **612** remains on **PQ** and central pool; **613** deepen follow-up and **handoff-audit** repair queued; Watcher-Result canonical + `Watcher-Result-sandbox.md` (VALIDATE then primary **failure**).
+- **Suggested fixes:** Run balance roadmap from a host where nested `Task` is available; run **handoff-audit** repair first; align Phase 5 “Authoritative cursor” callout in `workflow_state.md` with frontmatter `6.1.3`.
+- **Recovery:** No automatic rollback; use validator report and repair queue entry.
