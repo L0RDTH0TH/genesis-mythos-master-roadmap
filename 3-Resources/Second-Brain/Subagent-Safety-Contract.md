@@ -75,6 +75,23 @@ These roadmap-specific rules refine, but do not weaken, the global MCP & filesys
 
 ---
 
+## Proof-on-failure (normative)
+
+When any mandated `Task(subagent_type)` **does not complete successfully** (host rejection, tool error, timeout, or no `Task` tool in the session’s callable tool set):
+
+1. **Do not** substitute inline pipeline or queue work as “success.”
+2. **Record proof** before user-facing prose:
+   - When **`task_handoff_comms.enabled`** is not **false**: append **`return_in`** for the same **`task_correlation_id`** as the preceding **`handoff_out`**, with **`body`** = verbatim or sanitized host/tool error, **or** the fixed attestation string below when no `Task` exists; set **`fallback_reason`** to **`task_tool_call_failed`** or **`task_tool_not_exposed_in_session`**.
+   - Always append **Errors.md** per Error Handling Protocol: **`error_type`** = **`task_tool_launch_failed`** or **`task_tool_not_exposed_in_session`**; **Trace** = same error text or fixed string.
+3. **Fixed attestation** (only when `Task` is not in the session tool set): `task_tool_not_exposed_in_session: no Task invocation possible in this chat tool set` — not a creative paraphrase.
+4. **Applies to:** Layer 0 → `queue`; Layer 1 → pipelines; Layer 1 → post-queue **`gitforge`** / **`prompt_craft`**; Layer 2 → nested helpers — same pattern, appropriate `from_actor` / `subagent_type`.
+
+**Parallel tracks:** Resolve `.technical/task-handoff-comms.jsonl` (and PQ) via the active track’s **`technical_bundle_root`** from **parallel_context** / **A.0x** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]]) so forensic rows sit next to the queue that run consumed.
+
+Narrative-only claims of unavailability without (2) are **contract violations**.
+
+---
+
 ## Mandatory helper proof-of-attempt (ledger + contract)
 
 This section makes explicit the **proof-of-attempt requirement** for **mandatory** nested helpers (Validator, IRA, Research) and ties it to the top-level `contract_satisfied` flag. It refines, but does not replace, the honesty rules in [[3-Resources/Second-Brain/Docs/Safety-Invariants|Safety-Invariants]] § Helper profiles and the attestation rules in [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]].
@@ -140,7 +157,7 @@ All `Task` callers (Layer 0, Layer 1, and Layer 2 nested helpers) MUST route the
   - On the **first** Task use per conversation/run, the harden pass MUST:
     - Attempt a **no-op Task call** for each expected pipeline subagent type:
       - `queue`, `roadmap`, `ingest`, `distill`, `express`, `archive`, `organize`, `research`, `validator`,
-      - plus any additional, explicitly-whitelisted helper types such as `prompt_craft`, `internal-repair-agent`.
+      - plus any additional, explicitly-whitelisted helper types such as `prompt_craft`, `internal-repair-agent`, `gitforge` (Layer 1 post-queue tail only; see **queue.mdc A.7a**).
     - Use a trivial prompt such as `"ping (capability probe only)"` that makes it clear to the callee that no real work is required.
   - These probe calls exist **only** to discover whether a given `subagent_type` is accepted by the host; pipeline logic MUST ignore their semantic content.
 
@@ -167,7 +184,7 @@ All `Task` callers (Layer 0, Layer 1, and Layer 2 nested helpers) MUST route the
 
 Every Task launch MUST pass through a small decision function controlled by:
 
-- `desired_subagent_type`: the intended subagent (`roadmap`, `validator`, `archive`, `research`, …).
+- `desired_subagent_type`: the intended subagent (`roadmap`, `validator`, `archive`, `research`, `gitforge`, …).
 - `task_role`: role of the caller (e.g. `layer0_chat`, `layer1_queue`, `layer2_roadmap`, `helper_validator`).
 - `pipeline_profile`: the active safety/speed tier for this pipeline:
   - `fast` — minimal helper set, softest enforcement, may omit non-critical helpers when allowed by the helper graph.
@@ -329,6 +346,7 @@ task_harden_result:
     - Whether to treat a helper as out-of-graph under the active profile.
   - MUST apply stricter behavior when `queue.strict_nested_return_gates` is enabled:
     - No consuming of entries as `Success` when a mandatory helper shows `contract_satisfied: false` or a required step was skipped.
+  - MAY launch `Task(subagent_type: "gitforge")` **once** after **queue.mdc A.7** when **A.7a** gates pass, Second-Brain-Config **`gitforge.enabled`** is **true**, and **`effective_pipeline_mode`** is **`balance`** or **`quality`** (**`speed`** skips GitForge). On host rejection of `gitforge`, MAY use `generalPurpose` with the GitForge contract ([[.cursor/agents/gitforge|agents/gitforge.md]]). On `Task(gitforge)` or tail failure after an attempted launch, follow **Proof-on-failure** (comms + Errors.md). GitForge failure MUST NOT roll back queue consumption.
 
 - **Layer 2 (pipeline subagents and nested helpers)**
   - MUST treat `task_harden_metadata` in their hand-offs as **read-only context**:
@@ -352,6 +370,7 @@ task_harden_result:
 - Any deviation from the ideal helper graph MUST:
   - Be reflected in the parent status (`#review-needed` or `failure` rather than `Success`), and
   - Leave a durable trail in **Errors.md**, `.technical/task-handoff-comms.jsonl`, `nested_subagent_ledger`, or `.technical/queue-continuation.jsonl` sufficient for later audit.
+- Claims that `Task(...)` failed or was unavailable MUST be auditable via **Proof-on-failure** artifacts (`raw_errors`, comms `return_in`, or Errors.md trace).
 
 ### 7. Rollout phases (non-invasive → strict → profiled)
 
@@ -395,8 +414,8 @@ Task: {clear one-sentence goal}
 
 Original request / queue entry: {full queue JSON or user prompt excerpt}
 
-**Telemetry (copy into your Run-Telemetry note):** parent_run_id: "<uuid>", queue_entry_id: "<entry.id>", project_id: "<id or '-'>", timestamp: "<ISO8601>", pipeline_task_correlation_id: "<uuid>"
-(The primary always populates these in every hand-off; use them as the required fields for your Run-Telemetry note. **pipeline_task_correlation_id** is generated by Layer 1 when dispatching this pipeline `Task`; copy it into comms rows for this run and use it as **parent_task_correlation_id** on every **nested helper** `Task` (validator, IRA, research) per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]].)
+**Telemetry (copy into your Run-Telemetry note):** parent_run_id: "<uuid>", queue_entry_id: "<entry.id>", project_id: "<id or '-'>", timestamp: "<ISO8601>", pipeline_task_correlation_id: "<uuid>", parallel_track: "<sandbox|godot|null when absent>"
+(The primary always populates these in every hand-off; use them as the required fields for your Run-Telemetry note. **pipeline_task_correlation_id** is generated by Layer 1 when dispatching this pipeline `Task`; copy it into comms rows for this run and use it as **parent_task_correlation_id** on every **nested helper** `Task` (validator, IRA, research) per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]]. When **parallel_track** is **sandbox** or **godot**, write the Run-Telemetry note under **`.technical/Run-Telemetry/<parallel_track>/`** instead of the flat **`.technical/Run-Telemetry/`** directory — see § Critical invariants / Run-Telemetry below and [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]].)
 
 Critical invariants you MUST enforce:
 • Always create backup + per-change snapshot before any destructive MCP action (move, rename, write, append, split, etc.)
@@ -438,9 +457,17 @@ Execute the task. Return only:
 
 **Task hand-off comms (nested helpers):** Before and after **each** nested **`Task(validator)`**, **`Task(internal-repair-agent)`**, or **`Task(research)`**, the **pipeline** MUST append **`handoff_out`** and **`return_in`** records to **`.technical/task-handoff-comms.jsonl`** per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]], with **`parent_task_correlation_id`** = **`pipeline_task_correlation_id`** from this run’s Layer 1 hand-off. Respect **`task_handoff_comms.enabled`** in Config.
 
-**Layer 1 (Queue)** MUST append **task hand-off comms** for each outbound `Task` it invokes (pipeline dispatch, post–little-val validator, PromptCraft, empty-queue bootstrap) to **`.technical/task-handoff-comms.jsonl`** per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]] (paired `handoff_out` / `return_in`, full verbatim bodies after sanitization, `task_correlation_id`; for L1→L2 pipeline dispatch the hand-off **must** include **`pipeline_task_correlation_id`** equal to that correlation id). See `.cursor/rules/agents/queue.mdc`.
+**Layer 1 (Queue)** MUST append **task hand-off comms** for each outbound `Task` it invokes (pipeline dispatch, post–little-val validator, PromptCraft, empty-queue bootstrap, **GitForge** when **A.7a** runs) to **`.technical/task-handoff-comms.jsonl`** per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]] (paired `handoff_out` / `return_in`, full verbatim bodies after sanitization, `task_correlation_id`; for L1→L2 pipeline dispatch the hand-off **must** include **`pipeline_task_correlation_id`** equal to that correlation id). See `.cursor/rules/agents/queue.mdc`.
 
 ---
+
+## GitForge (post-queue git/export)
+
+**Role:** **Git and export-repo orchestration** after a **successful** prompt-queue **A.7**. **Not** a queue-entry processor; **not** Layer 2 in the Subagent-Layers-Reference sense (no `nested_subagent_ledger` for queue entries).
+
+**Invocation:** **Layer 1 only**, **once** per Part A run, **after** **[[.cursor/rules/agents/queue.mdc|queue.mdc]] A.7a** gates. Config: [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **`gitforge`**. Agent: [[.cursor/agents/gitforge|agents/gitforge.md]]. **IRA**, **Validator**, **pipelines**, and **Layer 0** MUST NOT call **`Task(gitforge)`**.
+
+**Parallel dual-track (v1):** When **`parallel_execution.enabled`** is **true**, GitForge **must** acquire **`{vault_root}/.technical/.gitforge.lock`** (timeout **`parallel_execution.gitforge.lock_timeout_seconds`**) before vault git/export — preferably via **`python3 scripts/gitforge_lock.py acquire`** from **`vault_root`** per **agents/gitforge.md**; if the lock is not acquired, **skip** GitForge and log per **agents/gitforge.md**. Hand-off may include **`parallel_track`**, **`parallel_branch_prefix`**, **`parallel_export_path`**.
 
 ## PromptCraftSubagent (recovery queue crafting)
 
@@ -448,7 +475,7 @@ Execute the task. Return only:
 
 **Layering (canonical):** [[3-Resources/Second-Brain/Docs/Subagent-Layers-Reference|Subagent-Layers-Reference]] — **Layer 0** = Cursor chat; **Layer 1** = Queue/Dispatcher; **Layer 2** = pipelines. PromptCraft is invoked by **Layer 0** (manual **REPAIR CRAFT** / **PROMPT CRAFT RECOVERY**) or by **Layer 1** when (a) **`recovery_auto_craft_enabled`** is **true** and a pipeline return includes **`prompt_craft_request`** (**A.5d**), or (b) **`post_little_val_repair_use_prompt_craft`** is **true** and **queue.mdc A.5b** triggers post–little-val repair craft (**hand-off:** **`craft_source: "a5b_post_little_val"`** + **`a5b_repair_context`** — see subsection below), or (c) **`queue_continuation.empty_queue_bootstrap_enabled`** and **`empty_queue_bootstrap_prompt_craft`** are **true** and **queue.mdc A.1b** selects an eligible continuation record (**hand-off:** **`craft_source: "empty_queue_bootstrap"`** + **`empty_bootstrap_context`**). **IRA** and **nested Validator** MUST NOT call PromptCraft; only L0/L1 orchestrate **`Task(prompt_craft)`**.
 
-**Permissions:** May **read** vault notes (Config, workflow_state, roadmap-state, Errors, validator reports) via MCP **read** tools only. **MUST NOT** write `prompt-queue.jsonl`, `Task-Queue.md`, `Watcher-Result.md`, Decision Wrappers, or mutate user roadmap/ingest notes. **MUST NOT** call **`Task`** for pipelines (ingest, roadmap, …). **MUST NOT** nest Validator or IRA.
+**Permissions:** May **read** vault notes (Config, workflow_state, roadmap-state, Errors, validator reports) via MCP **read** tools only. **MUST NOT** write **PQ** (prompt queue — legacy `.technical/prompt-queue.jsonl` or per-track path per **queue.mdc A.0x**), `Task-Queue.md`, canonical **`Watcher-Result.md`** (or parallel mirror files), Decision Wrappers, or mutate user roadmap/ingest notes. **MUST NOT** call **`Task`** for pipelines (ingest, roadmap, …). **MUST NOT** nest Validator or IRA.
 
 **Return (required tail):** Structured block in the return message:
 - `status`: **Success** | **failure**
@@ -458,7 +485,7 @@ Execute the task. Return only:
 - `effective_params_preview`: object (optional; merged preview for audit)
 - `recovery_metadata`: `{ error_correlation_id, suggested_modes[], rationale_short }` (optional)
 
-**Layer 1 append:** Only **Layer 1** performs **read → append → write** on `.technical/prompt-queue.jsonl` after PromptCraft returns. Use **`idempotency_key`** on appended lines (e.g. `"<error_correlation_id>-prompt-craft"`). Cap auto PromptCraft invocations per correlation: **`max_prompt_craft_per_correlation_per_run`** — for **A.5d**, key = **`error_correlation_id`**; for **A.5b**, key = **`<queue_entry_id>-post-little-val-repair`**; for **A.1b** bootstrap, **`idempotency_key`** is fixed by Layer 1 as **`bootstrap_key`** (see **Empty-queue bootstrap** subsection).
+**Layer 1 append:** Only **Layer 1** performs **read → append → write** on **PQ** (resolved per **queue.mdc A.0x**) after PromptCraft returns. Use **`idempotency_key`** on appended lines (e.g. `"<error_correlation_id>-prompt-craft"`). Cap auto PromptCraft invocations per correlation: **`max_prompt_craft_per_correlation_per_run`** — for **A.5d**, key = **`error_correlation_id`**; for **A.5b**, key = **`<queue_entry_id>-post-little-val-repair`**; for **A.1b** bootstrap, **`idempotency_key`** is fixed by Layer 1 as **`bootstrap_key`** (see **Empty-queue bootstrap** subsection).
 
 ### A.5b hand-off (`craft_source: a5b_post_little_val`, Layer 1 → PromptCraft)
 
@@ -612,7 +639,7 @@ chain_request:
 - **Watcher-Result:** When the delegation prompt includes `requestId`, append one line to 3-Resources/Watcher-Result.md: `requestId: <id> | status: success|failure | message: "..." | trace: "..." | completed: <ISO8601>`.
 - **Queue clearing:** Only the Queue/Dispatcher (primary) agent removes processed entries from `.technical/prompt-queue.jsonl` (by omitting lines whose id is in processed_success_ids at step A.7). Subagents may **append** lines only; they must not remove or rewrite the entry they were invoked for. The primary must add that entry's id to processed_success_ids when the subagent returns success. **For chained runs:** the "processed" entry is the **original** chain entry; it is only added to processed_success_ids after the first subagent has been re-invoked (with resume_from_chain_request and collected dependency results) and has returned successfully the second time.
 - **Queue clearing / mutation:** Only the Queue/Dispatcher (primary) agent reads/writes `.technical/prompt-queue.jsonl` and `3-Resources/Task-Queue.md`. Subagents must not read or write queue files. The primary removes processed entries by omitting ids in `processed_success_ids` at step A.7. Any follow-ups (next RESUME_ROADMAP, RECAL-ROAD, dependencies for chain_request) are appended by the primary based on subagent return metadata.
-- **Run-Telemetry:** Before returning, subagents SHOULD write one Run-Telemetry note to `.technical/Run-Telemetry/` with **required** fields (actor, project_id, queue_entry_id, timestamp; parent_run_id from hand-off) and **any optional fields you have**; omit the rest. See [[3-Resources/Second-Brain/Vault-Layout]] § .technical/Run-Telemetry and [[3-Resources/Second-Brain/Logs#Run-Telemetry|Logs § Run-Telemetry]].
+- **Run-Telemetry:** Before returning, subagents SHOULD write one Run-Telemetry note with **required** fields (actor, project_id, queue_entry_id, timestamp; parent_run_id from hand-off) and **any optional fields you have**; omit the rest. **Path:** **`.technical/Run-Telemetry/<parallel_track>/`** when the hand-off includes **`parallel_track`** **`sandbox`** or **`godot`** (dual-track **EAT-QUEUE** per **queue.mdc A.0x**); otherwise **`.technical/Run-Telemetry/`** (flat). Ensure the parent directory exists before write. See [[3-Resources/Second-Brain/Vault-Layout]] § .technical/Run-Telemetry, [[3-Resources/Second-Brain/Logs#Run-Telemetry|Logs § Run-Telemetry]], and [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]].
 - **Post–little-val hostile validator (queue-level double-check):** The queue **MUST** run the **ValidatorSubagent** once per pipeline run **after** the pipeline returns Success **and** `little_val_ok: true`, using `validator_context` from the pipeline’s return — **except** when **`queue.mdc` A.5 (b1a)** profile gate **skips** L1 for **roadmap-class** entries per [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] (`l1_post_lv_policy`). **Non-roadmap** pipelines and **`validator_context.force_layer1_post_lv: true`** always run L1 when other gates pass. This pass is an **independent hostile check**; it MUST be read-only on inputs. When L1 runs after **`force_layer1_post_lv`**, **Watcher-Result** (**`segment: VALIDATE`**) **`message`** **must** begin with **`profile_escalation_full_validation:`** (per `queue.mdc`). **Legacy path:** If `validator_context` is missing, `queue.mdc` may skip this pass and still consume the entry unless **`queue.strict_nested_return_gates`** is **true**. See Queue-Sources § Post-pipeline validator, `queue.mdc` **A.4z** / **(b1)**, Parameters § Pipeline validator profiles.
 
 ---

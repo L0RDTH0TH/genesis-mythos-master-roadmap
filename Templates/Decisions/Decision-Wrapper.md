@@ -6,6 +6,7 @@ clunk_severity: medium                                # low | medium | high (inf
 proposal_path: {{proposal_path}}                     # full path where this wrapper itself lives
 original_note: [[{{original_filename}}]]
 original_path: {{original_path}}                      # full path of the note being decided
+# queue_lane: sandbox                                 # optional (dual-track): sandbox | godot | shared — limits Step 0 to matching EAT-QUEUE lane; omit = any track may process (see [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]])
 decision_priority: high                               # high / medium / low
 created: {{date}} {{time}}
 re-wrap: false                                    # manual only — set true when unhappy with A–G options; run EAT-QUEUE → Cursor archives this wrapper and creates a new one with Thoughts as seed
