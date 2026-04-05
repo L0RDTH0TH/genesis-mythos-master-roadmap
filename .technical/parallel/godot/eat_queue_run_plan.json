@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "parent_run_id": "layer1-eatq-godot-20260406T120500Z",
+  "parent_run_id": "layer1-eatq-godot-20260405T200500Z",
   "intents": [
     {
       "op": "dispatch",
       "subagent_type": "roadmap",
-      "queue_entry_id": "followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z",
+      "queue_entry_id": "followup-deepen-phase6-primary-rollup-post-61-godot-gmm-20260406T013000Z",
       "project_id": "godot-genesis-mythos-master",
       "queue_pass_phase": "initial",
       "pass_id": "pass1",
@@ -17,63 +17,14 @@
         "nested_validator_second",
         "l1_post_lv"
       ]
-    },
-    {
-      "op": "dispatch",
-      "subagent_type": "roadmap",
-      "queue_entry_id": "repair-l1postlv-distilled-core-contradiction-godot-20260405T233500Z",
-      "project_id": "godot-genesis-mythos-master",
-      "queue_pass_phase": "repair",
-      "pass_id": "pass3",
-      "dispatch_ordinal": 2,
-      "micro_workflow": [
-        "validator",
-        "ira",
-        "final_validator"
-      ]
-    },
-    {
-      "op": "dispatch",
-      "subagent_type": "roadmap",
-      "queue_entry_id": "repair-l1-wf-callout-phase61-secondary-godot-20260406T014500Z",
-      "project_id": "godot-genesis-mythos-master",
-      "queue_pass_phase": "repair",
-      "pass_id": "pass3",
-      "dispatch_ordinal": 3,
-      "micro_workflow": [
-        "validator",
-        "ira",
-        "final_validator"
-      ]
-    },
-    {
-      "op": "dispatch",
-      "subagent_type": "roadmap",
-      "queue_entry_id": "repair-l1postlv-roadmap-state-cursor-6111-godot-20260406T041000Z",
-      "project_id": "godot-genesis-mythos-master",
-      "queue_pass_phase": "repair",
-      "pass_id": "pass3",
-      "dispatch_ordinal": 4,
-      "micro_workflow": [
-        "validator",
-        "ira",
-        "final_validator"
-      ]
     }
   ],
-  "consumed_ids": [
-    "followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z"
-  ],
+  "consumed_ids": [],
   "strict_mode": true,
   "effective_pipeline_mode": "balance",
   "full_cycle_pass_index": 1,
   "full_cycle_passes_total": 2,
-  "queue_rewrite_ids": [
-    "followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z",
-    "repair-l1postlv-distilled-core-contradiction-godot-20260405T233500Z",
-    "repair-l1-wf-callout-phase61-secondary-godot-20260406T014500Z",
-    "repair-l1postlv-roadmap-state-cursor-6111-godot-20260406T041000Z"
-  ],
-  "inline_pass3_drain": true,
+  "queue_rewrite_ids": [],
+  "inline_pass3_drain": false,
   "has_anticipatory_repair_slot": false
 }

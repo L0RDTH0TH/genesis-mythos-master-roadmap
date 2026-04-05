@@ -441,3 +441,26 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Entry **612** remains on **PQ** and central pool; **613** deepen follow-up and **handoff-audit** repair queued; Watcher-Result canonical + `Watcher-Result-sandbox.md` (VALIDATE then primary **failure**).
 - **Suggested fixes:** Run balance roadmap from a host where nested `Task` is available; run **handoff-audit** repair first; align Phase 5 “Authoritative cursor” callout in `workflow_state.md` with frontmatter `6.1.3`.
 - **Recovery:** No automatic rollback; use validator report and repair queue entry.
+
+### 2026-04-05 18:09 — Godot lane deepen nested attestation (Task absent in roadmap subagent)
+
+| Field | Value |
+|-------|-------|
+| pipeline | EAT-QUEUE / RESUME_ROADMAP |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-05T18:09:24Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- Queue entry: `followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z`
+- Roadmap subagent reported `nested_task_tool_absent_in_session` for nested_validator_first / IRA / second validator (balance deepen).
+- Layer 1 post–little-val: `contract_satisfied: false`, `primary_code: safety_unknown_gap`, report `.technical/Validator/l1postlv-b1-phase61-rollup-nested-task-absent-godot-20260406T180500Z.md`.
+
+#### Summary
+
+- **Root cause:** Roadmap Task subagent host lacks nested `Task(validator)`/`Task(IRA)` in schema; balance-mode attestation chain could not run.
+- **Impact:** Entry not consumed at A.7; workflow_state log row + roadmap-state bump still applied idempotently; operator must re-run deepen on Task-capable host or adjust profile.
+- **Suggested fixes:** Run same queue line from parent chat with full Task nesting; or temporary `pipeline_mode: speed` only if policy allows (not recommended without human gate).
+- **Recovery:** Re-queue unchanged line remains on `.technical/parallel/godot/prompt-queue.jsonl`.
