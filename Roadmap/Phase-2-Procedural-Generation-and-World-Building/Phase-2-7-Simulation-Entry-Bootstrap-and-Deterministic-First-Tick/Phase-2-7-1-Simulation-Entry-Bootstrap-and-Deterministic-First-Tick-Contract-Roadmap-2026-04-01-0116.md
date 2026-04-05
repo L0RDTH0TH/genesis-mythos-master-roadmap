@@ -3,7 +3,7 @@ title: Phase 2.7.1 - Simulation-entry bootstrap and deterministic first-tick con
 roadmap-level: tertiary
 phase-number: 2
 subphase-index: "2.7.1"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 42
@@ -11,7 +11,7 @@ handoff_readiness: 80
 created: 2026-04-01
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-2
 para-type: Project
 links:

@@ -3,7 +3,7 @@ title: Phase 2.5.2 - Cross-sink correlation and deterministic timeline ordering
 roadmap-level: tertiary
 phase-number: 2
 subphase-index: "2.5.2"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 38
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-03-31
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-2
 para-type: Project
 links:

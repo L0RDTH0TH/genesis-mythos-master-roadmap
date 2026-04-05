@@ -3,7 +3,7 @@ title: Phase 2.3.1 - Validation test plan and acceptance criteria scaffold
 roadmap-level: tertiary
 phase-number: 2
 subphase-index: "2.3.1"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 28
@@ -11,7 +11,7 @@ handoff_readiness: 82
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-2
 para-type: Project
 links:

@@ -19,13 +19,16 @@ Deterministic **`eat_queue_run_plan.json`** is produced by the **`scripts/eat_qu
 
 From the vault root, generate the plan **before** EAT-QUEUE. If `plan` exits non-zero, **stop** and fix the queue or plan; do not invoke **`Task(queue)`** with a stale or missing manifest.
 
-**Reactive full cycle (Pass 3 drain / `queue_rewrite_ids`):** Prefer **`python3 -m scripts.eat_queue_core.full_cycle`** (repo root, **`PYTHONPATH=.`**) with **`--action`**, **`--profile`**, **`--max-passes=2`** — see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. Re-invoke after Layer 1 mid-run repair append when pass 1 had no Pass 3 intents.
+**Reactive full cycle (Pass 3 drain / `queue_rewrite_ids`):** Prefer **`python3 -m scripts.eat_queue_core.full_cycle`** (repo root, **`PYTHONPATH=.`**) with **`--action`**, **`--profile`**, **`--max-passes=2`** — see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. Re-invoke after Layer 1 mid-run repair append when pass 1 had no Pass 3 intents. **`full_cycle`** accepts the same optional **`--lane <name>`** as **`plan`** (validated against **`queue.allowed_lanes`** / Python fallback).
+
+Optional **`--lane <name>`** on **`plan`** matches Layer 1 **`queue_lane_filter`** (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes): the plan includes only entries in the dispatch subset for that lane (`sandbox`/`godot`/`core` ∪ `shared`; `shared` only; `default` only). Omit **`--lane`** to plan over **all** entries.
 
 ```bash
 python -m eat_queue_core plan \
   --queue .technical/prompt-queue.jsonl \
   --emit .technical/eat_queue_run_plan.json \
   --parent-run-id "$(date +eatq-%Y%m%dT%H%M%SZ)" \
+  --lane sandbox \
   --verbose && echo "✅ Plan ready – now invoke EAT-QUEUE / Task(queue)"
 ```
 

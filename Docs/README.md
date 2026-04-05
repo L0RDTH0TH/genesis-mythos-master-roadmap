@@ -2,6 +2,8 @@
 
 **Version: 2026-03 – post-subagent migration**
 
+> **On GitHub** ([genesis-mythos-master-roadmap](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap)): this folder is part of a **published export** that also contains the **Genesis Mythos** `Roadmap/` and project goal files. For what the *repository* is (product + automation), read the **[root `README.md`](../README.md)** first.
+
 High-level overview and quick-start for the Second Brain vault’s Cursor native subagent architecture. Use this as the entry point; then follow links to Architecture, Pipelines, Rules, and User Flows.
 
 ---
@@ -31,6 +33,7 @@ This folder documents the **post-migration** system: Cursor’s native subagents
 
 | Document | Purpose |
 |----------|---------|
+| [GitHub-Export-Repository-README](GitHub-Export-Repository-README.md) | Source for **root `README.md`** on [genesis-mythos-master-roadmap](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap) (product + repo layout + branches); copied during vault → export sync |
 | [Architecture](Architecture.md) | Delegation flow, Mermaid diagram, Queue vs direct triggers |
 | [Subagent-List](Subagent-List.md) | Table: name, description, responsibilities, triggers |
 | [Creating-Subagents](Creating-Subagents.md) | How to add or change a subagent; template and conventions |

@@ -4,13 +4,13 @@ created: 2026-03-31
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
-project-id: genesis-mythos-master
+  - godot-genesis-mythos-master
+project-id: godot-genesis-mythos-master
 para-type: Project
 roadmap_track: conceptual
 decision_type: deepen
 queue_entry_id: resume-deepen-gmm-241-20260330T122531Z-forward
-parent_roadmap_note: 1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-4-Post-Validation-Commit-Orchestration/Phase-2-4-1-Deterministic-Commit-Deny-Defer-Precedence-and-Envelope-Lineage-Roadmap-2026-03-31-0240.md
+parent_roadmap_note: 1-Projects/godot-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-4-Post-Validation-Commit-Orchestration/Phase-2-4-1-Deterministic-Commit-Deny-Defer-Precedence-and-Envelope-Lineage-Roadmap-2026-03-31-0240.md
 validation_status: pattern_only
 ---
 

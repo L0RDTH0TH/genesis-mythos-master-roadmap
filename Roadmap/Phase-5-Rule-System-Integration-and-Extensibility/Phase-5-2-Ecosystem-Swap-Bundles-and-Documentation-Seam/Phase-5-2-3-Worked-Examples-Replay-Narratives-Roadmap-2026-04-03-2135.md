@@ -3,7 +3,7 @@ title: Phase 5.2.3 — Worked examples and replay narratives (documentation laye
 roadmap-level: tertiary
 phase-number: 5
 subphase-index: "5.2.3"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: in-progress
 priority: high
 progress: 92
@@ -11,7 +11,7 @@ handoff_readiness: 88
 created: 2026-04-03
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-5
 para-type: Project
 links:

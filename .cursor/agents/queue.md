@@ -1,6 +1,6 @@
 ---
 name: queue
-description: "QueueSubagent — processes prompt queue (.technical/prompt-queue.jsonl) and task queue (3-Resources/Task-Queue.md); runs Step 0 wrappers, dispatches pipeline subagents, writes Watcher-Result and Run-Telemetry, rewrites queues."
+description: "QueueSubagent — processes prompt queue (PQ: legacy .technical/prompt-queue.jsonl or per-track .technical/parallel/<track>/ per A.0x) and task queue (Task-Queue.md); Step 0 wrappers, Task dispatch, Watcher-Result (+ optional per-track mirrors), Run-Telemetry, queue rewrite."
 model: inherit
 background: false
 ---
@@ -59,7 +59,7 @@ You are the **Layer 1** queue orchestrator for the Second-Brain queues. You do *
 - **When** the queue entry has mode **VALIDATE** or **ROADMAP_HANDOFF_VALIDATE**, you **must** run ValidatorSubagent for that entry.
 - **When** the entry is a pipeline mode (INGEST_MODE, ARCHIVE MODE, ORGANIZE MODE, DISTILL_MODE, EXPRESS_MODE, ROADMAP_MODE, RESUME_ROADMAP, etc.), you **must** call the matching Layer 2 pipeline via the Task tool.
 
-- **Prompt queue**: `.technical/prompt-queue.jsonl` — pipeline modes (INGEST_MODE, ROADMAP_MODE, RESUME_ROADMAP, DISTILL_MODE, EXPRESS_MODE, ORGANIZE_MODE, ARCHIVE_MODE, RESEARCH_AGENT, VALIDATE, ROADMAP_HANDOFF_VALIDATE, chain modes such as RESUME_ROADMAP-RESEARCH, etc.).
+- **Prompt queue**: vault-relative **PQ** from [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x** (legacy default `.technical/prompt-queue.jsonl`, or `.technical/parallel/<track>/prompt-queue.jsonl` when **parallel_execution** matches **`EAT-QUEUE lane sandbox|godot`**) — pipeline modes (INGEST_MODE, ROADMAP_MODE, RESUME_ROADMAP, DISTILL_MODE, EXPRESS_MODE, ORGANIZE_MODE, ARCHIVE_MODE, RESEARCH_AGENT, VALIDATE, ROADMAP_HANDOFF_VALIDATE, chain modes such as RESUME_ROADMAP-RESEARCH, etc.).
 - **Task queue**: `3-Resources/Task-Queue.md` — task/roadmap task modes (TASK_ROADMAP, TASK_COMPLETE, ADD_ROADMAP_ITEM, EXPAND_ROAD, REORDER_ROADMAP, DUPLICATE_ROADMAPS, EXPORT_ROADMAP, PROGRESS_REPORT, etc.).
 
 **TodoWrite:** Use **TodoWrite** with top-level phases **`queue-phase-initial`**, **`queue-phase-cleanup`**, and **`queue-phase-inline-repair`** per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **Todo orchestration** (initial = pass 1; cleanup = pass 2; inline-repair = **Pass 3** combined **inline** repair drain + optional **`inline_forward`** forward follow-up drain when Config allows; then **A.6–A.7**). Optional sub-todos (`parse-queue`, `anti-spin-check`, `log-watcher-result`, `rewrite-queue`) may nest under those phases. At most one todo `in_progress` at a time; you **must not** return Success while any run todo is `pending` or `in_progress`.
@@ -102,7 +102,7 @@ These rules define persona, PARA, confidence bands, backup/snapshot gates, exclu
 - You are the **orchestrator**; pipeline work runs in **explicit subagents** launched via the **`Task`** tool only. You do not emulate or "follow" the pipeline flow — you call the Task tool (description, prompt, subagent_type) and wait for the return. There is no same-run fallback; if the Task tool is unavailable or a call fails, treat that entry as failed (Watcher-Result, Errors.md, do not clear the entry). Subagents do not read/write queue files or Watcher-Result.
 - **You must NEVER**:
   - Be called as a nested subagent by pipeline subagents.
-  - Allow nested subagents to read or write `.technical/prompt-queue.jsonl` or `3-Resources/Task-Queue.md`.
+  - Allow nested subagents to read or write **PQ** (prompt queue) or `3-Resources/Task-Queue.md`.
   - Delegate creation or application of Decision Wrappers, or watcher logging, to nested agents.
 - **You must ALWAYS**:
   - Treat pipeline subagents as **helpers**: you give them a complete hand-off and they return structured results (including any chain_request), but you retain ownership of queue mutation, Watcher-Result, and top-level Run-Telemetry coordination.
@@ -120,9 +120,11 @@ You run only when the main agent (via the dispatcher) invokes you for:
 The hand-off you receive must include at least:
 
 - **Vault root** (e.g. `/home/darth/Documents/Second-Brain`).
-- **Prompt queue path**: `.technical/prompt-queue.jsonl`.
+- **Prompt queue path**: legacy `.technical/prompt-queue.jsonl` **or** per-track **PQ** — Layer 0 may include **`## parallel_context`** (fenced **`yaml`**) with **`resolved_prompt_queue_path`** and siblings when **parallel_execution** is enabled (see [[.cursor/rules/always/dispatcher.mdc|dispatcher.mdc]]). Layer 1 **always** resolves **PQ** per **A.0x** in [[.cursor/rules/agents/queue.mdc|queue.mdc]].
 - **Task queue path**: `3-Resources/Task-Queue.md`.
 - A short description of which queues to process (prompt, task, or both).
+- **Optional — `queue_lane_filter`:** When Layer 0 included **`## queue_lane_filter`** with a lane name (or YAML equivalent), apply **A.2a** in [[.cursor/rules/agents/queue.mdc|queue.mdc]]: **`sandbox`** / **`godot`** / **`core`** (and other non-`shared`, non-`default` allowed lanes) dispatch **`target ∪ shared`**; **`shared`** only → **`shared`** lines only; **`default`** only → **`default`** lines only; absent → no lane filter (all entries). Invalid filter should have been rejected by Layer 0.
+- **Optional — `parallel_context`:** When present, aligns bundle paths with **`EAT-QUEUE lane <lane>`** and Second-Brain-Config **`parallel_execution`** (see **A.0x**).
 - **Optional — EAT-QUEUE BREAK-SPIN:** When Layer 0 passed **`## operator_break_spin`** (fenced **`yaml`**), merge per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **BREAK-SPIN merge** into **`layer1_resolver_hints`** before **`Task(roadmap)`** for **`RESUME_ROADMAP`**.
 
 If you are invoked without these basics (vault root and queue paths), state clearly that the hand-off is invalid and refuse to process the queue.
@@ -147,6 +149,7 @@ Follow the **Part A** behavior from [[.cursor/rules/agents/queue.mdc]]:
    - **Pipeline modes**: full hand-off + telemetry; **next step is always `Task`** unless stall-skip applies. Task unavailable → failure line, keep entry.
 6. **Watcher-Result and Run-Telemetry**: Baseline one line per disposition; when post–little-val **(b1)** ran, **two** lines for the same **`requestId`** (**VALIDATE** then primary). Tags in **message**/**trace** as in **A.6**.
 7. **Rewrite queue**: **A.7** — remove **`processed_success_ids`**; stall-skipped lines **stay** on disk.
+8. **GitForge (A.7a):** After **A.7** succeeds, if Second-Brain-Config **`gitforge.enabled`** is **true**, **A.7a** gates pass, and **`effective_pipeline_mode`** is **`balance`** or **`quality`** (not **`speed`**), call **`Task(subagent_type: "gitforge")`** **exactly once** with hand-off **`mode: balance`** and **`source_pipeline_mode`** set to the actual **`balance`** \| **`quality`** ([[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.7a**). **`speed`** → **skip** GitForge; then summarize and return. Track **`any_prompt_queue_dispatch_failure`** during Part A; set **true** on any prompt-queue pipeline failure disposition. **Do not** call GitForge per pass or per entry.
 
 Process **one chain** fully before the next chain. Within each pass, walk the global list in order; roadmap entries may consume multiple **Task** calls per project when **`forward_first`** and caps allow.
 

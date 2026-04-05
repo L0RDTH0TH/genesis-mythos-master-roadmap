@@ -3,14 +3,14 @@ title: "CDR — Sealed external audit bundles + compare-table row interchange (2
 created: 2026-03-31
 tags:
   - conceptual-decision-record
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-2
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-2-5-4-Sealed-External-Audit-Bundles-and-Compare-Table-Row-Interchange-Roadmap-2026-03-31-2335]]"
 decision_kind: deepen
 queue_entry_id: resume-deepen-gmm-254-20260331T233500Z-forward
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-godot-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

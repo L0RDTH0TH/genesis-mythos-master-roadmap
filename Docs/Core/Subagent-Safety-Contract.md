@@ -140,7 +140,7 @@ All `Task` callers (Layer 0, Layer 1, and Layer 2 nested helpers) MUST route the
   - On the **first** Task use per conversation/run, the harden pass MUST:
     - Attempt a **no-op Task call** for each expected pipeline subagent type:
       - `queue`, `roadmap`, `ingest`, `distill`, `express`, `archive`, `organize`, `research`, `validator`,
-      - plus any additional, explicitly-whitelisted helper types such as `prompt_craft`, `internal-repair-agent`.
+      - plus any additional, explicitly-whitelisted helper types such as `prompt_craft`, `internal-repair-agent`, `gitforge` (Layer 1 post-queue tail only; see **queue.mdc A.7a**).
     - Use a trivial prompt such as `"ping (capability probe only)"` that makes it clear to the callee that no real work is required.
   - These probe calls exist **only** to discover whether a given `subagent_type` is accepted by the host; pipeline logic MUST ignore their semantic content.
 
@@ -167,7 +167,7 @@ All `Task` callers (Layer 0, Layer 1, and Layer 2 nested helpers) MUST route the
 
 Every Task launch MUST pass through a small decision function controlled by:
 
-- `desired_subagent_type`: the intended subagent (`roadmap`, `validator`, `archive`, `research`, …).
+- `desired_subagent_type`: the intended subagent (`roadmap`, `validator`, `archive`, `research`, `gitforge`, …).
 - `task_role`: role of the caller (e.g. `layer0_chat`, `layer1_queue`, `layer2_roadmap`, `helper_validator`).
 - `pipeline_profile`: the active safety/speed tier for this pipeline:
   - `fast` — minimal helper set, softest enforcement, may omit non-critical helpers when allowed by the helper graph.
@@ -329,6 +329,7 @@ task_harden_result:
     - Whether to treat a helper as out-of-graph under the active profile.
   - MUST apply stricter behavior when `queue.strict_nested_return_gates` is enabled:
     - No consuming of entries as `Success` when a mandatory helper shows `contract_satisfied: false` or a required step was skipped.
+  - MAY launch `Task(subagent_type: "gitforge")` **once** after **queue.mdc A.7** when **A.7a** gates pass, Second-Brain-Config **`gitforge.enabled`** is **true**, and **`effective_pipeline_mode`** is **`balance`** or **`quality`** (**`speed`** skips GitForge). On host rejection of `gitforge`, MAY use `generalPurpose` with the GitForge contract ([[.cursor/agents/gitforge|agents/gitforge.md]]). GitForge failure MUST NOT roll back queue consumption.
 
 - **Layer 2 (pipeline subagents and nested helpers)**
   - MUST treat `task_harden_metadata` in their hand-offs as **read-only context**:
@@ -438,9 +439,17 @@ Execute the task. Return only:
 
 **Task hand-off comms (nested helpers):** Before and after **each** nested **`Task(validator)`**, **`Task(internal-repair-agent)`**, or **`Task(research)`**, the **pipeline** MUST append **`handoff_out`** and **`return_in`** records to **`.technical/task-handoff-comms.jsonl`** per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]], with **`parent_task_correlation_id`** = **`pipeline_task_correlation_id`** from this run’s Layer 1 hand-off. Respect **`task_handoff_comms.enabled`** in Config.
 
-**Layer 1 (Queue)** MUST append **task hand-off comms** for each outbound `Task` it invokes (pipeline dispatch, post–little-val validator, PromptCraft, empty-queue bootstrap) to **`.technical/task-handoff-comms.jsonl`** per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]] (paired `handoff_out` / `return_in`, full verbatim bodies after sanitization, `task_correlation_id`; for L1→L2 pipeline dispatch the hand-off **must** include **`pipeline_task_correlation_id`** equal to that correlation id). See `.cursor/rules/agents/queue.mdc`.
+**Layer 1 (Queue)** MUST append **task hand-off comms** for each outbound `Task` it invokes (pipeline dispatch, post–little-val validator, PromptCraft, empty-queue bootstrap, **GitForge** when **A.7a** runs) to **`.technical/task-handoff-comms.jsonl`** per [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]] (paired `handoff_out` / `return_in`, full verbatim bodies after sanitization, `task_correlation_id`; for L1→L2 pipeline dispatch the hand-off **must** include **`pipeline_task_correlation_id`** equal to that correlation id). See `.cursor/rules/agents/queue.mdc`.
 
 ---
+
+## GitForge (post-queue git/export)
+
+**Role:** **Git and export-repo orchestration** after a **successful** prompt-queue **A.7**. **Not** a queue-entry processor; **not** Layer 2 in the Subagent-Layers-Reference sense (no `nested_subagent_ledger` for queue entries).
+
+**Invocation:** **Layer 1 only**, **once** per Part A run, **after** **[[.cursor/rules/agents/queue.mdc|queue.mdc]] A.7a** gates. Config: [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **`gitforge`**. Agent: [[.cursor/agents/gitforge|agents/gitforge.md]]. **IRA**, **Validator**, **pipelines**, and **Layer 0** MUST NOT call **`Task(gitforge)`**.
+
+**Parallel dual-track (v1):** When **`parallel_execution.enabled`** is **true**, GitForge **must** acquire **`{vault_root}/.technical/.gitforge.lock`** (timeout **`parallel_execution.gitforge.lock_timeout_seconds`**) before vault git/export; if the lock is not acquired, **skip** GitForge and log per **agents/gitforge.md**. Hand-off may include **`parallel_track`**, **`parallel_branch_prefix`**, **`parallel_export_path`**.
 
 ## PromptCraftSubagent (recovery queue crafting)
 
@@ -448,7 +457,7 @@ Execute the task. Return only:
 
 **Layering (canonical):** [[3-Resources/Second-Brain/Docs/Subagent-Layers-Reference|Subagent-Layers-Reference]] — **Layer 0** = Cursor chat; **Layer 1** = Queue/Dispatcher; **Layer 2** = pipelines. PromptCraft is invoked by **Layer 0** (manual **REPAIR CRAFT** / **PROMPT CRAFT RECOVERY**) or by **Layer 1** when (a) **`recovery_auto_craft_enabled`** is **true** and a pipeline return includes **`prompt_craft_request`** (**A.5d**), or (b) **`post_little_val_repair_use_prompt_craft`** is **true** and **queue.mdc A.5b** triggers post–little-val repair craft (**hand-off:** **`craft_source: "a5b_post_little_val"`** + **`a5b_repair_context`** — see subsection below), or (c) **`queue_continuation.empty_queue_bootstrap_enabled`** and **`empty_queue_bootstrap_prompt_craft`** are **true** and **queue.mdc A.1b** selects an eligible continuation record (**hand-off:** **`craft_source: "empty_queue_bootstrap"`** + **`empty_bootstrap_context`**). **IRA** and **nested Validator** MUST NOT call PromptCraft; only L0/L1 orchestrate **`Task(prompt_craft)`**.
 
-**Permissions:** May **read** vault notes (Config, workflow_state, roadmap-state, Errors, validator reports) via MCP **read** tools only. **MUST NOT** write `prompt-queue.jsonl`, `Task-Queue.md`, `Watcher-Result.md`, Decision Wrappers, or mutate user roadmap/ingest notes. **MUST NOT** call **`Task`** for pipelines (ingest, roadmap, …). **MUST NOT** nest Validator or IRA.
+**Permissions:** May **read** vault notes (Config, workflow_state, roadmap-state, Errors, validator reports) via MCP **read** tools only. **MUST NOT** write **PQ** (prompt queue — legacy `.technical/prompt-queue.jsonl` or per-track path per **queue.mdc A.0x**), `Task-Queue.md`, canonical **`Watcher-Result.md`** (or parallel mirror files), Decision Wrappers, or mutate user roadmap/ingest notes. **MUST NOT** call **`Task`** for pipelines (ingest, roadmap, …). **MUST NOT** nest Validator or IRA.
 
 **Return (required tail):** Structured block in the return message:
 - `status`: **Success** | **failure**
@@ -458,7 +467,7 @@ Execute the task. Return only:
 - `effective_params_preview`: object (optional; merged preview for audit)
 - `recovery_metadata`: `{ error_correlation_id, suggested_modes[], rationale_short }` (optional)
 
-**Layer 1 append:** Only **Layer 1** performs **read → append → write** on `.technical/prompt-queue.jsonl` after PromptCraft returns. Use **`idempotency_key`** on appended lines (e.g. `"<error_correlation_id>-prompt-craft"`). Cap auto PromptCraft invocations per correlation: **`max_prompt_craft_per_correlation_per_run`** — for **A.5d**, key = **`error_correlation_id`**; for **A.5b**, key = **`<queue_entry_id>-post-little-val-repair`**; for **A.1b** bootstrap, **`idempotency_key`** is fixed by Layer 1 as **`bootstrap_key`** (see **Empty-queue bootstrap** subsection).
+**Layer 1 append:** Only **Layer 1** performs **read → append → write** on **PQ** (resolved per **queue.mdc A.0x**) after PromptCraft returns. Use **`idempotency_key`** on appended lines (e.g. `"<error_correlation_id>-prompt-craft"`). Cap auto PromptCraft invocations per correlation: **`max_prompt_craft_per_correlation_per_run`** — for **A.5d**, key = **`error_correlation_id`**; for **A.5b**, key = **`<queue_entry_id>-post-little-val-repair`**; for **A.1b** bootstrap, **`idempotency_key`** is fixed by Layer 1 as **`bootstrap_key`** (see **Empty-queue bootstrap** subsection).
 
 ### A.5b hand-off (`craft_source: a5b_post_little_val`, Layer 1 → PromptCraft)
 

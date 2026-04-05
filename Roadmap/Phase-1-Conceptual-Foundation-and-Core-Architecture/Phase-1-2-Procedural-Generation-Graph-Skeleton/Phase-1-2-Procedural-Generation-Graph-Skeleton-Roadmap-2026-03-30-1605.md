@@ -3,7 +3,7 @@ title: Phase 1.2 — Procedural Generation Graph Skeleton
 roadmap-level: secondary
 phase-number: 1
 subphase-index: "1.2"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 35
@@ -11,7 +11,7 @@ handoff_readiness: 76
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-1
 para-type: Project
 links:
@@ -75,7 +75,7 @@ Readers can sketch **node lists and edges** as bullet graphs and **ordered stage
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton"
+FROM "1-Projects/godot-genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton"
 WHERE roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

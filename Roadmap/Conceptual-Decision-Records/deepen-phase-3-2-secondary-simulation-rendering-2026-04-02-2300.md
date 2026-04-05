@@ -3,14 +3,14 @@ title: "CDR — Phase 3.2 secondary — simulation/rendering decoupling + observ
 created: 2026-04-02
 tags:
   - conceptual-decision-record
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-3
 para-type: Project
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-3-2-Simulation-Rendering-Decoupling-and-Observation-Channels-Roadmap-2026-04-02-2300]]"
 decision_kind: deepen
 queue_entry_id: followup-deepen-phase3-32-gmm-20260402T230000Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-godot-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

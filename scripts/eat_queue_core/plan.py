@@ -9,6 +9,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from .lanes import filter_entries_by_lane
 from .models import DispatchIntent, EatQueueRunPlan, QueueEntry, ValidationResult
 
 
@@ -141,10 +142,17 @@ def _transition(
     return nxt
 
 
-def build_plan(entries: list[QueueEntry], parent_run_id: str) -> tuple[EatQueueRunPlan, list[dict[str, Any]]]:
+def build_plan(
+    entries: list[QueueEntry],
+    parent_run_id: str,
+    *,
+    lane_filter: str | None = None,
+) -> tuple[EatQueueRunPlan, list[dict[str, Any]]]:
     decisions: list[dict[str, Any]] = []
     st = _FsmState.START
     st = _transition(st, "partition", decisions, parent_run_id)
+
+    entries = filter_entries_by_lane(entries, lane_filter)
 
     by: dict[str, dict[str, list[QueueEntry]]] = defaultdict(lambda: {"forward": [], "repair": []})
     order: list[str] = []

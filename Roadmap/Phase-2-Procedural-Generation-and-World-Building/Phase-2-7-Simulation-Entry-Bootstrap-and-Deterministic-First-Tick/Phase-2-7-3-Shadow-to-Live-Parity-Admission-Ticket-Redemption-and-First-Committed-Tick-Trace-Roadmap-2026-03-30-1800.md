@@ -3,7 +3,7 @@ title: Phase 2.7.3 - Shadow-to-live parity, admission ticket redemption, and fir
 roadmap-level: tertiary
 phase-number: 2
 subphase-index: "2.7.3"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 52
@@ -11,7 +11,7 @@ handoff_readiness: 84
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-2
 para-type: Project
 links:

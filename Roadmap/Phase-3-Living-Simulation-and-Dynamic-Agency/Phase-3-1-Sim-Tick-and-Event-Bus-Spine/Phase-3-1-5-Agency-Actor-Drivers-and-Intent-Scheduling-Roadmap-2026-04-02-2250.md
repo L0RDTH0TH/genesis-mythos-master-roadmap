@@ -3,7 +3,7 @@ title: Phase 3.1.5 — Agency, actor drivers, and intent scheduling
 roadmap-level: tertiary
 phase-number: 3
 subphase-index: "3.1.5"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 46
@@ -12,7 +12,7 @@ handoff_readiness: 85
 created: 2026-04-02
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-3
 para-type: Project
 links:

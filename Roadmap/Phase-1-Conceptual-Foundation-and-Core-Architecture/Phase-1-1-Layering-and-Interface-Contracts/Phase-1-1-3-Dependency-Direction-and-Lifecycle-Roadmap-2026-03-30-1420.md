@@ -3,7 +3,7 @@ title: Phase 1.1.3 — Dependency direction, injection seams, and lifecycle hook
 roadmap-level: tertiary
 phase-number: 1
 subphase-index: "1.1.3"
-project-id: genesis-mythos-master
+project-id: godot-genesis-mythos-master
 status: active
 priority: high
 progress: 28
@@ -11,7 +11,7 @@ handoff_readiness: 77
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-1
 para-type: Project
 links:

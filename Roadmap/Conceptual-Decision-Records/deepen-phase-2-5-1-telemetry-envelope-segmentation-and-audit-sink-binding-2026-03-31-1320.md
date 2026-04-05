@@ -4,8 +4,8 @@ created: 2026-03-31
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
-project-id: genesis-mythos-master
+  - godot-genesis-mythos-master
+project-id: godot-genesis-mythos-master
 parent_roadmap_note: "[[Phase-2-5-1-Telemetry-Envelope-Segmentation-and-Audit-Sink-Binding-Roadmap-2026-03-31-1320]]"
 roadmap_track: conceptual
 queue_entry_id: resume-deepen-gmm-251-20260330T132059Z-forward
