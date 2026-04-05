@@ -19,12 +19,16 @@
       ]
     }
   ],
-  "consumed_ids": [],
+  "consumed_ids": [
+    "followup-deepen-phase6-primary-rollup-post-61-godot-gmm-20260406T013000Z"
+  ],
   "strict_mode": true,
   "effective_pipeline_mode": "balance",
   "full_cycle_pass_index": 1,
   "full_cycle_passes_total": 2,
-  "queue_rewrite_ids": [],
+  "queue_rewrite_ids": [
+    "followup-deepen-phase6-primary-rollup-post-61-godot-gmm-20260406T013000Z"
+  ],
   "inline_pass3_drain": false,
   "has_anticipatory_repair_slot": false
 }
