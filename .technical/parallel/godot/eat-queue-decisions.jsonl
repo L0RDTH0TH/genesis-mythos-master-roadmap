@@ -1,0 +1,4 @@
+{"ts": "2026-04-05T10:57:57.470540Z", "parent_run_id": "layer1-eatq-godot-20260406T120500Z", "rule_id": "fsm:start->partitioned", "from_state": "start", "to_state": "partitioned", "queue_entry_id": null, "reason": "partition"}
+{"ts": "2026-04-05T10:57:57.470664Z", "parent_run_id": "layer1-eatq-godot-20260406T120500Z", "rule_id": "fsm:partitioned->pass1_done", "from_state": "partitioned", "to_state": "pass1_done", "queue_entry_id": null, "reason": "plan_pass1"}
+{"ts": "2026-04-05T10:57:57.470710Z", "parent_run_id": "layer1-eatq-godot-20260406T120500Z", "rule_id": "fsm:pass1_done->pass3_done", "from_state": "pass1_done", "to_state": "pass3_done", "queue_entry_id": null, "reason": "plan_pass3"}
+{"ts": "2026-04-05T10:57:57.470772Z", "parent_run_id": "layer1-eatq-godot-20260406T120500Z", "rule_id": "fsm:pass3_done->emitted", "from_state": "pass3_done", "to_state": "emitted", "queue_entry_id": null, "reason": "emit"}

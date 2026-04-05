@@ -123,3 +123,21 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded; `release` succeeded (trap on EXIT). **Vault:** single amended commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE — RESUME_ROADMAP deepen reconcile (balance)` (30 files incl. this audit line; verify with `git log -1 --oneline`). Hand-off summary: sandbox lane consumed RESUME_ROADMAP deepen (idempotent reconcile); one recal line remains on sandbox PQ; clean success for processed entry. **Clarifier:** commit message derived from Layer 1 hand-off `summary` (no separate `clarifier_input` field). **Push:** not attempted — vault has **no `origin` remote** (`git remote get-url origin` fails). **export_sync:** skipped (Config `gitforge.modes.balance.export_sync: false`). **Engine mirror:** not run. **Tag:** not created (same convention as prior balance passes). |
 | error_excerpt | — |
+
+### 2026-04-05 11:14 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| eat_queue_run_id | — |
+| result | **Lock:** `acquire` succeeded on first attempt (no timeout / `gitforge_lock_held`). **Vault:** amended commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox recal post-611 — follow-up deepen queued (balance)` (34 files incl. this audit line; `git log -1 --oneline` for hash). **Context:** consumed `followup-recal-post-611-high-ctx-sandbox-gmm-20260405T220000Z` after successful RESUME_ROADMAP recal; follow-up deepen queued; clean queue success. **Clarifier:** from operator **Context** block in Layer 1 A.7a hand-off. **Push:** attempted — **no configured push destination** / no `origin` on vault (same as prior passes). **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine mirror (Step 1b)** to `parallel_export_path`: not run (export_sync disabled). **Tag:** not created. **Release:** `gitforge_lock.py release` succeeded after tail. |
+| error_excerpt | vault push: no origin remote |

@@ -386,3 +386,30 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Both godot RESUME_ROADMAP lines remain in **PQ** and pool; no roadmap mutations from this pass.
 - **Suggested fixes:** Re-run **EAT-QUEUE lane godot** from a parent Cursor agent where `Task(queue)` / nested `Task(roadmap)` is available, or generate **EQPLAN** via `scripts.eat_queue_core.full_cycle` if using the Python orchestrator bridge.
 - **Recovery:** No vault rollback needed; duplicate **Watcher-Result** lines for the same `requestId` are acceptable for audit when re-dispatching after a host fix.
+
+### 2026-04-06 11:06 — EAT-QUEUE godot: nested_attestation_failure after Task(roadmap) (balance deepen)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1 godot track) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-06T11:06:14Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **parent_run_id:** `layer1-eatq-godot-20260406T120500Z`
+- **A.0.4:** `pool_sync` copied 5 ids into `.technical/parallel/godot/prompt-queue.jsonl`
+- **A.0.5:** `full_cycle` wrote `.technical/parallel/godot/eat_queue_run_plan.json` (4 intents)
+- **Task(roadmap):** queue_entry_id `followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z` — `roadmap_core` ran; **nested_validator_first / ira_post_first_validator / nested_validator_second** → `task_tool_invoked: false`, `task_error` (Task unavailable in roadmap subagent host); `task_harden_result.contract_satisfied: false`
+- **Task(validator) L1:** `roadmap_handoff_auto` → `severity: medium`, `primary_code: state_hygiene_failure`, `recommended_action: needs_work`; report `.technical/Validator/roadmap-handoff-auto-gmm-l1postlv-phase61-followup-20260406T120500Z.md`
+- **A.7:** **not** consumed (FINAL GATEKEEPER + hygiene provisional); pass3 intents **not** dispatched in this session
+- **Telemetry:** `.technical/Run-Telemetry/godot/queue-layer1-eatq-godot-20260406T110614Z.md`
+
+#### Summary
+
+- **Root cause:** Roadmap subagent host cannot nest `Task(validator)` / `Task(internal-repair-agent)`; balance micro_workflow attestation fails despite `roadmap_core` + `little_val_ok`.
+- **Impact:** deepen line and remaining repair lines stay on **PQ** and central pool; Watcher-Result canonical + `Watcher-Result-godot.md` (VALIDATE then primary **failure**).
+- **Suggested fixes:** Run balance roadmap from a Cursor configuration where roadmap subagent can call nested `Task`, or temporarily use **speed** profile / Config that does not require nested helper proof for this host.
+- **Recovery:** Review validator report; optional manual hygiene edit to `roadmap-state` consistency bullet cited in report.
