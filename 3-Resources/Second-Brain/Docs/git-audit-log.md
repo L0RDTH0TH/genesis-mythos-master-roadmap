@@ -105,3 +105,21 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded on first attempt; `release` succeeded. **Vault:** new commit on `iteration-2-roadmap-rules` — `chore(vault): repair-l1-postlv wflog hygiene sandbox + handoff-audit validator repass` (34 files incl. this audit line; use `git log -1` for hash). Context: consumed `repair-l1-postlv-wflog-hygiene-sandbox-gmm-20260405T224500Z` after RESUME_ROADMAP handoff-audit wflog backfill + L1 `Task(validator)` repass. **Push:** attempted — **`origin` missing on vault** (`fatal: 'origin' does not appear to be a git repository`); operator must add `origin` or push manually. **export_sync:** skipped (Config `gitforge.modes.balance.export_sync: false`). **Engine mirror (Step 1b):** not run — export sync disabled for balance; export checkout was `iteration-2-roadmap-rules` (integration line). **Tag:** not created. |
 | error_excerpt | vault push: no origin remote |
+
+### 2026-04-05 10:56 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| eat_queue_run_id | — |
+| result | **Lock:** `acquire` succeeded; `release` succeeded (trap on EXIT). **Vault:** single amended commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE — RESUME_ROADMAP deepen reconcile (balance)` (30 files incl. this audit line; verify with `git log -1 --oneline`). Hand-off summary: sandbox lane consumed RESUME_ROADMAP deepen (idempotent reconcile); one recal line remains on sandbox PQ; clean success for processed entry. **Clarifier:** commit message derived from Layer 1 hand-off `summary` (no separate `clarifier_input` field). **Push:** not attempted — vault has **no `origin` remote** (`git remote get-url origin` fails). **export_sync:** skipped (Config `gitforge.modes.balance.export_sync: false`). **Engine mirror:** not run. **Tag:** not created (same convention as prior balance passes). |
+| error_excerpt | — |
