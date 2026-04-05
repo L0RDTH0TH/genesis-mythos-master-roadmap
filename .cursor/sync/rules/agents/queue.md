@@ -121,6 +121,37 @@ When the instruction contains **EAT-QUEUE**, **Process queue**, **EAT-CACHE**, o
 
 **EAT-CACHE pasted payload:** Still applies lane filter from hand-off; **PQ** is only used when reading from disk — pasted payloads bypass **PQ** for the initial parse but **A.7** rewrite targets **PQ** when merging back (document: prefer file-based queue for parallel tracks).
 
+## A.0.4. Central pool hydration (per-track PQ)
+
+**When:** Immediately after **A.0x** resolution, **before** **A.0** (wrappers). All of the following must hold:
+
+- Second-Brain-Config **`queue.central_pool_fanout_enabled`** is **true** (machine-readable YAML under **`queue:`**).
+- **A.0x** set **PQ** to a **per-track** path (i.e. **`parallel_track`** is non-null and **PQ** is under **`.technical/parallel/<track>/prompt-queue.jsonl`**), not the legacy single **PQ**.
+- Layer 0 hand-off includes **`queue_lane_filter`** matching that track's **`parallel_execution.tracks[].lane`**.
+
+**Action (mandatory when conditions hold):** From **vault root**, run:
+
+`python3 -m scripts.eat_queue_core.pool_sync --vault-root <vault> --lane <queue_lane_filter> --target-pq <PQ vault-relative>`
+
+Use **PQ** exactly as resolved in **A.0x** (vault-relative). **Do not** skip this step when conditions hold — the central pool **`.technical/prompt-queue.jsonl`** is the operator append target; **PQ** is overwritten with the lane-filtered subset.
+
+- **Success:** Optionally append **PQAUD** one-line JSON with **`event: pool_hydrate_applied`**, **`lane`**, **`copied_count`**, **`copied_ids`** (from script stdout JSON) when **`queue.audit_log_enabled`** is not **false**.
+- **Failure (non-zero exit, invalid JSON, I/O):** Append **Errors.md** (`error_type: pool_hydrate_failure`), **Watcher-Result** **`status: failure`**, message prefix **`pool_hydrate_failed`** — **stop** the prompt-queue flow (do not read/dispatch **PQ** this run).
+
+## A.0z. Lane-scoped project root (parallel track)
+
+**When:** **A.0x** set **`parallel_track`** non-null **and** Layer 0 **`## parallel_context`** (or Config **`parallel_execution.tracks[]`**) supplies **`lane_project_id`** for the active track.
+
+**Bind for this run:**
+
+- **`lane_project_id`** — slug under **`1-Projects/`** (must match the track's configured row).
+- **`lane_project_root`** — vault-relative **`1-Projects/<lane_project_id>/`** (or explicit path if Config provides **`lane_project_root`**).
+- **`roadmap_dir`** — default **`lane_project_root` + `Roadmap/`**.
+
+**Pass in every pipeline `Task` hand-off** (fenced **`yaml`** under **`## parallel_context`** or adjacent block): **`lane_project_id`**, **`lane_project_root`**, **`roadmap_dir`**.
+
+**Downstream:** Roadmap, Validator, IRA, GitForge — mutate roadmap state **only** under **`lane_project_root`** when these keys are present. See **A.2a.1** for queue entry gating.
+
 ## A.0. Always-check wrappers (runs first, every EAT-QUEUE run)
 
 - Run **before** reading the queue. Enumerate all markdown notes under `Ingest/Decisions/` recursively (including subfolders such as `Ingest-Decisions/`). If this folder tree is missing or empty, proceed to A.1 (Read queue) with no further action.
@@ -199,6 +230,12 @@ Invoked from **A.2** when **valid entry count === 0** after parse (prompt-queue 
 - **Ordering (A.3–A.4), A.4c, Pass 3 re-parse:** Run dedup, canonical order, roadmap dispatch maps, and Pass 3 **A.2** re-parsing on the **filtered** list / file lines that survive **A.2a** (after re-read, re-apply **`queue_failed`** filter and **A.2a** with the **same** **`queue_lane_filter`** for this run).
 - **EAT-CACHE:** When the hand-off includes pasted **`queued_prompts`**, apply the same **`queue_lane_filter`** rules to each object after parse.
 - **Python orchestrator:** When **`eat_queue_run_plan.json`** is built with **`--lane`**, it must use the **same** subset semantics so **`intents`** align with Layer 1.
+
+## A.2a.1. Lane–project gate (dual-track)
+
+**When:** **A.0z** bound **`lane_project_id`** for this run (non-empty string).
+
+**After** **A.2a** lane subset, for each remaining entry whose **`mode`** is **`ROADMAP_MODE`** or **`RESUME_ROADMAP`** (or a **chain** whose **primary** segment is **`RESUME_ROADMAP`** / **`ROADMAP_MODE`**): compute **`effective_project_id`** = top-level **`project_id`** if present, else **`params.project_id`** if string. If **`effective_project_id`** is missing or after trim **≠** **`lane_project_id`**: **do not** dispatch that entry; append **Watcher-Result** **`status: failure`**, **`requestId`** = entry **`id`**, message prefix **`queue_lane_project_mismatch`** (include expected **`lane_project_id`** and found **`effective_project_id`** in **`trace`**). **Retain** the line in **PQ** and the central pool (operator fixes the entry or Config). Non-roadmap modes are **not** subject to this gate unless a future spec extends it.
 
 ## A.3. Dedup
 
@@ -581,6 +618,7 @@ See [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-S
 
 ## A.7. Clear passed entries only
 
+- **Central pool (dual removal):** When **`queue.central_pool_fanout_enabled`** is **true** and **PQ** is a **per-track** path (non-null **`parallel_track`**, **PQ** ≠ legacy **`.technical/prompt-queue.jsonl`**), **after** computing **`processed_success_ids`**, remove those **`id`** values from **both** **PQ** and the central pool **`.technical/prompt-queue.jsonl`** (read–filter–write each file; preserve unrelated lines). Reference helper: **`apply_queue_cleanup_dual_track`** in **`scripts/eat_queue_core/full_cycle.py`**. If only **PQ** is used (legacy single-file mode), remove from **PQ** only.
 - Build **processed_success_ids** from entries that completed with **status success** (including entries **consumed** after post–little-val hard block when **A.5b** appended a repair line — see Queue-Sources § **A.7 tiered policy**). **Pre-write re-read (mandatory):** **Immediately before** constructing the merged file body, **re-read** **PQ** from disk. **Do not** use an earlier in-memory snapshot of the queue from the start of A.7 or from Pass 1 for the keep/drop decision. **Merge** from **only** this latest read: omit lines whose **`id`** ∈ **`processed_success_ids`**; retain **all** other lines verbatim. With **per-track PQ** (A.0x), each chat owns one file — no cross-track lines in the same JSONL. Legacy single-file mode: retain lines in other **`queue_lane`** values and lines appended by concurrent lane-scoped runs when those modes shared one **PQ**. Add original-run failed/skipped entries with **`queue_failed: true`**. If approved_wrappers_remaining, append one CHECK_WRAPPERS entry. Write merged content back. **Then** run **A.5g** **`line_removed`** appends for each **`processed_success_ids`** entry (when audit enabled).
 
 ## A.7a. GitForge (Layer 1 post-run; optional)

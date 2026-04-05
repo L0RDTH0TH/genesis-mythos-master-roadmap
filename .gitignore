@@ -33,3 +33,6 @@ Second-Brain-Starter-Kit/
 # Python
 __pycache__/
 *.py[cod]
+
+# GitForge parallel-track lock (machine-local; never commit)
+.technical/.gitforge.lock

@@ -40,12 +40,100 @@ Single source of truth for pipeline and skill configuration. Skills and rules th
 - **queue_nudge_enabled**: true | false — when true, nudge is allowed when queue has pending entries.
 - **auto_cleanup_after_process**: true | false — when true, run queue-cleanup skill after each EAT-QUEUE run (auto-mark failed entries, append to Errors.md). When false, cleanup only when user runs "Clear queue" or "Queue cleanup".
 - **re_try_max_loops**: 3 — cap on re-try spins per thread (e.g. same section/phase_path). When exceeded, abort re-try and create cap-hit wrapper (A: Force approve, B: Prune branch, 0: Re-wrap full phase). Document in Parameters.md.
-- **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read `.technical/eat_queue_run_plan.json` produced by `python -m eat_queue_core plan` and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
+- **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read **EQPLAN** (`eat_queue_run_plan.json` colocated with **PQ** — legacy `.technical/eat_queue_run_plan.json` or per-track under `.technical/parallel/<track>/`; see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**) produced by `python3 -m scripts.eat_queue_core.full_cycle` / plan and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
+- **central_pool_fanout_enabled**: when **true**, Layer 1 **A.0.4** runs **`pool_sync`** before wrappers so **`.technical/prompt-queue.jsonl`** (pool) is filtered into per-track **PQ**; **A.7** removes consumed ids from **pool** and **PQ** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.4**, **A.7**).
+- **allowed_lanes** (under **`queue:`** YAML): list of strings allowed for **`queue_lane`** on prompt-queue JSONL lines and for Layer 0 **`EAT-QUEUE lane <name>`**. Default in YAML below: `default`, `shared`, `sandbox`, `godot`, `core`. Unknown lane on append or filter → reject / error (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes).
 
 The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above):
 
 queue:
   python_orchestrator_enabled: true
+  central_pool_fanout_enabled: true
+  allowed_lanes:
+    - default
+    - shared
+    - sandbox
+    - godot
+    - core
+
+## parallel_execution (dual-track EAT-QUEUE; two Cursor chats)
+
+- **enabled**: when **true** and Layer 0 passes **`EAT-QUEUE lane sandbox`** or **`lane godot`**, the Queue subagent uses **per-track bundles** under `.technical/parallel/<track>/` for the prompt queue, plan JSON, continuation log, audit JSONL, and optional tmp-prompt (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**).
+- **default_to_legacy**: when **true**, ignore bundle routing even if enabled (single `.technical/prompt-queue.jsonl`).
+- **GitForge**: global **`.technical/.gitforge.lock`** with **`lock_timeout_seconds`**; **`policy: lock_last_wins`** — if lock not acquired, skip GitForge and log (see [[.cursor/agents/gitforge.md|agents/gitforge.md]]).
+- **lane_project_id** (per **`tracks[]`** row): slug under **`1-Projects/`** for **A.0z** / **A.2a.1** — dual-track roadmap state must stay under **`1-Projects/<lane_project_id>/`** for that lane.
+- **Watcher**: keep canonical **`watcher.canonical_path`** for the Obsidian plugin; optional **per-track mirrors** when **`watcher.enable_mirrors`** is true (see [[.cursor/rules/always/watcher-result-append.mdc|watcher-result-append]]).
+
+Machine-readable block (keep aligned with bullets):
+
+```yaml
+parallel_execution:
+  enabled: true
+  default_to_legacy: false
+  tracks:
+    - id: sandbox
+      lane: sandbox
+      lane_project_id: sandbox-genesis-mythos-master
+      technical_subdir: parallel/sandbox
+      branch_prefix: sandbox-
+      export_path: "/home/darth/Documents/gmm-roadmap-export"
+    - id: godot
+      lane: godot
+      lane_project_id: godot-genesis-mythos-master
+      technical_subdir: parallel/godot
+      branch_prefix: godot-
+      export_path: "/home/darth/Documents/gmm-roadmap-export"
+  gitforge:
+    lock_timeout_seconds: 30
+    policy: lock_last_wins
+  watcher:
+    canonical_path: "3-Resources/Watcher-Result.md"
+    enable_mirrors: true
+```
+
+## gitforge (Layer 1 post-queue git/export)
+
+- **enabled**: true — when **true**, Queue may run **A.7a** after a successful prompt-queue **A.7** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]]). Set **false** to disable the post-queue git tail.
+- **Pipeline tier:** **`effective_pipeline_mode`** **`speed`** → GitForge is **not** called (fast runs skip automatic vault git). **`balance`** and **`quality`** → **one** **`Task(gitforge)`** after **A.7**, hand-off **`mode: balance`** for both; **`quality`** is traced via **`source_pipeline_mode`** (same git rules as balance — quality is stricter **pipeline** enforcement, not a separate export tier).
+- **export_repo_root**: absolute path to the `gmm-roadmap-export` checkout (see [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]).
+- **integration_branch**: branch name for the **canonical system mirror** — complete `.cursor/` (including **`.cursor/sync/`**), full queue **`scripts/`** (`eat_queue_core`, `queue-gate-compute.py`, **`gitforge_lock.py`**), full **`Docs/`** + **`Docs/Core/`** (all top-level `3-Resources/Second-Brain/*.md`) + **`Docs/Second-Brain-User-Flows/`** (see workflow § Branch purposes and export coverage). Default `iteration-2-roadmap-rules`.
+- **Engine branches (convention):** **`sandbox-genesis-mythos-master`**, **`godot-genesis-mythos-master`** — **rule-sterile** lines: spine must match **`origin/<integration_branch>`**; publish only **`Roadmap/`** + anchors from the matching **`lane_project_id`** / `GMM_PROJECT_ROOT`. Align with [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1b.
+- **invoke_on_empty_queue**: false — when false, skip GitForge when there were no prompt-queue entries to process after A.1 (Step 0–only or empty file).
+- **invoke_only_on_clean_success**: true — when true, skip GitForge if any prompt-queue entry this run got a failure disposition.
+
+Machine-readable block (keep aligned with bullets):
+
+```yaml
+gitforge:
+  enabled: true
+  export_repo_root: "/home/darth/Documents/gmm-roadmap-export"
+  vault_repo_remote: "origin"
+  integration_branch: "iteration-2-roadmap-rules"
+  # Export contract (see Docs/git-push-workflow — § Branch purposes and export coverage):
+  export_contract:
+    integration_includes:
+      - ".cursor/agents/"
+      - ".cursor/rules/"
+      - ".cursor/skills/"
+      - ".cursor/sync/"
+      - "scripts/eat_queue_core/"
+      - "scripts/queue-gate-compute.py"
+      - "scripts/gitforge_lock.py"
+      - "Docs/"  # from 3-Resources/Second-Brain/Docs/
+      - "Docs/Core/*.md"  # all top-level Second-Brain dev *.md + Roadmap Structure + Watcher/Errors copies
+      - "Docs/Second-Brain-User-Flows/"
+    engine_includes:
+      - "Roadmap/"
+      - "<PROJ_ID>-goal.md"
+      - "<PROJ_ID>-Roadmap-MOC.md"
+    engine_spine_source: "origin/<integration_branch>"
+  invoke_on_empty_queue: false
+  invoke_only_on_clean_success: true
+  modes:
+    fast: { tag: false, export_sync: false }
+    balance: { tag: true, export_sync: false }
+    extreme: { tag: true, export_sync: false, require_confirmation: false }
+```
 
 ## task_harden (capability probing)
 
@@ -98,6 +186,7 @@ queue:
 - **context_util_threshold**: 80 — utilization % above which deepen is paused and **RECAL-ROAD** is queued instead of another deepen.
 - **context_token_per_char**: 0.25 — chars → tokens heuristic (approx. 4 characters per token) used to estimate context usage without a tokenizer.
 - **context_window_tokens**: 128000 — assumed model context window size used as the denominator when computing utilization.
+- **deepen_multi_artifact**: false — when false (default in **prompt_defaults.roadmap**), roadmap-deepen creates **one** structural phase-tree note per RESUME_ROADMAP deepen pass; set **true** (or use profile **deepen-aggressive**) to allow multi-mint **branch_factor** / **batch_subphases** / **max_depth** batching.
 - **display_timezone** (optional): IANA timezone name (e.g. `America/New_York`) used to convert queue entry `timestamp` (UTC) to local time when writing workflow_state ## Log. When invalid or missing, pipelines fall back to server time and log to Errors.md; see Parameters § Timestamp resolution.
 
 ## code_comments (optional)
@@ -168,12 +257,13 @@ validator:
   - context_token_per_char: 0.25
   - context_window_tokens: 128000
   - recal_util_high_threshold: 70
-  - max_depth: (optional; derived from phase when absent: 1–2→2, 3–4→3, 5–6→4)
-  - branch_factor: 4
+  - deepen_multi_artifact: false
+  - max_depth: (optional; derived from phase when absent: 1–2→2, 3–4→3, 5–6→4; only batches when deepen_multi_artifact true)
+  - branch_factor: 1
   - inject_extra_state: (optional; when true, roadmap-deepen pulls extra context; use with token_cap)
   - token_cap: 50000
 - profiles:
-  - deepen-aggressive: { token_cap: 50000, branch_factor: 4, inject_extra_state: true, max_depth: 4 }
+  - deepen-aggressive: { token_cap: 50000, deepen_multi_artifact: true, branch_factor: 4, inject_extra_state: true, max_depth: 4 }
   - (Profiles are **read-only presets**: they are consumed by auto-roadmap and the dispatcher but are never created or mutated by the Prompt-Crafter. When `params.profile` names a configured profile (e.g. "deepen-aggressive"), its object is merged **between** `prompt_defaults.roadmap` and the queue params, so it can only **pre-fill missing keys**; any explicit queue params from the crafter always win. When `params.profile` does **not** match a key under `prompt_defaults.profiles`, the dispatcher must treat the profile as missing (no preset merge) and fall back to `prompt_defaults.roadmap` + explicit params rather than failing or silently substituting another profile. Commander macros (e.g. **"Craft Deepen Aggressive"**) may still build queue entries that reference these profiles directly.)
 
 **Profile namespaces (V4):** Conceptually, roadmap and CODE flows use separate profile buckets. **Roadmap profiles** (e.g. under `prompt_defaults.profiles` as above) are tuned for RESUME-ROADMAP / ROADMAP MODE (token_cap, branch_factor, max_depth, etc.). **CODE profiles** (e.g. for INGEST, ORGANIZE, DISTILL, EXPRESS) are TBD and may be added under a dedicated key such as `prompt_defaults.code_profiles` after roadmap deployment testing. Until then, CODE flows that present a profile gate must state clearly in chat: "Profiles are currently tuned for roadmap; CODE runs will mostly rely on per-mode defaults until CODE-specific profiles are configured." Do not offer roadmap-only profile names as if they applied to CODE runs without that warning.

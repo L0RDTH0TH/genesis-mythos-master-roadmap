@@ -15,6 +15,21 @@ You **do not** read or write the prompt queue (**PQ** — legacy `.technical/pro
 
 ---
 
+## Export surfaces by branch type (normative)
+
+Use **`git branch --show-current`** in **`export_repo_root`** (Config **`gitforge.export_repo_root`**) together with **`gitforge.integration_branch`** and **`parallel_execution.tracks[]`** (`lane_project_id`, `export_path`, `branch_prefix`) to choose the correct mirror procedure.
+
+| Export checkout branch | Intent | Mirror procedure (vault → export) |
+|------------------------|--------|-------------------------------------|
+| **`integration_branch`** (e.g. `iteration-2-roadmap-rules`) | **Canonical collaboration branch** — complete picture of **how the system is built and run** (agents, rules, skills, **`.cursor/sync`**, Python queue stack, **`gitforge_lock.py`**, full `Docs/` + **all** `Docs/Core/` backbone `*.md` + **Second-Brain-User-Flows**). | **Step 1 — integration** in [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]. Optionally append one engine’s `Roadmap/` + anchors if `GMM_PROJECT_ROOT` is set. |
+| **Engine line** (e.g. `sandbox-genesis-mythos-master`, `godot-genesis-mythos-master`) | **Per-engine roadmap** for collaborators reading that engine’s phases; spine must **not** drift from integration. | Refresh spine from **`origin/<integration_branch>`** (merge or re-run integration Step 1), then **Step 1b — engine** only (`Roadmap/` + `<PROJ_ID>-goal.md` + MOC from matching **`GMM_PROJECT_ROOT`**). |
+
+**Config mirror:** Second-Brain-Config **`gitforge.export_contract`** documents the same paths for tooling and audits.
+
+When **`export_sync`** (or operator policy) triggers an export run: **never** treat an engine branch as the authoritative rules source; always point collaborators at **`integration_branch`** for full coverage.
+
+---
+
 ## Hand-off (required)
 
 Layer 1 passes a structured block (YAML or JSON). Minimum fields:
@@ -81,8 +96,8 @@ When Second-Brain-Config **`parallel_execution.enabled`** is **true** (or the ha
 
 ## Branch policy (rule-sterile engine branches)
 
-- **`iteration-2-roadmap-rules`** (or Config **`gitforge.integration_branch`**) is the **canonical spine** for **`.cursor/`**, **`.cursor/agents`**, **skills**, and mirrored **Docs** in the **export** repo.
-- On an **engine** branch (any branch name **not** equal to **`integration_branch`**): **never** publish a dirty mix of vault `.cursor/` into export. **Refresh spine from the integration tip** before rsync (e.g. checkout integration in export clone, copy spine, then checkout engine and sync only **Roadmap/** + anchors per workflow). Exact shell steps live in the **git-push-workflow** doc.
+- **`gitforge.integration_branch`** is the **complete canonical mirror**: **`.cursor/`** (agents, rules, skills, **`.cursor/sync/`**), **`scripts/`** (`eat_queue_core`, `queue-gate-compute.py`, **`gitforge_lock.py`**), and **`Docs/`** (including **`Docs/Core/`** full backbone and **`Docs/Second-Brain-User-Flows/`**).
+- On an **engine** branch (name **not** equal to **`integration_branch`**): **never** publish a partial ruleset as authoritative. **Refresh spine from `origin/<integration_branch>`**, then sync **only** **Roadmap/** + anchors per **Step 1b** in the **git-push-workflow** doc.
 - Vault **git** operations (commit/push) apply to **whatever repo** contains the vault; export repo is a **separate** clone — follow the workflow for **`GMM_PROJECT_ROOT`** and branch alignment.
 
 ---

@@ -15,11 +15,26 @@ source: "Phase 3 bridge — deterministic plan + Layer 1 Task dispatch"
 
 Deterministic **`eat_queue_run_plan.json`** is produced by the **`scripts/eat_queue_core`** package (`python -m eat_queue_core plan`). Layer 1 (Queue subagent) may **consume** that file when [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] **`queue.python_orchestrator_enabled`** is **`true`**. See [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**.
 
+## Central pool hydration (`pool_sync`)
+
+When **`queue.central_pool_fanout_enabled`** is **`true`** and **`full_cycle`** runs with **`--lane`** and **`--queue`** pointing at a **per-track** `prompt-queue.jsonl` (not the legacy pool path), **`run_full_eat_queue_cycle`** hydrates the track file from **`.technical/prompt-queue.jsonl`** before planning (same filter as Layer 1 **A.2a**). With **`--apply-cleanup`**, consumed ids are removed from **both** the track **PQ** and the central pool (`apply_queue_cleanup_dual_track`).
+
+Layer 1 must still run **`python3 -m scripts.eat_queue_core.pool_sync`** per **A.0.4** when the orchestrator is off.
+
+CLI (manual / CI):
+
+```bash
+PYTHONPATH=. python3 -m scripts.eat_queue_core.pool_sync \
+  --vault-root . \
+  --lane sandbox \
+  --target-pq .technical/parallel/sandbox/prompt-queue.jsonl
+```
+
 ## Pre-run hook (recommended)
 
 From the vault root, generate the plan **before** EAT-QUEUE. If `plan` exits non-zero, **stop** and fix the queue or plan; do not invoke **`Task(queue)`** with a stale or missing manifest.
 
-**Reactive full cycle (Pass 3 drain / `queue_rewrite_ids`):** Prefer **`python3 -m scripts.eat_queue_core.full_cycle`** (repo root, **`PYTHONPATH=.`**) with **`--action`**, **`--profile`**, **`--max-passes=2`** — see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. Re-invoke after Layer 1 mid-run repair append when pass 1 had no Pass 3 intents. **`full_cycle`** accepts the same optional **`--lane <name>`** as **`plan`** (validated against **`queue.allowed_lanes`** / Python fallback).
+**Reactive full cycle (Pass 3 drain / `queue_rewrite_ids`):** Prefer **`python3 -m scripts.eat_queue_core.full_cycle`** (repo root, **`PYTHONPATH=.`**) with **`--action`**, **`--profile`**, **`--max-passes=2`** — see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. Re-invoke after Layer 1 mid-run repair append when pass 1 had no Pass 3 intents. **`full_cycle`** accepts the same optional **`--lane <name>`** as **`plan`** (validated against **`queue.allowed_lanes`** / Python fallback). Optional **`--central-pool-fanout`** / **`--no-central-pool-fanout`** override Config **`queue.central_pool_fanout_enabled`** for hydration.
 
 Optional **`--lane <name>`** on **`plan`** matches Layer 1 **`queue_lane_filter`** (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes): the plan includes only entries in the dispatch subset for that lane (`sandbox`/`godot`/`core` ∪ `shared`; `shared` only; `default` only). Omit **`--lane`** to plan over **all** entries.
 

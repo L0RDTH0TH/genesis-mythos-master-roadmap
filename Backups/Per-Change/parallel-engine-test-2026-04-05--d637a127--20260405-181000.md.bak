@@ -1,0 +1,30 @@
+---
+original_path: 1-Projects/sandbox-genesis-mythos-master/parallel-engine-test-2026-04-05.md
+original_title: Parallel engine test (sandbox lane)
+pipeline: autonomous-distill
+snapshot_type: per-change
+snapshot_created: 2026-04-05T18:10:00.000Z
+snapshot_hash: c456edb5db9a2e0ebc9513df46c02e96b362d204805a13754ad5c63059844ffe
+confidence: 90
+flag: none
+immutable: true
+para-type: Archive
+status: frozen
+queue_entry_id: parallel-distill-sandbox-test-20260405T181000Z
+parent_run_id: eatq-20260404-sandbox-lane-d1
+---
+
+---
+title: Parallel engine test (sandbox lane)
+created: 2026-04-05
+tags:
+  - parallel-test
+  - sandbox
+  - queue-smoke
+project-id: sandbox-genesis-mythos-master
+source: Queue parallel lane test — sandbox
+---
+
+# Parallel engine test (sandbox)
+
+Smoke-test note for **`EAT-QUEUE lane sandbox`**. Safe to delete after validating queue + lane filtering.

@@ -8,16 +8,16 @@ status: active
 
 # Dual-track EAT-QUEUE operator guide
 
-Run **two Cursor chats** in parallel on **separate prompt-queue bundles** (sandbox vs godot) without corrupting **PQ**, **continuation**, or **git**. This note is the **operator contract**; normative mechanics live in [[.cursor/rules/agents/queue.mdc|queue.mdc]] (**A.0x**, **A.2a**, **A.6**, **A.7a**), [[.cursor/rules/always/dispatcher.mdc|dispatcher.mdc]], and [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] (`parallel_execution`).
+Run **two Cursor chats** in parallel on **separate prompt-queue bundles** (sandbox vs godot) without corrupting **PQ**, **continuation**, or **git**. This note is the **operator contract**; normative mechanics live in [[.cursor/rules/agents/queue.mdc|queue.mdc]] (**A.0x**, **A.0.4**, **A.0z**, **A.2a**, **A.2a.1**, **A.6**, **A.7**, **A.7a**), [[.cursor/rules/always/dispatcher.mdc|dispatcher.mdc]], and [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] (`parallel_execution`, `queue.central_pool_fanout_enabled`).
 
 ## Must
 
 1. **Lane in the trigger** — Each parallel chat must use an explicit lane, e.g. **`EAT-QUEUE lane sandbox`** in chat A and **`EAT-QUEUE lane godot`** in chat B. Bare **`EAT-QUEUE`** leaves **`queue_lane_filter`** unset, uses **legacy** **PQ** at `.technical/prompt-queue.jsonl`, and processes **all** lanes in one file — not dual-track.
-2. **Config** — `parallel_execution.enabled: true` and `default_to_legacy: false` (see Config machine-readable block). Tracks **`sandbox`** and **`godot`** must match your **`technical_subdir`** rows.
-3. **Queue lines** — Set **`queue_lane`** on JSONL entries per [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] (Queue lanes). Use **`shared`** only when the work should run with **sandbox ∪ shared** or **godot ∪ shared** (see **A.2a**). Prefer explicit **`default`** on general work when not parallel.
+2. **Config** — `parallel_execution.enabled: true` and `default_to_legacy: false` (see Config machine-readable block). Tracks **`sandbox`** and **`godot`** must match your **`technical_subdir`** rows. Set **`queue.central_pool_fanout_enabled: true`** to use **`.technical/prompt-queue.jsonl`** as the single append pool; Layer 1 **A.0.4** copies lane-aligned lines into each track **PQ** before dispatch. Each track row should set **`lane_project_id`** (slug under **`1-Projects/`**) so **A.2a.1** rejects roadmap lines for the wrong project.
+3. **Queue lines** — Append new work to the **central pool** **`.technical/prompt-queue.jsonl`** when fanout is enabled (Prompt Crafter already targets this path). Set **`queue_lane`** on JSONL entries per [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] (Queue lanes). Use **`shared`** only when the work should run with **sandbox ∪ shared** or **godot ∪ shared** (see **A.2a**). Prefer explicit **`default`** on general work when not parallel. Do not rely on hand-editing **`.technical/parallel/<track>/prompt-queue.jsonl`** when fanout is on — it is overwritten at hydrate.
 4. **Layer 0 hand-off** — The parent chat must invoke **`Task(subagent_type: queue)`** with:
    - **`## queue_lane_filter`** plus the lane token (lowercase), and
-   - When parallel is on and the lane matches a configured track, **`## parallel_context`** (YAML) with **`resolved_prompt_queue_path`**, **`technical_bundle_root`**, sibling paths, **`parallel_track`**, **`parallel_branch_prefix`**, **`parallel_export_path`** as in dispatcher.mdc.
+   - When parallel is on and the lane matches a configured track, **`## parallel_context`** (YAML) with **`resolved_prompt_queue_path`**, **`technical_bundle_root`**, sibling paths, **`parallel_track`**, **`parallel_branch_prefix`**, **`parallel_export_path`**, and **`lane_project_id`** / **`lane_project_root`** / **`roadmap_dir`** when Config defines **`lane_project_id`** (dispatcher.mdc).
 
 ## Must-not
 

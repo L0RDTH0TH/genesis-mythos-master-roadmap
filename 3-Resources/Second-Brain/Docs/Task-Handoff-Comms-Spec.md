@@ -13,7 +13,7 @@ links:
 
 **Version:** `schema_version: 1`
 
-**Canonical store:** `.technical/task-handoff-comms.jsonl` (append-only JSONL, one JSON object per line).
+**Canonical store:** `.technical/task-handoff-comms.jsonl` (append-only JSONL, one JSON object per line). When **parallel_context** / **queue.mdc A.0x** resolves a per-track **`technical_bundle_root`**, use **`{technical_bundle_root}/task-handoff-comms.jsonl`** for that run so comms sit beside the lane’s PQ.
 
 **Purpose:** Durable **verbatim** record of **Cursor `Task`** hand-offs and returns for orchestration (Layer 0 → Layer 1 → Layer 2 → nested helpers). This is **not** a replacement for [[3-Resources/Second-Brain/Logs#Run-Telemetry|Run-Telemetry]] (per-run metrics and nested ledger in notes), [[3-Resources/Watcher-Result|Watcher-Result]] (one-line UX), or **`nested_subagent_ledger`** (structured attestation in pipeline returns). All may coexist; **task-handoff-comms** is the **full transcript** of Task `prompt` and subagent return text.
 
@@ -31,6 +31,7 @@ Log **every** orchestration-relevant **`Task`** invocation:
 | Layer 1 (Queue) | Pipeline subagents (`roadmap`, `ingest`, …) | Same `task_correlation_id` as **`pipeline_task_correlation_id`** in the hand-off |
 | Layer 1 | Post–little-val `Task(validator)` | New `task_correlation_id` per invocation |
 | Layer 1 | `Task(prompt_craft)` | New `task_correlation_id` per invocation |
+| Layer 1 | `Task(gitforge)` (post **queue.mdc A.7a**) | Same comms pair as other L1 `Task` launches; on failure, **Proof-on-failure** per [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § Proof-on-failure |
 | Layer 2 (pipeline) | `Task(validator)`, `Task(internal-repair-agent)`, `Task(research)` | **Required**; set **`parent_task_correlation_id`** = **`pipeline_task_correlation_id`** from the pipeline hand-off |
 
 **No opt-out** for whitelisted nested helpers when the pipeline invokes them.
@@ -47,6 +48,13 @@ For **each** `Task` call, append **two** lines to `.technical/task-handoff-comms
 Both lines share the same **`task_correlation_id`** (new UUID per `Task` invocation).
 
 **Layer 1 → Layer 2:** The correlation id for that dispatch **must** appear in the mandatory hand-off telemetry as **`pipeline_task_correlation_id`** (see [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]]) so the pipeline can copy it onto every nested helper comms row as **`parent_task_correlation_id`**.
+
+---
+
+## Failed or impossible Task invocation
+
+- When comms are **enabled**, a mandated `Task` call that **fails** or **cannot be invoked** still requires a **`return_in`** line for the same **`task_correlation_id`** as **`handoff_out`**, with **`body`** = verbatim/sanitized host error or the fixed attestation in **Proof-on-failure**, and **`fallback_reason`** = **`task_tool_call_failed`** or **`task_tool_not_exposed_in_session`** (see [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § Proof-on-failure). Omitting **`return_in`** on failure leaves no audit trail.
+- Full obligations (Errors.md, fixed string, parallel bundle paths) are normative in **Proof-on-failure**; this spec only defines the JSONL shape.
 
 ---
 
@@ -70,7 +78,7 @@ Both lines share the same **`task_correlation_id`** (new UUID per `Task` invocat
 | `sanitization_rules_applied` | string[] | yes | e.g. `["strip_secrets", "redact_home"]`; empty array if none |
 | `launch_mode` | string | no but recommended | `native_subagent` \| `generalPurpose_fallback` — copied from Task harden metadata when available; omitted for legacy calls. |
 | `contract_satisfied` | boolean \| null | no but recommended on `return_in` | When the callee emits a `task_harden_result` footer, callers SHOULD project its `contract_satisfied` value here (`null` or omit when unknown). |
-| `fallback_reason` | string | no | Short machine code such as `helper_not_selected_for_profile`, `task_enum_missing`, `generalPurpose_fallback_failed` when a fallback or profile-based skip occurs. |
+| `fallback_reason` | string | no | Short machine code: `helper_not_selected_for_profile`, `task_enum_missing`, `generalPurpose_fallback_failed`, or for failed Layer 0/1/tail launches **`task_tool_call_failed`** / **`task_tool_not_exposed_in_session`** (see § Failed or impossible Task invocation). |
 
 **Optional (large payloads):**
 
