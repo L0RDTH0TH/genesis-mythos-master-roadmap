@@ -3,7 +3,7 @@ title: Phase 2.4.5 - Commit decision finalization, replay safety, and audit hand
 roadmap-level: tertiary
 phase-number: 2
 subphase-index: "2.4.5"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 45
@@ -11,7 +11,7 @@ handoff_readiness: 88
 created: 2026-03-31
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-2
 para-type: Project
 links:

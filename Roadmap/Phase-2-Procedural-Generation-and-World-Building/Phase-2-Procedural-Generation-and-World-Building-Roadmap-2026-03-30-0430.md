@@ -3,7 +3,7 @@ title: Phase 2 — Procedural Generation and World Building
 roadmap-level: primary
 phase-number: 2
 subphase-index: "0"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 85
@@ -13,11 +13,11 @@ handoff_readiness: 86
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase
 para-type: Project
 links:
-  - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
+  - "[[sandbox-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
 ---
 
 ## Phase 2 — Procedural Generation and World Building
@@ -93,7 +93,7 @@ At this primary conceptual depth, pseudo-code is not required. Readers should be
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```

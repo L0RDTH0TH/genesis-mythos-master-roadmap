@@ -3,7 +3,7 @@ title: Phase 4 — Perspective Split and Control Systems
 roadmap-level: primary
 phase-number: 4
 subphase-index: "4"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 85
@@ -13,11 +13,11 @@ handoff_readiness: 86
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase
 para-type: Project
 links:
-  - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
+  - "[[sandbox-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
   - "[[Phase-4-1-Narrative-Rendering-and-Consumer-Surface-Lanes-Roadmap-2026-04-03-2015]]"
 ---
 
@@ -111,7 +111,7 @@ At **primary** conceptual depth, **no pseudo-code** is required. **Interfaces + 
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```

@@ -4,14 +4,14 @@ created: 2026-04-04
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-5
 para-type: Project
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 parent_roadmap_note: "[[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]]"
 decision_kind: deepen
 queue_entry_id: followup-deepen-phase5-51-rollup-nl-gwt-gmm-20260404T181000Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

@@ -3,7 +3,7 @@ title: Phase 2.5 - Deterministic decision telemetry and post-commit audit bridge
 roadmap-level: secondary
 phase-number: 2
 subphase-index: "2.5"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 28
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-03-31
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-2
 para-type: Project
 links:
@@ -92,7 +92,7 @@ At this secondary depth, pseudo-code is not required. Readers should be able to 
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-5-Deterministic-Decision-Telemetry-and-Post-Commit-Audit-Bridge"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-5-Deterministic-Decision-Telemetry-and-Post-Commit-Audit-Bridge"
 WHERE roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

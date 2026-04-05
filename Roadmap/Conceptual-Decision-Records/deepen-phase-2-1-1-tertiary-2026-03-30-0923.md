@@ -4,13 +4,13 @@ created: 2026-03-30
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 parent_roadmap_note: "[[Phase-2-1-1-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-03-30-0923]]"
 decision_kind: deepen
 queue_entry_id: pb-craft-20260330T050422Z-8f7e7e5c-7a9c-4c55-9e2e-5c2e3b7f1c0a
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

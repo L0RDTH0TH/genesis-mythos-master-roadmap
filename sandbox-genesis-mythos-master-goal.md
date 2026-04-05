@@ -8,7 +8,7 @@ tags:
   - restored-from-unaltered-capture
   - manual-mutilation-only
 source:
-  - - Backups/Per-Change/Source-genesis-mythos-master-goal-unaltered-capture-2026-03-07-0033-2026-03-08-0900-2026-03-11-0533-2026-03-14-1200--a8815e27--20260314-120000.md.bak
+  - - Backups/Per-Change/Source-sandbox-genesis-mythos-master-goal-unaltered-capture-2026-03-07-0033-2026-03-08-0900-2026-03-11-0533-2026-03-14-1200--a8815e27--20260314-120000.md.bak
 ---
 
 # AI Output Capture

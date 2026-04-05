@@ -3,7 +3,7 @@ title: Phase 5.2.2 — Cross-bundle compatibility matrix and multi-bundle sessio
 roadmap-level: tertiary
 phase-number: 5
 subphase-index: "5.2.2"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: in-progress
 priority: high
 progress: 90
@@ -11,7 +11,7 @@ handoff_readiness: 87
 created: 2026-04-04
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-5
 para-type: Project
 links:

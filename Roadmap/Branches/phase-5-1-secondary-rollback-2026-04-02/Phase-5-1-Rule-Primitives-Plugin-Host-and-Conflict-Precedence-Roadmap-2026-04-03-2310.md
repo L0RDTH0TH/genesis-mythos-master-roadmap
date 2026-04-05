@@ -3,7 +3,7 @@ title: Phase 5.1 - Rule Primitives, Plugin Host, Conflict Precedence
 roadmap-level: secondary
 phase-number: 5
 subphase-index: "5.1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: complete
 priority: high
 progress: 100
@@ -13,7 +13,7 @@ archived_from_active_tree: 2026-04-02
 archive_reason: operator rollback — stabilize Second-Brain / regen cadence; next authoritative secondary 5.1 will be re-minted from clean RESUME_ROADMAP
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-5
 para-type: Project
 links:
@@ -106,7 +106,7 @@ At secondary conceptual depth, no pseudo-code is required. Algorithm sketches an
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-5-Rule-System-Integration-and-Extensibility/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-5-Rule-System-Integration-and-Extensibility/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence"
 WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

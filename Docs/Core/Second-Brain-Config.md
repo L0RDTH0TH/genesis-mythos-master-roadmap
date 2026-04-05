@@ -40,12 +40,76 @@ Single source of truth for pipeline and skill configuration. Skills and rules th
 - **queue_nudge_enabled**: true | false — when true, nudge is allowed when queue has pending entries.
 - **auto_cleanup_after_process**: true | false — when true, run queue-cleanup skill after each EAT-QUEUE run (auto-mark failed entries, append to Errors.md). When false, cleanup only when user runs "Clear queue" or "Queue cleanup".
 - **re_try_max_loops**: 3 — cap on re-try spins per thread (e.g. same section/phase_path). When exceeded, abort re-try and create cap-hit wrapper (A: Force approve, B: Prune branch, 0: Re-wrap full phase). Document in Parameters.md.
-- **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read `.technical/eat_queue_run_plan.json` produced by `python -m eat_queue_core plan` and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
+- **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read **EQPLAN** (`eat_queue_run_plan.json` colocated with **PQ** — legacy `.technical/eat_queue_run_plan.json` or per-track under `.technical/parallel/<track>/`; see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**) produced by `python3 -m scripts.eat_queue_core.full_cycle` / plan and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
+- **allowed_lanes** (under **`queue:`** YAML): list of strings allowed for **`queue_lane`** on prompt-queue JSONL lines and for Layer 0 **`EAT-QUEUE lane <name>`**. Default in YAML below: `default`, `shared`, `sandbox`, `godot`, `core`. Unknown lane on append or filter → reject / error (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes).
 
 The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above):
 
 queue:
   python_orchestrator_enabled: true
+  allowed_lanes:
+    - default
+    - shared
+    - sandbox
+    - godot
+    - core
+
+## parallel_execution (dual-track EAT-QUEUE; two Cursor chats)
+
+- **enabled**: when **true** and Layer 0 passes **`EAT-QUEUE lane sandbox`** or **`lane godot`**, the Queue subagent uses **per-track bundles** under `.technical/parallel/<track>/` for the prompt queue, plan JSON, continuation log, audit JSONL, and optional tmp-prompt (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**).
+- **default_to_legacy**: when **true**, ignore bundle routing even if enabled (single `.technical/prompt-queue.jsonl`).
+- **GitForge**: global **`.technical/.gitforge.lock`** with **`lock_timeout_seconds`**; **`policy: lock_last_wins`** — if lock not acquired, skip GitForge and log (see [[.cursor/agents/gitforge.md|agents/gitforge.md]]).
+- **Watcher**: keep canonical **`watcher.canonical_path`** for the Obsidian plugin; optional **per-track mirrors** when **`watcher.enable_mirrors`** is true (see [[.cursor/rules/always/watcher-result-append.mdc|watcher-result-append]]).
+
+Machine-readable block (keep aligned with bullets):
+
+```yaml
+parallel_execution:
+  enabled: true
+  default_to_legacy: false
+  tracks:
+    - id: sandbox
+      lane: sandbox
+      technical_subdir: parallel/sandbox
+      branch_prefix: sandbox-
+      export_path: "/home/darth/Documents/gmm-roadmap-export"
+    - id: godot
+      lane: godot
+      technical_subdir: parallel/godot
+      branch_prefix: godot-
+      export_path: "/home/darth/Documents/gmm-roadmap-export"
+  gitforge:
+    lock_timeout_seconds: 30
+    policy: lock_last_wins
+  watcher:
+    canonical_path: "3-Resources/Watcher-Result.md"
+    enable_mirrors: true
+```
+
+## gitforge (Layer 1 post-queue git/export)
+
+- **enabled**: true — when **true**, Queue may run **A.7a** after a successful prompt-queue **A.7** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]]). Set **false** to disable the post-queue git tail.
+- **Pipeline tier:** **`effective_pipeline_mode`** **`speed`** → GitForge is **not** called (fast runs skip automatic vault git). **`balance`** and **`quality`** → **one** **`Task(gitforge)`** after **A.7**, hand-off **`mode: balance`** for both; **`quality`** is traced via **`source_pipeline_mode`** (same git rules as balance — quality is stricter **pipeline** enforcement, not a separate export tier).
+- **export_repo_root**: absolute path to the `gmm-roadmap-export` checkout (see [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]).
+- **integration_branch**: branch name treated as canonical spine for `.cursor/` + export Docs (default `iteration-2-roadmap-rules`).
+- **invoke_on_empty_queue**: false — when false, skip GitForge when there were no prompt-queue entries to process after A.1 (Step 0–only or empty file).
+- **invoke_only_on_clean_success**: true — when true, skip GitForge if any prompt-queue entry this run got a failure disposition.
+
+Machine-readable block (keep aligned with bullets):
+
+```yaml
+gitforge:
+  enabled: true
+  export_repo_root: "/home/darth/Documents/gmm-roadmap-export"
+  vault_repo_remote: "origin"
+  integration_branch: "iteration-2-roadmap-rules"
+  invoke_on_empty_queue: false
+  invoke_only_on_clean_success: true
+  modes:
+    fast: { tag: false, export_sync: false }
+    balance: { tag: true, export_sync: false }
+    extreme: { tag: true, export_sync: false, require_confirmation: false }
+```
 
 ## task_harden (capability probing)
 

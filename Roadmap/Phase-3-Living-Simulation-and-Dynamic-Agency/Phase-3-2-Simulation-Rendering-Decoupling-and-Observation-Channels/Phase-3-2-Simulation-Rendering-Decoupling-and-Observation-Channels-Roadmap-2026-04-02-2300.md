@@ -3,7 +3,7 @@ title: Phase 3.2 — Simulation / rendering decoupling + observation channels
 roadmap-level: secondary
 phase-number: 3
 subphase-index: "3.2"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 72
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-04-02
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-3
 para-type: Project
 links:
@@ -130,7 +130,7 @@ At **secondary** conceptual depth, **no pseudo-code** is required. **Interface s
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency/Phase-3-2-Simulation-Rendering-Decoupling-and-Observation-Channels"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency/Phase-3-2-Simulation-Rendering-Decoupling-and-Observation-Channels"
 WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

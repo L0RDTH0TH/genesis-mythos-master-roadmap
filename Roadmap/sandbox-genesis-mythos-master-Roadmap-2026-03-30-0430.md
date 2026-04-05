@@ -1,8 +1,8 @@
 ---
-title: genesis-mythos-master Roadmap
+title: sandbox-genesis-mythos-master Roadmap
 roadmap-level: master
 phase-number: 0
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 50
@@ -10,22 +10,22 @@ created: 2026-03-30
 tags:
   - roadmap
   - project
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
 para-type: Project
 links:
-  - "[[genesis-mythos-master-Roadmap-MOC]]"
+  - "[[sandbox-genesis-mythos-master-Roadmap-MOC]]"
 roadmap_generation_status: complete
 ---
 
-# genesis-mythos-master Roadmap
+# sandbox-genesis-mythos-master Roadmap
 
 > [!info] Generation provenance
-> Generated from `[[Source-genesis-mythos-master-goal-2026-03-30-0430]]` on 2026-03-30T04:30:00Z  
+> Generated from `[[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]` on 2026-03-30T04:30:00Z  
 > Queue: `roadmap-setup-gmm-20260330T043000Z` (ROADMAP_MODE)  
 > Guidance: No additional guidance provided.  
 > Intent confidence: high
 
-Source: [[Source-genesis-mythos-master-goal-2026-03-30-0430]]
+Source: [[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]
 
 ## Phase 1 — Conceptual Foundation and Core Architecture
 
@@ -33,7 +33,7 @@ Establish decoupled layers, the procedural generation graph, intent interfaces, 
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```
@@ -44,7 +44,7 @@ Deliver the collaborative forge: pipeline stages, intent loops, scaffold refinem
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```
@@ -55,7 +55,7 @@ Layer persistent simulation, DM overwrite semantics, vitality/consequence system
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```
@@ -66,7 +66,7 @@ Ship first-person player rig, DM flight + orthographic tabletop, camera interpol
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```
@@ -77,7 +77,7 @@ Integrate rules-as-plugins, demonstrate swaps, and document ecosystem seams.
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-5-Rule-System-Integration-and-Extensibility"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-5-Rule-System-Integration-and-Extensibility"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```
@@ -88,14 +88,14 @@ Assemble the Q3 2026 horizon prototype: combined vertical slice, tests, provenan
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-6-Prototype-Assembly-Testing-and-Iteration"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-6-Prototype-Assembly-Testing-and-Iteration"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```
 
 ## Related
 
-- [[genesis-mythos-master-Roadmap-MOC]]
-- [[Source-genesis-mythos-master-goal-2026-03-30-0430]]
+- [[sandbox-genesis-mythos-master-Roadmap-MOC]]
+- [[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]
 - [[roadmap-state]]
 - [[workflow_state]]

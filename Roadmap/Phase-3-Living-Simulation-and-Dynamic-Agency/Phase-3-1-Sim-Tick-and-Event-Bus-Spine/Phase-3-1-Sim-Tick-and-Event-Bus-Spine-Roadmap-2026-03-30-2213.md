@@ -3,7 +3,7 @@ title: Phase 3.1 — Sim tick + event bus spine
 roadmap-level: secondary
 phase-number: 3
 subphase-index: "3.1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 52
@@ -11,7 +11,7 @@ handoff_readiness: 84
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-3
 para-type: Project
 links:
@@ -112,7 +112,7 @@ At **secondary** conceptual depth, **no pseudo-code** is required; interfaces ar
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency/Phase-3-1-Sim-Tick-and-Event-Bus-Spine"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-3-Living-Simulation-and-Dynamic-Agency/Phase-3-1-Sim-Tick-and-Event-Bus-Spine"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

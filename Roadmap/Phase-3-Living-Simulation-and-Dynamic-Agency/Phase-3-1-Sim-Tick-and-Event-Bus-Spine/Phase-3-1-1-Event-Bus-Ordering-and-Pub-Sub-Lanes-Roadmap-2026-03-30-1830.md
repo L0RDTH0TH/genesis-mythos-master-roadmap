@@ -3,7 +3,7 @@ title: Phase 3.1.1 — Event bus ordering + pub/sub lanes
 roadmap-level: tertiary
 phase-number: 3
 subphase-index: "3.1.1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 48
@@ -11,7 +11,7 @@ handoff_readiness: 85
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-3
 para-type: Project
 links:

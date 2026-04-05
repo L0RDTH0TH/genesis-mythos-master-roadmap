@@ -3,7 +3,7 @@ title: Redirect — Phase 3.2.1 observation channel taxonomy
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - redirect-stub
 para-type: Project
 ---

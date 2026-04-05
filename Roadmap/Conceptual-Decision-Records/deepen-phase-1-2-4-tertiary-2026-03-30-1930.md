@@ -4,13 +4,13 @@ created: 2026-03-30
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 parent_roadmap_note: "[[Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-03-30-1930]]"
 decision_kind: deepen
 queue_entry_id: resume-gmm-deepen-124-20260330T193000Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

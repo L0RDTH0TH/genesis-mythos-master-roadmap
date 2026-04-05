@@ -4,9 +4,9 @@ created: 2026-04-03
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 parent_roadmap_note: "[[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]]"
 queue_entry_id: followup-deepen-phase5-51-mint-gmm-20260403T231000Z
 validation_status: pattern_only
@@ -29,4 +29,4 @@ Advances the master goal toward **toolable, deterministic, operator-legible** wo
 
 ## Validation evidence
 
-Active secondary note [[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]] — **GWT-5.1-A–K** narrowed vs primary **GWT-5-A–K**; archive copy [[1-Projects/genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]. Queue **`followup-deepen-phase5-51-mint-gmm-20260403T231000Z`** — RESUME_ROADMAP **deepen** remint after rollback + conceptual reset (`parent_run_id: eatq-20260403-layer1-gmm-p51-remint`).
+Active secondary note [[Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2330]] — **GWT-5.1-A–K** narrowed vs primary **GWT-5-A–K**; archive copy [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Branches/phase-5-1-secondary-rollback-2026-04-02/Phase-5-1-Rule-Primitives-Plugin-Host-and-Conflict-Precedence-Roadmap-2026-04-03-2310]]. Queue **`followup-deepen-phase5-51-mint-gmm-20260403T231000Z`** — RESUME_ROADMAP **deepen** remint after rollback + conceptual reset (`parent_run_id: eatq-20260403-layer1-gmm-p51-remint`).

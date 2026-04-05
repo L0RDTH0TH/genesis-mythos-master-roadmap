@@ -3,7 +3,7 @@ title: Phase 4.1 — Narrative + rendering consumer surface lanes
 roadmap-level: secondary
 phase-number: 4
 subphase-index: "4.1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: complete
 priority: high
 progress: 100
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-04-03
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-4
 para-type: Project
 links:
@@ -110,7 +110,7 @@ At **secondary** depth, **interfaces + algorithm sketches** for **lane adapters*
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-1-Narrative-Rendering-and-Consumer-Surface-Lanes"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-1-Narrative-Rendering-and-Consumer-Surface-Lanes"
 WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

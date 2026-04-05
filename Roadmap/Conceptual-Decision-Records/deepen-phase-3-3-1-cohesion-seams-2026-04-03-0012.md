@@ -4,13 +4,13 @@ created: 2026-04-03
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 parent_roadmap_note: "[[Phase-3-3-1-Vitality-Consequence-Persistence-Cohesion-Seams-Roadmap-2026-04-03-0012]]"
 decision_kind: deepen
 queue_entry_id: followup-deepen-phase3-331-gmm-20260403T001500Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

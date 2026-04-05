@@ -3,7 +3,7 @@ title: Phase 2.7.2 - First-tick dry-run shadow, hook matrix, and operator bootst
 roadmap-level: tertiary
 phase-number: 2
 subphase-index: "2.7.2"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 48
@@ -11,7 +11,7 @@ handoff_readiness: 82
 created: 2026-04-01
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-2
 para-type: Project
 links:

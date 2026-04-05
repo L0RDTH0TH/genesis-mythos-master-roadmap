@@ -24,6 +24,7 @@ class QueueEntry(BaseModel):
     params: dict | None = None
     queue_priority: str | None = None
     validator_repair_followup: bool | None = None
+    queue_lane: str | None = None
 
 
 class DispatchIntent(BaseModel):

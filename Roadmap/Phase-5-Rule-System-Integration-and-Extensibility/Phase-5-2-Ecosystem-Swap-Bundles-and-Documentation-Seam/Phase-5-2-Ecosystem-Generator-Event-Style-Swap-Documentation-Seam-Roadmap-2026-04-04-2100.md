@@ -3,7 +3,7 @@ title: Phase 5.2 — Ecosystem generator / event / style swap documentation seam
 roadmap-level: secondary
 phase-number: 5
 subphase-index: "5.2"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: complete
 priority: high
 progress: 92
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-04-04
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-5
 para-type: Project
 links:
@@ -135,7 +135,7 @@ CDR: [[Conceptual-Decision-Records/deepen-phase-5-2-secondary-rollup-nl-gwt-2026
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-5-Rule-System-Integration-and-Extensibility/Phase-5-2-Ecosystem-Swap-Bundles-and-Documentation-Seam"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-5-Rule-System-Integration-and-Extensibility/Phase-5-2-Ecosystem-Swap-Bundles-and-Documentation-Seam"
 WHERE roadmap-level = "secondary" OR roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

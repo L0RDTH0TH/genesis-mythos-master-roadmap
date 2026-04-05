@@ -3,7 +3,7 @@ title: Phase 1 — Conceptual Foundation and Core Architecture
 roadmap-level: primary
 phase-number: 1
 subphase-index: "0"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 72
@@ -12,11 +12,11 @@ handoff_readiness: 82
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase
 para-type: Project
 links:
-  - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
+  - "[[sandbox-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
 ---
 
 ## Phase 1 — Conceptual Foundation and Core Architecture
@@ -94,7 +94,7 @@ At this conceptual depth, readers can sketch **without** full implementation: ps
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```

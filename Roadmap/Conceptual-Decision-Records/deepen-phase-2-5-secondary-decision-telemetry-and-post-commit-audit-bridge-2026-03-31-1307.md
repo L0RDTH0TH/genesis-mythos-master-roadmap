@@ -4,13 +4,13 @@ created: 2026-03-31
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
-project-id: genesis-mythos-master
+  - sandbox-genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 para-type: Project
 roadmap_track: conceptual
 decision_type: deepen
 queue_entry_id: resume-deepen-gmm-25-20260330T130745Z-forward
-parent_roadmap_note: 1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-5-Deterministic-Decision-Telemetry-and-Post-Commit-Audit-Bridge/Phase-2-5-Deterministic-Decision-Telemetry-and-Post-Commit-Audit-Bridge-Roadmap-2026-03-31-1307.md
+parent_roadmap_note: 1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-5-Deterministic-Decision-Telemetry-and-Post-Commit-Audit-Bridge/Phase-2-5-Deterministic-Decision-Telemetry-and-Post-Commit-Audit-Bridge-Roadmap-2026-03-31-1307.md
 validation_status: evidence_backed_conceptual
 ---
 

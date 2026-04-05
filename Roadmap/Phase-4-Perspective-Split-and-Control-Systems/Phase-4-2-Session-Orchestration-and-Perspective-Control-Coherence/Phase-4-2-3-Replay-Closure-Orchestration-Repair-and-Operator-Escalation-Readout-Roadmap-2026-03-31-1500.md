@@ -3,7 +3,7 @@ title: Phase 4.2.3 — Replay closure, orchestration repair, and operator escala
 roadmap-level: tertiary
 phase-number: 4
 subphase-index: "4.2.3"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 58
@@ -12,7 +12,7 @@ handoff_readiness: 87
 created: 2026-03-31
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-4
 para-type: Project
 links:

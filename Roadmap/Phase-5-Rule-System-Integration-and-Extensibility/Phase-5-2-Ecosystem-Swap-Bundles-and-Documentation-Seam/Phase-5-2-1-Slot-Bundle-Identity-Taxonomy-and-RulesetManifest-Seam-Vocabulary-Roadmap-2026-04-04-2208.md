@@ -3,7 +3,7 @@ title: Phase 5.2.1 — Slot / bundle identity taxonomy vs RulesetManifest + 5.1.
 roadmap-level: tertiary
 phase-number: 5
 subphase-index: "5.2.1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: in-progress
 priority: high
 progress: 88
@@ -11,7 +11,7 @@ handoff_readiness: 86
 created: 2026-04-04
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-5
 para-type: Project
 links:

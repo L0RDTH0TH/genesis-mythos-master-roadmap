@@ -4,13 +4,13 @@ created: 2026-04-04
 tags:
   - conceptual-decision-record
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 parent_roadmap_note: "[[Phase-5-2-1-Slot-Bundle-Identity-Taxonomy-and-RulesetManifest-Seam-Vocabulary-Roadmap-2026-04-04-2208]]"
 decision_kind: deepen
 queue_entry_id: followup-deepen-phase5-521-slot-bundle-gmm-20260404T220800Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

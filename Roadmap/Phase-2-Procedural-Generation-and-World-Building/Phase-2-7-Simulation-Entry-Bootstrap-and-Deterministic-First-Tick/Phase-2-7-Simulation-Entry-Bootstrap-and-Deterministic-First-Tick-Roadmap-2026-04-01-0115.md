@@ -3,7 +3,7 @@ title: Phase 2.7 - Simulation-entry bootstrap and deterministic first-tick contr
 roadmap-level: secondary
 phase-number: 2
 subphase-index: "2.7"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 52
@@ -11,7 +11,7 @@ handoff_readiness: 84
 created: 2026-04-01
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-2
 para-type: Project
 links:
@@ -84,7 +84,7 @@ At secondary depth, **no pseudo-code** required; interfaces are NL contracts ref
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-7-Simulation-Entry-Bootstrap-and-Deterministic-First-Tick"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-7-Simulation-Entry-Bootstrap-and-Deterministic-First-Tick"
 WHERE roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

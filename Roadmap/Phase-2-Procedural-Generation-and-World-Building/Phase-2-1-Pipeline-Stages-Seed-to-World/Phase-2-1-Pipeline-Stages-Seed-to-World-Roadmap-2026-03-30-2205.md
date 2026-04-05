@@ -3,7 +3,7 @@ title: Phase 2.1 — Pipeline stages from seed to world
 roadmap-level: secondary
 phase-number: 2
 subphase-index: "1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 35
@@ -11,7 +11,7 @@ handoff_readiness: 76
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-2
 para-type: Project
 links:
@@ -108,7 +108,7 @@ At this depth, readers can sketch **an ordered stage list** and **typed input/ou
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World"
 WHERE roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```

@@ -3,7 +3,7 @@ title: Phase 6 — Prototype Assembly, Testing, and Iteration
 roadmap-level: primary
 phase-number: 6
 subphase-index: "1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 28
@@ -12,11 +12,11 @@ handoff_readiness: 86
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase
 para-type: Project
 links:
-  - "[[genesis-mythos-master-Roadmap-2026-03-30-0430]]"
+  - "[[sandbox-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
   - "[[Phase-5-Rule-System-Integration-and-Extensibility-Roadmap-2026-03-30-0430]]"
   - "[[Phase-4-Perspective-Split-and-Control-Systems-Roadmap-2026-03-30-0430]]"
   - "[[Phase-3-Living-Simulation-and-Dynamic-Agency-Roadmap-2026-03-30-0430]]"
@@ -108,7 +108,7 @@ At **primary** conceptual depth, **no pseudo-code** is required. **Typed bodies*
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-6-Prototype-Assembly-Testing-and-Iteration"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-6-Prototype-Assembly-Testing-and-Iteration"
 WHERE roadmap-level = "primary" OR roadmap-level = "secondary" OR roadmap-level = "tertiary"
 SORT subphase-index ASC, file.name ASC
 ```

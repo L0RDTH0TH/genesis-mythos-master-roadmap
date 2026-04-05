@@ -4,13 +4,13 @@ created: 2026-03-30
 tags:
   - roadmap
   - conceptual-decision-record
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
 para-type: Project
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 parent_roadmap_note: "[[Phase-2-6-2-Operator-Session-Escalation-Surfaces-and-Forge-Continuity-Roadmap-2026-03-30-1200]]"
 decision_kind: deepen
 queue_entry_id: resume-deepen-gmm-262-post-recal-rollup-20260401T010700Z
-master_goal: "[[Source-genesis-mythos-master-goal-2026-03-30-0430]]"
+master_goal: "[[Source-sandbox-genesis-mythos-master-goal-2026-03-30-0430]]"
 validation_status: pattern_only
 related_research: []
 ---

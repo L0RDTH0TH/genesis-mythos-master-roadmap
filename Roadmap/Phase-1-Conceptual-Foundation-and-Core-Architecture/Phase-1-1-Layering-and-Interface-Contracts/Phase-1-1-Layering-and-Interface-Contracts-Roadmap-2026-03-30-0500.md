@@ -3,7 +3,7 @@ title: Phase 1.1 — Layering and Interface Contracts
 roadmap-level: secondary
 phase-number: 1
 subphase-index: "1.1"
-project-id: genesis-mythos-master
+project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
 progress: 40
@@ -11,7 +11,7 @@ handoff_readiness: 82
 created: 2026-03-30
 tags:
   - roadmap
-  - genesis-mythos-master
+  - sandbox-genesis-mythos-master
   - phase-1
 para-type: Project
 links:
@@ -68,7 +68,7 @@ Readers can sketch **interface sketches** (function-shaped bullets) without a re
 
 ```dataview
 TABLE WITHOUT ID roadmap-level AS "Level", file.link AS "Note", subphase-index AS "Index", status, progress AS "%"
-FROM "1-Projects/genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts"
+FROM "1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts"
 WHERE roadmap-level = "tertiary" OR roadmap-level = "task"
 SORT subphase-index ASC, file.name ASC
 ```
