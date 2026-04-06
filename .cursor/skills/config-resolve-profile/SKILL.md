@@ -91,7 +91,7 @@ If **after parsing** no familial family is set (no `speed_mode`, `repair_strateg
 | `repair_strategy` | `repair_first`   |
 | `validator_tier`  | `forgiving`      |
 
-This matches the documented **default** labels in **[[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]]** and **[[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]]** § `profiles`.
+This matches the documented **default** labels in **[[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]]** and **[[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]]** § `profiles` (Option B: canonical three-line **default familial bundle** in Config for human parity).
 
 ## Merge order (normative)
 

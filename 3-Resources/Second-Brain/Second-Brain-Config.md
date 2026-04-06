@@ -13,9 +13,11 @@ Single source of truth for pipeline and skill configuration. Skills and rules th
 
 ## profiles (familial config)
 
+**Preferred way:** use familial keys on queue **`params`** (or nested **`params.profiles`**). **Flat keys remain fully supported** as overrides via **deepMerge** (explicit queue entry → profile expansion → this file → implicit defaults).
+
 **Canonical reference:** [[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]] — `speed_mode`, `repair_strategy`, `validator_tier` and **deepMerge** order (queue entry explicit keys win over profile expansion over this file over defaults).
 
-**Auto-applied default profile:** When a queue line omits familial keys, **config-resolve-profile** still applies the same default bundle as **`balance` + `repair_first` + `forgiving`** in memory during merge (see Config-Profiles **Resolution flow**). Flat YAML values in *this* file are unchanged; behavior is additive in the resolver.
+**Auto-applied default profile:** When a queue line omits familial keys, **config-resolve-profile** still applies the same default bundle as **`balance` + `repair_first` + `forgiving`** in memory during merge (see Config-Profiles **Resolution flow**). The **canonical default labels** (Option B) are spelled out below; flat YAML in *this* file for overlapping keys stays as **explicit overrides** — behavior is unchanged for existing runs.
 
 **Deprecation (soft):** Prefer familial names on queue **`params`** (or the nested `params.profiles` object) instead of setting **`queue.inline_*`**, **`queue.roadmap_pass_order`**, **`validator.tiered_blocks_enabled`**, and **`pipeline_mode`** directly for every run. **All flat keys remain supported** and merge with expanded profiles per Config-Profiles; nothing is removed.
 
@@ -32,6 +34,14 @@ profiles:
   validator_tier:
     aggressive: {}
     forgiving: {}   # default
+```
+
+**Canonical default familial bundle (Option B)** — same three labels the resolver injects when familial keys are omitted (documentation mirror; not a second merge root):
+
+```yaml
+speed_mode: balance
+repair_strategy: repair_first
+validator_tier: forgiving
 ```
 
 ## hub_names
@@ -67,13 +77,22 @@ profiles:
 - **central_pool_fanout_enabled**: when **true**, Layer 1 **A.0.4** runs **`pool_sync`** before wrappers so **`.technical/prompt-queue.jsonl`** (pool) is filtered into per-track **PQ**; **A.7** removes consumed ids from **pool** and **PQ** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.4**, **A.7**).
 - **allowed_lanes** (under **`queue:`** YAML): list of strings allowed for **`queue_lane`** on prompt-queue JSONL lines and for Layer 0 **`EAT-QUEUE lane <name>`**. Default in YAML below: `default`, `shared`, `sandbox`, `godot`, `core`. Unknown lane on append or filter → reject / error (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes).
 - **harness_validation_mode** (`advisory` \| `strict`, default **`advisory`**): Layer 1 **A.5i** after pipeline **Task** returns — parse **`nested_subagent_ledger`**, **`blocked_scope`** on hard-block paths; **`strict`** upgrades refusals per [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4.
+- **roadmap_pass_order** (`repair_first` \| `forward_first`): Layer 1 **A.4c** roadmap multi-dispatch; default **`repair_first`** aligns with familial **`repair_strategy: repair_first`** (overridable flat key).
+- **inline_a5b_repair_drain_enabled**: default **`true`** when omitted in older configs; explicit **`true`** here — Pass 3 repair drain (see [[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]).
+- **inline_forward_followup_drain_enabled**: default **`false`** — Pass 3 forward follow-up wave; familial default **`repair_first`** keeps this off unless you enable forward drain.
+- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: default **3** each — Pass 3 generation caps (**A.5.0**).
 
-The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above):
+The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above). Keys **`roadmap_pass_order`**, **`inline_*`**, and **`max_inline_*`** below mirror the **default familial bundle** (`repair_first` + `balance`-shaped Pass 3 behavior); they remain **explicit flat overrides** — change them here to diverge from profile defaults without editing queue JSONL.
 
 queue:
   python_orchestrator_enabled: true
   central_pool_fanout_enabled: true
   harness_validation_mode: advisory
+  roadmap_pass_order: repair_first
+  inline_a5b_repair_drain_enabled: true
+  inline_forward_followup_drain_enabled: false
+  max_inline_a5b_repair_generations_per_run: 3
+  max_inline_forward_followup_generations_per_run: 3
   allowed_lanes:
     - default
     - shared
@@ -169,7 +188,7 @@ gitforge:
 
 ## pipeline_mode and validator_profiles
 
-- **pipeline_mode**: balance  # fast | balance | extreme — default validator/safety profile for roadmap/research
+- **pipeline_mode**: balance  # fast | balance | extreme — default validator/safety profile for roadmap/research; **overridable flat key** (matches default **`speed_mode: balance`** expansion; see § **profiles**)
 - **validator_profiles**:
   - extreme:
     - l1_post_lv_policy: always
@@ -244,9 +263,11 @@ Validation-type → model (Cursor model id) or `"auto"`. Fixed model = stable ho
 - **roadmap_handoff**: Final validation pass on roadmap → one handoff-readiness report. High-stakes; use fixed model (Grok code). **Manual trigger only** via ROADMAP_HANDOFF_VALIDATE queue mode.
 - **research_synthesis**: Hostile check over synthesized research notes (sourcing strength, consistency, overclaim). **Liberal** type; use `"auto"` so pipelines can append VALIDATE runs frequently.
 - **Future types**: Add rows as needed (e.g. `ingest_classification: { model: "auto" }`). Document in Parameters which types are high-stakes (fixed model, manual-only) vs liberal (Auto, pipeline-appendable).
+- **tiered_blocks_enabled** (optional; in YAML below): default **`true`** — tiered nested validator Success gate; maps to familial **`validator_tier: forgiving`**. Set **`false`** for **`validator_tier: aggressive`**-style strict behavior (overridable flat key).
 
 ```yaml
 validator:
+  tiered_blocks_enabled: true   # overridable; matches default **validator_tier: forgiving** (tiered nested Success gate)
   roadmap_handoff:
     model: "grok-code"   # Cursor model id for Grok code; high-stakes → fixed model
   research_synthesis:

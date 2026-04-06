@@ -28,6 +28,7 @@ End-to-end resolution for one queue entry (Prompt Crafter step 9 and Queue **A.2
 flowchart TD
   raw_input[raw_queue_params_JSONL]
   parse[parse_familial_combo_strings]
+  config_labels[Second_Brain_Config_profiles_section_labels]
   default_bundle[default_bundle_if_no_familial_keys]
   merge_defaults[merge_implicit_defaults]
   merge_config[merge_Second_Brain_Config_flat]
@@ -37,6 +38,7 @@ flowchart TD
 
   raw_input --> parse
   parse --> default_bundle
+  config_labels -.->|"human parity; same three labels"| default_bundle
   default_bundle --> merge_defaults
   merge_defaults --> merge_config
   merge_config --> merge_profile
@@ -44,11 +46,30 @@ flowchart TD
   merge_explicit --> effective
 ```
 
-**Default bundle (auto-applied):** when no familial keys are present after parsing, agents inject **`speed_mode: balance`**, **`repair_strategy: repair_first`**, **`validator_tier: forgiving`** before the profile-expansion merge. That aligns **effective** behavior with the documented default labels without requiring every JSONL line to repeat them.
+**Default bundle (auto-applied):** when no familial keys are present after parsing, agents inject **`speed_mode: balance`**, **`repair_strategy: repair_first`**, **`validator_tier: forgiving`** before the profile-expansion merge. That aligns **effective** behavior with the documented default labels without requiring every JSONL line to repeat them. **Option B:** the same three labels are **also** spelled out in [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **`profiles`** (canonical default bundle); resolver behavior is unchanged — **Config** is the human-readable baseline.
 
 **Example — single familial key:** `speed_mode: extreme` expands per the **`speed_mode` → flat** table (e.g. `pipeline_mode: extreme`, **`validator_profiles.extreme`** row, stricter nested budgets, GitForge **balance** with quality trace — see § **`speed_mode`** and **Pipeline-Validator-Profiles**). Other families remain at **default bundle** values unless also set.
 
 **Merge order (later wins):** implicit defaults → **Second-Brain-Config** → profile expansion (from familial keys, including the default bundle) → explicit flat keys on the entry.
+
+---
+
+## Default bundle — literal flat defaults (Option B)
+
+When the **default familial bundle** (`balance` + `repair_first` + `forgiving`) is active, **effective** flat knobs match the following **documented** defaults (same values as in [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] where those keys are now listed for explicit override). **Queue** and **validator** keys are not redefined here — they merge per **deepMerge** above.
+
+| Area | Key | Default value |
+|------|-----|----------------|
+| Speed | `pipeline_mode` | `balance` |
+| Speed | `validator_profiles` row | use **balance** row from Config |
+| Repair / Pass 3 | `queue.roadmap_pass_order` | `repair_first` |
+| Repair / Pass 3 | `queue.inline_a5b_repair_drain_enabled` | `true` (treat absent as on) |
+| Repair / Pass 3 | `queue.inline_forward_followup_drain_enabled` | `false` |
+| Repair / Pass 3 | `queue.max_inline_a5b_repair_generations_per_run` | `3` |
+| Repair / Pass 3 | `queue.max_inline_forward_followup_generations_per_run` | `3` |
+| Validator | `validator.tiered_blocks_enabled` | `true` |
+
+**Queue continuation** (`queue_continuation.*`) is **not** part of the familial families; defaults remain per [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] and **Second-Brain-Config** when present.
 
 ---
 
@@ -141,6 +162,28 @@ Prefer familial keys on **`params`** (alongside `mode`, `project_id`, …). **Om
   }
 }
 ```
+
+### Flat key override on top of a profile
+
+Familial expansion runs **before** explicit flat keys on the entry. To force a **single** flat knob while keeping the rest of the default bundle, set the familial keys you want (or omit them for defaults) **and** add the flat override — the flat key **wins**.
+
+```json
+{
+  "mode": "RESUME_ROADMAP",
+  "params": {
+    "project_id": "sandbox-genesis-mythos-master",
+    "action": "deepen",
+    "speed_mode": "balance",
+    "repair_strategy": "repair_first",
+    "validator_tier": "forgiving",
+    "queue": {
+      "inline_forward_followup_drain_enabled": true
+    }
+  }
+}
+```
+
+Here **`queue.inline_forward_followup_drain_enabled: true`** overrides the default **`false`** from the **`repair_first`** profile expansion for this entry only.
 
 **Single profile:**
 
