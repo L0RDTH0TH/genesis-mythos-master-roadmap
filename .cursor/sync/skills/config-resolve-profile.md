@@ -104,7 +104,7 @@ Same as **Config-Profiles** § deepMerge — **later wins** at the same path:
 3. **Profile expansion** from normalized familial keys (including the default bundle when nothing was specified).
 4. **Explicit flat keys** on the queue entry / assembled **`params`** (highest precedence).
 
-**Empty-queue bootstrap:** **`queue_continuation.*`** is **not** familial — it merges as **Second-Brain-Config** (step **2**). **config-resolve-profile** does **not** append to **PQ** or run **A.1b**; **Layer 1** reads merged **Config** (including **`queue_continuation.empty_queue_bootstrap_enabled`**) when **A.2** finds **zero** valid entries and invokes **[[.cursor/rules/agents/queue.mdc|queue.mdc]]** **A.1b** after **pool_sync**. **Post–Pass 3** empty lane + bootstrap is **A.1b** territory, not resolver output.
+**Empty-queue bootstrap:** **`queue_continuation.*`** is **not** familial — it merges as **Second-Brain-Config** (step **2**). **empty_queue_bootstrap** uses **`queue_continuation.bootstrap_track`** (default **`conceptual`**) and sibling keys **`bootstrap_action`**, **`bootstrap_source`** from merged **Config** / **Config-Profiles** alignment (see **[[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]]**). **Layer 1** **A.1b** reads **`current_subphase_index`** from the workflow file resolved when **`bootstrap_source`** is **`workflow_state.md`** (path depends on **`bootstrap_track`**). **config-resolve-profile** does **not** append to **PQ** or run **A.1b**; **Post–Pass 3** empty lane + bootstrap is **A.1b** territory, not resolver output.
 
 **Arrays** replace as a whole unless a spec says otherwise.
 

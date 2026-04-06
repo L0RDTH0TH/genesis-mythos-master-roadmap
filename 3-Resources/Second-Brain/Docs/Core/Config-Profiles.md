@@ -68,8 +68,20 @@ When the **default familial bundle** (`balance` + `repair_first` + `forgiving`) 
 | Repair / Pass 3 | `queue.max_inline_a5b_repair_generations_per_run` | `8` (Repair-Heavy / Hygiene-Focused vault in **Second-Brain-Config** § **profiles**; default **3** when not using Repair-Heavy) |
 | Repair / Pass 3 | `queue.max_inline_forward_followup_generations_per_run` | `3` |
 | Validator | `validator.tiered_blocks_enabled` | `true` |
+| Empty-queue bootstrap (A.1b) | `queue_continuation.bootstrap_track` | `conceptual` — aligns with default **`speed_mode: balance`** + **`repair_strategy: repair_first`** (work-then-drain / Pass 3 hygiene); **not** a fourth familial key — set in **Second-Brain-Config** `queue_continuation` or override there |
 
-**Queue continuation** (`queue_continuation.*`) is **not** part of the familial families; defaults remain per [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] and **Second-Brain-Config** when present.
+**Queue continuation** (`queue_continuation.*`) is **not** part of the familial families; defaults remain per [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] and **Second-Brain-Config** when present. **`bootstrap_track`** defaults to **`conceptual`** in **Second-Brain-Config**; operators override in the same YAML block (see below).
+
+### Empty-queue bootstrap track (operator override)
+
+To work on the **execution** subtree instead of conceptual, set in **Second-Brain-Config** `queue_continuation`:
+
+```yaml
+queue_continuation:
+  bootstrap_track: execution
+```
+
+**Example:** *To work on execution track instead:* `bootstrap_track: execution` (keep **`bootstrap_source: workflow_state.md`** so **Layer 1** reads **`current_subphase_index`** from **`Roadmap/Execution/workflow_state-execution.md`** per **[[.cursor/rules/agents/queue.mdc|queue.mdc]]** **A.1b**). For ad-hoc tracks (e.g. **procedural**), set **`bootstrap_track`** to match **`params.roadmap_track`** / vault conventions; unknown tracks fall back gracefully when the workflow file is missing.
 
 ---
 
@@ -100,7 +112,7 @@ profiles:
 | Value | Primary flat keys |
 |-------|---------------------|
 | `fast` | `pipeline_mode: fast` (see `validator_profiles.fast`); GitForge: **skip** (`effective_pipeline_mode` **speed** → no **A.7a** `Task(gitforge)` per queue.mdc); `snapshot.batch_size_for_snapshot`: lower threshold bias toward **per-change** snapshots (use **3** when unset; operators may keep Config default **5**). |
-| `balance` | `pipeline_mode: balance` (default `validator_profiles.balance`); GitForge **balance**; `batch_size_for_snapshot: 5` (Config default). When **`queue_continuation.empty_queue_bootstrap_enabled: true`** in **Second-Brain-Config** and the **sandbox** (or lane) **PQ** is **empty** after **Pass 3** / **pool_sync**, **Layer 1** **A.1b** may **auto-append** a new **`RESUME_ROADMAP`** **`deepen`** for the **next** true work cycle (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**, **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**) — requires **non-empty** **queue-continuation** log or **unfinished** fallback per **A.1b**. |
+| `balance` | `pipeline_mode: balance` (default `validator_profiles.balance`); GitForge **balance**; `batch_size_for_snapshot: 5` (Config default). When **`queue_continuation.empty_queue_bootstrap_enabled: true`** in **Second-Brain-Config** and the **sandbox** (or lane) **PQ** is **empty** after **Pass 3** / **pool_sync**, **Layer 1** **A.1b** may **auto-append** a new **`RESUME_ROADMAP`** **`deepen`** on **`queue_continuation.bootstrap_track`** (default **`conceptual`**) for the **next** true work cycle (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**, **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**) — requires **non-empty** **queue-continuation** log or **unfinished** fallback per **A.1b**. |
 | `extreme` | `pipeline_mode: extreme` (`validator_profiles.extreme`); GitForge **balance** with **`quality`** trace via `params.pipeline_mode` / `source_pipeline_mode`; **stricter** nested validator budgets (`target_nested_validator_passes: 4`, `l1_post_lv_policy: always`, `nested_ira_policy: always`). |
 
 **Related:** `[[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]]` (`pipeline_mode` → `validator_profiles` rows), `Second-Brain-Config` § **pipeline_mode and validator_profiles**, **gitforge** (fast skips).
