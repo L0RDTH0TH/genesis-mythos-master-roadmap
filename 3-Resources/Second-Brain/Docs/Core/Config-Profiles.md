@@ -64,8 +64,8 @@ When the **default familial bundle** (`balance` + `repair_first` + `forgiving`) 
 | Speed | `validator_profiles` row | use **balance** row from Config |
 | Repair / Pass 3 | `queue.roadmap_pass_order` | `repair_first` |
 | Repair / Pass 3 | `queue.inline_a5b_repair_drain_enabled` | `true` (treat absent as on) |
-| Repair / Pass 3 | `queue.inline_forward_followup_drain_enabled` | `false` |
-| Repair / Pass 3 | `queue.max_inline_a5b_repair_generations_per_run` | `3` |
+| Repair / Pass 3 | `queue.inline_forward_followup_drain_enabled` | `true` (Repair-Heavy / Hygiene-Focused vault in **Second-Brain-Config** § **profiles**) |
+| Repair / Pass 3 | `queue.max_inline_a5b_repair_generations_per_run` | `5` (same vault mode; default **3** when not using Repair-Heavy) |
 | Repair / Pass 3 | `queue.max_inline_forward_followup_generations_per_run` | `3` |
 | Validator | `validator.tiered_blocks_enabled` | `true` |
 
@@ -109,7 +109,7 @@ profiles:
 
 | Value | Primary flat keys |
 |-------|---------------------|
-| `repair_first` | `queue.roadmap_pass_order: repair_first` (default); **Pass 3** repair drain: `queue.inline_a5b_repair_drain_enabled` **not false** (default on); `queue.inline_forward_followup_drain_enabled: false` unless operator enables forward follow-up. |
+| `repair_first` | `queue.roadmap_pass_order: repair_first` (default); **Pass 3** repair drain: `queue.inline_a5b_repair_drain_enabled` **not false** (default on). Pair **`inline_a5b_repair_drain_enabled: true`** explicitly in **Second-Brain-Config** with **`repair_first`** to avoid **Config-gate-off** Pass 3 skips when a **same-run** **A.5b** / **A.5d** append **does** set **`inline_repair_pending`** — reduces “repair on **PQ** but operator thought drain was off” vs **[[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]** **stale-row** trap. **`inline_forward_followup_drain_enabled`** remains **operator/vault** choice (often **`true`** in **Repair-Heavy** so forward follow-up can set **`inline_forward_followup_pending`** per **A.5.0**). **queue.mdc** still requires **same-run** pending flags; **no** familial preset **creates** pending from stale rows. |
 | `forward_first` | `queue.roadmap_pass_order: forward_first`; caps **`queue.max_forward_roadmap_dispatches_per_project_per_run`**, **`queue.max_repair_roadmap_dispatches_per_project_per_run`**, **`queue.max_blocking_repair_preflight_per_project_per_run`** per **Second-Brain-Config** / **Queue-Sources**; optional **`queue.inline_forward_followup_drain_enabled: true`** for Pass 3 forward wave. |
 
 **Related:** `[[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]` § Roadmap multi-dispatch, **queue.mdc** **A.4c**.
@@ -163,6 +163,10 @@ Prefer familial keys on **`params`** (alongside `mode`, `project_id`, …). **Om
 }
 ```
 
+**Hygiene-heavy workflows (pre-existing repair-class lines on PQ):** familial keys do **not** set **`inline_repair_pending`** — **[[.cursor/rules/agents/queue.mdc|queue.mdc]]** **A.5.0** still requires **this run’s** **A.5b** / **A.5d** (and related) appends. Pair **`repair_strategy: repair_first`** with **`queue.inline_a5b_repair_drain_enabled: true`** in **Second-Brain-Config** so Pass 3 **repair** drain is **not** Config-gated off when pending **is** set by a qualifying append.
+
+**Example intent (operator):** `speed_mode: balance + repair_strategy: repair_first` **plus** **`inline_a5b_repair_drain_enabled: true`** — express **`inline_a5b`** as **`queue.inline_a5b_repair_drain_enabled`** in **Second-Brain-Config** `queue:` (or **`params.queue`**), **not** as a fourth token in the **`+`** combo string unless the implementation explicitly supports non-familial keys there.
+
 ### Flat key override on top of a profile
 
 Familial expansion runs **before** explicit flat keys on the entry. To force a **single** flat knob while keeping the rest of the default bundle, set the familial keys you want (or omit them for defaults) **and** add the flat override — the flat key **wins**.
@@ -183,7 +187,7 @@ Familial expansion runs **before** explicit flat keys on the entry. To force a *
 }
 ```
 
-Here **`queue.inline_forward_followup_drain_enabled: true`** overrides the default **`false`** from the **`repair_first`** profile expansion for this entry only.
+Here **`queue.inline_forward_followup_drain_enabled: true`** overrides merged **Second-Brain-Config** / profile expansion for **this** entry only (per **deepMerge**).
 
 **Single profile:**
 

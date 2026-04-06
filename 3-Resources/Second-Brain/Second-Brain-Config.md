@@ -44,6 +44,22 @@ repair_strategy: repair_first
 validator_tier: forgiving
 ```
 
+### Repair-Heavy / Hygiene-Focused Mode (vault defaults)
+
+Preferred **familial** bundle for reliable **repair-first** + **Pass 3** inline drain (same three labels as above). **Flat** overrides below are written explicitly in **`queue:`** / **`validator`** YAML so they win via **deepMerge** over profile expansion alone (see [[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]] § deepMerge).
+
+**Sandbox (2026-04-07):** followup-**deepen** dispatched while **repair-l1-hygiene** was held under **repair_first** single-slot, **`nested_validation_passed: false`**, **`suppress_clean_drain: true`**, no **`inline_repair_pending`** flip, repair row already on **PQ** but Pass 3 skipped. **This combination** ensures **`inline_repair_pending`** can trigger Pass 3 **after** **A.5b** hygiene appends **even when** a forward deepen wins the **initial** slot — **queue.mdc** **A.5.0** still requires same-run pending flags; **`inline_forward_followup_drain_enabled: true`** and higher **`max_inline_a5b_repair_generations_per_run`** give Pass 3 room to run **repair** and **forward** inline waves when those flags are set per contract.
+
+**Flat overrides (effective with this mode):**
+
+| Key | Value |
+|-----|--------|
+| `queue.inline_a5b_repair_drain_enabled` | `true` |
+| `queue.inline_forward_followup_drain_enabled` | `true` |
+| `queue.roadmap_pass_order` | `repair_first` |
+| `queue.max_inline_a5b_repair_generations_per_run` | `5` |
+| `validator.tiered_blocks_enabled` | `true` |
+
 ## hub_names
 
 - projects: "Projects Hub"
@@ -79,10 +95,10 @@ validator_tier: forgiving
 - **harness_validation_mode** (`advisory` \| `strict`, default **`advisory`**): Layer 1 **A.5i** after pipeline **Task** returns — parse **`nested_subagent_ledger`**, **`blocked_scope`** on hard-block paths; **`strict`** upgrades refusals per [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4.
 - **roadmap_pass_order** (`repair_first` \| `forward_first`): Layer 1 **A.4c** roadmap multi-dispatch; default **`repair_first`** aligns with familial **`repair_strategy: repair_first`** (overridable flat key).
 - **inline_a5b_repair_drain_enabled**: default **`true`** when omitted in older configs; explicit **`true`** here — Pass 3 repair drain (see [[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]).
-- **inline_forward_followup_drain_enabled**: default **`false`** — Pass 3 forward follow-up wave; familial default **`repair_first`** keeps this off unless you enable forward drain.
-- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: default **3** each — Pass 3 generation caps (**A.5.0**).
+- **inline_forward_followup_drain_enabled**: Pass 3 forward follow-up wave — **`true`** in **Repair-Heavy / Hygiene-Focused Mode** (see § **profiles**) so forward-class appends can set **`inline_forward_followup_pending`** and drain in Pass 3 per **A.5.0** (when gate and caps allow).
+- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: Pass 3 generation caps (**A.5.0**). **Repair-Heavy** sets **`max_inline_a5b_repair_generations_per_run: 5`**; forward cap remains **3** unless changed.
 
-The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above). Keys **`roadmap_pass_order`**, **`inline_*`**, and **`max_inline_*`** below mirror the **default familial bundle** (`repair_first` + `balance`-shaped Pass 3 behavior); they remain **explicit flat overrides** — change them here to diverge from profile defaults without editing queue JSONL.
+The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above). Keys **`roadmap_pass_order`**, **`inline_*`**, and **`max_inline_*`** implement **Repair-Heavy / Hygiene-Focused Mode** defaults (§ **profiles**); they remain **explicit flat overrides** — change them here to diverge without editing queue JSONL.
 
 queue:
   python_orchestrator_enabled: true
@@ -90,8 +106,8 @@ queue:
   harness_validation_mode: advisory
   roadmap_pass_order: repair_first
   inline_a5b_repair_drain_enabled: true
-  inline_forward_followup_drain_enabled: false
-  max_inline_a5b_repair_generations_per_run: 3
+  inline_forward_followup_drain_enabled: true
+  max_inline_a5b_repair_generations_per_run: 5
   max_inline_forward_followup_generations_per_run: 3
   allowed_lanes:
     - default
