@@ -464,3 +464,172 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Entry not consumed at A.7; workflow_state log row + roadmap-state bump still applied idempotently; operator must re-run deepen on Task-capable host or adjust profile.
 - **Suggested fixes:** Run same queue line from parent chat with full Task nesting; or temporary `pipeline_mode: speed` only if policy allows (not recommended without human gate).
 - **Recovery:** Re-queue unchanged line remains on `.technical/parallel/godot/prompt-queue.jsonl`.
+
+### 2026-04-07 10:35 — Sandbox pool-remint-613 balance nested Task unavailable (nested attestation)
+
+| Field | Value |
+|-------|-------|
+| pipeline | EAT-QUEUE / RESUME_ROADMAP |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T10:35:00Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **Queue entry id:** `pool-remint-613-sandbox-gmm-20260406120002Z`
+- **Lane:** `sandbox`, **parallel_track:** `sandbox`, **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl`
+- **Task(roadmap):** balance deepen; `nested_validator_first`, `ira_post_first_validator`, `nested_validator_second` → `task_tool_invoked: false`, `outcome: task_error`, `host_error_class: nested_task_unavailable`
+- **Task(validator) L1 (b1):** completed; `roadmap_handoff_auto` → `needs_work`, `primary_code: missing_roll_up_gates` (advisory on conceptual track)
+- **A.7:** **did not** consume `613`; removed `pool-remint-612` from sandbox PQ + central pool only
+- **Watcher-Result:** `nested_attestation_failure` primary line for `613` (canonical + sandbox mirror)
+
+#### Summary
+
+- **Root cause:** Roadmap subagent runtime cannot invoke nested `Task(validator)` / `Task(internal-repair-agent)`; balance-mode ledger attestation chain incomplete despite vault writes.
+- **Impact:** Entry **613** retained on **PQ** and central pool for retry; **612** consumed successfully; follow-up `followup-deepen-phase611-after-612-outoforder-…` remains on sandbox PQ.
+- **Suggested fixes:** Re-run **613** from a Cursor host where roadmap subagent can nest `Task` helpers; or operator verifies vault artifacts manually and uses `speed` profile only if policy allows.
+- **Recovery:** Re-dispatch `pool-remint-613` after nested Task availability is restored; see Nested-Subagent-Ledger-Spec attestation invariants.
+
+### 2026-04-07 10:55 — EAT-QUEUE Layer1 Task(roadmap) unavailable (host)
+
+| Field | Value |
+|-------|-------|
+| pipeline | EAT-QUEUE / queue_dispatch |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T10:55:00Z |
+| error_type | mcp-dispatch |
+
+#### Trace
+
+- **Context:** Queue/Dispatcher subagent run for `EAT-QUEUE lane sandbox`; **A.0.4** `pool_sync` ran; **followup-deepen-phase611-after-612-outoforder-sandbox-gmm-20260407T100000Z** was re-appended to **central** `.technical/prompt-queue.jsonl` after fanout had dropped a sandbox-only line (operator intent preserved).
+- **Failure:** Cursor **`Task`** tool not exposed to the queue subagent host — **`Task(subagent_type: roadmap)`** could not be issued for **`pool-remint-613-sandbox-gmm-20260406120002Z`**.
+- **Proof-on-failure:** Watcher-Result + this entry; **no** queue consumption (**A.7** skipped).
+
+#### Summary
+
+- **Root cause:** Host capability gap — pipeline dispatch requires real `Task` launch per dispatcher.mdc / queue.mdc; no same-run fallback.
+- **Impact:** Both sandbox PQ lines remain for a future run; second line **A.4c** `repair_first` non-dispatchable in initial pass (logged as skip success in Watcher-Result).
+- **Suggested fixes:** Re-run **EAT-QUEUE lane sandbox** from a Layer 0 chat where **`Task(queue)`** and nested **`Task(roadmap)`** are available.
+- **Recovery:** Same queue file state; no A.7 rewrite applied this run.
+
+### 2026-04-07 13:35 — EAT-QUEUE sandbox phase611 nested attestation + L1 state_hygiene_failure
+
+| Field | Value |
+|-------|-------|
+| pipeline | EAT-QUEUE / queue_dispatch |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T13:35:00Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **Queue entry id:** `followup-deepen-phase611-after-pool-remint-613-20260407T123000Z`
+- **Lane:** `sandbox`, **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl`
+- **Task(roadmap):** returned `#review-needed`; `nested_validator_first` / `ira_post_first_validator` / `nested_validator_second` → `task_tool_invoked: false`, `nested_task_unavailable`
+- **Task(validator) L1 (b1):** `roadmap_handoff_auto` → `needs_work`, `primary_code: state_hygiene_failure` (workflow_state embedded note vs YAML/Log); report `.technical/Validator/roadmap-handoff-auto-sandbox-gmm-20260407T131500Z-l1postlv-followup-deepen-phase611.md`
+- **A.7:** triggering id **not** consumed; appended follow-up deepen secondary 6.1 rollup + `repair-l1-hygiene-workflow-state-embedded-sandbox-20260407T133100Z` to sandbox PQ and central pool
+
+#### Summary
+
+- **Root cause:** Roadmap subagent host cannot nest `Task(validator)` / `Task(IRA)`; balance ledger incomplete. Independent L1 validator additionally flagged **state_hygiene_failure** on coordination surfaces.
+- **Impact:** Primary queue line retained; repair and forward follow-ups queued; `suppress_clean_drain=true`.
+- **Suggested fixes:** Run `repair-l1-hygiene-workflow-state-embedded-sandbox` handoff-audit; align `workflow_state.md` embedded callout; re-run roadmap deepen when nested `Task` is available or use policy-approved profile.
+- **Recovery:** Next **EAT-QUEUE lane sandbox** processes repair-first ordering per A.4c.
+
+### 2026-04-07 17:00 — EAT-QUEUE Task(queue) aborted; Layer 0 manual hand-off close (sandbox)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 0 → Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T17:00:00Z |
+| error_type | mcp-dispatch |
+
+#### Trace
+
+- **Context:** Operator **aborted** Cursor **`Task(subagent_type: queue)`** before the Queue/Dispatcher subagent returned (miss-click). **`handoff_out`** existed for correlation **`33fb2a1d-ef37-4bcf-b17c-bdc2caa9f462`** (retry after prior abort) with **no** Layer 1 **`return_in`**.
+- **Layer 0 manual completion:** Appended **`return_in`** to **`.technical/parallel/sandbox/task-handoff-comms.jsonl`**, **Watcher-Result** + **Watcher-Result-sandbox** (VALIDATE + primary `failure` for **`followup-deepen-phase611-after-pool-remint-613-20260407T123000Z`**, `completed: 2026-04-07T17:00:00.000Z`), and **Run-Telemetry** `[[.technical/Run-Telemetry/sandbox/queue-layer0-manual-eatq-recovery-20260407T170000Z|queue-layer0-manual-eatq-recovery-20260407T170000Z]]`.
+- **Disposition (no new L1 run):** Aligns with last completed Layer 1 pass **`eatq-layer1-sandbox-20260407T150500Z`** — nested roadmap **`task_tool_invoked: false`** on mandatory nested steps; L1 **`roadmap_handoff_auto`** **`severity: high`**, **`primary_code: contradictions_detected`**, **`state_hygiene_failure`**; entry **not** in **`processed_success_ids`**; **A.7** leaves **all three** lines on **`.technical/parallel/sandbox/prompt-queue.jsonl`**.
+
+#### Summary
+
+- **Root cause:** **`Task(queue)`** invocation did not finish; Layer 1 queue processor never ran for that attempt.
+- **Impact:** **No** queue rewrite; sandbox **PQ** unchanged (three lines). Audit trail closed in **task-handoff-comms** + Watcher + telemetry.
+- **Suggested fixes:** Re-run **`EAT-QUEUE lane sandbox`** when **`Task(queue)`** is stable; resolve **workflow_state** / roadmap-state hygiene per validator report **`.technical/Validator/roadmap-handoff-auto-sandbox-gmm-20260407T150500Z-l1postlv-phase611-idempotent.md`**.
+- **Recovery:** N/A — manual close only; no vault rollback.
+
+### 2026-04-07 18:35 — EAT-QUEUE sandbox RESUME_ROADMAP nested attestation + L1 state_hygiene_failure (phase611)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T18:35:00Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl` — dispatched **`followup-deepen-phase611-after-pool-remint-613-20260407T123000Z`** (`queue_pass_phase=initial`, `parent_run_id=eatq-sandbox-layer1-20260407T180500Z`).
+- **Task(roadmap):** returned `#review-needed`; `nested_validator_first` → `task_error` / `nested_task_unavailable`; balance-mode ledger attestation incomplete.
+- **Task(validator) L1 (b1):** `roadmap_handoff_auto` → `severity: medium`, `recommended_action: needs_work`, `primary_code: state_hygiene_failure`, `reason_codes: state_hygiene_failure, contradictions_detected`; report `.technical/Validator/roadmap-handoff-auto-sandbox-gmm-20260407T183000Z-l1postlv-phase61-secondary-rollup-conceptual-v1.md`.
+- **A.7:** id **not** consumed; **no** mid-run PQ append (follow-up `next_entry` suppressed while hygiene provisional).
+
+#### Summary
+
+- **Root cause:** Roadmap subagent could not invoke nested `Task(validator)`; L1 hostile validator independently flagged rollup-surface contradictions vs **18:05** cursor.
+- **Impact:** Queue line retained; `suppress_clean_drain=true`; three sandbox PQ lines unchanged.
+- **Suggested fixes:** Prefer **`repair-l1-hygiene-workflow-state-embedded-sandbox`** (`handoff-audit`) or add **`queue_priority: repair`** so **repair_first** orders hygiene before duplicate deepen lines; align `distilled-core.md` / `workflow_state.md` embedded notes per validator report.
+- **Recovery:** Re-run **EAT-QUEUE lane sandbox** after hygiene repair; optional operator edit to mark repair line as repair-class.
+
+### 2026-04-07 21:15 — EAT-QUEUE sandbox RESUME_ROADMAP Task(roadmap) nested_task_unavailable (secondary-61 deepen)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T21:15:00Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl` — dispatched **`followup-deepen-secondary-61-rollup-post-611-mint-20260407T133000Z`** (`queue_pass_phase=initial`, `parent_run_id=eatq-sandbox-20260407T210500Z-layer1-p1`).
+- **Task(roadmap):** returned `#review-needed`; `nested_validator_first` / `ira_post_first_validator` / `nested_validator_second` recorded **`task_error`** with **`nested_task_unavailable`** (Cursor `Task` tool not exposed in roadmap subagent context).
+- **Layer 1 gate:** **No** `processed_success_ids` append; **no** L1 `Task(validator)` **(b1)** — pipeline return was not a tiered Success path with nested ledger satisfied.
+- **A.4c:** Remaining **`repair-l1-hygiene-workflow-state-embedded-sandbox-20260407T133100Z`** and **`resume-deepen-phase6-primary-rollup-sandbox-gmm-20260407T194500Z`** **skipped** (`skipped: primary_roadmap_pass1_cap`) same project **repair_first** initial pass.
+
+#### Summary
+
+- **Root cause:** Host/subagent surface for **`Task(roadmap)`** could not invoke nested **`Task(validator)`** / **`Task(internal-repair-agent)`** — balance-mode attestation cannot complete in that environment.
+- **Impact:** All **three** sandbox PQ lines **retained**; **A.7** no consumption.
+- **Suggested fixes:** Run **EAT-QUEUE** from a Cursor host where **RoadmapSubagent** nested **`Task`** calls succeed; or run operator **VALIDATE** / manual validator pass; see **Nested-Subagent-Ledger-Spec** attestation invariants.
+- **Recovery:** Re-dispatch when **`Task`** nesting is available; queue order unchanged (repair line remains for next `repair_first` ordering).
+
+### 2026-04-06 19:32 — EAT-QUEUE sandbox Layer 1 Task(roadmap) not invocable (host)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-06T19:32:21Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl` — **A.0.4** `pool_sync` **ok** (`copied_count: 3`).
+- **A.4c** (`roadmap_pass_order: repair_first`): initial roadmap slot for **`sandbox-genesis-mythos-master`** → **`followup-deepen-secondary-61-rollup-post-611-mint-20260407T133000Z`** (earliest timestamp among three `RESUME_ROADMAP` lines; **`repair-l1-hygiene-workflow-state-embedded-sandbox-20260407T133100Z`** not tagged `queue_priority: repair`).
+- **Dispatch:** Cursor **`Task`** tool **not available** in this Layer 1 execution context — **no** `Task(roadmap)` launch (Proof-on-failure per Subagent-Safety-Contract).
+- **A.7:** **no** `processed_success_ids`; PQ **unchanged** (three lines).
+
+#### Summary
+
+- **Root cause:** Queue orchestrator requires **`Task(subagent_type: roadmap)`**; host did not expose the Task API to this run.
+- **Impact:** No roadmap work; no Watcher **(b1)** `Task(validator)`; central pool + sandbox PQ retain all three entries.
+- **Suggested fixes:** Re-run **EAT-QUEUE lane sandbox** from a Cursor session where **`Task(queue)`** / nested **`Task(roadmap)`** are wired; optional: add **`queue_priority: repair`** on **`repair-l1-hygiene-workflow-state-embedded-sandbox-20260407T133100Z`** so **repair_first** sub-sort prioritizes hygiene before the 13:30 deepen line.
+- **Recovery:** Same as impact — re-dispatch when Task is available; no vault rollback.

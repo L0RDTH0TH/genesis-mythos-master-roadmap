@@ -4,10 +4,10 @@ roadmap-level: secondary
 phase-number: 6
 subphase-index: "6.1"
 project-id: sandbox-genesis-mythos-master
-status: active
+status: complete
 priority: high
-progress: 45
-handoff_readiness: 82
+progress: 100
+handoff_readiness: 86
 created: 2026-04-06
 tags:
   - roadmap
@@ -17,6 +17,7 @@ para-type: Project
 links:
   - "[[Phase-6-Prototype-Assembly-Testing-and-Iteration-Roadmap-2026-03-30-0430]]"
   - "[[Conceptual-Decision-Records/deepen-phase-6-1-bundle-remint-post-rollback-2026-04-06-1200]]"
+  - "[[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-and-Instrumentation-Envelope-Roadmap-2026-04-07-1245]]"
   - "[[decisions-log]]"
   - "[[workflow_state]]"
   - "[[Branches/phase-6-operator-rollback-20260405/Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle/Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]]"
@@ -40,13 +41,13 @@ First **secondary** under Phase **6** (post-rollback): a **named vertical slice 
 
 **Out of scope:** concrete metric backends, dashboards, soak harnesses, perf SLAs, CI jobs, or **Roadmap/Execution/** mirrors until execution track is bootstrapped.
 
-## Planned tertiary decomposition (not yet minted on this tree)
+## Planned tertiary decomposition (active tree)
 
 | Index | Intent | Notes |
 | --- | --- | --- |
-| **6.1.1** | **Manifest Field Registry** + **FeedbackRecord** taxonomy + **instrumentation envelope** | Operator-directed remint; binds manifest rows to **RulesetManifest** / **5.1.1** seam vocabulary and **FeedbackRecord** shape without reopening **2.x** commit authority. |
-| **6.1.2** | Bounded tick-window scenarios + sim-visible × checkpoint matrix | TBD after **6.1.1**. |
-| **6.1.3** | ObservationChannel lane readout + **4.1.3** co-display | TBD after **6.1.2**. |
+| **6.1.1** | **Manifest Field Registry** + **FeedbackRecord** taxonomy + **instrumentation envelope** | **Minted** — [[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-and-Instrumentation-Envelope-Roadmap-2026-04-07-1245]] (`followup-deepen-phase611-after-pool-remint-613-20260407T123000Z`); **`mar.hq3.*`** stable IDs carried forward for **6.1.2**/**6.1.3** joins. |
+| **6.1.2** | Bounded tick-window scenarios + sim-visible × checkpoint matrix | **Remint on active tree** — [[Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-1215]] (`pool-remint-612-sandbox-gmm-20260406120001Z`). **`mar.*`** join keys — active **6.1.1** ([[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-and-Instrumentation-Envelope-Roadmap-2026-04-07-1245]]). |
+| **6.1.3** | ObservationChannel lane readout + **4.1.3** co-display | **Remint on active tree** — [[Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-07-1015]] (`pool-remint-613-sandbox-gmm-20260406120002Z`). **Out-of-order** vs **6.1.1** (operator queue). |
 
 ## Behavior (natural language)
 
@@ -67,7 +68,7 @@ First **secondary** under Phase **6** (post-rollback): a **named vertical slice 
 ### Admission (manifest subsection)
 
 - **Pinned:** [[Phase-2-7-3-Shadow-to-Live-Parity-Admission-Ticket-Redemption-and-First-Committed-Tick-Trace-Roadmap-2026-03-30-1800]]; [[Phase-2-7-1-Simulation-Entry-Bootstrap-and-Deterministic-First-Tick-Contract-Roadmap-2026-04-01-0116]].
-- **Tertiary 6.1.1 (planned):** Manifest **field registry** rows + **FeedbackRecord** typing + **instrumentation envelope** hooks—**NL** binding to **5.1.1** seam admission vocabulary (**no** alternate admission authority vs **2.7.x**).
+- **Tertiary 6.1.1 (minted):** [[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-and-Instrumentation-Envelope-Roadmap-2026-04-07-1245]] — manifest **field registry** rows + **FeedbackRecord** typing + **instrumentation envelope** hooks—**NL** binding to **5.1.1** seam admission vocabulary (**no** alternate admission authority vs **2.7.x**).
 
 ### Tick window + sim-visible (manifest subsection)
 
@@ -113,16 +114,46 @@ First **secondary** under Phase **6** (post-rollback): a **named vertical slice 
 
 Secondary depth: **interfaces + tables**; **no** pseudo-code required. **6.1.1+** may add mid-technical sketches.
 
-## Phase-level **GWT-6 → 6.1** delegation (pending tertiary chain)
+## Phase-level **GWT-6 → 6.1** delegation (tertiary chain on active tree)
 
 | GWT-6 row | Delegates into **6.1** (evidence status) |
 | --- | --- |
-| A–C | **Pending** — filled after **6.1.1–6.1.3** mint + rollup |
-| D–K | **Pending** — same |
+| A (admission / manifest rows / field registry) | **Closed** — [[Phase-6-1-1-Manifest-Field-Registry-FeedbackRecord-and-Instrumentation-Envelope-Roadmap-2026-04-07-1245]] (`handoff_readiness` **86**; mint queue `followup-deepen-phase611-after-pool-remint-613-20260407T123000Z`) |
+| B (tick window / sim-visible classification) | **Closed** — [[Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-1215]] (`handoff_readiness` **87**; queue `pool-remint-612-sandbox-gmm-20260406120001Z`); **out-of-order** mint before **6.1.1** resolved by active **6.1.1** mint **2026-04-07** |
+| C–K (observation / presentation / operator readout) | **Closed** — [[Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-07-1015]] (`handoff_readiness` **88**; queue `pool-remint-613-sandbox-gmm-20260406120002Z`) |
 
 ## Secondary rollup closure
 
-**Not started** — requires tertiaries **6.1.1–6.1.3** on the **active** tree and NL + **GWT-6.1** parity pass.
+**Complete (2026-04-07)** — **NL checklist** + **GWT-6.1-A–K** parity vs tertiaries **6.1.1–6.1.3** on the **active** remint tree; **GWT-6 → 6.1** delegation rows **A–K** bound to evidence notes above; **InstrumentationIntent** starter rows aligned to tertiary **instr.*** / **ii.*** citations; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-active-tree-2026-04-07-1805]]. **Queue reconcile:** stale `user_guidance` on `followup-deepen-phase611-after-pool-remint-613-20260407T123000Z` described **mint 6.1.1** — **superseded** by **2026-04-07 12:45** mint; this deepen executed **secondary 6.1 rollup** per authoritative [[workflow_state]] **`current_subphase_index: "6.1"`** + terminal ## Log.
+
+### NL handoff checklist (secondary rollup — closure)
+
+| Checklist row | Status |
+| --- | --- |
+| **Scope** | **Pass** — manifest phonebook + InstrumentationIntent + FeedbackRecord routing (see § Scope / manifest subsections). |
+| **Behavior** | **Pass** — actors/ordering echo **6.1.x** tertiary bindings without second sim truth. |
+| **Interfaces** | **Pass** — upstream pins + downstream tertiary wikilinks + **6.1.3** readout matrix joins **6.1.2**/**4.1.3**. |
+| **Edge cases** | **Pass** — partial slice + pin drift called out; execution-deferred legs labeled. |
+| **Open questions** | **Pass** — remainder explicitly execution-deferred or listed in tertiaries. |
+| **Pseudo-code readiness** | **N/A at secondary** — mid-technical sketches live in **6.1.1–6.1.3** per depth contract. |
+
+### **GWT-6.1-A–K** (secondary rollup parity vs **6.1.1 / 6.1.2 / 6.1.3**)
+
+| GWT-6.1 | Parity statement | Tertiary evidence |
+| --- | --- | --- |
+| **A** | Manifest field registry + **5.1.1** seam vocabulary + **`mar.hq3.*`** stable IDs | **6.1.1** **GWT-6.1.1-A–D** |
+| **B** | Tick-window scenarios + sim-visible × checkpoint matrix + **`stws.*`** joins | **6.1.2** **GWT-6.1.2-A–D** |
+| **C** | ObservationChannel readout + presentation-time co-display + **`sor.*`** joins | **6.1.3** **GWT-6.1.3-A–D** |
+| **D–K** | Delegation coverage + traceability columns + InstrumentationIntent alignment rows | **6.1.1**/**6.1.2**/**6.1.3** respective **GWT-6.1.x-E–K** tables |
+
+### InstrumentationIntent — tertiary chain closure (active tree)
+
+| intent_id | Tertiary bind | Closure |
+| --- | --- | --- |
+| `instr.worldgen_stage` | **6.1.x** stage-family pins | Named in manifest + **6.1.2** scenario catalog |
+| `instr.tick_closure` | **6.1.2** | `stws.hq3.*` alignment row |
+| `instr.rules_eval_frame` | **5.1.2** pin (upstream) | Non-bypass cite preserved |
+| `instr.presentation_envelope` | **6.1.3** | `sor.hq3.*` matrix + **4.1.3** |
 
 ## Related
 

@@ -294,3 +294,22 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | eatq-sandbox-20260406194500Z |
 | result | **Lock:** `acquire` succeeded (30s budget; track `sandbox`). **Vault:** single amended commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE A.7a pool-remint-611 [balance]` (70 files incl. this audit line; **hash:** `git log -1` on vault — self-referential amend). Dirty submodule roots `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` left unstaged. **Clarifier:** operator/GitForge hand-off **changes_summary** (pool-remint-611-sandbox-gmm; RESUME_ROADMAP deepen; dual pool A.7). **Vault push:** **no configured push destination** (no `origin` on vault). **Export (`sandbox-genesis-mythos-master`):** `git merge origin/iteration-2-roadmap-rules` **aborted** (mass conflicts). **Spine refresh:** `git checkout origin/iteration-2-roadmap-rules -- .cursor scripts Docs README.md` then **Step 1b** rsync `Roadmap/` + anchors from vault `GMM_PROJECT_ROOT`; commit `eaf5134` pushed to `origin/sandbox-genesis-mythos-master`. Export worktree returned to `iteration-2-roadmap-rules`. **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
 | error_excerpt | vault push: no configured push destination |
+
+### 2026-04-06 21:49 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| eat_queue_run_id | — |
+| result | **Lock:** `acquire` succeeded (30s budget; track `sandbox`). **Vault:** commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE A.7a — RESUME_ROADMAP; PQ follow-up execution deepen [balance]` (117 files incl. this audit line; **`git log -1 --oneline`** for hash after final amend). **Clarifier:** Layer 1 **Context** — single RESUME_ROADMAP consumed; sandbox PQ holds follow-up execution deepen only. **Submodule roots** `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` remain dirty/unstaged (not in commit). **Vault push:** **not completed** — `git remote -v` empty in this environment; `git push` fails (`origin` does not appear to be a git repository). Operator: `git remote add origin <url>` then `git push -u origin iteration-2-roadmap-rules`. **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine Step 1b** to `parallel_export_path`: not run (export_sync disabled). **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
+| error_excerpt | vault push: no origin remote |
