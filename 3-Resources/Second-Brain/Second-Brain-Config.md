@@ -43,12 +43,14 @@ Single source of truth for pipeline and skill configuration. Skills and rules th
 - **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read **EQPLAN** (`eat_queue_run_plan.json` colocated with **PQ** — legacy `.technical/eat_queue_run_plan.json` or per-track under `.technical/parallel/<track>/`; see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**) produced by `python3 -m scripts.eat_queue_core.full_cycle` / plan and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
 - **central_pool_fanout_enabled**: when **true**, Layer 1 **A.0.4** runs **`pool_sync`** before wrappers so **`.technical/prompt-queue.jsonl`** (pool) is filtered into per-track **PQ**; **A.7** removes consumed ids from **pool** and **PQ** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.4**, **A.7**).
 - **allowed_lanes** (under **`queue:`** YAML): list of strings allowed for **`queue_lane`** on prompt-queue JSONL lines and for Layer 0 **`EAT-QUEUE lane <name>`**. Default in YAML below: `default`, `shared`, `sandbox`, `godot`, `core`. Unknown lane on append or filter → reject / error (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes).
+- **harness_validation_mode** (`advisory` \| `strict`, default **`advisory`**): Layer 1 **A.5i** after pipeline **Task** returns — parse **`nested_subagent_ledger`**, **`blocked_scope`** on hard-block paths; **`strict`** upgrades refusals per [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4.
 
 The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above):
 
 queue:
   python_orchestrator_enabled: true
   central_pool_fanout_enabled: true
+  harness_validation_mode: advisory
   allowed_lanes:
     - default
     - shared

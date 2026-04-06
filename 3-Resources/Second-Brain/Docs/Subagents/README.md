@@ -35,7 +35,7 @@ This folder is the single place for subagent-related docs: who runs what, how de
 
 | Section | Contents |
 |---------|----------|
-| **Root** | [Architecture](Architecture.md), [Subagent-List](Subagent-List.md), [Creating-Subagents](Creating-Subagents.md), [Delegation-Patterns](Delegation-Patterns.md), [Safety-Invariants](Safety-Invariants.md), [Migration-Guide](Migration-Guide.md), [Examples](Examples.md) |
+| **Root** | [Architecture](Architecture.md), [Subagent-List](Subagent-List.md), [Creating-Subagents](Creating-Subagents.md), [Harness-Patterns-and-Guidelines](../Harness-Patterns-and-Guidelines.md), [Delegation-Patterns](Delegation-Patterns.md), [Safety-Invariants](Safety-Invariants.md), [Migration-Guide](Migration-Guide.md), [Examples](Examples.md) |
 | **Pipelines/** | Per-pipeline steps: [Ingest](../Pipelines/Ingest-Pipeline.md), [Roadmap](../Pipelines/Roadmap-Pipeline.md), [Distill](../Pipelines/Distill-Pipeline.md), [Express](../Pipelines/Express-Pipeline.md), [Archive](../Pipelines/Archive-Pipeline.md), [Organize](../Pipelines/Organize-Pipeline.md) |
 | **Rules/** | [Dispatcher-Rule](../Rules/Dispatcher-Rule.md), [Core-Guardrails](../Rules/Core-Guardrails.md), [Watcher-Result-Contract](../Rules/Watcher-Result-Contract.md) |
 | **Skills/** | Skill domains: [Roadmap](../Skills/Roadmap-Skills-Overview.md), [Distill/Highlight](../Skills/Distill-Highlight-Skills.md), [Ingest/Organize](../Skills/Ingest-Organize-Skills-Overview.md) |

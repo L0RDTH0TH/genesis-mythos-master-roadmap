@@ -98,7 +98,13 @@ See [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-He
 - **Frozen for automation:** Further **`RESUME_ROADMAP` `deepen`** (or `advance-phase`) that **depends** on the contradicted / incoherent / unsafe spine **for that scope** until repair completes or human overrides.
 - **Allowed without waiting:** Other **`project_id`s**; modes that do not assume the frozen contract (e.g. **INGEST_MODE** on unrelated notes, **DISTILL_MODE** on Resources, **RESEARCH_AGENT** for another project); **`RESUME_ROADMAP`** with **`action: recal`**, **`handoff-audit`**, **`sync-outputs`**, **`resume-from-last-safe`** when scoped to reconcile.
 
-Pipeline returns SHOULD include **`blocked_scope`** in structured return metadata: `{ "project_id": "...", "phase_ids": [], "paths": [] }` when a hard block applies.
+### 4.1 Return metadata: `blocked_scope`
+
+**Normative** (MUST emit) when a **hard block** or tiered outcome triggers the scoped freeze in §4 above. **Optional** on returns with no hard-block path.
+
+- **Canonical YAML shape, fields, and Layer 1 handling:** [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §2.2.
+- **`allowed_pivots`:** MUST align with [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] **repair-first** ordering and the §3 action matrix (same **`project_id`**).
+- **Layer 1:** Parses **`blocked_scope`** in **A.5i**; echoes into **Watcher-Result** when present; **`advisory`** vs **`strict`** per **`queue.harness_validation_mode`**.
 
 ---
 

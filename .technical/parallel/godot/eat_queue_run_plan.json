@@ -1,34 +1,13 @@
 {
   "schema_version": 1,
-  "parent_run_id": "layer1-eatq-godot-20260405T200500Z",
-  "intents": [
-    {
-      "op": "dispatch",
-      "subagent_type": "roadmap",
-      "queue_entry_id": "followup-deepen-phase6-primary-rollup-post-61-godot-gmm-20260406T013000Z",
-      "project_id": "godot-genesis-mythos-master",
-      "queue_pass_phase": "initial",
-      "pass_id": "pass1",
-      "dispatch_ordinal": 1,
-      "micro_workflow": [
-        "roadmap_core",
-        "nested_validator_first",
-        "ira",
-        "nested_validator_second",
-        "l1_post_lv"
-      ]
-    }
-  ],
-  "consumed_ids": [
-    "followup-deepen-phase6-primary-rollup-post-61-godot-gmm-20260406T013000Z"
-  ],
+  "parent_run_id": "layer1-eatq-godot-20260406T001000Z",
+  "intents": [],
+  "consumed_ids": [],
   "strict_mode": true,
   "effective_pipeline_mode": "balance",
   "full_cycle_pass_index": 1,
   "full_cycle_passes_total": 2,
-  "queue_rewrite_ids": [
-    "followup-deepen-phase6-primary-rollup-post-61-godot-gmm-20260406T013000Z"
-  ],
+  "queue_rewrite_ids": [],
   "inline_pass3_drain": false,
   "has_anticipatory_repair_slot": false
 }

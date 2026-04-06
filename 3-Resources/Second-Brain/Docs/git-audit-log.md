@@ -274,3 +274,23 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded (30s budget; first attempt). **Vault:** commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE — RESUME_ROADMAP deepen Phase6 rollup (balance)` (17 files incl. this audit line; `git log -1 --oneline` for hash). **Scope:** sandbox lane only — staged `parallel/sandbox` bundle, legacy `prompt-queue.jsonl`, sandbox Phase-6 roadmap note, canonical + sandbox Watcher-Result, IRA follow-up, Run-Telemetry (sandbox + sandbox validator paths), Validator reports; **excluded** unstaged godot parallel deltas, `Watcher-Result-godot.md`, godot Run-Telemetry untracked, dirty submodule roots. **Clarifier:** operator **Context** (one RESUME_ROADMAP deepen consumed). **Push:** attempted — **no `origin` remote** on vault (`git remote get-url origin` fails). **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine Step 1b** to `parallel_export_path` / branch `sandbox-genesis-mythos-master`: not run (export_sync disabled; contract documented in Config only). **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
 | error_excerpt | vault push: no origin remote |
+
+### 2026-04-07 12:15 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted; export_sync_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| parent_run_id | eatq-sandbox-20260406194500Z |
+| eat_queue_run_id | eatq-sandbox-20260406194500Z |
+| result | **Lock:** `acquire` succeeded (30s budget; track `sandbox`). **Vault:** single amended commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE A.7a pool-remint-611 [balance]` (70 files incl. this audit line; **hash:** `git log -1` on vault — self-referential amend). Dirty submodule roots `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` left unstaged. **Clarifier:** operator/GitForge hand-off **changes_summary** (pool-remint-611-sandbox-gmm; RESUME_ROADMAP deepen; dual pool A.7). **Vault push:** **no configured push destination** (no `origin` on vault). **Export (`sandbox-genesis-mythos-master`):** `git merge origin/iteration-2-roadmap-rules` **aborted** (mass conflicts). **Spine refresh:** `git checkout origin/iteration-2-roadmap-rules -- .cursor scripts Docs README.md` then **Step 1b** rsync `Roadmap/` + anchors from vault `GMM_PROJECT_ROOT`; commit `eaf5134` pushed to `origin/sandbox-genesis-mythos-master`. Export worktree returned to `iteration-2-roadmap-rules`. **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
+| error_excerpt | vault push: no configured push destination |

@@ -60,6 +60,24 @@ If the new pipeline is **dispatched from the queue**:
 
 ---
 
+## Harness requirements (mandatory scaffolding)
+
+Every **new** `.cursor/agents/<name>.md` and **new** vault-mutating `.cursor/skills/<name>/SKILL.md` must follow [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]].
+
+**Subagent (.md):**
+
+| Must include | Reference |
+|--------------|-----------|
+| Numbered pipeline steps aligned with harness skeleton | Harness §1; [[3-Resources/Second-Brain/Docs/Safety-Invariants|Safety-Invariants]] § Snapshot triggers |
+| **TodoWrite** phase todos; no Success while any phase todo `pending` / `in_progress` | [[3-Resources/Second-Brain/Docs/Subagent-Layers-Reference|Subagent-Layers-Reference]] § TodoWrite |
+| Explicit gates: backup, snapshot (when ≥85%), confidence band table, Run-Telemetry | [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] |
+| Final return: `nested_subagent_ledger` (+ `task_harden_result` when nested **Task** used) | [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] |
+| **`blocked_scope`** fenced YAML when hard block / tiered freeze path | Harness §2.2; [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Spec|Validator-Tiered-Blocks-Spec]] §4; [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] repair-first |
+
+**Skill (`SKILL.md`) that mutates the vault:** Harness subsection (`vault_mutations`, `snapshot_trigger`, …) per Harness §3.
+
+---
+
 ## Checklist
 
 - [ ] Subagent doc and legacy rule both require Subagent-Safety-Contract (backup, per-change snapshot, confidence bands, Error Handling Protocol, Watcher-Result).
@@ -67,3 +85,4 @@ If the new pipeline is **dispatched from the queue**:
 - [ ] On failure: trace + summary, log to `3-Resources/Errors.md`, one-line ref in pipeline log; error Decision Wrapper under `Ingest/Decisions/Errors/` when appropriate.
 - [ ] When `requestId` present, append one line to `3-Resources/Watcher-Result.md` in the required format.
 - [ ] No shell `cp`/`mv`/`rm` on the vault; all moves/renames via MCP with backup and snapshot gates (except the documented, user-invoked attachment-move skill).
+- [ ] Harness: ledger + conditional **`blocked_scope`** on returns; new skills declare Harness §3 block when touching vault notes.

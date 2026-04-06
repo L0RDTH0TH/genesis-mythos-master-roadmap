@@ -2,14 +2,12 @@
 title: Phase 6 — Prototype Assembly, Testing, and Iteration
 roadmap-level: primary
 phase-number: 6
-subphase-index: "6"
+subphase-index: "1"
 project-id: sandbox-genesis-mythos-master
 status: active
 priority: high
-progress: 86
-phase6_primary_checklist: complete
-phase6_primary_rollup_nl_gwt: complete
-handoff_readiness: 86
+progress: 22
+handoff_readiness: 78
 created: 2026-03-30
 tags:
   - roadmap
@@ -18,6 +16,7 @@ tags:
 para-type: Project
 links:
   - "[[sandbox-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
+  - "[[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-06-1200]]"
   - "[[Phase-5-Rule-System-Integration-and-Extensibility-Roadmap-2026-03-30-0430]]"
   - "[[Phase-4-Perspective-Split-and-Control-Systems-Roadmap-2026-03-30-0430]]"
   - "[[Phase-3-Living-Simulation-and-Dynamic-Agency-Roadmap-2026-03-30-0430]]"
@@ -35,15 +34,15 @@ Assemble the **Q3 2026** **vertical slice**: one **replay-stable** path from **w
 - **`GMM-2.4.5-*`:** remain **reference-only** anchors for execution-track audit/compare artifacts.
 - **`D-5.1.3-matrix-vs-manifest`:** remains **open** per [[decisions-log]]—**non-blocking** for Phase **6** primary checklist; resolution target **execution** / later secondaries.
 
-- [x] Core implementation task — **Vertical slice integration** (end-to-end **NL** session path binding Phases **2.7 → 3 → 4 → 5**)
-- [x] Core implementation task — **Performance dry-runs + instrumentation** for gen/sim hotspots (**NL** hooks + named metric classes; execution tooling deferred)
-- [x] Glue / integration task — **Feedback loop** + iteration notes feeding [[roadmap-state]] / [[workflow_state]] **## Log** discipline
+- [ ] Core implementation task — **Vertical slice integration** (end-to-end **NL** session path binding Phases **2.7 → 3 → 4 → 5**)
+- [ ] Core implementation task — **Performance dry-runs + instrumentation** for gen/sim hotspots (**NL** hooks + named metric classes; execution tooling deferred)
+- [ ] Glue / integration task — **Feedback loop** + iteration notes feeding [[roadmap-state]] / [[workflow_state]] **## Log** discipline
 
 ### Progress semantics (frontmatter)
 
 `progress` is **0–100** for this note’s conceptual slice depth: **~25** = primary NL checklist complete enough to mint secondaries (**6.1+**); **~50+** = secondaries drafted; **100** = phase-ready for execution handoff (instrumentation closure still execution-deferred).
 
-- **Cursor authority:** For **RESUME_ROADMAP** / Layer 1 routing, **`[[workflow_state]]` frontmatter `current_subphase_index`** is authoritative. This note’s **`subphase-index`** is aligned to that cursor after **Phase 6 primary rollup** (**2026-04-06**) so Dataview / tooling does not split-brain against **`"6"`** vs **`"1"`**.
+- **Cursor authority:** For **RESUME_ROADMAP** / Layer 1 routing, **`[[workflow_state]]` frontmatter `current_subphase_index`** is authoritative. After rollback ([[Branches/phase-6-operator-rollback-20260405/ROLLBACK-MANIFEST-20260405]]), **secondary 6.1** was re-minted **2026-04-07** — [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-06-1200]]; default deepen targets **tertiary 6.1.1** while **`current_subphase_index: "6.1.1"`**.
 
 ## Scope
 
@@ -87,25 +86,9 @@ Assemble the **Q3 2026** **vertical slice**: one **replay-stable** path from **w
 
 At **primary** conceptual depth, **no pseudo-code** is required. **Typed bodies** start at **6.1+** secondaries.
 
-## Phase-level **GWT-6-A–K** (primary checklist + **primary rollup** — evidence bound to rolled-up **6.1**)
+## Phase-level **GWT-6-A–K**
 
-> **Rollup contract (2026-04-06):** Primary **GWT-6-A–K** **Evidence** columns are explicitly **bound** to secondary **6.1** NL + **GWT-6.1-A–K** vs tertiaries **6.1.1–6.1.3** and rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]]. Authoritative probe / manifest rows remain on **6.1** + tertiaries — this table is the **phase-level parity index**, not a second manifest.
-
-| ID | Given | When | Then | Evidence |
-| --- | --- | --- | --- | --- |
-| **GWT-6-A** | **2.7.x** admission + first committed tick | Slice starts | World enters sim under **2.7** contracts—**no** ad hoc bypass of entry gates | **GWT-6.1.1-A–K** vs [[Phase-6-1-1-Manifest-Admission-Row-Bindings-and-Admission-Ticket-Vocabulary-Roadmap-2026-04-05-1918]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]]; primary CDR [[Conceptual-Decision-Records/deepen-phase-6-primary-rollup-nl-gwt-2026-04-06-1605]] |
-| **GWT-6-B** | **3.x** tick + **sim-visible** facts | Slice runs ticks | Events stay **sim-visible**-classified; **3.1.4** checkpoint story **respected** | **GWT-6.1.2-A–K** vs [[Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-0800]] + primary § Interfaces; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-C** | **4.x** lanes + **ObservationChannel** | Operator observes | Presentation respects **preview_shadow** vs **committed_session** + **4.1.3** legibility | **GWT-6.1.3-A–K** vs [[Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-06-2130]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-D** | **4.2.x** transition / repair tokens | Orchestration fires | Tokens are **inputs** to rules / UX—**not** alternate persistence writers | **6.1** orchestration / transition input rows + **GWT-6.1** parity vs **6.1.1–6.1.3** — [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-E** | **5.x** **RuleOutcome** + pinned ruleset | Rules evaluate | Outcomes **consume** **SeamId** rows—**no** second consumer truth; **no** **2.x** commit bypass | **6.1** rules / manifest binding rows — [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-F** | Phase **6** scope | Operator runs **Horizon-Q3** slice | One **named** vertical path is **documented** end-to-end at NL | **6.1** pinned path + **GWT-6 → 6.1** delegation **closed** — [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-G** | Hotspot loci (gen / sim / rules) | Dry-run / lab pass | **InstrumentationIntent** names **probe attach points** (execution tools deferred) | **6.1** **InstrumentationIntent** table + tertiary chain closure column — [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-H** | **FeedbackRecord** | Iteration | Findings route to [[roadmap-state]] / [[decisions-log]] **without** rewriting upstream phase authority | **6.1** feedback routing row — [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-I** | **3.4.1** **SeamId** catalog | Slice references seams | Only **catalog** seams appear in slice glue—**forbidden** reinterpretation rows | **6.1** seam reference rows vs [[Phase-3-4-1-Handoff-Seam-Catalog-and-Consumer-Contract-Rows-Roadmap-2026-04-03-0115]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-J** | **3.1.3** DM overwrite classes | DM acts in slice | **Live** vs **structural regen** labels persist through slice narrative | **6.1** + **6.1.2** sim-visible matrix alignment vs Phase **3** primary; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-| **GWT-6-K** | Conceptual waiver | Validator advisory codes | Execution-only gaps (perf SLAs, CI, marketplace) **deferred**—not blocking primary checklist | [[roadmap-state]], [[distilled-core]] — **execution-deferred** explicit; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]] |
-
-**Primary checklist closure:** `phase6_primary_checklist: complete`; `handoff_readiness` **86** (CDR [[Conceptual-Decision-Records/deepen-phase-6-primary-checklist-prototype-assembly-2026-04-05-1510]]). **Primary rollup closure:** `phase6_primary_rollup_nl_gwt: complete` (CDR [[Conceptual-Decision-Records/deepen-phase-6-primary-rollup-nl-gwt-2026-04-06-1605]]). **Secondary 6.1 on disk + rollup complete:** [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-05-1615]] (`handoff_readiness` **86** after NL + **GWT-6.1-A–K** vs **6.1.1–6.1.3**; mint CDR [[Conceptual-Decision-Records/deepen-phase-6-1-vertical-slice-manifest-instrumentation-2026-04-05-1615]]; rollup CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-2026-04-06-2145]]). **Canonical cursor:** [[workflow_state]] **`current_subphase_index: "6"`** — **Phase 6 primary rollup** complete; next **`advance-phase`** (Phase **6** design closure) **or** operator **RECAL-ROAD** / **`bootstrap-execution-track`**. Queue: `followup-deepen-phase6-primary-rollup-sandbox-gmm-20260406T230000Z`. **No** `Roadmap/Execution/**` edits on conceptual track unless execution bootstrapped.
+**Pending.** The phase-level **GWT** table and rollup evidence are authored after secondary **6.1+** exists on the active tree under `Phase-6-Prototype-Assembly-Testing-and-Iteration/` and rollups close. Prior **6.x** material for maintainer replay lives under [[Branches/phase-6-operator-rollback-20260405]].
 
 ## Subphases & notes
 

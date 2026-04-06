@@ -1,29 +1,19 @@
-# Technical / machine-only bin — exclude from indexing and AI context
-.technical/**
-*.jsonl
-3-Resources/Watcher-*.md
-*.log
+# Reduce Cursor indexing noise; keep Second-Brain orchestration paths readable.
+#
+# .technical/** is NOT ignored: agents need prompt queues (legacy + parallel tracks),
+# task-handoff-comms, tmp-prompt, eat-queue plans, Run-Telemetry, Validator/IRA outputs, etc.
 
-# Exceptions for technical files that Cursor must access
+# All JSONL elsewhere stay ignored; under .technical they are allowed (queue + audit + comms).
+*.jsonl
 !.technical/
-!.technical/prompt-queue.jsonl
-!.technical/queue-continuation.jsonl
-!.technical/prompt-queue-audit.jsonl
-!.technical/queue-gate-state.json
-!.technical/task-handoff-comms.jsonl
-!.technical/Run-Telemetry/
-!.technical/Run-Telemetry/**
-!.technical/Validator/
-!.technical/Validator/**
-!.technical/Internal-Repair-Agent/
-!.technical/Internal-Repair-Agent/**
-!.technical/scripts/
-!.technical/scripts/**
+!.technical/**
+
+3-Resources/Watcher-*.md
 !3-Resources/Watcher-Result.md
 !3-Resources/Watcher-Result-sandbox.md
 !3-Resources/Watcher-Result-godot.md
-!.technical/parallel/sandbox/prompt-queue.jsonl
-!.technical/parallel/godot/prompt-queue.jsonl
+
+*.log
 
 # Root-level technical files (must stay at root; Syncthing/Cursor read them here)
 .stignore
