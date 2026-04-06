@@ -102,7 +102,13 @@ flowchart TD
 
 - Adjust **`queue.roadmap_pass_order`**, per-project caps, or lane scope; use [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]] **full_cycle** when debugging plan parity.
 - **Immediate remediation:** Run another **EAT-QUEUE** after any mid-run append (the new repair line will be tagged in the next Pass 1–2 if it wins the slot). For stubborn stalls, temporarily set `queue.inline_a5b_repair_drain_enabled: true` and `queue.inline_forward_followup_drain_enabled: true` in `Second-Brain-Config.md` (balance or extreme profile), then re-run.
-- After Pass 3 **empties** the lane **PQ** (desired), **`queue_continuation`** **empty-queue bootstrap** (**Second-Brain-Config**) can **auto-append** the next **balance**-mode **`RESUME_ROADMAP`** **`deepen`** so **true work** stays available (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]** **A.1b**, **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**). **Healthy end state** = **one** new **`RESUME_ROADMAP`** **`deepen`** line on **`queue_continuation.bootstrap_track`** (default: **`conceptual`**), with **`params`** matching **`bootstrap_action`** / **`bootstrap_track`** from Config.
+- After Pass 3 **empties** the lane **PQ** (desired), **`queue_continuation`** **empty-queue bootstrap** (**Second-Brain-Config**) can **auto-append** the next **balance**-mode **`RESUME_ROADMAP`** **`deepen`** so **true work** stays available (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]** **A.1b**, **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**). **Healthy end state** = **one** new line with **`params.roadmap_track`** = **`bootstrap_track`**, **`params.action`** = **`bootstrap_action`**, and **rich** **`params.user_guidance`** (subphase from **track-specific** `workflow_state`), e.g. conceptual default:
+
+```json
+{"mode":"RESUME_ROADMAP","params":{"project_id":"sandbox-genesis-mythos-master","action":"deepen","roadmap_track":"conceptual","user_guidance":"Next deepen on conceptual track after empty queue. Current subphase: 6-1. Continue from last successful rollup."}}
+```
+
+(Real **`id`** / **`idempotency_key`** omitted for brevity; **`current_subphase_index`** comes from **`Roadmap/workflow_state.md`** when **`bootstrap_track`** is **`conceptual`**.)
 - **Anti-pattern / vault defaults:** The **Repair-Heavy** bundle in **Second-Brain-Config** § **profiles** plus **`inline_a5b_repair_drain_enabled: true`** allows **pre-existing** **repair-l1-hygiene** (repair-class) lines to **participate in Pass 3** even when **no** new **A.5b** append occurred **this** run — **Layer 1** may set **`inline_repair_pending`** from **stale** hygiene rows at Pass 3 re-tag (**`inline_repair_pending_from_stale`** telemetry per **config-resolve-profile**).
 
 ---

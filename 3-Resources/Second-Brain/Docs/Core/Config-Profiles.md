@@ -83,6 +83,15 @@ queue_continuation:
 
 **Example:** *To work on execution track instead:* `bootstrap_track: execution` (keep **`bootstrap_source: workflow_state.md`** so **Layer 1** reads **`current_subphase_index`** from **`Roadmap/Execution/workflow_state-execution.md`** per **[[.cursor/rules/agents/queue.mdc|queue.mdc]]** **A.1b**). For ad-hoc tracks (e.g. **procedural**), set **`bootstrap_track`** to match **`params.roadmap_track`** / vault conventions; unknown tracks fall back gracefully when the workflow file is missing.
 
+**Good bootstrap `user_guidance` (A.1b normative, deterministic):** **Layer 1** sets a single actionable string; subphase comes from the **track-specific** workflow file.
+
+| Track | Example `params.user_guidance` (illustrative subphase) |
+|-------|--------------------------------------------------------|
+| **conceptual** (`bootstrap_track: conceptual`) | `Next deepen on conceptual track after empty queue. Current subphase: 6-1. Continue from last successful rollup.` |
+| **execution** (`bootstrap_track: execution`) | `Next deepen on execution track after empty queue. Current subphase: 2-3. Continue from last successful rollup.` |
+
+If **`current_subphase_index`** cannot be read, the middle clause uses **`unknown`** instead of a numeric slug.
+
 ---
 
 ## `profiles` — families (expandable)

@@ -79,7 +79,10 @@ queue_continuation:
   empty_queue_bootstrap_deterministic_when_no_record: true
   bootstrap_track: conceptual   # params.roadmap_track on synthesized deepen lines; use execution, procedural, etc. when needed
   bootstrap_action: deepen      # params.action when synthesizing; must match RESUME_ROADMAP allowed actions
-  bootstrap_source: workflow_state.md   # authoritative for subphase cursor; Layer 1 resolves path by bootstrap_track (see queue.mdc A.1b)
+  # bootstrap_source: token workflow_state.md (default) → Layer 1 resolves the file by bootstrap_track:
+  #   conceptual → Roadmap/workflow_state.md; execution → Roadmap/Execution/workflow_state-execution.md; other → try conceptual then execution path.
+  #   A non-default value is read as a path relative to 1-Projects/<project_id>/ (see queue.mdc A.1b). Used for current_subphase_index in bootstrap user_guidance.
+  bootstrap_source: workflow_state.md
 ```
 
 ## hub_names
