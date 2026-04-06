@@ -44,7 +44,7 @@ RoadmapSubagent **must** emit fenced YAML (or equivalent contract block) includi
 | `waiver_reason` | when `gate_waived` non-empty | e.g. `conceptual_track` |
 | `section_score_breakdown` | optional | Dict for debugging / replay |
 
-Layer 1 merges these into **queue-continuation** rows and **`.technical/control-plane-nightly.jsonl`** when those artifacts are written.
+Layer 1 merges these into **queue-continuation** rows (**QCONT** per **queue.mdc A.0x**) and the **control-plane nightly ledger** path resolved in **queue.mdc A.5h** when those artifacts are written.
 
 ---
 
@@ -113,7 +113,7 @@ Eight components: `pri`, `unc`, `iter`, `stag`, `decay`, `bal`, `rb`, `cont` →
 
 ## 7. Nightly ledger
 
-**Path:** `.technical/control-plane-nightly.jsonl` (append-only).
+**Path:** Default **`.technical/control-plane-nightly.jsonl`** (append-only), or Config override **`queue.control_plane_v2.nightly_ledger_path`**. When **Layer 1** runs with a non-null **`parallel_track`** (**queue.mdc A.0x** — per-track **PQ** bundle), the nightly ledger is **`dirname(PQ)/control-plane-nightly.jsonl`** instead (colocated with that track’s prompt queue).
 
 **Line schema (minimum):** `schema_version`, `control_plane_version`, `completed_iso`, `eat_queue_run_id`, `queue_entry_id`, `project_id`, `disposition`, `final_subphase_key`, `blocked_subphases` (array), `effective_cap_used`, `stagnation_severity`, `stagnation_cluster_id`, `routing_decision`, `effective_track`, optional `gate_waived`, `waiver_reason`, `remaining_repair_budget`, `notes_machine`.
 

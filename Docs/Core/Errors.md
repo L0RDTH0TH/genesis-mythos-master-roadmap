@@ -260,3 +260,77 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Rollup content may be in vault but attestation and hostile pass are provisional; operator must run repair handoff-audit and reconcile state files before treating Phase 5.2 as closed.
 - **Suggested fixes:** Process repair queue line next EAT-QUEUE; patch `distilled-core.md` and Phase 5.2 secondary note frontmatter per validator report; re-run deepen only after nested Task surface works or profile adjusted per ops policy.
 - **Recovery:** Validator report path above; per-change snapshots if user restores prior vault versions.
+
+### 2026-04-05 18:20 — EAT-QUEUE lane sandbox: Phase 6.1 mint — balance nested gate provisional + L1 state_hygiene_failure
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-05T18:20:00Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl`; **queue_lane_filter:** `sandbox`; **parallel_track:** `sandbox`.
+- **Consumed id:** `followup-deepen-phase6-61-mint-slice-manifest-sandbox-gmm-20260405T151000Z` (`RESUME_ROADMAP` deepen, `pipeline_mode: balance`, `project_id: sandbox-genesis-mythos-master`).
+- **Roadmap `Task` return:** `#review-needed`; `nested_validator_first` → `task_error` / `nested_task_unavailable` in L2 host; `ira_post_first_validator` / `nested_validator_second` skipped (prerequisite); **A.5d** balance deepen checklist **not** fully satisfied (provisional).
+- **L1 `Task(validator)` `roadmap_handoff_auto`:** report `.technical/Validator/roadmap-auto-validation-20260405T181500Z.md`; **high** / `block_destructive`; **primary_code:** `state_hygiene_failure` (distilled-core vs `workflow_state` / Phase 6.1 cursor; plus `safety_unknown_gap` for missing L2 nested validator artifact).
+- **A.5b:** Appended **repair** `repair-l1postlv-sandbox-gmm-distilled-hygiene-6-61-20260405T182000Z` (`handoff-audit`) and roadmap **forward** `followup-deepen-phase6-611-tertiary-sandbox-gmm-20260405T160500Z` to sandbox PQ; **GitForge** skipped (`invoke_only_on_clean_success`).
+
+#### Summary
+
+- **Root cause:** L2 roadmap host could not run nested `Task(validator)`; L1 hostile pass then flagged **state hygiene** (rollup / distilled-core narrative vs live cursor after 6.1 mint).
+- **Impact:** Phase 6.1 secondary note may exist on disk, but closure is **provisional** until handoff-audit repair runs and distilled-core is reconciled.
+- **Suggested fixes:** Run **EAT-QUEUE lane sandbox** again (repair first); patch `distilled-core.md` per validator report; ensure future roadmap runs use a **Task-capable** host for balance nested cycles.
+- **Recovery:** Validator report path above; Watcher-Result pair for same `requestId` (VALIDATE + RESUME_ROADMAP segments).
+
+### 2026-04-05 15:25 — Sandbox PQ: pool_sync against empty central pool wiped track queue; restored + L1 b1 state_hygiene_failure
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-05T15:25:00Z |
+| error_type | io-failure |
+
+#### Trace
+
+- **A.0.4** `pool_sync` ran while **`.technical/prompt-queue.jsonl`** was **empty** → `copied_count: 0` → **overwrote** `.technical/parallel/sandbox/prompt-queue.jsonl` with empty body (lost in-flight sandbox line until restored from hand-off).
+- **Restored** central pool (sandbox + godot lines) and re-ran `pool_sync` (`copied_count: 1` then later 3 after appends).
+- **Task(roadmap)** for `followup-deepen-phase6-61-mint-slice-manifest-sandbox-gmm-20260405T151000Z`: nested `Task(validator)` / IRA **`task_error`** (`nested_task_unavailable_in_host`); material 6.1 mint reported on disk.
+- **L1 `Task(validator)` `roadmap_handoff_auto`:** report `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-20260405T152000Z-layer1-postlv-phase6-61-b1.md`; **`state_hygiene_failure: true`** (terminal `workflow_state` ## Log row vs `6.1`).
+- **A.7:** triggering id **not** consumed (`suppress_clean_drain`); central pool + sandbox PQ ordered **repair-first**: `repair-state-hygiene-phase6-1-sandbox-gmm-20260405T152200Z`, `followup-deepen-phase6-611-manifest-fields-sandbox-gmm-20260405T151500Z`, retained original `followup-deepen-phase6-61-mint-slice-manifest-sandbox-gmm-20260405T151000Z`.
+
+#### Summary
+
+- **Root cause:** **Fan-out hydration** overwrites per-track PQ from pool; an **empty pool** is a destructive wipe. Separately, roadmap subagent host lacked nested `Task`, and L1 validator found **workflow_state** log hygiene vs Phase 6.1.
+- **Impact:** Operator must keep **central pool non-empty** before `pool_sync` when entries exist only on track files, or disable fan-out until pool is repopulated; run **handoff-audit** repair line next; fix terminal log row per validator report.
+- **Suggested fixes:** `chmod`/ACL so Layer 0 can read `.technical/parallel/sandbox/`; never run `pool_sync` without verifying pool has expected lines; patch `workflow_state.md` per b1 report.
+- **Recovery:** Validator report path above; Watcher-Result + `Watcher-Result-sandbox.md` appended for same `requestId`.
+
+### 2026-04-05 23:55 — Godot lane EAT-QUEUE: L1 post-little-val state_hygiene_failure after RESUME_ROADMAP deepen 6.1
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-05T23:55:00Z |
+| error_type | confidence-below-threshold |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/godot/prompt-queue.jsonl` (lane **godot**); **A.0.4** `pool_sync` ok (`copied_count: 0`).
+- **Task(roadmap)** `followup-deepen-phase6-61-mint-slice-manifest-godot-gmm-20260405T151000Z`: Success; nested ledger balance cycle ok (`nested_validator_first` / `ira_post_first_validator` / `nested_validator_second` `task_tool_invoked: true`); `queue_followups.next_entry` = deepen **6.1.1**.
+- **Task(validator)** L1 post–little-val `roadmap_handoff_auto`: **high** / **block_destructive** / **`primary_code: state_hygiene_failure`**; report `.technical/Validator/roadmap-handoff-auto-godot-gmm-20260405T220500Z-l1postlv-followup-deepen-phase6-61.md` (workflow_state callout vs `current_subphase_index: "6.1"`; distilled-core Canonical routing paragraph stale vs Phase 3 rollup).
+- **A.5d:** triggering id **not** consumed; **A.5b.3** repair `repair-l1-handoff-audit-godot-phase6-61-20260405T234800Z` + **A.5c** forward `followup-deepen-phase611-mint-first-tertiary-godot-gmm-20260405T231500Z` written to godot PQ; duplicate godot **6.1** line removed from **central pool** `.technical/prompt-queue.jsonl`.
+
+#### Summary
+
+- **Root cause:** Layer 2 mint and nested validators reached **log_only**, but Layer 1 hostile pass still found **rollup/hygiene contradictions** in `workflow_state.md` and `distilled-core.md`.
+- **Impact:** Phase 6.1 artifacts on disk are **provisional** until handoff-audit repair reconciles callouts and rollup text; godot PQ now has **repair-first** ordering (3 lines: repair, 6.1.1 deepen, retained original 6.1 deepen).
+- **Suggested fixes:** Run **EAT-QUEUE lane godot** (processes `handoff-audit` first); patch notes per L1 validator report; optional Pass 3 inline drain on next run.
+- **Recovery:** Watcher-Result + `Watcher-Result-godot.md`; validator report path above. #review-needed

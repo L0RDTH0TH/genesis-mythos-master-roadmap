@@ -25,6 +25,7 @@ from .lanes import FALLBACK_ALLOWED_LANES, filter_entries_by_lane, validate_lane
 from .plan import append_decisions, build_plan, emit_plan_json, load_queue_file
 from .workflows import micro_workflow_for_entry
 from .models import EatQueueRunPlan, QueueEntry
+from .pool_sync import hydrate_track_pq_from_pool, read_central_pool_fanout_enabled
 
 
 def _entry_action(e: QueueEntry) -> str:
@@ -199,6 +200,18 @@ def apply_queue_cleanup(queue_path: Path, ids_to_remove: set[str]) -> bool:
     return changed
 
 
+def apply_queue_cleanup_dual_track(
+    track_pq: Path,
+    central_pool: Path,
+    ids_to_remove: set[str],
+) -> tuple[bool, bool]:
+    """Remove ids from track PQ and central pool (A.7 dual removal). Returns (track_changed, pool_changed)."""
+    return (
+        apply_queue_cleanup(track_pq, ids_to_remove),
+        apply_queue_cleanup(central_pool, ids_to_remove),
+    )
+
+
 def run_full_eat_queue_cycle(
     *,
     initial_action: str,
@@ -213,6 +226,7 @@ def run_full_eat_queue_cycle(
     simulate_post_pass1_repair: Callable[[], None] | None = None,
     apply_cleanup: bool = False,
     lane_filter: str | None = None,
+    central_pool_fanout: bool | None = None,
 ) -> FullCycleResult:
     """
     Build up to ``max_passes`` plans, re-reading the queue between passes.
@@ -226,13 +240,43 @@ def run_full_eat_queue_cycle(
     When ``lane_filter`` is set, ``build_plan`` and ``enrich_plan_dict`` use the same subset
     as ``eat_queue_core plan --lane`` (track ∪ shared; ``shared`` / ``default`` only).
     """
-    root = vault_root or Path.cwd()
-    qpath = queue_path or (root / ".technical" / "prompt-queue.jsonl")
+    root = (vault_root or Path.cwd()).resolve()
+    qpath = (queue_path or (root / ".technical" / "prompt-queue.jsonl"))
+    if not qpath.is_absolute():
+        qpath = (root / qpath).resolve()
+    else:
+        qpath = qpath.resolve()
     ppath = plan_path or (qpath.parent / "eat_queue_run_plan.json")
     dpath = decisions_path or (qpath.parent / "eat-queue-decisions.jsonl")
     prid = parent_run_id or f"eatq-fullcycle-{uuid.uuid4().hex[:12]}"
 
-    messages: list[str] = []
+    pool_default = (root / ".technical" / "prompt-queue.jsonl").resolve()
+    if central_pool_fanout is None:
+        use_fanout = read_central_pool_fanout_enabled(root)
+    else:
+        use_fanout = central_pool_fanout
+    dual_pool_cleanup = bool(
+        lane_filter and use_fanout and qpath != pool_default
+    )
+    if dual_pool_cleanup:
+        try:
+            rel_target = qpath.relative_to(root)
+        except ValueError:
+            rel_target = qpath
+        hr = hydrate_track_pq_from_pool(
+            vault_root=root,
+            lane_filter=lane_filter,  # type: ignore[arg-type]
+            target_pq=rel_target,
+        )
+        if not hr.ok:
+            raise ValueError(hr.messages[0] if hr.messages else "pool_sync hydrate failed")
+        messages = [
+            f"pool_hydrate: copied {hr.copied_count} id(s) from {hr.pool_path} to {hr.target_pq}"
+        ]
+        if hr.messages:
+            messages.extend(hr.messages)
+    else:
+        messages = []
     plans_out: list[dict[str, Any]] = []
     summaries: list[dict[str, Any]] = []
     passes = 0
@@ -274,8 +318,15 @@ def run_full_eat_queue_cycle(
 
         if apply_cleanup:
             removed = set(queue_rewrite_ids(plan))
-            apply_queue_cleanup(qpath, removed)
-            messages.append(f"pass{pass_idx + 1}: queue cleanup removed {sorted(removed)}")
+            if dual_pool_cleanup:
+                tc, pc = apply_queue_cleanup_dual_track(qpath, pool_default, removed)
+                messages.append(
+                    f"pass{pass_idx + 1}: queue cleanup removed {sorted(removed)} "
+                    f"(track_pq={tc}, central_pool={pc})"
+                )
+            else:
+                apply_queue_cleanup(qpath, removed)
+                messages.append(f"pass{pass_idx + 1}: queue cleanup removed {sorted(removed)}")
 
         if pass_idx == 0 and simulate_post_pass1_repair is not None:
             simulate_post_pass1_repair()
@@ -343,6 +394,16 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="queue_lane_filter for build_plan (must be in allowed_lanes)",
     )
+    p.add_argument(
+        "--central-pool-fanout",
+        action="store_true",
+        help="Force central pool → track PQ hydrate when lane + track PQ (overrides Config)",
+    )
+    p.add_argument(
+        "--no-central-pool-fanout",
+        action="store_true",
+        help="Disable central pool fanout for this run (overrides Config)",
+    )
     args = p.parse_args(argv)
 
     root = (args.vault_root or Path.cwd()).resolve()
@@ -358,6 +419,12 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         lane_filter = token
 
+    cpf: bool | None = None
+    if getattr(args, "no_central_pool_fanout", False):
+        cpf = False
+    elif getattr(args, "central_pool_fanout", False):
+        cpf = True
+
     try:
         result = run_full_eat_queue_cycle(
             initial_action=args.action,
@@ -371,6 +438,7 @@ def main(argv: list[str] | None = None) -> int:
             parent_run_id=args.parent_run_id,
             lane_filter=lane_filter,
             apply_cleanup=args.apply_cleanup,
+            central_pool_fanout=cpf,
         )
     except (OSError, ValueError) as e:
         print(f"full_cycle error: {e}", file=sys.stderr)
