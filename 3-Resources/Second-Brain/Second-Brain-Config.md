@@ -57,7 +57,7 @@ Preferred **familial** bundle for reliable **repair-first** + **Pass 3** inline 
 | `queue.inline_a5b_repair_drain_enabled` | `true` |
 | `queue.inline_forward_followup_drain_enabled` | `true` |
 | `queue.roadmap_pass_order` | `repair_first` |
-| `queue.max_inline_a5b_repair_generations_per_run` | `5` |
+| `queue.max_inline_a5b_repair_generations_per_run` | `8` |
 | `validator.tiered_blocks_enabled` | `true` |
 
 ## hub_names
@@ -96,7 +96,7 @@ Preferred **familial** bundle for reliable **repair-first** + **Pass 3** inline 
 - **roadmap_pass_order** (`repair_first` \| `forward_first`): Layer 1 **A.4c** roadmap multi-dispatch; default **`repair_first`** aligns with familial **`repair_strategy: repair_first`** (overridable flat key).
 - **inline_a5b_repair_drain_enabled**: default **`true`** when omitted in older configs; explicit **`true`** here — Pass 3 repair drain (see [[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]).
 - **inline_forward_followup_drain_enabled**: Pass 3 forward follow-up wave — **`true`** in **Repair-Heavy / Hygiene-Focused Mode** (see § **profiles**) so forward-class appends can set **`inline_forward_followup_pending`** and drain in Pass 3 per **A.5.0** (when gate and caps allow).
-- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: Pass 3 generation caps (**A.5.0**). **Repair-Heavy** sets **`max_inline_a5b_repair_generations_per_run: 5`**; forward cap remains **3** unless changed.
+- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: Pass 3 generation caps (**A.5.0**). **Repair-Heavy** sets **`max_inline_a5b_repair_generations_per_run: 8`**; forward cap remains **3** unless changed.
 
 The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above). Keys **`roadmap_pass_order`**, **`inline_*`**, and **`max_inline_*`** implement **Repair-Heavy / Hygiene-Focused Mode** defaults (§ **profiles**); they remain **explicit flat overrides** — change them here to diverge without editing queue JSONL.
 
@@ -107,7 +107,7 @@ queue:
   roadmap_pass_order: repair_first
   inline_a5b_repair_drain_enabled: true
   inline_forward_followup_drain_enabled: true
-  max_inline_a5b_repair_generations_per_run: 5
+  max_inline_a5b_repair_generations_per_run: 8
   max_inline_forward_followup_generations_per_run: 3
   allowed_lanes:
     - default
