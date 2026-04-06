@@ -116,7 +116,7 @@ When a **hard block** or surviving **`contradictions_detected`** applies to scop
 2. **Repair lines MUST sort before** other **`RESUME_ROADMAP`** lines for the **same** `project_id` that would **deepen** or **advance** the same spine.  
    **Rationale:** `RECAL-ROAD` normalizes to `RESUME_ROADMAP`, so mode-order alone does not separate recal from deepen — use **`queue_priority: repair`** (integer, lower = earlier) or **`validator_repair_followup: true`** plus **sub-sort** in auto-eat-queue (see Queue-Sources).
 3. **Orthogonal** entries (other projects / no dependency) **continue** in canonical order without waiting for S’s repair.
-4. **Pass 3 (inline repair drain, same EAT-QUEUE run):** After Layer 1 **A.5b** (or repair-class **A.5d** recovery) appends a **`RESUME_ROADMAP`** repair line, **`queue.inline_a5b_repair_drain_enabled`** (Second-Brain-Config) gates whether **Pass 3** runs: re-read **`prompt-queue.jsonl`**, tag **`dispatch_pass: inline`**, and dispatch **`Task(roadmap)`** on the new **`id`** before **A.7**, within **`max_repair_roadmap_dispatches_per_project_per_run`** (shared with cleanup-pass repair dispatches) and **`max_inline_a5b_repair_generations_per_run`**. See [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.4c**, **A.5.0**, **A.5b**.
+4. **Pass 3 (inline repair drain, same EAT-QUEUE run):** After Layer 1 **A.5b** (or repair-class **A.5d** recovery) appends a **`RESUME_ROADMAP`** repair line, **`queue.inline_a5b_repair_drain_enabled`** (Second-Brain-Config) gates whether **Pass 3** runs: re-read **`prompt-queue.jsonl`**, tag **`dispatch_pass: inline`**, and dispatch **`Task(roadmap)`** on the new **`id`** before **A.7**, within **`max_repair_roadmap_dispatches_per_project_per_run`** (shared with cleanup-pass repair dispatches) and **`max_inline_a5b_repair_generations_per_run`**. **Pending flags** (not merely “a repair row exists on disk”) are required for Pass 3 entry; see [[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]. See [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.4c**, **A.5.0**, **A.5b**.
 
 ---
 
@@ -150,7 +150,7 @@ When `mode` is **`PRIMARY-DEP-...`** (chain):
 See [[3-Resources/Second-Brain/Parameters|Parameters]] / [[3-Resources/Second-Brain-Config|Second-Brain-Config]]:
 
 - `max_incoherence_retries` — cap guided retries for `incoherence` (default 0–1). **Wiring:** Roadmap subagent applies the decrement contract in `.cursor/agents/roadmap.md` § **Incoherence bounded retry** (and `roadmap.mdc`); Layer 1 **A.5b** uses the same formula on post–little-val repair lines when `primary_code` is `incoherence` (see Queue-Sources § Tiered validator queue fields).
-- `validator.tiered_blocks_enabled` — if false, fall back to legacy “high or block_destructive always no Success” (optional kill-switch).
+- `validator.tiered_blocks_enabled` — if false, fall back to legacy “high or block_destructive always no Success” (optional kill-switch). **Familial alias:** [[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]] **`validator_tier`** (`forgiving` ↔ tiered on, `aggressive` ↔ this flag false).
 
 ---
 

@@ -11,6 +11,29 @@ links: [[Resources Hub]]
 
 Single source of truth for pipeline and skill configuration. Skills and rules that need hub names or thresholds should read this note (e.g. via context or Templater/Dataview).
 
+## profiles (familial config)
+
+**Canonical reference:** [[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]] — `speed_mode`, `repair_strategy`, `validator_tier` and **deepMerge** order (queue entry explicit keys win over profile expansion over this file over defaults).
+
+**Auto-applied default profile:** When a queue line omits familial keys, **config-resolve-profile** still applies the same default bundle as **`balance` + `repair_first` + `forgiving`** in memory during merge (see Config-Profiles **Resolution flow**). Flat YAML values in *this* file are unchanged; behavior is additive in the resolver.
+
+**Deprecation (soft):** Prefer familial names on queue **`params`** (or the nested `params.profiles` object) instead of setting **`queue.inline_*`**, **`queue.roadmap_pass_order`**, **`validator.tiered_blocks_enabled`**, and **`pipeline_mode`** directly for every run. **All flat keys remain supported** and merge with expanded profiles per Config-Profiles; nothing is removed.
+
+```yaml
+# Mirror of Docs/Core/Config-Profiles.md — keep in sync when adding families
+profiles:
+  speed_mode:
+    fast: {}
+    balance: {}   # default familial label
+    extreme: {}
+  repair_strategy:
+    repair_first: {}   # default
+    forward_first: {}
+  validator_tier:
+    aggressive: {}
+    forgiving: {}   # default
+```
+
 ## hub_names
 
 - projects: "Projects Hub"

@@ -52,6 +52,8 @@ This folder documents the **post-migration** system: Cursor’s native subagents
 | [Pipelines/Queue-Pipeline](Pipelines/Queue-Pipeline.md) | Step 0, two queues, dispatch, Watcher-Result, clear/tag |
 | [Pipelines/Research-Pipeline](Pipelines/Research-Pipeline.md) | RESEARCH-AGENT queue-only flow, project_id + linked_phase, research-agent-run |
 | [User-Flows/EAT-QUEUE-Flow](User-Flows/EAT-QUEUE-Flow.md) | EAT-QUEUE user journey: Step 0 → read → dispatch → Watcher-Result |
+| [User-Flows/EAT-QUEUE-Pass-3-Operator-Guide](User-Flows/EAT-QUEUE-Pass-3-Operator-Guide.md) | Pass 3 inline drain: pending flags vs pre-existing repair rows, `repair_first` slot, diagrams |
+| [Core/Config-Profiles](Core/Config-Profiles.md) | Familial **`speed_mode` / `repair_strategy` / `validator_tier`** → flat Config keys; deepMerge order; Crafter + queue resolver |
 | [Rules/Always-Rules-Overview](Rules/Always-Rules-Overview.md) | Index of all always rules (and context entry points) with one-line purpose |
 | [Skills/Queue-and-Shared-Skills](Skills/Queue-and-Shared-Skills.md) | Step 0 skills, queue-cleanup, obsidian-snapshot, task/roadmap queue skills |
 | [Operations/Backup-and-Restore](Operations/Backup-and-Restore.md) | Backups, snapshots, retention, RESTORE MODE, Restore-Queue — single reference |
