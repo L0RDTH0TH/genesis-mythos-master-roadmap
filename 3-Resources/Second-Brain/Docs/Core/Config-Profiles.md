@@ -100,7 +100,7 @@ profiles:
 | Value | Primary flat keys |
 |-------|---------------------|
 | `fast` | `pipeline_mode: fast` (see `validator_profiles.fast`); GitForge: **skip** (`effective_pipeline_mode` **speed** → no **A.7a** `Task(gitforge)` per queue.mdc); `snapshot.batch_size_for_snapshot`: lower threshold bias toward **per-change** snapshots (use **3** when unset; operators may keep Config default **5**). |
-| `balance` | `pipeline_mode: balance` (default `validator_profiles.balance`); GitForge **balance**; `batch_size_for_snapshot: 5` (Config default). |
+| `balance` | `pipeline_mode: balance` (default `validator_profiles.balance`); GitForge **balance**; `batch_size_for_snapshot: 5` (Config default). When **`queue_continuation.empty_queue_bootstrap_enabled: true`** in **Second-Brain-Config** and the **sandbox** (or lane) **PQ** is **empty** after **Pass 3** / **pool_sync**, **Layer 1** **A.1b** may **auto-append** a new **`RESUME_ROADMAP`** **`deepen`** for the **next** true work cycle (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**, **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**) — requires **non-empty** **queue-continuation** log or **unfinished** fallback per **A.1b**. |
 | `extreme` | `pipeline_mode: extreme` (`validator_profiles.extreme`); GitForge **balance** with **`quality`** trace via `params.pipeline_mode` / `source_pipeline_mode`; **stricter** nested validator budgets (`target_nested_validator_passes: 4`, `l1_post_lv_policy: always`, `nested_ira_policy: always`). |
 
 **Related:** `[[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]]` (`pipeline_mode` → `validator_profiles` rows), `Second-Brain-Config` § **pipeline_mode and validator_profiles**, **gitforge** (fast skips).

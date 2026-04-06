@@ -60,6 +60,29 @@ Preferred **familial** bundle for reliable **repair-first** + **Pass 3** inline 
 | `queue.max_inline_a5b_repair_generations_per_run` | `8` |
 | `validator.tiered_blocks_enabled` | `true` |
 
+### queue_continuation (empty-queue bootstrap after lane drain)
+
+When the **lane** **PQ** is **empty** after **Pass 3** / **A.7** (desired after balance work + repair churn), **Layer 1** **A.1b** (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**) may **append** the next **`RESUME_ROADMAP`** **`deepen`** from **`.technical/…/queue-continuation.jsonl`** (**QCONT**) or **unfinished-roadmap** fallback per **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**. **`continuation_log_enabled: true`** is required so **A.5e** can populate **QCONT**; if **QCONT** is **missing or empty**, **A.1b** step **2** fails (**queue.mdc**) — keep roadmap runs emitting **`queue_continuation`** and logging enabled.
+
+**Operator intent (balance → next balance cycle):** next bootstrapped line should be **`effective_pipeline_mode`** **balance** (familial **`speed_mode: balance`**), **`params.roadmap_track: conceptual`**, **`params.action: deepen`** — reflected when **Layer 1** builds the candidate from **`suggested_next`** or **deterministic** **A.1b** step **10** (**not** separate **Queue-Continuation-Spec** v1 schema keys; comments in YAML below document intent).
+
+```yaml
+queue_continuation:
+  continuation_log_enabled: true
+  empty_queue_bootstrap_enabled: true
+  empty_queue_bootstrap_auto_append: true
+  empty_queue_bootstrap_tail_lines: 50
+  empty_queue_bootstrap_max_age_minutes: 1440
+  empty_queue_bootstrap_force_when_unfinished: true
+  empty_queue_bootstrap_prompt_craft: false
+  empty_queue_bootstrap_prompt_craft_on_no_record: false
+  empty_queue_bootstrap_deterministic_when_no_record: true
+  # Intent (documentation — synthesize into A.1b RESUME_ROADMAP params; not spec v1 keys):
+  # bootstrap_mode: balance        # match pipeline / familial balance work cycle
+  # bootstrap_track: conceptual      # params.roadmap_track on deepen line when applicable
+  # bootstrap_action: deepen         # params.action
+```
+
 ## hub_names
 
 - projects: "Projects Hub"
