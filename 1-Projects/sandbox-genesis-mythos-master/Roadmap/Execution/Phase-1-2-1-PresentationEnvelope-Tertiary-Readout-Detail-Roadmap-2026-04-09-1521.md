@@ -14,7 +14,7 @@ phase-number: 1
 subphase-index: "1.2.1"
 parent_secondary: "[[Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]]"
 conceptual_counterpart: "[[../Phase-6-Prototype-Assembly-Testing-and-Iteration/Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle/Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-07-1015]]"
-status: in-progress
+status: complete
 progress: 100
 handoff_readiness: 86
 ---
@@ -40,7 +40,7 @@ First **execution-local** tertiary (**`1.2.1`**) under secondary **[[Phase-1-2-P
 | Drill | Input gate | Expected readout / outcome |
 | --- | --- | --- |
 | Happy | `PresentationCoDisplayGate.presentation_time_only == true` | One `PresentationReadoutRow` with fields populated per **1.2** `stubMapSampleToReadout` |
-| Negative | `presentation_time_only == false` | **No** operator readout line; stub returns **blocked** sentinel string `"[stub] co-display gate failed — not presentation-time"` |
+| Negative | `presentation_time_only == false` | **No** `PresentationReadoutRow`; `drillReadout` returns `{ blocked: true, reason: "co-display gate" }` only (no string sentinel — table matches § Drill pseudocode) |
 
 ## Drill pseudocode (interface sketch)
 
@@ -57,7 +57,7 @@ function drillReadout(s: ObservationChannelSample, g: PresentationCoDisplayGate)
 
 | ID | Claim | Evidence hook |
 | --- | --- | --- |
-| GWT-1-2-1-Exec-A | **1.2.1** exists as first tertiary under **1.2** | Parent § Tertiary children + [[workflow_state-execution]] frontmatter **`current_subphase_index: "1.2"`** (rollup scope after mint **1.2.1**) + ## Log **2026-04-09 15:25** row (`Iter Phase` **1.2.1**, `queue_entry_id` **`followup-deepen-exec-phase1-2-1-tertiary-sandbox-gmm-20260409T152100Z`**) — cursor **`"1.2"`** is intentional (secondary rollup next), not **`"1.2.1"`**. |
+| GWT-1-2-1-Exec-A | **1.2.1** exists as first tertiary under **1.2** | Parent § Tertiary children + parent § Rollup completion + `[[workflow_state-execution]]` cursor **`1.1`** post–**2026-04-09 16:10** rollup row. |
 | GWT-1-2-1-Exec-B | Drill rows bind to **1.2** `PresentationReadoutRow` / `stubMapSampleToReadout` | § Drill rows + § Drill pseudocode |
 | GWT-1-2-1-Exec-C | Conceptual import remains read-only wikilink | Frontmatter `conceptual_counterpart` |
 

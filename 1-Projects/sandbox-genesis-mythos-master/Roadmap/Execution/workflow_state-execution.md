@@ -12,10 +12,10 @@ roadmap_track: execution
 status: in-progress
 automation_level: semi
 current_phase: 1
-current_subphase_index: "1.2"
+current_subphase_index: "1.1"
 last_auto_iteration: ""
 iterations_per_phase:
-  "1": 6
+  "1": 7
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -23,9 +23,9 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 50
-last_conf: 91
-last_injected_tokens: 45000
+last_ctx_util_pct: 52
+last_conf: 92
+last_injected_tokens: 45500
 ---
 
 # Workflow state (execution) — sandbox-genesis-mythos-master
@@ -43,3 +43,4 @@ Execution-track automation log. Conceptual state remains in `../workflow_state.m
 | 2026-04-09 14:45 | deepen | Phase-1-2-PresentationEnvelope-Stub | 4 | 1.2 | 48 | 52 | 80 | 43500 / 128000 | 2 | 89 | **1.2** stub **pseudocode binding** + **IRA/validator repair**: aligned `ObservationChannelSample` to **1.1** table (`envelope_ref`, `observed_at_tick`); added § Field parity + § Risk register (v0); `handoff_readiness` held **82** pending second nested validator. **`clock_corrected`:** human Timestamp restamped from operator wall **2026-04-06 15:45** → **2026-04-09 14:45** so ## Log order is monotonic after row **2026-04-09 12:00**. **Next:** deepen **1.1** (fenced type matching this parity) **or** mint **1.2.1** tertiary per **D-Exec-1** / operator. queue_entry_id: followup-deepen-exec-phase1-2-presentation-sandbox-gmm-20260407T002000Z \| `parent_run_id: eatq-layer1-20260406-sbx-a` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `gate_signature: execution-spine-continuation` \| `pipeline_mode_used: balance` \| `telemetry_utc: 2026-04-09T14:45:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 14:45` \| `audit: clock_corrected_row_restamp` |
 | 2026-04-09 15:10 | deepen | Phase-1-1-ObservationChannel-Stub-Binding | 5 | 1.1 | 49 | 51 | 80 | 44000 / 128000 | 1 | 90 | **1.1** **fenced type parity** with **1.2** `ObservationChannelSample`: added § Stub type (pseudocode) mirroring five-field stub table; `handoff_readiness` **87**. **Next:** mint **1.2.1** tertiary (PresentationEnvelope detail) **or** operator expand **1.2** polish per **D-Exec-1**. queue_entry_id: resume-deepen-sandbox-exec-p1-spine-post-telemetry-repair-20260409T120500Z \| `parent_run_id: eatq-layer1-sandbox-20260409T120600Z` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `gate_signature: execution-spine-continuation` \| `pipeline_mode_used: balance` \| `micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second→l1_post_lv` \| `telemetry_utc: 2026-04-09T12:05:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 15:10` \| `repair_context: telemetry_queue_ts repair-l1-telemetry-ts-sandbox-exec-20260407T002800Z` \| `audit: wall_clock_after_1445_for_monotonic_log` |
 | 2026-04-09 15:25 | deepen | Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail | 6 | 1.2.1 | 50 | 50 | 80 | 45000 / 128000 | 1 | 91 | Minted execution tertiary **1.2.1** [[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]] under **1.2** (PresentationEnvelope stub): § Drill rows + § Drill pseudocode + **GWT-1-2-1-Exec**; parent **1.2** § Tertiary children + Phase-1 spine **1.2.1** link; `handoff_readiness` **86** on **1.2** / **86** on **1.2.1**. **Next:** **secondary 1.2 rollup** (NL + GWT vs **1.2.1**) **or** operator **RECAL** / polish. **Cursor:** `current_subphase_index: "1.2"` (rollup scope). queue_entry_id: followup-deepen-exec-phase1-2-1-tertiary-sandbox-gmm-20260409T152100Z \| `parent_run_id: eatq-layer1-sandbox-20260406T000001Z` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `gate_signature: execution-spine-continuation` \| `pipeline_mode_used: balance` \| `micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second` \| `telemetry_utc: 2026-04-09T15:21:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 15:25` |
+| 2026-04-09 16:10 | deepen | Phase-1-2-PresentationEnvelope-Stub (rollup) | 7 | 1.2 | 52 | 48 | 80 | 45500 / 128000 | 2 | 92 | **Secondary 1.2 rollup:** § Rollup completion + **GWT-1-2-Exec** parity vs [[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]]; **1.2.1** negative drill row aligned to `{ blocked: true, reason: "co-display gate" }`; [[roadmap-state-execution]] Phase 1 summary aligned. **Next:** deepen **1.1** (sample-row / pseudo-code polish) **or** operator **RECAL**. **Cursor:** `current_subphase_index: "1.1"`. queue_entry_id: followup-deepen-exec-phase1-2-rollup-sandbox-gmm-20260409T152500Z \| `parent_run_id: eatq-20260406-sandbox-deepen-rollup` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `pipeline_mode_used: balance` \| `micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second` \| `telemetry_utc: 2026-04-09T15:25:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 16:10` \| `rollup: secondary-1.2-complete` |
