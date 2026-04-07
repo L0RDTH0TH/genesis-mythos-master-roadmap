@@ -37,7 +37,7 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 - [[Phase-1-1-ObservationChannel-Stub-Binding-Roadmap-2026-04-06-2245]] — first **1.1** secondary (ObservationChannel stub binding; **D-Exec-1** execution-local index).
 - [[Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]] — **1.2** secondary (PresentationEnvelope stub; downstream readout of **1.1** samples).
   - **1.2.1** tertiary — [[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]] (readout drill rows + co-display guard drills).
-- [[Phase-1-3-FirstCommittedTick-Stub-Binding-Roadmap-2026-04-09-2210]] — **1.3** secondary (first committed tick / seed-bundle stub; correlates **6.1.2** → **1.1** `tick_commit_id` namespace).
+- [[Phase-1-3-FirstCommittedTick-Stub-Binding-Roadmap-2026-04-09-2210]] — **1.3** secondary (first committed tick / seed-bundle stub; **6.1.2** wikilink → **1.1** `tick_commit_id` + § Drill / bridge parity vs **1.1** sample table, **2026-04-09 22:35Z** polish).
 
 ## GWT-1-Exec-A–C (execution spine — initial)
 

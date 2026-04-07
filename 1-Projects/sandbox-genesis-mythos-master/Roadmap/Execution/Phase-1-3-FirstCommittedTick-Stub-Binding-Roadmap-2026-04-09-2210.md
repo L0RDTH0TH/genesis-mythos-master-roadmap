@@ -14,8 +14,8 @@ phase-number: 1
 subphase-index: "1.3"
 conceptual_counterpart: "[[../Phase-6-Prototype-Assembly-Testing-and-Iteration/Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle/Phase-6-1-2-Bounded-Tick-Window-Scenarios-and-Sim-Visible-Classification-Matrix-Roadmap-2026-04-06-1215]]"
 status: in-progress
-progress: 5
-handoff_readiness: 86
+progress: 8
+handoff_readiness: 88
 ---
 
 # Phase 1.3 (Execution) — First committed tick stub binding
@@ -64,12 +64,36 @@ function edgeCommittedTickFromSeed(seed: string): CommittedTickStub
 - **Seed → tick:** `firstCommittedTickFromSeed` yields **`tick_commit_id`** matching **1.1** **Happy** row; **`edgeCommittedTickFromSeed`** yields **`tick-exec-0008`** for the **Edge** row.
 - **Tick → observation:** **1.1** `sampleHappy()` / `sampleEdge()` use the same **`tick_commit_id`** / `observed_at_tick` pairings as these stubs (no invented ids).
 
+### Drill rows (1.3 ↔ 1.1 parity)
+
+Operator-facing **Happy / Edge** drill (same namespace as [[Phase-1-1-ObservationChannel-Stub-Binding-Roadmap-2026-04-06-2245]] § Sample rows) — proves **`CommittedTickStub`** is the **sole** source of **`tick_commit_id`** / tick index before rows appear in **1.1**.
+
+| Drill | `tick_commit_id` | `committed_at_index` | Matches **1.1** row |
+| --- | --- | --- | --- |
+| **Happy** | `tick-exec-0007` | `7` | **Happy** — `observed_at_tick` **7** |
+| **Edge** | `tick-exec-0008` | `8` | **Edge** — `observed_at_tick` **8** |
+
+### Bridge pseudocode (1.3 → 1.1 `ObservationChannelSample`)
+
+Execution-local **glue** only — shows how a committed tick stub **feeds** the five-field type in **1.1** § Stub type (no new columns vs **1.2** `ObservationChannelSample`).
+
+```pseudo
+// Preconditions: ct.tick_commit_id / ct.committed_at_index match § Drill rows above.
+function committedTickToObservationSample(ct: CommittedTickStub): ObservationChannelSample
+  // Delegates to 1.1 constructors — same literals as sampleHappy / sampleEdge tables.
+  if ct.tick_commit_id == "tick-exec-0007" then return sampleHappy()
+  if ct.tick_commit_id == "tick-exec-0008" then return sampleEdge()
+  // Stub-only: no third id in v0 vertical slice.
+  halt "unknown tick_commit_id for ObservationChannel bridge"
+```
+
 ## GWT-1-3-Exec (local)
 
 | ID | Claim | Evidence hook |
 | --- | --- | --- |
-| GWT-1-3-Exec-A | **1.3** exists as **next** **1.x** child extending the instrumentation spine after **1.1** / **1.2** / **1.2.1** | Parent § Execution spine — 1.x children + [[workflow_state-execution]] `current_subphase_index` |
-| GWT-1-3-Exec-B | **Committed tick** stubs (happy + edge constructors) correlate to **1.1** sample rows without new columns | § Stub binding + § Happy-path wire-up |
+| GWT-1-3-Exec-A | **1.3** exists as **next** **1.x** child extending the instrumentation spine after **1.1** / **1.2** / **1.2.1** | Parent § Execution spine — 1.x children + [[workflow_state-execution]] `current_subphase_index` (**`1.3`** post–**2026-04-09 22:35Z** polish — § Drill rows + § Bridge pseudocode vs **1.1** sample + wire-up) |
+| GWT-1-3-Exec-B | **Committed tick** stubs (happy + edge constructors) correlate to **1.1** sample rows without new columns | § Stub binding + § Happy-path wire-up + § Drill rows |
+| GWT-1-3-Exec-C | **D-Exec-1** execution-local numbering holds (**1.3** is spine child, not a conceptual **6.1.x** remap) | [[../decisions-log]] **D-Exec-1-numbering-policy** + frontmatter `subphase-index: "1.3"` |
 
 ## Related
 

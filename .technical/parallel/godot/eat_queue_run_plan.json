@@ -1,24 +1,7 @@
 {
   "schema_version": 1,
-  "parent_run_id": "eatq-fullcycle-a0aa171f836c",
-  "intents": [
-    {
-      "op": "dispatch",
-      "subagent_type": "roadmap",
-      "queue_entry_id": "followup-deepen-exec-phase2-1-first-child-godot-gmm-20260409T202000Z",
-      "project_id": "godot-genesis-mythos-master",
-      "queue_pass_phase": "initial",
-      "pass_id": "pass1",
-      "dispatch_ordinal": 1,
-      "micro_workflow": [
-        "roadmap_core",
-        "nested_validator_first",
-        "ira",
-        "nested_validator_second",
-        "l1_post_lv"
-      ]
-    }
-  ],
+  "parent_run_id": "eatq-fullcycle-d3f04c64d5e1",
+  "intents": [],
   "consumed_ids": [],
   "strict_mode": true,
   "effective_pipeline_mode": "balance",
