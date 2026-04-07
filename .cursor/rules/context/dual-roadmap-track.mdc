@@ -19,7 +19,7 @@ Do **not** perform on frozen conceptual roadmap notes:
 
 ## Execution track
 
-When **`roadmap_track: execution`** on `…/Roadmap/roadmap-state.md`, deepen/recal **writes** go under `…/Roadmap/Execution/` per **roadmap-deepen** and **RoadmapSubagent**. Use `workflow_state-execution.md` and `roadmap-state-execution.md` for execution iteration state.
+When **`roadmap_track: execution`** on `…/Roadmap/roadmap-state.md`, deepen/recal **writes** go under `…/Roadmap/Execution/` per **roadmap-deepen** and **RoadmapSubagent**. Use `workflow_state-execution.md` and `roadmap-state-execution.md` (**Execution root only**) for execution iteration state. Execution **phase notes** must form a **parallel spine**: mirror the conceptual **`Roadmap/`** folder hierarchy under **`Roadmap/Execution/`** — **not** a flat dump of phase `.md` files at the Execution root when conceptual nests `Phase-*/` folders (**roadmap-deepen** § Execution track path rule).
 
 ## Conceptual-Amendments (post-freeze companion notes)
 

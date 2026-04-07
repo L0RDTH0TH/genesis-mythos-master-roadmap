@@ -42,6 +42,24 @@ Conceptual notes must stay **readable** in Cursor and Obsidian. Protection is **
 
 Follow the checklist in [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] § Dual roadmap track (snapshot → set `roadmap_track: execution` → stamp frozen conceptual notes → bootstrap `Templates/Roadmap/Execution`).
 
+## Execution path hand-off (queue / operator)
+
+Paste into **`user_guidance`** or **`prompt`** on **`RESUME_ROADMAP`** / deepen entries when you need to reinforce layout:
+
+```text
+Deepen on execution track only.
+Target root = Roadmap/Execution/
+Mirror the exact conceptual phase folder hierarchy from the current roadmap-state.md.
+Example mapping:
+  Conceptual path → Roadmap/Execution/<same relative folders and filename>
+Do NOT flatten under the Execution root.
+Create any missing Phase-X/ subfolders.
+After write, update all internal links, conceptual_counterpart frontmatter, and workflow_state-execution.md pointers.
+Confirm new path in the hand-off log.
+```
+
+Cross-ref: [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] (RESUME_ROADMAP payloads); [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] § Flat Execution folder hygiene.
+
 ## Unfreeze
 
 Use **`RESUME_ROADMAP`** with **`params.action: "unfreeze_conceptual"`** (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]) only when policy and approval allow editing frozen conceptual notes again.

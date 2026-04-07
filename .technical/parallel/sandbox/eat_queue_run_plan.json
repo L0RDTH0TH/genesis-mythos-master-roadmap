@@ -1,29 +1,12 @@
 {
   "schema_version": 1,
-  "parent_run_id": "eatq-recovery-20260409Tcrash-close",
-  "intents": [
-    {
-      "op": "dispatch",
-      "subagent_type": "roadmap",
-      "queue_entry_id": "resume-deepen-sandbox-exec-p1-spine-post-telemetry-repair-20260409T120500Z",
-      "project_id": "sandbox-genesis-mythos-master",
-      "queue_pass_phase": "initial",
-      "pass_id": "pass1",
-      "dispatch_ordinal": 1,
-      "micro_workflow": [
-        "roadmap_core",
-        "nested_validator_first",
-        "ira",
-        "nested_validator_second",
-        "l1_post_lv"
-      ]
-    }
-  ],
+  "parent_run_id": null,
+  "intents": [],
   "consumed_ids": [],
-  "strict_mode": true,
-  "effective_pipeline_mode": "balance",
-  "full_cycle_pass_index": 1,
-  "full_cycle_passes_total": 2,
+  "strict_mode": false,
+  "effective_pipeline_mode": null,
+  "full_cycle_pass_index": 0,
+  "full_cycle_passes_total": 0,
   "queue_rewrite_ids": [],
   "inline_pass3_drain": false,
   "has_anticipatory_repair_slot": false

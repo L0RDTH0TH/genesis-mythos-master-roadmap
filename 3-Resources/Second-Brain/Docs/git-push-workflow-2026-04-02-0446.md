@@ -1,6 +1,7 @@
 ---
 title: Git Push Workflow (Vault → Export Repo → GitHub)
 created: 2026-04-02
+updated: 2026-04-08
 tags: [ops, git, workflow, export, roadmap]
 source: Second-Brain internal ops note
 ---
@@ -15,11 +16,13 @@ The export repo carries **three collaboration roles** (branch names are the curr
 
 | Branch line | Role | What must appear in the export tree after a correct sync |
 |-------------|------|----------------------------------------------------------|
-| **`iteration-2-roadmap-rules`** (integration) | **Canonical system branch** — how the Second-Brain stack is **built** (agents, rules, skills, **`.cursor/sync`** mirror) and how it is **run** (queue, Python orchestrator, pipelines, config, operator docs, user flows). | **Full integration manifest** (below). This is the branch collaborators should clone to review or fork **the entire automation contract**, not a partial “core subset.” |
-| **`sandbox-genesis-mythos-master`** (engine) | **Sandbox engine roadmap line** — phases, decision records, anchors for the sandbox project. | **Rule-sterile spine** (integration-equivalent `.cursor/`, `scripts/`, `Docs/`) **plus** only **`Roadmap/`** and sandbox anchor files from `1-Projects/sandbox-genesis-mythos-master/`. |
-| **`godot-genesis-mythos-master`** (engine) | **Godot engine roadmap line** | Same spine policy as sandbox; **plus** only Godot **`Roadmap/`** and anchors from `1-Projects/godot-genesis-mythos-master/`. |
+| **`iteration-2-roadmap-rules`** (integration) | **Canonical system branch** — how the Second-Brain stack is **built** (agents, rules, skills, **`.cursor/sync`** mirror) and how it is **run** (queue, Python orchestrator, pipelines, config, operator docs, user flows). | **Full integration manifest** (below). This is the branch collaborators should clone to review or fork **the entire automation contract**, not a partial “core subset.” Public copies of vault-only operator notes (e.g. **Grok** custom instructions) live under **`Docs/`** here after sync — **not vault-only**. |
+| **`sandbox-genesis-mythos-master`** (engine) | **Sandbox engine roadmap line** — aligns with **EAT-QUEUE lane `sandbox`**, Config **`lane_project_id: sandbox-genesis-mythos-master`**, `GMM_PROJECT_ROOT` for that project. | **Rule-sterile spine** (integration-equivalent `.cursor/`, `scripts/`, `Docs/`) **plus** only **`Roadmap/`** (including **`Roadmap/Execution/`** when execution track is active — see [Dual-Roadmap-Track](Dual-Roadmap-Track.md)) and sandbox anchor files from `1-Projects/sandbox-genesis-mythos-master/`. |
+| **`godot-genesis-mythos-master`** (engine) | **Godot engine roadmap line** — aligns with **EAT-QUEUE lane `godot`**, Config **`lane_project_id: godot-genesis-mythos-master`**. | Same spine policy as sandbox; **plus** only Godot **`Roadmap/`** (including **`Roadmap/Execution/`** when execution track is active) and anchors from `1-Projects/godot-genesis-mythos-master/`. |
 
 **Invariant:** Engine branches must **not** publish a **partial or experimental** ruleset as authoritative. Collaborators who need the **true** agents/rules/skills use the **integration** branch (or merge/rebase from it). Engine branches stay **roadmap-first**; spine files should match **`origin/<integration_branch>`** at publish time.
+
+**Execution track (2026-04):** GMM engine projects use **`roadmap_track: execution`** in `roadmap-state.md` with forward work under **`Roadmap/Execution/`** (parallel folder spine to conceptual `Roadmap/` — see [Dual-Roadmap-Track](Dual-Roadmap-Track.md)). Published **`Roadmap/`** on an engine branch therefore includes **both** the conceptual tree (often frozen) **and** the **Execution** subtree when mirrored — do not assume “engine branch = conceptual-only.”
 
 **GitForge:** When **`gitforge.enabled`** and export sync run, use **`gitforge.integration_branch`** vs engine branch name (and Config **`parallel_execution.tracks[]`** `lane_project_id` / `export_path`) to decide whether to run the **integration** mirror steps or the **engine-only** delta. See [[.cursor/agents/gitforge.md|agents/gitforge.md]] § **Export surfaces by branch type**.
 
@@ -37,7 +40,7 @@ Optional on integration: **`Roadmap/`** + `<proj>-goal.md` + MOC when you intent
 
 After refreshing spine from **`origin/<integration_branch>`** (see § Rule-sterile engine branches), sync **only**:
 
-- **`Roadmap/`** and **`<PROJ_ID>-goal.md`**, **`<PROJ_ID>-Roadmap-MOC.md`** from the matching **`GMM_PROJECT_ROOT`**.
+- **`Roadmap/`** (whole tree — includes **`Roadmap/Execution/`** when present) and **`<PROJ_ID>-goal.md`**, **`<PROJ_ID>-Roadmap-MOC.md`** from the matching **`GMM_PROJECT_ROOT`**.
 
 Do **not** overwrite spine subtrees from a dirty engine working tree unless you have explicitly reconciled with the integration tip.
 
