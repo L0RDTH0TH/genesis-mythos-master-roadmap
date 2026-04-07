@@ -9,8 +9,8 @@ tags:
 para-type: Project
 project-id: godot-genesis-mythos-master
 roadmap_track: execution
-status: in-progress
-progress: 15
+status: complete
+progress: 22
 handoff_readiness: 86
 ---
 
@@ -48,6 +48,39 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 ## Open questions
 
 - **Resolved (policy):** execution-local numbering vs conceptual **6.1.x** mirrors — see [[../decisions-log]] **D-Exec-1-numbering-policy (2026-04-08)**.
+
+## Execution progress semantics
+
+- **Child slices:** for each execution note listed under § **Execution child slices** (at last vault sync: **`1.1`–`1.4`**), frontmatter **`progress`** is **slice-local** (0–100) for that execution note only.
+- **This Phase 1 spine (parent):** **`progress`** = **max** of **`progress`** on linked **Execution child slices** listed under § **Execution child slices** at last vault sync (recompute after a child slice deepens or materially changes).
+- **Rationale:** avoids reading the parent bar as “behind” a child when the parent is a rollup container — see [[../decisions-log]] **D-Exec-1-parent-progress-rollup**.
+
+## Execution child slices (1.x)
+
+- **1.1 — Godot engine binding surfaces vs sandbox A/B parity:** [[Phase-1-1-Godot-Engine-Binding-Surfaces-Sandbox-AB-Parity-Roadmap-2026-04-08-2300]] (mint **2026-04-08 23:00Z**, queue `followup-deepen-execution-phase1-godot-gmm-20260408T230000Z`).
+- **1.2 — Registry / telemetry stub slice (A/B parity):** [[Phase-1-2-Registry-Telemetry-Stubs-Sandbox-AB-Parity-Roadmap-2026-04-09-0000]] (mint **2026-04-09 00:00Z**, queue `followup-deepen-exec-phase1-2-registry-stubs-godot-gmm-20260409T000000Z`) — artifact path table, **`GMM-2.4.5-*`** deferral rows, links **1.1** ↔ **1.2**.
+- **1.3 — Instrumentation harness / ObservationChannel stub (A/B parity):** [[Phase-1-3-Instrumentation-Harness-ObservationChannel-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-0100]] (mint **2026-04-09 01:00Z**, queue `followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z`) — harness wiring **1.1** surfaces → **1.3** stub → **1.2** sinks; **no** **`GMM-2.4.5-*`** closure.
+- **1.4 — PresentationEnvelope stub (A/B parity):** [[Phase-1-4-PresentationEnvelope-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-1830]] (mint **2026-04-09 18:30Z**, queue `followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z` — **forward deepen** after **1.3** satisfied) — **1.3** sample → **1.4** readout stub; sandbox role-parity vs [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]].
+
+## Phase 1 execution rollup / completion checkpoint (Godot lane)
+
+> Architect: **1.1–1.4** are structurally present as **vault-only stubs**; this checkpoint records **parity + deferrals** before any Phase **2** execution spine work — **no** `GMM-2.4.5-*` closure until scripts/CI exist (**D-Exec-1.2-GMM-245-stub-vs-closure**).
+
+| Slice | Role | Sandbox A/B parity | `GMM-2.4.5-*` posture |
+| --- | --- | --- | --- |
+| **1.1** | Engine binding inventory (MainLoop / SceneTree / time / logging / GDExtension) | **Yes** — lane A vs lane B comparand rows | N/A (surfaces only) |
+| **1.2** | Registry JSONL + telemetry envelope **stub paths** | **Yes** — artifact path table per lane | **Explicit deferral rows** — compare/rollup/retention **not** closed |
+| **1.3** | Harness + **ObservationChannel** stub | **Yes** — **1.1** → **1.3** → **1.2** wiring | No closure claim |
+| **1.4** | **PresentationEnvelope** readout stub | **Yes** — role-parity vs sandbox **PresentationEnvelope** stub | No closure claim |
+
+**Checkpoint criteria (met for “stub-complete” Phase 1 vertical slice):**
+
+- [x] All four slices minted with **GWT-1.x-Exec-A–C** tables and cross-links under § **Execution child slices**.
+- [x] **A/B parity** language present at **schema/stub** level on every slice (not production parity proof).
+- [x] **No** authoritative **`GMM-2.4.5-*`** “done” claim — execution-deferred until **scripts/CI/lane-B** milestones per [[decisions-log]] **D-Exec-1.2-GMM-245-stub-vs-closure**.
+- [x] Parent **`progress`** semantics per **D-Exec-1-parent-progress-rollup** (spine **`progress`** = **max** child **`progress`**).
+
+**Next structural execution work (operator-default):** ~~mint **Phase 2** execution spine~~ **Done 2026-04-09 20:16Z** — [[Phase-2-Execution-Procedural-World-Spine-Roadmap-2026-04-09-2016]] (queue `followup-deepen-exec-phase2-spine-or-expand-godot-gmm-20260409T201600Z`). Remaining operator actions: **`deepen`** **2.1** child **or** **`recal` / `expand`** on Phase **1**/**2** per lane pressure — checkpoint row **2026-04-09 20:15Z** superseded for Phase **2** spine mint.
 
 ## Related
 
