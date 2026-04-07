@@ -313,3 +313,22 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded (30s budget; track `sandbox`). **Vault:** commit on `iteration-2-roadmap-rules` — `chore(vault): sandbox EAT-QUEUE A.7a — RESUME_ROADMAP; PQ follow-up execution deepen [balance]` (117 files incl. this audit line; **`git log -1 --oneline`** for hash after final amend). **Clarifier:** Layer 1 **Context** — single RESUME_ROADMAP consumed; sandbox PQ holds follow-up execution deepen only. **Submodule roots** `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` remain dirty/unstaged (not in commit). **Vault push:** **not completed** — `git remote -v` empty in this environment; `git push` fails (`origin` does not appear to be a git repository). Operator: `git remote add origin <url>` then `git push -u origin iteration-2-roadmap-rules`. **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine Step 1b** to `parallel_export_path`: not run (export_sync disabled). **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
 | error_excerpt | vault push: no origin remote |
+
+### 2026-04-07 00:10 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| eat_queue_run_id | — |
+| result | **Lock:** first `acquire` **timed out** (30s) — prior holder file showed `parallel_track: godot` with **dead PID**; `release` cleared stale lock; second `acquire` succeeded (track `sandbox`). **Vault:** commit on `iteration-2-roadmap-rules` — **`chore(vault): sandbox EAT-QUEUE — RESUME_ROADMAP deepen; PQ repair + pool [balance]`** — **git-audit-log only** (this row + prior audit paragraph; **`git log -1 --oneline`** for hash). Parent `33811ba` already held sandbox/godot parallel queue + roadmap/telemetry deltas from the EAT-QUEUE run; this A.7a tail folded **audit-only**. **Clarifier:** Layer 1 hand-off **`summary`** (no separate `clarifier_input`). **Submodule roots** `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` left unstaged (dirty submodule state). **Vault push:** attempted — **`git remote -v` empty** / no `origin` on vault. **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine mirror** to `parallel_export_path`: not run (export_sync disabled). **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
+| error_excerpt | vault push: no origin remote; initial lock acquire timeout (stale lock cleared) |
