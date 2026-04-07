@@ -446,3 +446,24 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded (30s; track `sandbox`). **Vault:** commit **`eb7e363`** on `iteration-2-roadmap-rules` — `chore(vault): balance sandbox EAT-QUEUE A.7a — roadmap exec, telemetry, parallel PQ` (78 files). **Hand-off digest:** consumed resume-deepen-sandbox-exec-p1-spine-post-telemetry-repair-20260409T120500Z; follow-up followup-deepen-exec-phase1-2-1-tertiary-sandbox-gmm-20260409T152100Z appended. **Vault push:** not available — no `origin` remote on vault (same as prior audits). **Integration merge into engine:** `git merge origin/iteration-2-roadmap-rules` on `sandbox-genesis-mythos-master` **aborted** (mass `Roadmap/**` conflicts). **Step 1b only:** rsync `Roadmap/` + `sandbox-genesis-mythos-master` anchors from vault `GMM_PROJECT_ROOT`; export commit **`05f7b7e`** pushed to **`origin/sandbox-genesis-mythos-master`**. **Tag (balance):** annotated **`gitforge-sandbox-engine-20260407T030337Z`** pushed to `origin`. **export_sync (Config):** `false` — operator-requested single engine mirror + tag despite flag. **Release:** `gitforge_lock.py release` OK; export worktree switched back to `iteration-2-roadmap-rules`. |
 | error_excerpt | vault push: no origin remote; engine spine merge aborted (conflicts) — Step 1b vault→export only |
+
+### 2026-04-07 03:23 UTC — gitforge | pending_clarifier
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| integration_branch | iteration-2-roadmap-rules |
+| parent_run_id | eatq-20260406-sandbox-deepen-rollup |
+| eat_queue_run_id | eatq-sandbox-20260406-phase12-rollup |
+| result | **Lock:** `acquire` succeeded (30s budget; track `sandbox`). **Contract:** hand-off omitted **`clarifier_input`** (only **`changes_summary`** / telemetry ids). Per [[.cursor/agents/gitforge.md|agents/gitforge.md]] balance mode — **no vault commit**, **no push**, **no export** this pass. **`gitforge.modes.balance.export_sync`** is **false** (export sync not in Config for balance). **Engine / export_contract:** Step 1b (`Roadmap/` + `<PROJ_ID>-goal.md` + MOC under `GMM_PROJECT_ROOT`) not run — pending clarifier gate. **Working tree:** dirty (parallel sandbox PQ/continuation, Watcher-Result, pool, telemetry, validator report paths); left **unstaged** for operator or re-invoke with **`clarifier_input`**. **Re-invoke:** GitForge with non-empty **`clarifier_input`** to authorize `chore(vault): …` scope. **Release:** `gitforge_lock.py release` after audit append. |
+| error_excerpt | — |

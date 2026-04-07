@@ -12,11 +12,11 @@ roadmap_track: execution
 status: in-progress
 automation_level: semi
 current_phase: 2
-current_subphase_index: "2"
+current_subphase_index: "2.1"
 last_auto_iteration: ""
 iterations_per_phase:
   "1": 9
-  "2": 1
+  "2": 2
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -24,9 +24,9 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 60
-last_conf: 87
-last_injected_tokens: 74000
+last_ctx_util_pct: 62
+last_conf: 88
+last_injected_tokens: 74800
 ---
 
 # Workflow state (execution) — godot-genesis-mythos-master
@@ -48,3 +48,5 @@ Execution-track automation log. Conceptual state remains in `../workflow_state.m
 | 2026-04-09 20:12 | repair | Phase-1 spine + workflow ledger (IRA apply) | 8 | 1 | 57 | 43 | 80 | 70500 / 128000 | 0 | 88 | **IRA apply (post–validator pass 1)** — **18:30** row: **`parent_run_id`** aligned to **`eatq-godot-layer1-20260409T120000Z`** + **`parent_run_id_clock_corrected`** stamp; **spine** § **Execution progress semantics** now enumerates child range **`1.1`–`1.4`** consistently with § **Execution child slices**; **`nested_task_ledger_supersession_note`** links **18:30** host limitation to this **`f4e8`** strict micro_workflow replay. `pipeline_task_correlation_id: f4e8a2c1-9b3d-4e7f-a1c2-0d6e9b8a7f5e` \| `ira_report: .technical/Internal-Repair-Agent/roadmap/2026-04/godot-genesis-mythos-master-ira-call-1-followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z.md` |
 | 2026-04-09 20:15 | checkpoint | Phase-1-Execution-Vertical-Slice-Instrumentation-Spine | 9 | 1 | 58 | 42 | 80 | 71000 / 128000 | 1 | 88 | **Phase 1 execution rollup / completion checkpoint** — spine § new rollup table (**1.1–1.4**), **sandbox A/B parity** + **`GMM-2.4.5-*`** deferral reaffirmed (**no** closure until scripts/CI); [[../decisions-log]] **D-Exec-1-phase1-rollup-checkpoint**; [[roadmap-state-execution]] Phase **1** summary synced. **`current_subphase_index: "1.4"`** — checkpoint refines parent spine (no new **1.x** mint this run). **Next structural:** mint **Phase 2** execution spine **or** operator **`recal`** / **`expand`** / continue **1.x** polish. queue_entry_id: followup-deepen-exec-phase1-post-14-godot-gmm-20260409T201500Z \| `parent_run_id: eatq-fullcycle-140eab489d24` \| `queue_lane: godot` \| `parallel_track: godot` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `strict_micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second→l1_post_lv` \| `pipeline_mode_used: balance` \| `user_guidance: Phase 1 rollup checkpoint; A/B parity; GMM-2.4.5-* open until scripts/CI` |
 | 2026-04-09 20:16 | deepen | Phase-2-Execution-Procedural-World-Spine | 10 | 2 | 60 | 40 | 80 | 73000 / 128000 | 2 | 87 | **Phase 2 execution spine mint** — [[Phase-2-Execution-Procedural-World-Spine-Roadmap-2026-04-09-2016]]: conceptual import [[../Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-03-30-0430]]; continuity from **Phase 1** instrumentation spine; **sandbox A/B parity** contract for future **2.x**; explicit **non-closure** for **`GMM-2.4.5-*`**. [[roadmap-state-execution]] → **`current_phase: 2`**, **`completed_phases: [1]`**; **`current_subphase_index: "2"`** — next **`deepen`**: mint **2.1** child **or** **`recal`** / **`expand`**. queue_entry_id: followup-deepen-exec-phase2-spine-or-expand-godot-gmm-20260409T201600Z \| `queue_lane: godot` \| `parallel_track: godot` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `strict_micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second→l1_post_lv` \| `pipeline_mode_used: balance` \| `user_guidance: Phase 1 checkpoint closed; mint Phase 2 spine or recal/expand; A/B parity; no GMM-2.4.5-* closure until scripts/CI` |
+| 2026-04-09 20:20 | deepen | Phase-2-1-Proc-World-Execution-Stub | 11 | 2 | 62 | 38 | 80 | 74500 / 128000 | 2 | 87 | **First Phase 2 execution child `2.1` mint** — [[Phase-2-1-Proc-World-Execution-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-2020]]: proc/world **stub** surfaces (world root, seed/RNG split, graph bundle, Observation fan-out, Presentation readout tie-in) with **sandbox A/B parity** rows; **`GMM-2.4.5-*`** remains **not closed** until scripts/CI; parent spine § **Execution child slices** + **`progress: 18`**. **`current_subphase_index: "2.1"`** — next **`deepen`**: **2.2** **or** **`recal`** / **`expand`**. queue_entry_id: followup-deepen-exec-phase2-1-first-child-godot-gmm-20260409T202000Z \| `parent_run_id: eatq-fullcycle-a0aa171f836c` \| `queue_lane: godot` \| `parallel_track: godot` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `strict_micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second→l1_post_lv` \| `pipeline_mode_used: balance` \| `user_guidance: Phase 2 execution spine minted; cursor phase 2 / subphase 2; mint first child 2.1 proc/world stub; sandbox A/B parity; no GMM-2.4.5-* closure until scripts/CI` |
+| 2026-04-09 20:22 | repair | Phase-2-1 + Phase-2 spine (IRA apply) | 12 | 2 | 62 | 38 | 80 | 74500 / 128000 | 0 | 88 | **IRA apply (post–nested validator pass 1)** — **H1–H3** evidence lines + stub row shapes; **`handoff_readiness` `84→85`**, **`progress` `22`** on **2.1**; Phase **2** spine **Open questions** **last verified** stamp; **`compare_to_report_path`** on pass **2**. `pipeline_task_correlation_id: ptc-roadmap-2p1-ce365cc854c5` \| `validator_pass2: .technical/Validator/roadmap-handoff-auto-godot-gmm-exec-phase2-1-20260409Tvalidator-second-pass-compare.md` |

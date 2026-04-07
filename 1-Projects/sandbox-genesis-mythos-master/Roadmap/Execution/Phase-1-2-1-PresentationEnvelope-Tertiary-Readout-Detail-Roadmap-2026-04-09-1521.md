@@ -57,7 +57,7 @@ function drillReadout(s: ObservationChannelSample, g: PresentationCoDisplayGate)
 
 | ID | Claim | Evidence hook |
 | --- | --- | --- |
-| GWT-1-2-1-Exec-A | **1.2.1** exists as first tertiary under **1.2** | Parent § Tertiary children + parent § Rollup completion + `[[workflow_state-execution]]` cursor **`1.1`** post–**2026-04-09 16:10** rollup row. |
+| GWT-1-2-1-Exec-A | **1.2.1** exists as first tertiary under **1.2** | Parent § Tertiary children + parent § Rollup completion + `[[workflow_state-execution]]` cursor **`1.1`** post–**2026-04-09 18:05** deepen row (**1.1** sample-row table + wire-up pseudocode). |
 | GWT-1-2-1-Exec-B | Drill rows bind to **1.2** `PresentationReadoutRow` / `stubMapSampleToReadout` | § Drill rows + § Drill pseudocode |
 | GWT-1-2-1-Exec-C | Conceptual import remains read-only wikilink | Frontmatter `conceptual_counterpart` |
 

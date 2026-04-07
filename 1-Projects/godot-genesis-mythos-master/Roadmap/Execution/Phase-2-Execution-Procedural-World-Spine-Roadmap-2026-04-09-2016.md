@@ -13,7 +13,7 @@ roadmap-level: primary
 phase-number: 2
 subphase-index: "2"
 status: in-progress
-progress: 0
+progress: 22
 handoff_readiness: 86
 conceptual_counterpart: "[[../Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-03-30-0430]]"
 ---
@@ -48,7 +48,7 @@ Execution-track **Phase 2** is the **second** execution lane after **Phase 1** v
 
 ## Open questions
 
-- **Sandbox comparand:** `1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/` has **no** Phase **2** execution spine file yet at this mint — **Godot lane** establishes the **first** execution Phase **2** spine; when sandbox mirrors, **recal** should align **2.x** slice indices under **A/B parity** policy.
+- **Sandbox comparand:** `1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/` has **no** Phase **2** execution spine file yet at this mint — **Godot lane** establishes the **first** execution Phase **2** spine; when sandbox mirrors, **recal** should align **2.x** slice indices under **A/B parity** policy. **Last verified (vault):** 2026-04-09 — re-check when sandbox mints a Phase **2** execution spine; log mirror in [[../decisions-log]].
 - **First 2.x child:** default next structural **`deepen`** target is **2.1** (proc/world stub slice) unless operator **`expand`** / **`recal`** overrides — see [[workflow_state-execution]] cursor.
 
 ## Execution progress semantics
@@ -58,7 +58,7 @@ Execution-track **Phase 2** is the **second** execution lane after **Phase 1** v
 
 ## Execution child slices (2.x)
 
-> **Pending:** No **2.x** child notes minted in this run — next **`RESUME_ROADMAP` `deepen`** should mint **2.1** (or operator **`expand`** on this spine).
+- **2.1** — [[Phase-2-1-Proc-World-Execution-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-2020]] — proc/world execution stub; **sandbox A/B parity** table; **no** **`GMM-2.4.5-*`** closure (queue `followup-deepen-exec-phase2-1-first-child-godot-gmm-20260409T202000Z`).
 
 ## Related
 
