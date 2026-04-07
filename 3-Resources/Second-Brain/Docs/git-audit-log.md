@@ -40,6 +40,26 @@ Use a level-3 heading per event for scanability:
 - Agent contract: `.cursor/agents/gitforge.md`
 - Config: [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**
 
+### 2026-04-07 04:07 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules (vault); export checkout was **godot-genesis-mythos-master** at time of check — **Step 1b not run** |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted; export_sync_skipped |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parent_run_id | eatq-sandbox-l1-20260409T230500Z |
+| eat_queue_run_id | — |
+| processed_entry_ids | followup-deepen-exec-phase2-prep-sandbox-gmm-20260409T224800Z |
+| result | **Lock:** `gitforge_lock.py acquire` (`parallel_track: sandbox`, timeout 30s) **ok**. **Vault:** commit **`203e884`** on `iteration-2-roadmap-rules` — `chore(vault): sandbox A.7a — EAT-QUEUE balance (parent eatq-sandbox-l1-20260409T230500Z)` (47 files: sandbox Phase 2.1 mint + execution state, parallel track bundles, godot + sandbox telemetry/validator/IRA, Watcher mirrors, Errors, Config). **Clarifier:** hand-off `notes` (RESUME_ROADMAP deepen / Phase 2.1 / sandbox PQ follow-up); no separate `clarifier_input` key. **Submodules:** `4-Archives/test-2-genesis-mythos-master`, `Second-Brain-Starter-Kit` left unstaged. **Vault push:** no **`origin`** remote — **no configured push destination**. **export_sync (`gitforge.modes.balance.export_sync`):** `false` — **no** Step 1b rsync to `gmm-roadmap-export` (engine line `sandbox-genesis-mythos-master` + `GMM_PROJECT_ROOT` not applied this run). **Tag:** not created. **Release:** `gitforge_lock.py release` after tail. |
+| error_excerpt | vault push: no configured push destination |
+
 ### 2026-04-07 03:53 UTC — gitforge | completed
 
 | Field | Value |
