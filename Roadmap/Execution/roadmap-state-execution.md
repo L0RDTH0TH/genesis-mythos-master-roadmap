@@ -13,7 +13,7 @@ status: generating
 current_phase: 1
 completed_phases: []
 version: 2
-last_run: "2026-04-08-2145"
+last_run: "2026-04-09-1510"
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 ---
@@ -24,7 +24,7 @@ Execution-track progress. **Conceptual** source of truth for the frozen map: `..
 
 ## Phase summaries
 
-- Phase 1: in-progress — first execution slice minted **2026-04-08** — [[Phase-1-Execution-Vertical-Slice-Instrumentation-Spine-Roadmap-2026-04-08-2145]] (instrumentation spine NL + **GWT-1-Exec-A–C**); next checklist closure / **1.x** child per [[workflow_state-execution]] ## Log **2026-04-08 21:45**
+- Phase 1: in-progress — spine [[Phase-1-Execution-Vertical-Slice-Instrumentation-Spine-Roadmap-2026-04-08-2145]] + **1.x** secondaries [[Phase-1-1-ObservationChannel-Stub-Binding-Roadmap-2026-04-06-2245]] (§ Stub type pseudocode parity **2026-04-09**) and [[Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]] (**1.2** stub binding + schema parity / risk v0); next **deepen** **1.2.1** tertiary **or** operator expand **1.2** polish per [[workflow_state-execution]] log + **D-Exec-1**.
 - Phase 2: pending
 - Phase 3: pending
 - Phase 4: pending
@@ -33,6 +33,7 @@ Execution-track progress. **Conceptual** source of truth for the frozen map: `..
 
 ## Notes
 
+- **Status semantics:** `status: generating` on this rollup note means the **execution phase tree** is still being expanded; live iteration / deepen cursor and log rows are authoritative in [[workflow_state-execution]] (`status: in-progress` there = active deepen loop).
 - Conceptual roadmap-state: [[../roadmap-state]]
 - Distilled core (shared): [[../distilled-core]]
 

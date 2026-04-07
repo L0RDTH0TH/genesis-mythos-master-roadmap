@@ -32,6 +32,11 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 - [x] Declare **one** minimal **vertical-slice happy path** (seed → first tick → one ObservationChannel sample → PresentationEnvelope stub) as prose-only: operator supplies **seed bundle** → engine runs **first committed tick** (per **2.7.3** trace vocabulary, conceptual) → **ObservationChannel** emits one labeled sample row → **PresentationEnvelope** stub renders operator-visible readout (no host binary; execution-deferred).
 - [x] List **execution-deferred** items explicitly (compare tables, CI retention proofs) with pointer to [[../distilled-core]] deferral language (e.g. **`GMM-2.4.5-*`**, registry/CI closure — **execution track** per [[decisions-log]] **Track:** line).
 
+## Execution spine — 1.x children
+
+- [[Phase-1-1-ObservationChannel-Stub-Binding-Roadmap-2026-04-06-2245]] — first **1.1** secondary (ObservationChannel stub binding; **D-Exec-1** execution-local index).
+- [[Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]] — **1.2** secondary (PresentationEnvelope stub; downstream readout of **1.1** samples).
+
 ## GWT-1-Exec-A–C (execution spine — initial)
 
 | ID | Claim | Evidence hook |
