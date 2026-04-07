@@ -9,9 +9,9 @@ tags:
 para-type: Project
 project-id: sandbox-genesis-mythos-master
 roadmap_track: execution
-status: in-progress
-progress: 15
-handoff_readiness: 86
+status: complete
+progress: 100
+handoff_readiness: 90
 ---
 
 # Phase 1 (Execution) — Vertical-slice instrumentation spine
@@ -46,6 +46,23 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 | GWT-1-Exec-A | Conceptual **6.1.x** binding surfaces are named and linked for execution import | § NL checklist (checked) + § Handoff from conceptual Phase 6 |
 | GWT-1-Exec-B | No authoritative gate is framed as blocking **conceptual** completion | § Out of scope + [[../roadmap-state]] `roadmap_track: execution` |
 | GWT-1-Exec-C | Next execution deepen target is machine-resolvable from [[workflow_state-execution]] | Parent state files + ## Log |
+
+## Phase 1 execution spine rollup (post-RECAL 2026-04-09)
+
+> [!summary] Rollup closure
+> - **Scope:** NL + **GWT-1-Exec-D–G** parity vs execution secondaries **1.1**, **1.2**, tertiary **1.2.1**, and **1.3** (stub contracts + drill rows; **D-Exec-1** execution-local index).
+> - **Drift citation:** queue `followup-recal-exec-post-l2-nested-unavailable-sandbox-gmm-20260409T224100Z` — **0.00** vs [[roadmap-state-execution]] + [[../decisions-log]].
+
+### GWT-1-Exec-D–G (rollup)
+
+| ID | Claim | Evidence hook |
+| --- | --- | --- |
+| GWT-1-Exec-D | **1.1** ObservationChannel samples wire to **1.2** readout mapping + **1.2.1** drills | [[Phase-1-1-ObservationChannel-Stub-Binding-Roadmap-2026-04-06-2245]] § Sample rows + § Stub type |
+| GWT-1-Exec-E | **1.2** PresentationEnvelope stub closes readout parity vs **1.2.1** tertiary | [[Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]] (rollup row **2026-04-09 16:10** in [[workflow_state-execution]]) |
+| GWT-1-Exec-F | **1.3** `CommittedTickStub` correlates **1.1** `tick_commit_id` namespace | [[Phase-1-3-FirstCommittedTick-Stub-Binding-Roadmap-2026-04-09-2210]] § Drill + § Bridge |
+| GWT-1-Exec-G | Phase **1** closes as **stub spine** — **Phase 2** prep is next; **no** registry/CI closure claimed | **Out of scope** + [[../distilled-core]] deferral language |
+
+**Next:** **Phase 2** execution `deepen` (first **2.x** slice per PMG) **or** operator **RECAL**. **Cursor:** `current_subphase_index: "2"` (Phase 2 container) per [[workflow_state-execution]].
 
 ## Handoff from conceptual Phase 6
 

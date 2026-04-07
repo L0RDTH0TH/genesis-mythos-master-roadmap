@@ -784,3 +784,30 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Phase **2.2** slice was minted in vault; queue entry **not** consumed as clean Success; **queue_failed** set on triggering line; **`followup-deepen-exec-phase2-3-...`** queued for next run.
 - **Suggested fixes:** Run roadmap from a host where nested **`Task(validator)`** / **`Task(internal-repair-agent)`** succeed; or operator repair / handoff-audit when Task-capable.
 - **Recovery:** Inspect `queue_failed` line; re-queue after nested Task availability confirmed; next deepen **2.3** remains on PQ.
+
+### 2026-04-07 03:55 — EAT-QUEUE godot phase2-5 Task(roadmap) unavailable + pool_sync track wipe recovered
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T03:55:51Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **A.0.4** `pool_sync --lane godot` → **`copied_count: 0`** — script **overwrote** `.technical/parallel/godot/prompt-queue.jsonl` with central-pool filter only; active line **`followup-deepen-exec-phase2-5-or-expand-godot-gmm-20260409T211500Z`** was **not** yet in `.technical/prompt-queue.jsonl`, so track **PQ went empty**.
+- **Recovery:** Restored godot **PQ** from **`git checkout HEAD -- .technical/parallel/godot/prompt-queue.jsonl`**.
+- **Hygiene:** Appended the same JSONL line to **central pool** `.technical/prompt-queue.jsonl` so the next **`pool_sync`** can hydrate without dropping track-only appends.
+- **Step 0:** No `approved: true` wrappers in `Ingest/Decisions/**` required apply.
+- **EQPLAN:** `intents: []` → legacy **A.1** dispatch path.
+- **Dispatch:** Cursor **`Task`** tool **not exposed** to this Layer 1 session → **no** `Task(roadmap)` (Proof-on-failure).
+- **A.7:** **No** consume; entry remains on godot **PQ**.
+
+#### Summary
+
+- **Root cause:** Host cannot invoke nested **`Task(roadmap)`**; **`pool_sync`** behavior emptying track **PQ** when the lane line is missing from the central pool compounded operator risk.
+- **Impact:** No RESUME_ROADMAP deepen for Phase **2.5**; no L1 **(b1)** post–little-val.
+- **Suggested fixes:** Run **EAT-QUEUE lane godot** from a Cursor session where **`Task(queue)`** can call **`Task(roadmap)`**; keep active godot lines in **both** central pool and track **PQ**, or adjust workflow so **`pool_sync`** does not drop track-only rows.
+- **Recovery:** Re-run when Task is available; **`followup-deepen-exec-phase2-5-...`** still on godot **PQ**.

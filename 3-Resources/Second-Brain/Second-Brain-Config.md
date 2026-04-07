@@ -186,6 +186,17 @@ parallel_execution:
 - **invoke_on_empty_queue**: false — when false, skip GitForge when there were no prompt-queue entries to process after A.1 (Step 0–only or empty file).
 - **invoke_only_on_clean_success**: true — when true, skip GitForge if any prompt-queue entry this run got a failure disposition.
 
+### GitHub branch URLs (open in Chrome)
+
+Export remote: **`https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap.git`**. Clickable branch roots (GitHub **tree** view):
+
+| Branch | Browse |
+| --- | --- |
+| `main` | [github.com/.../tree/main](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/main) |
+| `iteration-2-roadmap-rules` (integration — **`gitforge.integration_branch`**) | [github.com/.../tree/iteration-2-roadmap-rules](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/iteration-2-roadmap-rules) |
+| `sandbox-genesis-mythos-master` (sandbox engine line) | [github.com/.../tree/sandbox-genesis-mythos-master](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/sandbox-genesis-mythos-master) |
+| `godot-genesis-mythos-master` (godot engine line) | [github.com/.../tree/godot-genesis-mythos-master](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/godot-genesis-mythos-master) |
+
 Machine-readable block (keep aligned with bullets):
 
 ```yaml
