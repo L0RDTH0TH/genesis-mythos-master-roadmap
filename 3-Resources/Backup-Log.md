@@ -293,3 +293,5 @@ See `Restore Hub.md` and `.cursor/rules/context/auto-restore.mdc` for the detail
 
 2026-03-30 04:30 | type: per-change | note: 1-Projects/genesis-mythos-master/Genesis-mythos-master-goal.md (pre-normalize) | snapshot: Backups/Per-Change/Genesis-mythos-master-goal--89f7d90b--20260330043000.md.bak | pipeline: ROADMAP_MODE (normalize + tree gen) | confidence: 90% | flag: none
 2026-03-30 04:30 | external backup | paths: 1-Projects/genesis-mythos-master/Genesis-mythos-master-goal.md | backup: Second-Brain-oops-Backups/20260330-042549-Genesis-mythos-master-goal.md | pipeline: ROADMAP_MODE | flag: none
+
+2026-04-06 22:45 | type: per-change | note: sandbox execution deepen Phase 1.1 (workflow_state-execution, roadmap-state-execution, Phase-1 spine) | snapshot: Backups/Per-Change/workflow_state-execution--2b61884c--20260406224500.md.bak; Backups/Per-Change/roadmap-state-execution--34872be3--20260406224500.md.bak; Backups/Per-Change/Phase-1-Execution-Vertical-Slice-Instrumentation-Spine-Roadmap-2026-04-08-2145--795d06ab--20260406224500.md.bak | pipeline: roadmap (RESUME_ROADMAP execution deepen) | confidence: 88% | flag: none

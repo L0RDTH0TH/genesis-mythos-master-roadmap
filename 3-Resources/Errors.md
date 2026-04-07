@@ -633,3 +633,51 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** No roadmap work; no Watcher **(b1)** `Task(validator)`; central pool + sandbox PQ retain all three entries.
 - **Suggested fixes:** Re-run **EAT-QUEUE lane sandbox** from a Cursor session where **`Task(queue)`** / nested **`Task(roadmap)`** are wired; optional: add **`queue_priority: repair`** on **`repair-l1-hygiene-workflow-state-embedded-sandbox-20260407T133100Z`** so **repair_first** sub-sort prioritizes hygiene before the 13:30 deepen line.
 - **Recovery:** Same as impact — re-dispatch when Task is available; no vault rollback.
+
+### 2026-04-06 23:49 — EAT-QUEUE godot Layer 1 Task(roadmap) not invocable (host)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-06T23:49:03Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/godot/prompt-queue.jsonl` — **A.0.4** `pool_sync` **ok** (`copied_count: 1`, id `followup-deepen-execution-phase1-godot-gmm-20260408T230000Z`).
+- **A.2a.1:** `project_id` **godot-genesis-mythos-master** matches **lane_project_id** for track **godot**.
+- **Step 0:** `Ingest/Decisions/**` — no wrapper with `approved: true` requiring apply this run.
+- **Dispatch:** Cursor **`Task`** tool **not available** in this Layer 1 execution context — **no** `Task(roadmap)` launch (Proof-on-failure per Subagent-Safety-Contract).
+- **A.7:** **no** `processed_success_ids`; PQ **unchanged** (one line retained).
+
+#### Summary
+
+- **Root cause:** Queue orchestrator requires **`Task(subagent_type: roadmap)`**; this host did not expose the Task API to the queue subagent run.
+- **Impact:** No execution-track deepen; no L1 **(b1)** `Task(validator)`; entry remains on godot **PQ** and central pool hygiene depends on dual-cleanup on future successful consume.
+- **Suggested fixes:** Re-run **EAT-QUEUE lane godot** from a Cursor session where **`Task(queue)`** / nested **`Task(roadmap)`** are wired.
+- **Recovery:** Re-dispatch when Task is available; no vault rollback required.
+
+### 2026-04-07 00:32 — A.0.4 pool_sync empty overwrite sandbox PQ (lane line not in central pool)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T00:32:00Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **Config:** `queue.central_pool_fanout_enabled: true`; **A.0.4** ran `pool_sync --lane sandbox` before dispatch.
+- **Central pool** had **no** `queue_lane: sandbox` lines at sync time → `copied_count: 0` → **sandbox track PQ overwritten empty** while the operator still had a sandbox RESUME_ROADMAP line only on the track file.
+- **Mitigation this run:** Dispatch proceeded from pre-sync queue snapshot; **A.7** rewrote sandbox PQ + **central pool** with repair + follow-up lines so the next **pool_sync** repopulates.
+
+#### Summary
+
+- **Root cause:** Fanout assumes **authoritative appends** go to **`.technical/prompt-queue.jsonl`**; track-only lines are erased on sync when the pool has no matching lane rows.
+- **Impact:** Transient empty on-disk sandbox PQ; risk of confusion if Layer 1 re-reads PQ only after sync without holding a prior snapshot.
+- **Suggested fixes:** Always append lane-scoped entries to the **central pool** (or disable fanout for experiments); or teach **pool_sync** to merge-not-clobber when `copied_count==0` (spec change).
+- **Recovery:** Central pool and `.technical/parallel/sandbox/prompt-queue.jsonl` now both carry `repair-l1-telemetry-ts-sandbox-exec-20260407T002800Z` and `followup-deepen-exec-phase1-2-presentation-sandbox-gmm-20260407T002000Z`.

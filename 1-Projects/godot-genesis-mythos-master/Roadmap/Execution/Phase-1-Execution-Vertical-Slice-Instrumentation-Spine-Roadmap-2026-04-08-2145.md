@@ -4,10 +4,10 @@ created: 2026-04-08
 tags:
   - roadmap
   - execution
-  - sandbox-genesis-mythos-master
+  - godot-genesis-mythos-master
   - phase-1
 para-type: Project
-project-id: sandbox-genesis-mythos-master
+project-id: godot-genesis-mythos-master
 roadmap_track: execution
 status: in-progress
 progress: 15
@@ -32,10 +32,6 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 - [x] Declare **one** minimal **vertical-slice happy path** (seed → first tick → one ObservationChannel sample → PresentationEnvelope stub) as prose-only: operator supplies **seed bundle** → engine runs **first committed tick** (per **2.7.3** trace vocabulary, conceptual) → **ObservationChannel** emits one labeled sample row → **PresentationEnvelope** stub renders operator-visible readout (no host binary; execution-deferred).
 - [x] List **execution-deferred** items explicitly (compare tables, CI retention proofs) with pointer to [[../distilled-core]] deferral language (e.g. **`GMM-2.4.5-*`**, registry/CI closure — **execution track** per [[decisions-log]] **Track:** line).
 
-## Execution spine — 1.x children
-
-- [[Phase-1-1-ObservationChannel-Stub-Binding-Roadmap-2026-04-06-2245]] — first **1.1** secondary (ObservationChannel stub binding; **D-Exec-1** execution-local index).
-
 ## GWT-1-Exec-A–C (execution spine — initial)
 
 | ID | Claim | Evidence hook |
@@ -52,6 +48,10 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 ## Open questions
 
 - **Resolved (policy):** execution-local numbering vs conceptual **6.1.x** mirrors — see [[../decisions-log]] **D-Exec-1-numbering-policy (2026-04-08)**.
+
+## Execution child slices (1.x)
+
+- **1.1 — Godot engine binding surfaces vs sandbox A/B parity:** [[Phase-1-1-Godot-Engine-Binding-Surfaces-Sandbox-AB-Parity-Roadmap-2026-04-08-2300]] (mint **2026-04-08 23:00Z**, queue `followup-deepen-execution-phase1-godot-gmm-20260408T230000Z`).
 
 ## Related
 
