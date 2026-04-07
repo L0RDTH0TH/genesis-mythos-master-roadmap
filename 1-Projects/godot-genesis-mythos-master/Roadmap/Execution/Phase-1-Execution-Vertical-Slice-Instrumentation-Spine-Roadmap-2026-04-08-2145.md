@@ -62,6 +62,26 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 - **1.3 — Instrumentation harness / ObservationChannel stub (A/B parity):** [[Phase-1-3-Instrumentation-Harness-ObservationChannel-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-0100]] (mint **2026-04-09 01:00Z**, queue `followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z`) — harness wiring **1.1** surfaces → **1.3** stub → **1.2** sinks; **no** **`GMM-2.4.5-*`** closure.
 - **1.4 — PresentationEnvelope stub (A/B parity):** [[Phase-1-4-PresentationEnvelope-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-1830]] (mint **2026-04-09 18:30Z**, queue `followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z` — **forward deepen** after **1.3** satisfied) — **1.3** sample → **1.4** readout stub; sandbox role-parity vs [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]].
 
+## Phase 1 execution rollup / completion checkpoint (Godot lane)
+
+> Architect: **1.1–1.4** are structurally present as **vault-only stubs**; this checkpoint records **parity + deferrals** before any Phase **2** execution spine work — **no** `GMM-2.4.5-*` closure until scripts/CI exist (**D-Exec-1.2-GMM-245-stub-vs-closure**).
+
+| Slice | Role | Sandbox A/B parity | `GMM-2.4.5-*` posture |
+| --- | --- | --- | --- |
+| **1.1** | Engine binding inventory (MainLoop / SceneTree / time / logging / GDExtension) | **Yes** — lane A vs lane B comparand rows | N/A (surfaces only) |
+| **1.2** | Registry JSONL + telemetry envelope **stub paths** | **Yes** — artifact path table per lane | **Explicit deferral rows** — compare/rollup/retention **not** closed |
+| **1.3** | Harness + **ObservationChannel** stub | **Yes** — **1.1** → **1.3** → **1.2** wiring | No closure claim |
+| **1.4** | **PresentationEnvelope** readout stub | **Yes** — role-parity vs sandbox **PresentationEnvelope** stub | No closure claim |
+
+**Checkpoint criteria (met for “stub-complete” Phase 1 vertical slice):**
+
+- [x] All four slices minted with **GWT-1.x-Exec-A–C** tables and cross-links under § **Execution child slices**.
+- [x] **A/B parity** language present at **schema/stub** level on every slice (not production parity proof).
+- [x] **No** authoritative **`GMM-2.4.5-*`** “done” claim — execution-deferred until **scripts/CI/lane-B** milestones per [[decisions-log]] **D-Exec-1.2-GMM-245-stub-vs-closure**.
+- [x] Parent **`progress`** semantics per **D-Exec-1-parent-progress-rollup** (spine **`progress`** = **max** child **`progress`**).
+
+**Next structural execution work (operator-default):** mint **Phase 2** execution spine under `Roadmap/Execution/` when PMG/conceptual Phase **2** execution handoff is in scope — **or** **`recal` / `expand`** on Phase **1** per lane pressure — queue: `followup-deepen-exec-phase1-post-14-godot-gmm-20260409T201500Z` checkpoint row **2026-04-09 20:15Z**.
+
 ## Related
 
 - [[roadmap-state-execution]]

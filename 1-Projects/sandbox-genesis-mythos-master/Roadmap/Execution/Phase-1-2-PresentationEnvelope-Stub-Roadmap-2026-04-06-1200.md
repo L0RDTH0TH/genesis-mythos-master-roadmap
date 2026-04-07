@@ -15,7 +15,7 @@ subphase-index: "1.2"
 conceptual_counterpart: "[[../Phase-6-Prototype-Assembly-Testing-and-Iteration/Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle/Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-07-1015]]"
 status: in-progress
 progress: 20
-handoff_readiness: 85
+handoff_readiness: 86
 ---
 
 # Phase 1.2 (Execution) — PresentationEnvelope stub
@@ -91,7 +91,11 @@ function stubMapSampleToReadout(s: ObservationChannelSample, g: PresentationCoDi
 | `envelope_ref` | `envelope_ref` | ✓ |
 | `observed_at_tick` | `observed_at_tick` | ✓ |
 
-**Handoff evidence (2026-04-09):** Stub binding + § Field parity vs **1.1** are complete; `handoff_readiness` raised to **85** with residual execution-deferred risks tracked only in § Risk register (v0).
+**Handoff evidence (2026-04-09):** Stub binding + § Field parity vs **1.1** are complete; `handoff_readiness` **86** with residual execution-deferred risks in § Risk register (v0). **1.2.1** tertiary minted — [[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]] (drill rows + co-display guard drills).
+
+## Tertiary children (1.2.x)
+
+- [[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]] — **1.2.1** readout edge / co-display drills (mid-technical; **D-Exec-1**).
 
 ## Risk register (v0)
 
@@ -105,9 +109,14 @@ function stubMapSampleToReadout(s: ObservationChannelSample, g: PresentationCoDi
 
 | ID | Claim | Evidence hook |
 | --- | --- | --- |
-| GWT-1-2-Exec-A | **1.2** exists as second **1.x** child under Phase 1 execution spine | Parent § Execution spine — 1.x children + [[workflow_state-execution]] `current_subphase_index` (**live cursor `1.2.1` for next mint**; **1.2** = this secondary) + § Stub binding (pseudocode) |
+| GWT-1-2-Exec-A | **1.2** exists as second **1.x** child under Phase 1 execution spine | Parent § Execution spine — 1.x children + [[workflow_state-execution]] `current_subphase_index` (**post-1.2.1 mint: cursor `1.2` for secondary rollup**; **1.2** = this secondary) + § Stub binding (pseudocode) + § Tertiary children (**1.2.1** on disk) |
 | GWT-1-2-Exec-B | **PresentationEnvelope** stub is explicitly **downstream of ObservationChannel** stub | § Readout row schema + wikilink to **1.1** |
 | GWT-1-2-Exec-C | Conceptual counterpart is explicit and read-only | Frontmatter `conceptual_counterpart` + § Scope |
+
+## Rollup readiness (stub — next structural pass)
+
+- **Intent:** Close **secondary 1.2** rollup — NL checklist + **GWT-1-2-Exec** parity vs **[[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]]** drill evidence + spine § **Execution spine — 1.x children**.
+- **Execution-deferred:** `missing_roll_up_gates` at validator tier is **advisory** until this rollup section is replaced with evidence-backed completion language (`execution-deferred` per [[../decisions-log]] conceptual/execution split).
 
 ## Related
 
