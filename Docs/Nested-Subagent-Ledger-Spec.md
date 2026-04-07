@@ -13,7 +13,7 @@ links:
 
 **Version:** `ledger_schema_version: 1`
 
-**Purpose:** Forensic, verbose trace of **Layer 2** nested `Task` calls (Validator, Internal Repair Agent, Research) and contract skips so operators can distinguish **Task tool rejection** (e.g. invalid `subagent_type`), **resource_exhausted**, **contract skip**, and **success** without inferring from missing validator files alone.
+**Purpose:** **Core contract** for Layer 1 attestation and operator forensics: verbose trace of **Layer 2** nested `Task` calls (Validator, Internal Repair Agent, Research) and contract skips so operators can distinguish **Task tool rejection** (e.g. invalid `subagent_type`), **resource_exhausted**, **contract skip**, and **success** without inferring from missing validator files alone. Not optional “nice telemetry” when a mode is **Normative for** below — missing or dishonest ledgers trigger **`nested_attestation_failure`** / **Errors.md** per **`queue.strict_nested_ledger_all_pipelines`**, **`queue.strict_nested_return_gates`**, and **`queue.harness_validation_mode: strict`** (**A.5i**).
 
 **Normative for:** Every **queue-dispatched** Layer 2 pipeline subagent that may invoke nested helpers (**Validator**, **IRA**, **Research**): **`ROADMAP_MODE`**, **`RESUME_ROADMAP`**, **`INGEST_MODE`**, **`ARCHIVE MODE`**, **`ORGANIZE MODE`**, **`DISTILL_MODE`** / **`BATCH_DISTILL`**, **`EXPRESS MODE`** / **`BATCH_EXPRESS`**, **`RESEARCH_AGENT`** / **`RESEARCH_GAPS`**. On **every** final return for those modes, include a fenced YAML block **`nested_subagent_ledger:`** per this spec — **never omit** when claiming **Success** with **`little_val_ok: true`** (unless a documented exempt subcase below uses explicit **`not_applicable`** rows).
 

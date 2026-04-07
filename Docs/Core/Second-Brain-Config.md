@@ -11,6 +11,80 @@ links: [[Resources Hub]]
 
 Single source of truth for pipeline and skill configuration. Skills and rules that need hub names or thresholds should read this note (e.g. via context or Templater/Dataview).
 
+## profiles (familial config)
+
+**Preferred way:** use familial keys on queue **`params`** (or nested **`params.profiles`**). **Flat keys remain fully supported** as overrides via **deepMerge** (explicit queue entry → profile expansion → this file → implicit defaults).
+
+**Canonical reference:** [[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]] — `speed_mode`, `repair_strategy`, `validator_tier` and **deepMerge** order (queue entry explicit keys win over profile expansion over this file over defaults).
+
+**Auto-applied default profile:** When a queue line omits familial keys, **config-resolve-profile** still applies the same default bundle as **`balance` + `repair_first` + `forgiving`** in memory during merge (see Config-Profiles **Resolution flow**). The **canonical default labels** (Option B) are spelled out below; flat YAML in *this* file for overlapping keys stays as **explicit overrides** — behavior is unchanged for existing runs.
+
+**Deprecation (soft):** Prefer familial names on queue **`params`** (or the nested `params.profiles` object) instead of setting **`queue.inline_*`**, **`queue.roadmap_pass_order`**, **`validator.tiered_blocks_enabled`**, and **`pipeline_mode`** directly for every run. **All flat keys remain supported** and merge with expanded profiles per Config-Profiles; nothing is removed.
+
+```yaml
+# Mirror of Docs/Core/Config-Profiles.md — keep in sync when adding families
+profiles:
+  speed_mode:
+    fast: {}
+    balance: {}   # default familial label
+    extreme: {}
+  repair_strategy:
+    repair_first: {}   # default
+    forward_first: {}
+  validator_tier:
+    aggressive: {}
+    forgiving: {}   # default
+```
+
+**Canonical default familial bundle (Option B)** — same three labels the resolver injects when familial keys are omitted (documentation mirror; not a second merge root):
+
+```yaml
+speed_mode: balance
+repair_strategy: repair_first
+validator_tier: forgiving
+```
+
+### Repair-Heavy / Hygiene-Focused Mode (vault defaults)
+
+Preferred **familial** bundle for reliable **repair-first** + **Pass 3** inline drain (same three labels as above). **Flat** overrides below are written explicitly in **`queue:`** / **`validator`** YAML so they win via **deepMerge** over profile expansion alone (see [[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]] § deepMerge).
+
+**Sandbox (2026-04-07):** followup-**deepen** dispatched while **repair-l1-hygiene** was held under **repair_first** single-slot, **`nested_validation_passed: false`**, **`suppress_clean_drain: true`**, no **`inline_repair_pending`** flip, repair row already on **PQ** but Pass 3 skipped. **This combination** ensures **`inline_repair_pending`** can trigger Pass 3 **after** **A.5b** hygiene appends **even when** a forward deepen wins the **initial** slot — **queue.mdc** **A.5.0** still requires same-run pending flags; **`inline_forward_followup_drain_enabled: true`** and higher **`max_inline_a5b_repair_generations_per_run`** give Pass 3 room to run **repair** and **forward** inline waves when those flags are set per contract.
+
+**Flat overrides (effective with this mode):**
+
+| Key | Value |
+|-----|--------|
+| `queue.inline_a5b_repair_drain_enabled` | `true` |
+| `queue.inline_forward_followup_drain_enabled` | `true` |
+| `queue.roadmap_pass_order` | `repair_first` |
+| `queue.max_inline_a5b_repair_generations_per_run` | `8` |
+| `validator.tiered_blocks_enabled` | `true` |
+
+### queue_continuation (empty-queue bootstrap after lane drain)
+
+When the **lane** **PQ** is **empty** after **Pass 3** / **A.7** (desired after balance work + repair churn), **Layer 1** **A.1b** (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**) may **append** the next **`RESUME_ROADMAP`** **`deepen`** from **`.technical/…/queue-continuation.jsonl`** (**QCONT**) or **unfinished-roadmap** fallback per **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**. **`continuation_log_enabled: true`** is required so **A.5e** can populate **QCONT**; if **QCONT** is **missing or empty**, **A.1b** step **2** fails (**queue.mdc**) — keep roadmap runs emitting **`queue_continuation`** and logging enabled.
+
+**Operator intent (balance → next balance cycle):** next bootstrapped line should be **`effective_pipeline_mode`** **balance** (familial **`speed_mode: balance`**), **`params.roadmap_track`** from **`queue_continuation.bootstrap_track`** (default **`conceptual`**), **`params.action`** from **`queue_continuation.bootstrap_action`** (default **`deepen`**) — reflected when **Layer 1** builds the candidate from **`suggested_next`** or **deterministic** **A.1b** step **10** (**not** separate **Queue-Continuation-Spec** v1 schema keys). Override **`bootstrap_track`** in this YAML (or align **[[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]]** defaults) when focus shifts to **execution** or another track.
+
+```yaml
+queue_continuation:
+  continuation_log_enabled: true
+  empty_queue_bootstrap_enabled: true
+  empty_queue_bootstrap_auto_append: true
+  empty_queue_bootstrap_tail_lines: 50
+  empty_queue_bootstrap_max_age_minutes: 1440
+  empty_queue_bootstrap_force_when_unfinished: true
+  empty_queue_bootstrap_prompt_craft: false
+  empty_queue_bootstrap_prompt_craft_on_no_record: false
+  empty_queue_bootstrap_deterministic_when_no_record: true
+  bootstrap_track: conceptual   # params.roadmap_track on synthesized deepen lines; use execution, procedural, etc. when needed
+  bootstrap_action: deepen      # params.action when synthesizing; must match RESUME_ROADMAP allowed actions
+  # bootstrap_source: token workflow_state.md (default) → Layer 1 resolves the file by bootstrap_track:
+  #   conceptual → Roadmap/workflow_state.md; execution → Roadmap/Execution/workflow_state-execution.md; other → try conceptual then execution path.
+  #   A non-default value is read as a path relative to 1-Projects/<project_id>/ (see queue.mdc A.1b). Used for current_subphase_index in bootstrap user_guidance.
+  bootstrap_source: workflow_state.md
+```
+
 ## hub_names
 
 - projects: "Projects Hub"
@@ -43,12 +117,23 @@ Single source of truth for pipeline and skill configuration. Skills and rules th
 - **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read **EQPLAN** (`eat_queue_run_plan.json` colocated with **PQ** — legacy `.technical/eat_queue_run_plan.json` or per-track under `.technical/parallel/<track>/`; see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**) produced by `python3 -m scripts.eat_queue_core.full_cycle` / plan and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
 - **central_pool_fanout_enabled**: when **true**, Layer 1 **A.0.4** runs **`pool_sync`** before wrappers so **`.technical/prompt-queue.jsonl`** (pool) is filtered into per-track **PQ**; **A.7** removes consumed ids from **pool** and **PQ** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.4**, **A.7**).
 - **allowed_lanes** (under **`queue:`** YAML): list of strings allowed for **`queue_lane`** on prompt-queue JSONL lines and for Layer 0 **`EAT-QUEUE lane <name>`**. Default in YAML below: `default`, `shared`, `sandbox`, `godot`, `core`. Unknown lane on append or filter → reject / error (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes).
+- **harness_validation_mode** (`advisory` \| `strict`, default **`advisory`**): Layer 1 **A.5i** after pipeline **Task** returns — parse **`nested_subagent_ledger`**, **`blocked_scope`** on hard-block paths; **`strict`** upgrades refusals per [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4.
+- **roadmap_pass_order** (`repair_first` \| `forward_first`): Layer 1 **A.4c** roadmap multi-dispatch; default **`repair_first`** aligns with familial **`repair_strategy: repair_first`** (overridable flat key).
+- **inline_a5b_repair_drain_enabled**: default **`true`** when omitted in older configs; explicit **`true`** here — Pass 3 repair drain (see [[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]).
+- **inline_forward_followup_drain_enabled**: Pass 3 forward follow-up wave — **`true`** in **Repair-Heavy / Hygiene-Focused Mode** (see § **profiles**) so forward-class appends can set **`inline_forward_followup_pending`** and drain in Pass 3 per **A.5.0** (when gate and caps allow).
+- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: Pass 3 generation caps (**A.5.0**). **Repair-Heavy** sets **`max_inline_a5b_repair_generations_per_run: 8`**; forward cap remains **3** unless changed.
 
-The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above):
+The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above). Keys **`roadmap_pass_order`**, **`inline_*`**, and **`max_inline_*`** implement **Repair-Heavy / Hygiene-Focused Mode** defaults (§ **profiles**); they remain **explicit flat overrides** — change them here to diverge without editing queue JSONL.
 
 queue:
   python_orchestrator_enabled: true
   central_pool_fanout_enabled: true
+  harness_validation_mode: advisory
+  roadmap_pass_order: repair_first
+  inline_a5b_repair_drain_enabled: true
+  inline_forward_followup_drain_enabled: true
+  max_inline_a5b_repair_generations_per_run: 8
+  max_inline_forward_followup_generations_per_run: 3
   allowed_lanes:
     - default
     - shared
@@ -101,6 +186,17 @@ parallel_execution:
 - **invoke_on_empty_queue**: false — when false, skip GitForge when there were no prompt-queue entries to process after A.1 (Step 0–only or empty file).
 - **invoke_only_on_clean_success**: true — when true, skip GitForge if any prompt-queue entry this run got a failure disposition.
 
+### GitHub branch URLs (open in Chrome)
+
+Export remote: **`https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap.git`**. Clickable branch roots (GitHub **tree** view):
+
+| Branch | Browse |
+| --- | --- |
+| `main` | [github.com/.../tree/main](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/main) |
+| `iteration-2-roadmap-rules` (integration — **`gitforge.integration_branch`**) | [github.com/.../tree/iteration-2-roadmap-rules](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/iteration-2-roadmap-rules) |
+| `sandbox-genesis-mythos-master` (sandbox engine line) | [github.com/.../tree/sandbox-genesis-mythos-master](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/sandbox-genesis-mythos-master) |
+| `godot-genesis-mythos-master` (godot engine line) | [github.com/.../tree/godot-genesis-mythos-master](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/godot-genesis-mythos-master) |
+
 Machine-readable block (keep aligned with bullets):
 
 ```yaml
@@ -144,7 +240,7 @@ gitforge:
 
 ## pipeline_mode and validator_profiles
 
-- **pipeline_mode**: balance  # fast | balance | extreme — default validator/safety profile for roadmap/research
+- **pipeline_mode**: balance  # fast | balance | extreme — default validator/safety profile for roadmap/research; **overridable flat key** (matches default **`speed_mode: balance`** expansion; see § **profiles**)
 - **validator_profiles**:
   - extreme:
     - l1_post_lv_policy: always
@@ -219,9 +315,11 @@ Validation-type → model (Cursor model id) or `"auto"`. Fixed model = stable ho
 - **roadmap_handoff**: Final validation pass on roadmap → one handoff-readiness report. High-stakes; use fixed model (Grok code). **Manual trigger only** via ROADMAP_HANDOFF_VALIDATE queue mode.
 - **research_synthesis**: Hostile check over synthesized research notes (sourcing strength, consistency, overclaim). **Liberal** type; use `"auto"` so pipelines can append VALIDATE runs frequently.
 - **Future types**: Add rows as needed (e.g. `ingest_classification: { model: "auto" }`). Document in Parameters which types are high-stakes (fixed model, manual-only) vs liberal (Auto, pipeline-appendable).
+- **tiered_blocks_enabled** (optional; in YAML below): default **`true`** — tiered nested validator Success gate; maps to familial **`validator_tier: forgiving`**. Set **`false`** for **`validator_tier: aggressive`**-style strict behavior (overridable flat key).
 
 ```yaml
 validator:
+  tiered_blocks_enabled: true   # overridable; matches default **validator_tier: forgiving** (tiered nested Success gate)
   roadmap_handoff:
     model: "grok-code"   # Cursor model id for Grok code; high-stakes → fixed model
   research_synthesis:
