@@ -351,3 +351,23 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** first `acquire` **timed out** (30s) — prior holder file showed `parallel_track: godot` with **dead PID**; `release` cleared stale lock; second `acquire` succeeded (track `sandbox`). **Vault:** commit on `iteration-2-roadmap-rules` — **`chore(vault): sandbox EAT-QUEUE — RESUME_ROADMAP deepen; PQ repair + pool [balance]`** — **git-audit-log only** (this row + prior audit paragraph; **`git log -1 --oneline`** for hash). Parent `33811ba` already held sandbox/godot parallel queue + roadmap/telemetry deltas from the EAT-QUEUE run; this A.7a tail folded **audit-only**. **Clarifier:** Layer 1 hand-off **`summary`** (no separate `clarifier_input`). **Submodule roots** `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` left unstaged (dirty submodule state). **Vault push:** attempted — **`git remote -v` empty** / no `origin` on vault. **export_sync:** skipped (`gitforge.modes.balance.export_sync: false`). **Engine mirror** to `parallel_export_path`: not run (export_sync disabled). **Tag:** not created (same convention as prior balance passes). **Release:** `gitforge_lock.py release` after tail. |
 | error_excerpt | vault push: no origin remote; initial lock acquire timeout (stale lock cleared) |
+
+### 2026-04-07 00:29 UTC — gitforge | pending_clarifier
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | godot |
+| parallel_branch_prefix | godot- |
+| lane_project_id | godot-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| parent_run_id | eatq-godot-layer1-20260406T235959Z |
+| eat_queue_run_id | eatq-godot-layer1-20260406T235959Z |
+| result | **Lock:** `acquire` succeeded (30s budget; track `godot`). **Contract:** hand-off omitted **`clarifier_input`** (only **`changes_summary`**). Per [[.cursor/agents/gitforge.md|agents/gitforge.md]] balance mode — **no vault commit**, **no push**, **no export** this pass. **`gitforge.modes.balance.export_sync`** is **false** (export sync not requested). Re-invoke GitForge with non-empty **`clarifier_input`** to commit. **Context (digest):** RESUME_ROADMAP godot execution Phase 1.2 deepen; A.5c follow-up Phase 1.3 appended to `.technical/parallel/godot/prompt-queue.jsonl`. **Release:** `gitforge_lock.py release` after audit append. |
+| error_excerpt | — |

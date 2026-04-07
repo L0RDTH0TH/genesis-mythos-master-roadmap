@@ -681,3 +681,81 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Transient empty on-disk sandbox PQ; risk of confusion if Layer 1 re-reads PQ only after sync without holding a prior snapshot.
 - **Suggested fixes:** Always append lane-scoped entries to the **central pool** (or disable fanout for experiments); or teach **pool_sync** to merge-not-clobber when `copied_count==0` (spec change).
 - **Recovery:** Central pool and `.technical/parallel/sandbox/prompt-queue.jsonl` now both carry `repair-l1-telemetry-ts-sandbox-exec-20260407T002800Z` and `followup-deepen-exec-phase1-2-presentation-sandbox-gmm-20260407T002000Z`.
+
+### 2026-04-07 00:15 — EAT-QUEUE sandbox Task(roadmap) unavailable (Layer 1 Proof-on-failure)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T00:15:00Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl` — **A.0.4** `pool_sync` **ok** (`copied_count: 2`, ids `repair-l1-telemetry-ts-sandbox-exec-20260407T002800Z`, `followup-deepen-exec-phase1-2-presentation-sandbox-gmm-20260407T002000Z`).
+- **A.2a.1:** `project_id` **sandbox-genesis-mythos-master** matches **lane_project_id** for track **sandbox**.
+- **Python orchestrator:** `eat_queue_run_plan.json` **parent_run_id** `eatq-sandbox-20260406T214233Z` — hand-off had **no** `parent_run_id`; first intent **queue_entry_id** does not match current PQ → **legacy Part A** ordering.
+- **Ordering:** `repair_first` — pass-1 slot = **repair** line `repair-l1-telemetry-ts-sandbox-exec-20260407T002800Z` (RESUME_ROADMAP `handoff-audit`); forward line `followup-deepen-exec-phase1-2-presentation-sandbox-gmm-20260407T002000Z` **not** dispatched this pass.
+- **Step 0:** `Ingest/Decisions/**` — no wrapper with `approved: true` in frontmatter requiring apply this run.
+- **Dispatch:** Cursor **`Task`** tool **not available** in this Layer 1 execution context — **no** `Task(roadmap)` launch (Proof-on-failure per Subagent-Safety-Contract).
+- **A.7:** **no** `processed_success_ids`; PQ **unchanged** (two lines retained).
+
+#### Summary
+
+- **Root cause:** Queue orchestrator requires **`Task(subagent_type: roadmap)`**; this host did not expose the Task API to the queue subagent run.
+- **Impact:** No RESUME_ROADMAP handoff-audit execution; no L1 **(b1)** post–little-val validator; deepen line untouched for this run.
+- **Suggested fixes:** Re-run **EAT-QUEUE lane sandbox** from a Cursor session where **`Task(queue)`** / nested **`Task(roadmap)`** are wired; optionally regenerate **EQPLAN** with matching **parent_run_id** and current **queue_entry_id** values for Python orchestrator path.
+- **Recovery:** Re-dispatch when Task is available; no vault rollback required.
+
+### 2026-04-07 00:18 — EAT-QUEUE sandbox Task(roadmap) unavailable (retry; EQPLAN regenerated)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T00:18:38Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/sandbox/prompt-queue.jsonl` — **A.0.4** `pool_sync` **ok** (`copied_count: 2`, ids `repair-l1-telemetry-ts-sandbox-exec-20260407T002800Z`, `followup-deepen-exec-phase1-2-presentation-sandbox-gmm-20260407T002000Z`).
+- **`python3 -m scripts.eat_queue_core.full_cycle`** emitted **EQPLAN** `parent_run_id` **`eatq-fullcycle-493231020ac8`**: **intents** (1) pass1 deepen `followup-deepen-exec-phase1-2-presentation-sandbox-gmm-20260407T002000Z`, (2) pass3 repair `repair-l1-telemetry-ts-sandbox-exec-20260407T002800Z`; **ledger_validation** `ok: true`; **queue_rewrite_ids** lists both ids (not applied — no successful dispatch).
+- **Step 0:** No `approved: true` frontmatter wrappers in `Ingest/Decisions/**` matched for apply.
+- **Dispatch:** Cursor **`Task`** tool **not available** — **no** `Task(roadmap)` for either intent (Proof-on-failure).
+- **A.7:** Entries **not** consumed; central pool + track PQ unchanged.
+
+#### Summary
+
+- **Root cause:** Same host limitation as 00:15 run; EQPLAN was refreshed but Layer 1 still cannot invoke **`Task(roadmap)`**.
+- **Impact:** Neither execution **deepen** nor **handoff-audit** repair ran; operator must use a Task-capable chat for **EAT-QUEUE lane sandbox**.
+- **Suggested fixes:** Run Layer 0 **`Task(subagent_type: queue)`** from parent that exposes Task to the queue subagent; confirm **`eat_queue_run_plan.json`** aligns with PQ after edits.
+- **Recovery:** Re-run EAT-QUEUE when Task is available; PQ still holds both lines.
+
+### 2026-04-07 01:05 — EAT-QUEUE godot Task(roadmap) unavailable (Layer 1 Proof-on-failure)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T01:05:10Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/godot/prompt-queue.jsonl` — **A.0.4** `pool_sync --lane godot` **ok** (`copied_count: 1`, id `followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z`).
+- **A.2a.1:** `project_id` **godot-genesis-mythos-master** matches **lane_project_id** for track **godot**.
+- **Python orchestrator:** `.technical/parallel/godot/eat_queue_run_plan.json` has **parent_run_id** `eatq-godot-layer1-20260409T120000Z`; Layer 0 hand-off had **no** `parent_run_id` → **legacy Part A** ordering (plan mismatch path per **A.0.5**).
+- **Step 0:** No `Ingest/Decisions/**` wrapper with `approved: true` in frontmatter required apply-mode this run.
+- **Dispatch:** Cursor **`Task`** tool **not available** in this Layer 1 execution context — **no** `Task(roadmap)` launch (Proof-on-failure per Subagent-Safety-Contract).
+- **A.7:** **no** `processed_success_ids`; godot **PQ** and central **pool** unchanged for this id.
+
+#### Summary
+
+- **Root cause:** Queue orchestrator requires **`Task(subagent_type: roadmap)`**; this host session did not expose the Task API to the queue subagent.
+- **Impact:** No RESUME_ROADMAP execution deepen for Phase 1.3 instrumentation harness slice; no L1 **(b1)** post–little-val validator.
+- **Suggested fixes:** Re-run **EAT-QUEUE lane godot** from a Cursor chat where **`Task(queue)`** nests **`Task(roadmap)`** successfully; optionally regenerate **EQPLAN** via `full_cycle` with **parent_run_id** aligned to the hand-off and current **queue_entry_id**.
+- **Recovery:** Re-dispatch when Task is available; entry remains on godot PQ and in central pool.

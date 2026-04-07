@@ -39,7 +39,7 @@ execution_local_index: "1.1"
 
 ## A/B parity contract (operator-visible)
 
-1. **Same envelope schema:** Both lanes emit rows compatible with the **InstrumentationIntentEnvelope** vocabulary imported from conceptual **6.1.1** (field names differ only where host forces — document mapping table in a future **1.2** slice if needed).
+1. **Same envelope schema:** Both lanes emit rows compatible with the **InstrumentationIntentEnvelope** vocabulary imported from conceptual **6.1.1** (field names differ only where host forces — cross-link field-name divergences to the minted execution slice [[Phase-1-2-Registry-Telemetry-Stubs-Sandbox-AB-Parity-Roadmap-2026-04-09-0000]] for its **stub path table** + JSONL row schema; **GMM-2.4.5-*** compare/rollup closure remains execution-deferred per that note).
 2. **Divergence logging:** When Godot exposes a capability B lacks (e.g. built-in frame id), lane B adapter must emit **`parity_gap: true`** stub rows — **not** silent drop.
 3. **Queue / lane metadata:** Every sample row carries `queue_lane: godot` | `sandbox` (or configured tokens) for downstream rollup.
 
@@ -66,6 +66,7 @@ execution_local_index: "1.1"
 ## Related
 
 - Parent: [[Phase-1-Execution-Vertical-Slice-Instrumentation-Spine-Roadmap-2026-04-08-2145]]
+- Next sibling (registry / telemetry stubs): [[Phase-1-2-Registry-Telemetry-Stubs-Sandbox-AB-Parity-Roadmap-2026-04-09-0000]]
 - [[workflow_state-execution]]
 - [[roadmap-state-execution]]
 - [[../decisions-log]] (**D-Exec-1-numbering-policy**)

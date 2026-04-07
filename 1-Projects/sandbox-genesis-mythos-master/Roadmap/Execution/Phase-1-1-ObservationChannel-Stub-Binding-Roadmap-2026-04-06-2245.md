@@ -15,7 +15,7 @@ subphase-index: "1.1"
 conceptual_counterpart: "[[../Phase-6-Prototype-Assembly-Testing-and-Iteration/Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle/Phase-6-1-3-ObservationChannel-Lane-Readout-and-Presentation-Time-Co-Display-Roadmap-2026-04-07-1015]]"
 status: in-progress
 progress: 10
-handoff_readiness: 85
+handoff_readiness: 87
 ---
 
 # Phase 1.1 (Execution) — ObservationChannel stub binding
@@ -43,11 +43,26 @@ First **execution-local** secondary (**`1.1`**) under Phase 1 spine, per [[../de
 | `envelope_ref` | Pointer to instrumentation envelope / manifest row (stub) |
 | `observed_at_tick` | Tick index at observation |
 
+## Stub type (pseudocode) — parity with 1.2 `ObservationChannelSample`
+
+Execution-local **fenced type** matches the five fields used in [[Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]] § Stub binding (pseudocode) (`ObservationChannelSample`). The § Sample row schema table above is the operator-facing view of this same shape.
+
+```pseudo
+// Byte-aligned with 1.2 stubMapSampleToReadout input type (five fields).
+type ObservationChannelSample = {
+  tick_commit_id: string
+  channel_lane: string
+  sample_label: string
+  envelope_ref: string
+  observed_at_tick: number
+}
+```
+
 ## GWT-1-1-Exec (local)
 
 | ID | Claim | Evidence hook |
 | --- | --- | --- |
-| GWT-1-1-Exec-A | **1.1** exists as first **1.x** child under Phase 1 execution spine | Parent § Execution spine — 1.x children + [[workflow_state-execution]] `current_subphase_index: "1.1"` |
+| GWT-1-1-Exec-A | **1.1** exists as first **1.x** child under Phase 1 execution spine | Parent § Execution spine — 1.x children + [[workflow_state-execution]] frontmatter `current_subphase_index` (**live cursor `1.2.1` post-2026-04-09**; mint-time **1.1** snapshot **2026-04-08** retained in § NL checklist history) |
 | GWT-1-1-Exec-B | Conceptual counterpart is explicit and read-only | Frontmatter `conceptual_counterpart` + § Scope |
 
 ## Related

@@ -35,6 +35,7 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 ## Execution spine — 1.x children
 
 - [[Phase-1-1-ObservationChannel-Stub-Binding-Roadmap-2026-04-06-2245]] — first **1.1** secondary (ObservationChannel stub binding; **D-Exec-1** execution-local index).
+- [[Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]] — **1.2** secondary (PresentationEnvelope stub; downstream readout of **1.1** samples).
 
 ## GWT-1-Exec-A–C (execution spine — initial)
 

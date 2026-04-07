@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "parent_run_id": "eatq-godot-layer1-20260406T235500Z",
+  "parent_run_id": "eatq-godot-layer1-20260409T120000Z",
   "intents": [
     {
       "op": "dispatch",
       "subagent_type": "roadmap",
-      "queue_entry_id": "followup-deepen-exec-phase1-2-registry-stubs-godot-gmm-20260409T000000Z",
+      "queue_entry_id": "followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z",
       "project_id": "godot-genesis-mythos-master",
       "queue_pass_phase": "initial",
       "pass_id": "pass1",
@@ -19,9 +19,7 @@
       ]
     }
   ],
-  "consumed_ids": [
-    "followup-deepen-execution-phase1-godot-gmm-20260408T230000Z"
-  ],
+  "consumed_ids": [],
   "strict_mode": true,
   "effective_pipeline_mode": "balance",
   "full_cycle_pass_index": 1,

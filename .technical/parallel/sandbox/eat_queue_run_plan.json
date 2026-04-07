@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "parent_run_id": "eatq-sandbox-20260406T214233Z",
+  "parent_run_id": "eatq-recovery-20260409Tcrash-close",
   "intents": [
     {
       "op": "dispatch",
       "subagent_type": "roadmap",
-      "queue_entry_id": "resume-deepen-conceptual-next-slice-sandbox-gmm-20260406T213015Z",
+      "queue_entry_id": "resume-deepen-sandbox-exec-p1-spine-post-telemetry-repair-20260409T120500Z",
       "project_id": "sandbox-genesis-mythos-master",
       "queue_pass_phase": "initial",
       "pass_id": "pass1",

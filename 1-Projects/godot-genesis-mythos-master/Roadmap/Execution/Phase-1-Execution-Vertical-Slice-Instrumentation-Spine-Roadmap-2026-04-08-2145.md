@@ -10,7 +10,7 @@ para-type: Project
 project-id: godot-genesis-mythos-master
 roadmap_track: execution
 status: in-progress
-progress: 15
+progress: 22
 handoff_readiness: 86
 ---
 
@@ -49,9 +49,18 @@ Execution-track **Phase 1** establishes the **first concrete binding** between c
 
 - **Resolved (policy):** execution-local numbering vs conceptual **6.1.x** mirrors — see [[../decisions-log]] **D-Exec-1-numbering-policy (2026-04-08)**.
 
+## Execution progress semantics
+
+- **Child slices:** for each execution note listed under § **Execution child slices** (at last vault sync: **`1.1`–`1.4`**), frontmatter **`progress`** is **slice-local** (0–100) for that execution note only.
+- **This Phase 1 spine (parent):** **`progress`** = **max** of **`progress`** on linked **Execution child slices** listed under § **Execution child slices** at last vault sync (recompute after a child slice deepens or materially changes).
+- **Rationale:** avoids reading the parent bar as “behind” a child when the parent is a rollup container — see [[../decisions-log]] **D-Exec-1-parent-progress-rollup**.
+
 ## Execution child slices (1.x)
 
 - **1.1 — Godot engine binding surfaces vs sandbox A/B parity:** [[Phase-1-1-Godot-Engine-Binding-Surfaces-Sandbox-AB-Parity-Roadmap-2026-04-08-2300]] (mint **2026-04-08 23:00Z**, queue `followup-deepen-execution-phase1-godot-gmm-20260408T230000Z`).
+- **1.2 — Registry / telemetry stub slice (A/B parity):** [[Phase-1-2-Registry-Telemetry-Stubs-Sandbox-AB-Parity-Roadmap-2026-04-09-0000]] (mint **2026-04-09 00:00Z**, queue `followup-deepen-exec-phase1-2-registry-stubs-godot-gmm-20260409T000000Z`) — artifact path table, **`GMM-2.4.5-*`** deferral rows, links **1.1** ↔ **1.2**.
+- **1.3 — Instrumentation harness / ObservationChannel stub (A/B parity):** [[Phase-1-3-Instrumentation-Harness-ObservationChannel-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-0100]] (mint **2026-04-09 01:00Z**, queue `followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z`) — harness wiring **1.1** surfaces → **1.3** stub → **1.2** sinks; **no** **`GMM-2.4.5-*`** closure.
+- **1.4 — PresentationEnvelope stub (A/B parity):** [[Phase-1-4-PresentationEnvelope-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-1830]] (mint **2026-04-09 18:30Z**, queue `followup-deepen-exec-phase1-3-instrumentation-harness-stub-godot-gmm-20260409T010000Z` — **forward deepen** after **1.3** satisfied) — **1.3** sample → **1.4** readout stub; sandbox role-parity vs [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/Phase-1-2-PresentationEnvelope-Stub-Roadmap-2026-04-06-1200]].
 
 ## Related
 
