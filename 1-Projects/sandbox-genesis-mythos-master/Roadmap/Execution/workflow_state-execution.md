@@ -12,10 +12,10 @@ roadmap_track: execution
 status: in-progress
 automation_level: semi
 current_phase: 1
-current_subphase_index: "1.1"
+current_subphase_index: "1.3"
 last_auto_iteration: ""
 iterations_per_phase:
-  "1": 8
+  "1": 9
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -23,9 +23,9 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 53
-last_conf: 93
-last_injected_tokens: 46000
+last_ctx_util_pct: 54
+last_conf: 94
+last_injected_tokens: 47000
 ---
 
 # Workflow state (execution) — sandbox-genesis-mythos-master
@@ -45,3 +45,4 @@ Execution-track automation log. Conceptual state remains in `../workflow_state.m
 | 2026-04-09 15:25 | deepen | Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail | 6 | 1.2.1 | 50 | 50 | 80 | 45000 / 128000 | 1 | 91 | Minted execution tertiary **1.2.1** [[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]] under **1.2** (PresentationEnvelope stub): § Drill rows + § Drill pseudocode + **GWT-1-2-1-Exec**; parent **1.2** § Tertiary children + Phase-1 spine **1.2.1** link; `handoff_readiness` **86** on **1.2** / **86** on **1.2.1**. **Next:** **secondary 1.2 rollup** (NL + GWT vs **1.2.1**) **or** operator **RECAL** / polish. **Cursor:** `current_subphase_index: "1.2"` (rollup scope). queue_entry_id: followup-deepen-exec-phase1-2-1-tertiary-sandbox-gmm-20260409T152100Z \| `parent_run_id: eatq-layer1-sandbox-20260406T000001Z` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `gate_signature: execution-spine-continuation` \| `pipeline_mode_used: balance` \| `micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second` \| `telemetry_utc: 2026-04-09T15:21:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 15:25` |
 | 2026-04-09 16:10 | deepen | Phase-1-2-PresentationEnvelope-Stub (rollup) | 7 | 1.2 | 52 | 48 | 80 | 45500 / 128000 | 2 | 92 | **Secondary 1.2 rollup:** § Rollup completion + **GWT-1-2-Exec** parity vs [[Phase-1-2-1-PresentationEnvelope-Tertiary-Readout-Detail-Roadmap-2026-04-09-1521]]; **1.2.1** negative drill row aligned to `{ blocked: true, reason: "co-display gate" }`; [[roadmap-state-execution]] Phase 1 summary aligned. **Next:** deepen **1.1** (sample-row / pseudo-code polish) **or** operator **RECAL**. **Cursor:** `current_subphase_index: "1.1"`. queue_entry_id: followup-deepen-exec-phase1-2-rollup-sandbox-gmm-20260409T152500Z \| `parent_run_id: eatq-20260406-sandbox-deepen-rollup` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `pipeline_mode_used: balance` \| `micro_workflow: roadmap_core→nested_validator_first→ira→nested_validator_second` \| `telemetry_utc: 2026-04-09T15:25:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 16:10` \| `rollup: secondary-1.2-complete` |
 | 2026-04-09 18:05 | deepen | Phase-1-1-ObservationChannel-Stub-Binding | 8 | 1.1 | 53 | 47 | 80 | 46000 / 128000 | 1 | 93 | **1.1** **sample-row table** + **§ Wire-up pseudocode** (`sampleHappy` / `sampleEdge` / `toPresentationStub`) aligned to **1.2** `stubMapSampleToReadout` + **1.2.1** `drillReadout`; `handoff_readiness` **88**. **Next:** operator **RECAL** on execution tree **or** deepen Phase **1** next spine slice per **D-Exec-1** / PMG. **Cursor:** `current_subphase_index: "1.1"`. queue_entry_id: followup-deepen-exec-phase1-1-sample-row-sandbox-gmm-20260409T180500Z \| `parent_run_id: eatq-sandbox-l1-20260409T210000Z` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `pipeline_mode_used: balance` \| `micro_workflow: roadmap_core→nested_validator_first→ira_post_first_validator→nested_validator_second` \| `telemetry_utc: 2026-04-09T18:05:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 18:05` |
+| 2026-04-09 22:10 | deepen | Phase-1-3-FirstCommittedTick-Stub-Binding | 9 | 1.3 | 54 | 46 | 80 | 47000 / 128000 | 1 | 94 | Minted execution secondary **1.3** [[Phase-1-3-FirstCommittedTick-Stub-Binding-Roadmap-2026-04-09-2210]] (first committed tick / seed-bundle stub; **6.1.2** wikilink + `CommittedTickStub` pseudocode correlating **1.1** `tick_commit_id`); parent spine § **Execution spine — 1.x children** + [[roadmap-state-execution]] Phase 1 summary updated. `handoff_readiness` **86**. **Next:** deepen **1.3** (GWT drill / parity) **or** operator **RECAL**. **Cursor:** `current_subphase_index: "1.3"`. queue_entry_id: followup-deepen-exec-phase1-spine-continuation-sandbox-gmm-20260409T181000Z \| `parent_run_id: eatq-sandbox-l1-20260409T220000Z` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `effective_track: execution` \| `gate_catalog_id: execution_v1` \| `pipeline_mode_used: balance` \| `telemetry_utc: 2026-04-09T22:10:00.000Z` \| `monotonic_log_timestamp: 2026-04-09 22:10` \| `audit: telemetry_utc_reconciled_to_wall_row` |

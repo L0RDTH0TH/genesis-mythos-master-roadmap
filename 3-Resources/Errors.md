@@ -759,3 +759,28 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** No RESUME_ROADMAP execution deepen for Phase 1.3 instrumentation harness slice; no L1 **(b1)** post–little-val validator.
 - **Suggested fixes:** Re-run **EAT-QUEUE lane godot** from a Cursor chat where **`Task(queue)`** nests **`Task(roadmap)`** successfully; optionally regenerate **EQPLAN** via `full_cycle` with **parent_run_id** aligned to the hand-off and current **queue_entry_id**.
 - **Recovery:** Re-dispatch when Task is available; entry remains on godot PQ and in central pool.
+
+### 2026-04-07 03:35 — EAT-QUEUE godot RESUME_ROADMAP nested attestation failure (balance deepen)
+
+| Field | Value |
+|-------|-------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T03:35:31Z |
+| error_type | mcp-api |
+
+#### Trace
+
+- **PQ:** `.technical/parallel/godot/prompt-queue.jsonl` — entry `followup-deepen-exec-phase2-2-or-expand-godot-gmm-20260409T202500Z` (RESUME_ROADMAP deepen execution).
+- **Task(roadmap):** Returned `#review-needed`; nested **`nested_validator_first`**, **`ira_post_first_validator`**, **`nested_validator_second`** logged **`task_error`** / **`task_tool_invoked: false`** (nested Task unavailable in RoadmapSubagent session).
+- **Layer 1 A.5d checklist:** Balance-mode mandatory helper steps **not** all `task_tool_invoked: true` → **nested_attestation_failure**; original line marked **`queue_failed: true`** (`queue_failed_reason: nested_attestation_failure_balance_deepen_nested_task_unavailable`).
+- **A.5c:** Appended **`queue_followups.next_entry`** id `followup-deepen-exec-phase2-3-default-godot-gmm-20260409T203000Z` to godot PQ + central pool.
+- **Task(validator)** L1 post-LV **`roadmap_handoff_auto`:** `needs_work` / `medium` / **`safety_unknown_gap`** (not `state_hygiene_failure`); report `.technical/Validator/roadmap-handoff-auto-godot-gmm-exec-phase2-2-l1postlv-nested-task-unavailable-20260409T203500Z.md`. #review-needed
+
+#### Summary
+
+- **Root cause:** Nested Cursor **`Task`** not available inside **RoadmapSubagent**; strict balance **`micro_workflow`** could not complete Validator/IRA machine attestations.
+- **Impact:** Phase **2.2** slice was minted in vault; queue entry **not** consumed as clean Success; **queue_failed** set on triggering line; **`followup-deepen-exec-phase2-3-...`** queued for next run.
+- **Suggested fixes:** Run roadmap from a host where nested **`Task(validator)`** / **`Task(internal-repair-agent)`** succeed; or operator repair / handoff-audit when Task-capable.
+- **Recovery:** Inspect `queue_failed` line; re-queue after nested Task availability confirmed; next deepen **2.3** remains on PQ.
