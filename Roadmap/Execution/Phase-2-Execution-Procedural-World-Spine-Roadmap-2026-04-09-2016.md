@@ -49,7 +49,7 @@ Execution-track **Phase 2** is the **second** execution lane after **Phase 1** v
 ## Open questions
 
 - **Sandbox comparand:** `1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/` has **no** Phase **2** execution spine file yet at this mint — **Godot lane** establishes the **first** execution Phase **2** spine; when sandbox mirrors, **recal** should align **2.x** slice indices under **A/B parity** policy. **Last verified (vault):** 2026-04-09 — re-check when sandbox mints a Phase **2** execution spine; log mirror in [[../decisions-log]].
-- **First 2.x children:** **2.1**–**2.3** on disk (**2026-04-09**); default next structural **`deepen`** target is **2.4** (next child) or **`expand`** / **`recal`** on Phase **2** spine tables — see [[workflow_state-execution]] cursor.
+- **First 2.x children:** **2.1**–**2.4** on disk (**2026-04-09**); default next structural **`deepen`** target is **2.5** (next child) or **`expand`** / **`recal`** on Phase **2** spine tables — see [[workflow_state-execution]] cursor.
 
 ## Execution progress semantics
 
@@ -61,6 +61,7 @@ Execution-track **Phase 2** is the **second** execution lane after **Phase 1** v
 - **2.1** — [[Phase-2-1-Proc-World-Execution-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-2020]] — proc/world execution stub; **sandbox A/B parity** table; **no** **`GMM-2.4.5-*`** closure (queue `followup-deepen-exec-phase2-1-first-child-godot-gmm-20260409T202000Z`).
 - **2.2** — [[Phase-2-2-Proc-World-Chunk-Graph-Staging-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-2025]] — chunk / graph **staging** stub (seam + staging buffer contracts); **sandbox A/B parity**; **no** **`GMM-2.4.5-*`** closure (queue `followup-deepen-exec-phase2-2-or-expand-godot-gmm-20260409T202500Z`).
 - **2.3** — [[Phase-2-3-Proc-World-Staging-Commit-Integration-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-2030]] — staging → **commit** integration stub (barriers, fingerprints, world snapshot refs); **sandbox A/B parity**; **no** **`GMM-2.4.5-*`** closure (queue `followup-deepen-exec-phase2-3-default-godot-gmm-20260409T203000Z`).
+- **2.4** — [[Phase-2-4-Proc-World-Post-Commit-Epoch-Observation-Stub-Sandbox-AB-Parity-Roadmap-2026-04-09-2105]] — post-commit **epoch** observation & reconciliation stub (epoch_id, drift rows, Presentation bridge); **sandbox A/B parity**; **no** **`GMM-2.4.5-*`** closure (queue `followup-deepen-exec-phase2-4-or-expand-godot-gmm-20260409T204500Z`).
 
 ## Related
 
