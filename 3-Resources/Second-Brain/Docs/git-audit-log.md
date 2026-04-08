@@ -40,6 +40,26 @@ Use a level-3 heading per event for scanability:
 - Agent contract: `.cursor/agents/gitforge.md`
 - Config: [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**
 
+### 2026-04-08 21:10 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | **iteration-2-roadmap-rules** (vault); **godot-genesis-mythos-master** (export Step 1b) |
+| parallel_track | godot |
+| parallel_branch_prefix | godot- |
+| lane_project_id | godot-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted; export_sync_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parent_run_id | eatq-godot-20260408-p21-mint |
+| eat_queue_run_id | eatq-godot-20260408-p21-mint |
+| processed_summary | EAT-QUEUE lane godot: 1 RESUME_ROADMAP consumed (followup-deepen-exec-p21-mint); appended followup p223; dual-pool rewrite |
+| result | **Lock:** `gitforge_lock.py acquire` (`parallel_track: godot`, timeout 30s) **ok**; **`release`** after audit append. **Vault:** commit **`93a2221`** on `iteration-2-roadmap-rules` — `chore(vault): godot A.7a — RESUME_ROADMAP p21-mint; dual-pool rewrite (eatq-godot-20260408-p21-mint) (source: balance)` (61 files). **Submodules:** `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` left unstaged. **Vault push:** **`git push origin iteration-2-roadmap-rules`** rejected (**non-fast-forward** vs remote). **Export (Step 1b engine):** `git switch godot-genesis-mythos-master`; `rsync --delete` `Roadmap/` + anchors from `GMM_PROJECT_ROOT=/home/darth/Documents/Second-Brain/1-Projects/godot-genesis-mythos-master`; commit **`ef08dca`**; **push** `caa2d11..ef08dca` to **`origin/godot-genesis-mythos-master` succeeded**. **Config `gitforge.modes.balance.export_sync`:** `false` — Step 1b run per godot lane / operator contract (roadmap-only engine line). **Tag:** not created. |
+| error_excerpt | vault push: non-fast-forward |
+
 ### 2026-04-08 20:03 UTC — gitforge | completed
 
 | Field | Value |
