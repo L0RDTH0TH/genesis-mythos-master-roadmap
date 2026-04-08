@@ -5,12 +5,11 @@ phase-number: 2
 subphase-index: "2.2"
 project-id: godot-genesis-mythos-master
 roadmap_track: execution
-status: in-progress
+status: complete
 priority: high
-progress: 40
-handoff_readiness: 85
-handoff_gaps:
-  - "Tertiary execution mirrors 2.2.4–2.2.5 not yet minted on parallel spine (2.2.1–2.2.3 on disk)."
+progress: 100
+handoff_readiness: 88
+handoff_gaps: []
 created: 2026-04-10
 tags:
   - roadmap
@@ -25,6 +24,8 @@ links:
   - "[[Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]]"
   - "[[Phase-2-2-2-Execution-Validate-Classify-Schema-and-Hook-Mapping-Roadmap-2026-04-08-2330]]"
   - "[[Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]]"
+  - "[[Phase-2-2-4-Execution-Deterministic-Hook-Emission-Envelope-and-Pre-Commit-Payload-Handoff-Roadmap-2026-04-08-2351]]"
+  - "[[Phase-2-2-5-Execution-Envelope-Validation-Labels-and-Bundle-Chunk-Ordering-Boundary-Roadmap-2026-04-10-1705]]"
 ---
 
 ## Phase 2.2 — Execution intent resolver and hook mapping (parallel spine)
@@ -38,7 +39,7 @@ Execution mirror for conceptual **2.2** under `Execution/Phase-2-Procedural-Gene
 
 **In scope:** resolver stage ordering, hook namespace and schema catalog hooks, conflict classes (replace / merge / defer / reject), replay-safe intent snapshots, junior-dev stub pseudocode at seams.
 
-**Out of scope:** full tertiary chain **2.2.1–2.2.5**, CI/registry proof bundles, `GMM-2.4.5-*` closure (explicit defer rows only).
+**Out of scope:** CI/registry proof bundles beyond gate table defer rows, `GMM-2.4.5-*` full closure (explicit defer rows only). **Tertiary chain 2.2.1–2.2.5** is **in scope** on the parallel spine (minted **2026-04-08** / **2026-04-10**); see linked tertiaries in **Roll-up gates** below.
 
 ## Lane comparand — godot (A) vs sandbox (B)
 
@@ -76,7 +77,7 @@ func resolve_intents(envelopes: IntentEnvelope[], catalog_rev: CatalogRevision) 
 | `G-2.2-Hook-Schema-Binding` | **PASS** | Lane A/B + catalog revision semantics | `owner_signoff_G-2.2-Hook-Schema-Binding_2026-04-10` |
 | `G-2.2-Conflict-Policy` | **PASS** | Conflict classes + merge policy row | `owner_signoff_G-2.2-Conflict-Policy_2026-04-10` |
 | `G-2.2-Lane-Comparand-Parity` | **PASS** | Comparand table | `owner_signoff_G-2.2-Lane-Comparand-Parity_2026-04-10` |
-| `G-2.2-Tertiary-Chain-Deferred` | **FAIL (explicit, non-blocking)** | **2.2.1–2.2.3** minted ([[Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]], [[Phase-2-2-2-Execution-Validate-Classify-Schema-and-Hook-Mapping-Roadmap-2026-04-08-2330]], [[Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]]); **2.2.4–2.2.5** pending | `owner_defer_G-2.2-Tertiary-Chain-Deferred_2026-04-10` |
+| `G-2.2-Tertiary-Chain-Complete` | **PASS** | **2.2.1–2.2.5** on disk ([[Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]], [[Phase-2-2-2-Execution-Validate-Classify-Schema-and-Hook-Mapping-Roadmap-2026-04-08-2330]], [[Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]], [[Phase-2-2-4-Execution-Deterministic-Hook-Emission-Envelope-and-Pre-Commit-Payload-Handoff-Roadmap-2026-04-08-2351]], [[Phase-2-2-5-Execution-Envelope-Validation-Labels-and-Bundle-Chunk-Ordering-Boundary-Roadmap-2026-04-10-1705]]); **`rollup_2_primary_from_2_2`** closed on primary | `owner_signoff_G-2.2-Tertiary-Chain-Complete_2026-04-10` |
 
 ## Deferred safety / CI seams (explicit owner + timebox)
 
@@ -90,7 +91,7 @@ func resolve_intents(envelopes: IntentEnvelope[], catalog_rev: CatalogRevision) 
 1. **AC-2.2-1:** Mirrored path matches conceptual subtree `Phase-2-2-Intent-Resolver-and-Hook-Mapping/` (parallel spine).
 2. **AC-2.2-2:** Every `G-2.2-*` row has PASS or explicit non-blocking FAIL + token.
 3. **AC-2.2-3:** Intent seam from **2.1** **S1** is named and traceable in the seam table.
-4. **AC-2.2-4:** Phase 2 primary receives a propagation stub row for `rollup_2_primary_from_2_2` when tertiaries close (future deepen).
+4. **AC-2.2-4:** Phase 2 primary **`rollup_2_primary_from_2_2`** row is **closed** (**2026-04-10**) with owner token and links to this secondary + **2.2.5** tertiary receipt — see [[../Phase-2-Execution-Procedural-Generation-and-World-Building-Roadmap-2026-04-08-1227]] gate map.
 
 ## Related
 
