@@ -811,3 +811,98 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** No RESUME_ROADMAP deepen for Phase **2.5**; no L1 **(b1)** post–little-val.
 - **Suggested fixes:** Run **EAT-QUEUE lane godot** from a Cursor session where **`Task(queue)`** can call **`Task(roadmap)`**; keep active godot lines in **both** central pool and track **PQ**, or adjust workflow so **`pool_sync`** does not drop track-only rows.
 - **Recovery:** Re-run when Task is available; **`followup-deepen-exec-phase2-5-...`** still on godot **PQ**.
+
+### 2026-04-07 13:22 — EAT-QUEUE sandbox Phase 1 exec deepen — L1 post–little-val hard block (state_hygiene_failure)
+
+| Field | Value |
+|-------|--------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T13:22:00Z |
+| error_type | confidence-below-threshold |
+
+#### Trace
+
+- **Queue entry:** `followup-deepen-exec-phase1-sandbox-post-bootstrap-20260410T130500Z` — `RESUME_ROADMAP` deepen execution.
+- **`Task(roadmap)`:** Success; material mint under `Roadmap/Execution/`; nested ledger attested **`nested_validator_first`**, **`ira_post_first_validator`**, **`nested_validator_second`** with **`task_tool_invoked: true`**.
+- **`Task(validator)` (L1 b1):** Report `.technical/Validator/roadmap-handoff-auto-sandbox-genesis-mythos-master-exec-p1-2026-04-07T132000Z.md` — **`severity: high`**, **`recommended_action: block_destructive`**, **`primary_code: state_hygiene_failure`** (execution-track strictness).
+- **A.5b:** Repair line **`repair-l1-handoff-audit-sandbox-exec-p1-20260407T132100Z`** appended to `.technical/parallel/sandbox/prompt-queue.jsonl`; forward follow-up **`followup-deepen-exec-phase1-1-sandbox-20260410T131600Z`** retained.
+
+#### Summary
+
+- **Root cause:** Layer 1 hostile validator disagreed with “clean success” for execution hygiene / roll-up evidence (TBD rows, telemetry credibility per report).
+- **Impact:** Triggering queue line **consumed** with **provisional** disposition; **not** a clean Success drain; next runs should process **repair-first** line then **deepen** follow-up.
+- **Suggested fixes:** Run **`handoff-audit`** repair when ready; address gaps in L1 report; re-run **EAT-QUEUE lane sandbox**.
+- **Recovery:** Repair and deepen entries remain on sandbox **PQ**; Run-Telemetry: `.technical/Run-Telemetry/sandbox/eatq-layer1-sandbox-20260407T132200Z.md`.
+
+### 2026-04-07 07:42 — EAT-QUEUE godot Phase 1.1 execution deepen provisional (state_hygiene_failure)
+
+| Field | Value |
+|-------|--------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T07:42:02Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **Queue entry:** `followup-deepen-exec-p11-spine-godot-20260410T131600Z` — `RESUME_ROADMAP` deepen execution.
+- **`Task(roadmap)`:** Returned `#review-needed`; `material_state_change_asserted: true`; nested ledger shows mandatory balance helpers invoked (`nested_validator_first`, `ira_post_first_validator`, `nested_validator_second` all `task_tool_invoked: true`).
+- **Nested second validator (L2):** `.technical/Validator/roadmap-handoff-auto-godot-genesis-mythos-master-20260407T074201Z.md` with `severity: high`, `recommended_action: block_destructive`, `primary_code: incoherence`.
+- **L1 hostile validator (b1):** `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/godot-genesis-mythos-master-20260410T131600Z-followup-deepen-exec-p11-spine-godot.md` with `severity: high`, `recommended_action: block_destructive`, `primary_code: state_hygiene_failure`.
+- **Continuation enforcement:** Appended repair lines `repair-recal-exec-p11-godot-20260407T074201Z` and `repair-handoff-audit-godot-exec-p11-20260407T074201Z` to `.technical/parallel/godot/prompt-queue.jsonl`; original triggering line marked `queue_failed: true`.
+
+#### Summary
+
+- **Root cause:** Execution workflow/roadmap markers are inconsistent after deepen (`1.1` vs `1.1.1` lineage and roll-up closure state).
+- **Impact:** Run is treated as `provisional_success` with `suppress_clean_drain=true`; clean success consumption is blocked pending repair.
+- **Suggested fixes:** Process queued `handoff-audit`/`recal` repair entries first (repair-first), then re-run deepen only after hygiene passes.
+- **Recovery:** Queue continuation recorded in `.technical/parallel/godot/queue-continuation.jsonl`; Watcher lines written to canonical and godot mirror with `hygiene_issues_logged`.
+
+### 2026-04-08 15:12 — EAT-QUEUE godot: pool_sync overwrote track PQ; operator-expand Phase 4.2 L1 hostile block
+
+| Field | Value |
+|-------|--------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-08T15:12:00Z |
+| error_type | io-failure / state-inconsistent |
+
+#### Trace
+
+- **A.0.4 `pool_sync`:** Ran with `--lane godot`; copied one id from central pool into `.technical/parallel/godot/prompt-queue.jsonl` and **replaced** the track file such that locally queued lines (including `operator-expand-phase42-ux-amendment-godot-20260408T140500Z`) were lost until **restored from session snapshot** before dispatch.
+- **Dispatch:** `Task(roadmap)` for `operator-expand-phase42-ux-amendment-godot-20260408T140500Z` — `RESUME_ROADMAP` `expand` conceptual Phase 4.2 UX fold; nested ledger attested validators + IRA; roadmap reported Success with `little_val_ok: true`.
+- **L1 `Task(validator)` roadmap_handoff_auto (b1):** `severity: high`, `primary_code: contradictions_detected`, `reason_codes` include `state_hygiene_failure` / `stale_outputs` — distilled-core Phase 6 vs workflow_state / roadmap-state (see `.technical/Validator/roadmap-handoff-auto-godot-expand-p42-ux-fold-second-compare-20260408T150000Z.md`).
+
+#### Summary
+
+- **Root cause:** Central pool hydration merged pool lines into the track PQ in a way that **dropped non-pool track-only lines**; plus cross-artifact Phase 6 narrative drift surfaced by **Layer 1** hostile validator (not nested second pass alone).
+- **Impact:** Operator-expand entry **consumed** with **provisional** disposition; **repair** `repair-sync-distilled-core-phase6-l1-godot-20260408T151000Z` (`sync-outputs` conceptual) appended to godot **PQ**; **GitForge** skipped (`invoke_only_on_clean_success`).
+- **Suggested fixes:** Harden `pool_sync` to **merge** pool into track PQ without deleting unmatched track lines; run **`sync-outputs`** repair to align **distilled-core** Phase 6 with authoritative state.
+- **Recovery:** Track **PQ** restored to four lines (three prior + new repair); central pool unchanged (operator-expand was track-only).
+
+### 2026-04-08 21:35 — EAT-QUEUE sandbox: A.0.4 pool_sync emptied track PQ; operator-expand nested attestation + L1 hygiene provisional
+
+| Field | Value |
+|-------|--------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-08T21:35:00Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **`pool_sync`** (`--lane sandbox`, `copied_count: 0`): Overwrote `.technical/parallel/sandbox/prompt-queue.jsonl` with the central-pool subset (no sandbox lines in pool), **clearing** three track-local JSONL lines until **restored** from the Layer 1 session snapshot before dispatch.
+- **`Task(roadmap)`** `operator-expand-phase42-ux-amendment-sandbox-20260408T140500Z`: Expand applied per subagent; nested `Task(validator)` / IRA reported **`task_error`** / skip (`host_missing_cursor_task`); balance nested attestation **not** clean.
+- **`Task(validator)` L1 `roadmap_handoff_auto`:** Report `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-20260408T140500Z-l1postlv-operator-expand-phase42.md` — `primary_code: state_hygiene_failure`, `severity: medium`, `needs_work`.
+
+#### Summary
+
+- **Root cause:** **A.0.4** fanout when the central pool lacks lane rows **drops** track-only queue lines; nested roadmap validators unavailable in subagent host; validator found conceptual workflow / GWT / handoff-review hygiene gaps.
+- **Impact:** **A.7** did **not** consume the expand id; **suppress_clean_drain**; remaining PQ lines `repair-handoff-audit-sandbox-exec-phase1-2-1-20260407T040834Z` and `followup-deepen-exec-phase1-2-2-sandbox-20260407T040834Z` **not** dispatched in this run.
+- **Suggested fixes:** Append sandbox work to **central pool** before `pool_sync`, or disable fanout for track-only appends; fix conceptual `workflow_state.md` log row and handoff-review stamps per validator **next_artifacts**; re-run EAT-QUEUE when nested `Task` is available in roadmap host.
+- **Recovery:** Sandbox **PQ** file restored to three lines (expand first, then repair, then deepen). Run-Telemetry: `.technical/Run-Telemetry/sandbox/eatq-layer1-sandbox-operator-expand-p42-20260408T213500Z.md`.

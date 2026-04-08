@@ -29,7 +29,7 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 - Phase 1: in-progress — execution primary + secondary + tertiary mirror minted **2026-04-10** — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Execution-Foundation-and-Core-Architecture-Roadmap-2026-04-10-1315]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Execution-Layering-and-Interface-Contracts-Roadmap-2026-04-10-1316]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Execution-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-1316]]; next structural target **1.1 roll-up hardening** (close `rollup_1_1_from_1_1_1` evidence row and propagate to phase 1 primary gate register); gate anchors: `rollup_1_1_from_1_1_1` and `rollup_1_primary_from_1_1` (see [[workflow_state-execution#Execution gate tracker]])
 - Phase 2: pending
 - Phase 3: pending
-- Phase 4: pending
+- Phase 4: pending — conceptual **Phase 4.2** UX authority fold **2026-04-08** registered for future parallel-spine mint — see [[workflow_state-execution#Conceptual counterpart forward registry]] (`exec-forward-p42-ux-20260408`).
 - Phase 5: pending
 - Phase 6: pending
 

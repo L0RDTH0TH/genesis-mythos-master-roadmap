@@ -42,6 +42,16 @@ This gate runs **before** A.7 queue rewrite and Watcher-Result final write.
 - **Reference**: [Cursor-Skill-Pipelines-Reference](3-Resources/Second-Brain/Cursor-Skill-Pipelines-Reference.md), [Queue-Sources](3-Resources/Second-Brain/Queue-Sources.md). **MCP safety**: [mcp-obsidian-integration.mdc](.cursor/rules/always/mcp-obsidian-integration.mdc).
 - **Laptop-only**: Both queues are filled from laptop (Plan-mode crafting, Commander, or manual edit). Mobile = observe + fill Ingest only (see Mobile-Migration-Spec.md).
 
+## `option_evaluation` mandate (execution-track RESUME_ROADMAP)
+
+When **Second-Brain-Config** **`queue.rationale_enforcement_enabled`** is **true** (see **`queue:`** YAML in [Second-Brain-Config](3-Resources/Second-Brain/Second-Brain-Config.md)):
+
+1. **Gated entries:** **`RESUME_ROADMAP`** and **chain modes whose primary segment is `RESUME_ROADMAP`**, where **`effective_track`** is **`execution`** (queue entry **`params.roadmap_track: execution`** **or** project **`roadmap-state.md`** **`roadmap_track: execution`** when the queue entry does not lock conceptual — per [Queue-Sources](3-Resources/Second-Brain/Queue-Sources.md) § **`effective_track` resolution**).
+2. **Required payload:** **`params.option_evaluation`** must be present and match the **exact JSON shape** in [Queue-Sources](3-Resources/Second-Brain/Queue-Sources.md) § **Parallel execution tracking — task-handoff receipts + `option_evaluation`** (fields: **`master_goal_ref`**, **`alternatives[]`** with **`id`**, **`summary`**, **`alignment_score`**, **`chosen`**, **`rationale`**, optional **`validator_ref`**).
+3. **If missing or structurally invalid:** Do **not** remove the queue line solely for this reason. **Dispatch** may proceed per operator policy; you **must** record the gap in observability: ensure an **`intent_actual_receipt`** row (via **`scripts.eat_queue_core`** when **`tracking.intent_receipts_enabled`** is true) or equivalent **Watcher-Result** **`message`/`trace`** tags with **`divergence_codes`** **`option_evaluation_missing`** or **`option_evaluation_invalid`**, and prefer **`status_class: provisional_success`** semantics for that **`requestId`** when the pipeline return would otherwise read as clean Success. **`agent_reasoning`** alone does **not** satisfy this mandate.
+
+When **`queue.rationale_enforcement_enabled`** is **false**, **`option_evaluation`** remains **optional** (recommended for execution-track deepens for traceability).
+
 ## Depends on (shared always rules)
 
 This subagent **depends on** and does not duplicate: core-guardrails.mdc, confidence-loops.mdc, guidance-aware.mdc, mcp-obsidian-integration.mdc, watcher-result-append.mdc. All destructive operations occur in **downstream** pipelines or skills invoked by this subagent; this subagent only orchestrates (read, validate, order, dispatch, log, clear/tag).

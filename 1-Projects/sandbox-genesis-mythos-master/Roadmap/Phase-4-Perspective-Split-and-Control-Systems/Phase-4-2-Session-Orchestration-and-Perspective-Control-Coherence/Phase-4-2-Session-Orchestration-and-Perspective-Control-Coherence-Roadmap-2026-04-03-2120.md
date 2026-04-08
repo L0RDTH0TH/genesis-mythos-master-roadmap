@@ -23,6 +23,8 @@ links:
   - "[[Phase-3-1-2-Tick-Scheduling-Defer-Merge-and-Work-Queue-Policy-Roadmap-2026-04-02-0020]]"
   - "[[Phase-3-1-4-Persistence-Checkpoint-Boundaries-Roadmap-2026-04-02-2240]]"
   - "[[decisions-log]]"
+  - "[[Conceptual-Amendments/amend-frontend-player-ux-pc-swap-scheduling-lore-surface-2026-04-08-1400]]"
+  - "[[../Execution/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence-Roadmap-2026-04-03-2120|Execution mirror (Phase 4.2)]]"
 ---
 
 > [!note] #handoff-review
@@ -51,6 +53,15 @@ This secondary slice defines how perspective control modes coordinate with sessi
 1. Perspective control updates are accepted only through session-scoped orchestration hooks.
 2. Lane-specific presentation rules may differ, but control state transitions remain singular and replay-safe.
 3. Session transitions preserve ordering and checkpoint legality inherited from Phase 3 scheduling/durability rules.
+4. **Operator amendment (D-2026-04-08 — frontend player UX):** Folded from [[Conceptual-Amendments/amend-frontend-player-ux-pc-swap-scheduling-lore-surface-2026-04-08-1400]]. **Single authority lane** preserved: players **propose**; **DM approves** or **DM-overrides** only (no player-unilateral schedule commitment that bypasses DM authority).
+
+   - **(A) Multi-PC swap (consumer-facing):** GTA V–style **zoom-out → traverse to target character in world → zoom-in possess**; the prior body becomes **NPC / off-camera** per session orchestration (no hard session reload for swap).
+   - **(B) Schedules:** **Player-propose → DM gate → commit** to session hooks; recurring or standing commitments follow the same approval lane.
+   - **(C) Non-goal:** **Mobile / tablet spectator** client (read-only codex + light map while host runs 3D) is **explicitly deprioritized** — not a roadmap commitment until elevated by operator/product decision.
+   - **(D) Lore / chronicle:** Markdown / Obsidian-compatible trees as **serialization and human-audit layer** for multi-session, multi-campaign history — **not** embedding the vault **developer** PARA / queue / MCP automation spine in the shipped runtime.
+
+> [!info] Dual-Roadmap — execution mirror
+> Future **execution-track** Phase **4** work implements these deltas as **typed AC rows and interfaces** on the **parallel spine** (same folder hierarchy as this note under `Roadmap/Execution/`). Stub minted: [[../Execution/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence-Roadmap-2026-04-03-2120|Phase 4.2 execution mirror]]. **Deepen on execution track only** when driving implementation; do not flatten execution notes under the Execution root.
 
 ## Interfaces
 

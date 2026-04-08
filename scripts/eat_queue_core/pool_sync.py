@@ -50,6 +50,35 @@ def read_central_pool_fanout_enabled(vault_root: Path) -> bool:
     return m.group(1).lower() == "true"
 
 
+def read_tracking_intent_receipts_enabled(vault_root: Path) -> bool:
+    """Default true when key absent (Queue-Sources / Second-Brain-Config)."""
+    cfg = (vault_root / CONFIG_REL).resolve()
+    if not cfg.is_file():
+        return True
+    try:
+        text = cfg.read_text(encoding="utf-8")
+    except OSError:
+        return True
+    m = re.search(r"(?m)^\s*intent_receipts_enabled:\s*(true|false)\s*$", text)
+    if not m:
+        return True
+    return m.group(1).lower() == "true"
+
+
+def read_queue_rationale_enforcement_enabled(vault_root: Path) -> bool:
+    cfg = (vault_root / CONFIG_REL).resolve()
+    if not cfg.is_file():
+        return False
+    try:
+        text = cfg.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    m = re.search(r"(?m)^\s*rationale_enforcement_enabled:\s*(true|false)\s*$", text)
+    if not m:
+        return False
+    return m.group(1).lower() == "true"
+
+
 def _raw_lines_for_lane(
     pool_path: Path,
     lane_filter: str,

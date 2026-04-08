@@ -1,12 +1,29 @@
 {
   "schema_version": 1,
-  "parent_run_id": null,
-  "intents": [],
+  "parent_run_id": "eatq-godot-20260407T120000Z",
+  "intents": [
+    {
+      "op": "dispatch",
+      "subagent_type": "roadmap",
+      "queue_entry_id": "followup-deepen-exec-p11-spine-godot-20260410T131600Z",
+      "project_id": "godot-genesis-mythos-master",
+      "queue_pass_phase": "initial",
+      "pass_id": "pass1",
+      "dispatch_ordinal": 1,
+      "micro_workflow": [
+        "roadmap_core",
+        "nested_validator_first",
+        "ira",
+        "nested_validator_second",
+        "l1_post_lv"
+      ]
+    }
+  ],
   "consumed_ids": [],
-  "strict_mode": false,
-  "effective_pipeline_mode": null,
-  "full_cycle_pass_index": 0,
-  "full_cycle_passes_total": 0,
+  "strict_mode": true,
+  "effective_pipeline_mode": "balance",
+  "full_cycle_pass_index": 1,
+  "full_cycle_passes_total": 2,
   "queue_rewrite_ids": [],
   "inline_pass3_drain": false,
   "has_anticipatory_repair_slot": false
