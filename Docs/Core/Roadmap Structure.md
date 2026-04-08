@@ -60,7 +60,7 @@ flowchart TB
 
 ### Execution subtree (dual track)
 
-When the project is in **execution** mode (`roadmap_track: execution` on `roadmap-state.md`), deepen/recal writes live under **`Roadmap/Execution/`** with the **same folder patterns** as the conceptual tree (e.g. `Roadmap/Execution/Phase-1-<Name>/…`). Conceptual files under `Roadmap/` (outside `Execution/`) stay **frozen** and read-only for agents.
+When the project is in **execution** mode (`roadmap_track: execution` on `roadmap-state.md`), deepen/recal writes live under **`Roadmap/Execution/`** with the **identical folder hierarchy and relative paths** as the conceptual phase tree under `Roadmap/` (**parallel spine**; see worked example below). Do **not** leave execution phase notes as a **flat heap** of `Phase-*.md` files on `Roadmap/Execution/` when conceptual nests them under `Roadmap/Phase-*/…`. Conceptual files under `Roadmap/` (outside `Execution/`) stay **frozen** and read-only for agents.
 
 ```mermaid
 flowchart LR
@@ -80,6 +80,38 @@ flowchart LR
 
 - **Execution** notes: `roadmap_track: execution`, `conceptual_counterpart: "[[Roadmap/Phase-1-…/note]]"` (or vault path string).
 - **Conceptual** notes (optional): `execution_mirror: "[[Roadmap/Execution/Phase-1-…/note]]"`.
+
+### Execution track – parallel spine (worked example)
+
+**Conceptual tree** (frozen; under `Roadmap/`):
+
+```text
+Roadmap/
+├── Phase-1-Foundation/
+│   ├── Phase-1-1-Requirements-Roadmap-*.md
+│   └── Phase-1-2-Architecture-Roadmap-*.md
+├── Phase-2-Engine/
+│   └── Phase-2-1-Core-Loop-Roadmap-*.md
+└── Phase-3-Systems/
+    └── Phase-3-2-UI-Integration-Roadmap-*.md
+```
+
+**Execution tree** (writable mirror — **same shape** under `Roadmap/Execution/`). Execution evidence and technical depth live in these files; **do not** flatten them as a pile of `Phase-*.md` directly on `Roadmap/Execution/`.
+
+```text
+Roadmap/Execution/
+├── workflow_state-execution.md          ← global state (root only)
+├── roadmap-state-execution.md         ← global state (root only)
+├── Phase-1-Foundation/
+│   ├── Phase-1-1-Requirements-Roadmap-*.md
+│   └── Phase-1-2-Architecture-Roadmap-*.md
+├── Phase-2-Engine/
+│   └── Phase-2-1-Core-Loop-Roadmap-*.md
+└── Phase-3-Systems/
+    └── Phase-3-2-UI-Integration-Roadmap-*.md
+```
+
+**Contract:** `Roadmap/Execution/<relative path>` = mirror of `Roadmap/<relative path>` for each execution counterpart. See **roadmap-deepen** § Execution track path rule and [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] § Dual roadmap track.
 
 ---
 

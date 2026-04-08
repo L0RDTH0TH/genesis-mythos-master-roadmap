@@ -66,6 +66,7 @@ Single index so the needle is always in the haystack: where to look for config, 
 | **Trigger → rule** (always + context) | [Rules](../../Rules.md) |
 | **Skills by pipeline and slot; full skills table** | [Skills](../../Skills.md) |
 | **Snapshot triggers by pipeline** | [Safety-Invariants](../Safety-Invariants.md) § Snapshot triggers |
+| **Structure harness** (pipeline skeleton, `blocked_scope`, Layer 1 **A.5i**, skill `SKILL.md` harness block) | [Harness-Patterns-and-Guidelines](../Harness-Patterns-and-Guidelines.md) |
 
 ---
 

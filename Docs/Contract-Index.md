@@ -102,6 +102,7 @@ Single-page index of the core contract, safety, and ledger docs the agents and v
 
 If you are a secondary agent (Grok, validator, or tooling) trying to locate the contracts:
 
+- **Grok Chat (custom instructions)**: `3-Resources/Second-Brain/Docs/Grok-Second-Brain-Custom-Instructions.md` — for **Grok web/app UI** only (not Cursor). Grok sees **git**, not live Obsidian/MCP; doc tells Grok to ground answers in **committed** repo files and not pretend runtime access.
 - Start here: `Docs/Contract-Index.md` (this file).
 - Then follow:
   - `Docs/Safety-Invariants.md`

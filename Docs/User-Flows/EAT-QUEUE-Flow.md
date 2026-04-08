@@ -58,6 +58,8 @@ When the user says **PROCESS TASK QUEUE** (or EAT-QUEUE with clear intent for th
 
 ## References
 
+- **Pass 3 (inline drain):** For why Pass 3 may skip despite a repair line on **PQ**, and **`repair_first`** single-slot behavior, see [EAT-QUEUE-Pass-3-Operator-Guide](EAT-QUEUE-Pass-3-Operator-Guide.md).
+
 - [Pipelines/Queue-Pipeline](../Pipelines/Queue-Pipeline.md)
 - [Rules/Dispatcher-Rule](../Rules/Dispatcher-Rule.md)
 - [Rules/Watcher-Result-Contract](../Rules/Watcher-Result-Contract.md)

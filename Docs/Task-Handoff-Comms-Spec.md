@@ -65,7 +65,7 @@ Both lines share the same **`task_correlation_id`** (new UUID per `Task` invocat
 | `schema_version` | int | yes | Currently `1` |
 | `task_correlation_id` | string | yes | UUID for this `Task` pair |
 | `parent_task_correlation_id` | string \| null | conditional | **Required** on both records of a **nested helper** `Task` (L2→helper): equals **`pipeline_task_correlation_id`** from the L1→L2 hand-off. **`null`** or omit for L0→L1 and L1→L2 **top-level** dispatches |
-| `record_type` | string | yes | `handoff_out` \| `return_in` |
+| `record_type` | string | yes | `handoff_out` \| `return_in` \| `intent_snapshot` \| `intent_actual_receipt` (receipt types: see § **Intent tracking rows**) |
 | `iso_timestamp` | string | yes | ISO 8601 when the record is written |
 | `from_actor` | string | yes | e.g. `layer0_chat`, `layer1_queue`, `layer2_roadmap`, `layer2_ingest`, `helper_validator`, … |
 | `to_actor` | string | yes | Target role or `subagent_type` label for the callee |
@@ -141,6 +141,51 @@ List applied rules in **`sanitization_rules_applied`**.
   - Run-Telemetry / queue dispatch_ledger entries that record the same `task_correlation_id` as having been invoked.
 - If a pipeline claims in its ledger that a required helper was `invoked_ok` (or `invoked_empty_ok`) but there is **no** matching Task-Handoff-Comms pair for that helper and `subagent_type`, treat this as a structural contract violation (non-compliant attestation).
 - If Layer 1 records a pipeline dispatch as successful but there is **no** Task-Handoff-Comms pair with `subagent_type` equal to that pipeline name and the expected `task_correlation_id`, treat that as a dispatch bug rather than an absent pipeline.
+
+---
+
+## Intent tracking rows (`intent_snapshot`, `intent_actual_receipt`)
+
+**Normative:** [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § **Parallel execution tracking — task-handoff receipts + option_evaluation**. When **`tracking.intent_receipts_enabled`** is **true** in Second-Brain-Config, the Python harness (`scripts.eat_queue_core`) and/or Layer 1 **append** one line per row below to the **same** JSONL path as Task pairs (`{technical_bundle_root}/task-handoff-comms.jsonl`).
+
+### Shared fields (both receipt types)
+
+| Field | Type | Required | Notes |
+|-------|------|----------|--------|
+| `schema_version` | int | yes | Use `1` |
+| `record_type` | string | yes | `intent_snapshot` or `intent_actual_receipt` |
+| `iso_timestamp` | string | yes | ISO 8601 when written |
+| `queue_entry_id` | string | yes | Queue entry `id` |
+| `parent_run_id` | string | yes | EAT-QUEUE / plan parent run id |
+| `project_id` | string | yes | `"-"` if N/A |
+| `vault_root` | string | yes | Workspace path |
+| `parallel_track` | string | yes | Track id or `"-"` |
+| `queue_lane` | string | yes | Effective lane (`default` if omitted on entry) |
+| `mode` | string | yes | Queue mode (e.g. `RESUME_ROADMAP`) |
+| `from_actor` | string | yes | e.g. `eat_queue_core` or `layer1_queue` |
+| `to_actor` | string | yes | `intent_tracking` |
+| `subagent_type` | string | yes | `intent_tracking` (placeholder for schema parity with Task rows) |
+| `body` | string | yes | Minimal JSON summary of receipt payload (or `"{}"`) |
+| `sanitization_rules_applied` | string[] | yes | Often `[]` |
+
+**`parent_task_correlation_id`:** use `null` for receipt rows. **`task_correlation_id`:** new UUID per receipt line (distinct from pipeline Task ids).
+
+**`intent_snapshot`** additionally SHOULD include `params_hash` (string), optional `params_redacted` (object) for audit.
+
+**`intent_actual_receipt`** — required keys in `body` JSON or as top-level fields alongside the above:
+
+| Field | Type | Notes |
+|-------|------|--------|
+| `task_correlation_id` | string | Pipeline correlation if known, else `"-"` |
+| `timestamp` | string | Same instant as `iso_timestamp` |
+| `status_class` | string | `success` \| `provisional_success` \| `failure` |
+| `status` | string | Short disposition |
+| `divergence_codes` | string[] | Allowlist per Queue-Sources |
+| `planned_action` | string | |
+| `actual_action` | string | |
+| `ledger_ref` | string[] | Forward-ref for `roadmap-state-execution.md` frontmatter; may be empty |
+
+Optional: `telemetry_path`, `validator_report_path`, `execution_state_refs`, `intent_snapshot_id`, `retryable`.
 
 ---
 

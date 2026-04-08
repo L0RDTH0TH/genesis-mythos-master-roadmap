@@ -10,9 +10,21 @@ status: active
 
 This note defines the **indexed layer model** (L0–L2) and the **helper family** (Validator, Research, Internal Repair Agent) for automation in the vault. All "must" obligations are **conditional**: they apply only when the scenario specifies (e.g. Queue **must** run Research **only when** there is a research queue item being eaten). Pipeline (Layer 2) prompts are **explicit and conditional**, not run-without-purpose.
 
-**See also:** [[3-Resources/Second-Brain/Subagent-Safety-Contract]], [[3-Resources/Second-Brain/Queue-Sources]], [[3-Resources/Second-Brain/Docs/Prompt-Craft-Subagent|Prompt-Craft-Subagent]], [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Spec|Validator-Tiered-Blocks-Spec]], [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]], [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]], [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]] (illustrative EAT-QUEUE deepen trace; subordinate to queue/roadmap contracts), `.cursor/rules/agents/queue.mdc`, `.cursor/agents/*.md`
+**See also:** [[3-Resources/Second-Brain/Subagent-Safety-Contract]], [[3-Resources/Second-Brain/Queue-Sources]], [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]], [[3-Resources/Second-Brain/Docs/Prompt-Craft-Subagent|Prompt-Craft-Subagent]], [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Spec|Validator-Tiered-Blocks-Spec]], [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]], [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]], [[3-Resources/Second-Brain/Docs/Examples/Roadmap-Deepen-Dry-Run-Reference|Roadmap-Deepen-Dry-Run-Reference]] (illustrative EAT-QUEUE deepen trace; subordinate to queue/roadmap contracts), `.cursor/rules/agents/queue.mdc`, `.cursor/agents/*.md`
 
 **Why three pipeline modes (`quality` / `balance` / `speed`)?** Routine **RESUME_ROADMAP** runs with pre-deepen research and nested validation could stretch toward very long wall-clock times; the bundled **validator profiles** trade depth on **Layer 1** post–little-val checks and **Layer 2** nested IRA/compare work against speed, while **hard** validator signals and **safety escalation** still force the full path. Defaults and thresholds live in [[3-Resources/Second-Brain-Config|Second-Brain-Config]] / [[3-Resources/Second-Brain/Parameters|Parameters]]; operator semantics and escape hatches are in [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]].
+
+---
+
+## Harness gates (MUST when scenario applies)
+
+| Gate | Owner | Reference |
+|------|--------|-----------|
+| **A.5i** return parse (`nested_subagent_ledger`, **`blocked_scope`**, attestation) | Layer 1 | [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.5i**; [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4 |
+| **`nested_subagent_ledger` + conditional `blocked_scope`** on final return | Layer 2 pipelines | [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §2; [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]] |
+| **TodoWrite** phase lifecycle | Layer 2 + helpers | § TodoWrite (below) |
+
+Harness does **not** override § **Conditional obligation** — each **must** still keys off its scenario.
 
 ---
 
@@ -20,7 +32,7 @@ This note defines the **indexed layer model** (L0–L2) and the **helper family*
 
 - **Layer 2 — `nested_subagent_ledger`:** **All** queue-dispatched pipelines that use nested helpers (ingest, archive, organize, distill, express, research, roadmap) **must** return a verbose, ordered ledger of nested **`Task`** calls (Validator, IRA, Research), skill-only steps (little val), and contract skips, including **verbatim** `host_error_raw` when the host rejects `subagent_type` or returns `resource_exhausted` (sanitized per spec). Full schema: [[3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec|Nested-Subagent-Ledger-Spec]]. The same object appears in the pipeline Run-Telemetry note body and as fenced YAML in the Task return (roadmap: before optional `prompt_craft_request` and final `queue_continuation`).
 - **Layer 1 — `dispatch_ledger` (recommended):** The Queue subagent records each outbound **`Task`** it performs (pipeline, post–little-val validator, PromptCraft, bootstrap) so operators can tell **L1 never launched** vs **L2 nested failure**. See `queue.mdc` **(3c)** and the spec.
-- **Watcher-Result:** EAT-QUEUE embeds **`nested_subagent_ledger`** YAML in **`trace`** for roadmap and **non-roadmap** pipelines when present (length cap + link to Run-Telemetry). Missing ledger on gated success → **Errors.md** `nested_ledger_missing_or_unparseable` (roadmap v1 soft gate; other pipelines analogous when **`queue.strict_nested_ledger_all_pipelines`** is **true**). See `queue.mdc` **A.6**.
+- **Watcher-Result:** EAT-QUEUE embeds **`nested_subagent_ledger`** YAML in **`trace`** for roadmap and **non-roadmap** pipelines when present (length cap + link to Run-Telemetry). Missing ledger on gated success → **Errors.md** `nested_ledger_missing_or_unparseable` (roadmap v1 soft gate; other pipelines analogous when **`queue.strict_nested_ledger_all_pipelines`** is **true**). See `queue.mdc` **A.6**; **A.5i** adds **`harness_outcome`** / **`blocked_scope`** echo when applicable.
 - **Continuation log:** When strict nested attestation fails, Layer 1 may append **`.technical/queue-continuation.jsonl`** with **`suppress_reason: nested_attestation_failure`** (not bootstrap-eligible). See [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] and Second-Brain-Config § **`queue`**.
 
 ---

@@ -42,6 +42,24 @@ Conceptual notes must stay **readable** in Cursor and Obsidian. Protection is **
 
 Follow the checklist in [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] § Dual roadmap track (snapshot → set `roadmap_track: execution` → stamp frozen conceptual notes → bootstrap `Templates/Roadmap/Execution`).
 
+## Execution path hand-off (queue / operator)
+
+Paste into **`user_guidance`** or **`prompt`** on **`RESUME_ROADMAP`** / deepen entries when you need to reinforce layout:
+
+```text
+Deepen on execution track only.
+Target root = Roadmap/Execution/
+Mirror the exact conceptual phase folder hierarchy from the current roadmap-state.md.
+Example mapping:
+  Conceptual path → Roadmap/Execution/<same relative folders and filename>
+Do NOT flatten under the Execution root.
+Create any missing Phase-X/ subfolders.
+After write, update all internal links, conceptual_counterpart frontmatter, and workflow_state-execution.md pointers.
+Confirm new path in the hand-off log.
+```
+
+Cross-ref: [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] (RESUME_ROADMAP payloads); [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] § Flat Execution folder hygiene.
+
 ## Unfreeze
 
 Use **`RESUME_ROADMAP`** with **`params.action: "unfreeze_conceptual"`** (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]) only when policy and approval allow editing frozen conceptual notes again.
@@ -53,6 +71,10 @@ Advisory flags in `workflow_state` ## Log **Status / Next** (config: `prompt_def
 ## Control plane v2 (progression gates)
 
 **Conceptual** track does **not** require execution-only artifacts (e.g. depth-4 pseudo-code blocks) for **advance-phase** on phases 5–6 or for deepen **pre-create** at depth ≥4. **Execution** track keeps those gates. Deterministic rules and observability fields live in [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]]; Config: `roadmap.control_plane_v2`.
+
+## Execution tracking linkage (`ledger_ref`)
+
+On the **execution** track, **`1-Projects/<project_id>/Roadmap/Execution/roadmap-state-execution.md`** frontmatter **must** include **`ledger_ref`** as a **YAML array of strings** (stable ids from **`intent_actual_receipt`** rows in **`task-handoff-comms.jsonl`**, e.g. receipt **`task_correlation_id`** or synthetic receipt id) for **each phase rollup** when a deepen or decision-closing run completes. This links junior-visible execution state to the nervous-system receipt trail (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Parallel execution tracking). **`workflow_state-execution.md`** may mirror the same **`ledger_ref`** for the active cursor when operators want a single scroll point.
 
 ## Related
 
