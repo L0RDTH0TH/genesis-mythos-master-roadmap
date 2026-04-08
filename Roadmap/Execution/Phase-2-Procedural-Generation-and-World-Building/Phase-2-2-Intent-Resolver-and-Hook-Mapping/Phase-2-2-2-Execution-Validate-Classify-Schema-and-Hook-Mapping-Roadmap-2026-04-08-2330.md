@@ -110,4 +110,4 @@ func validate_classify_map(envelopes: CanonicalIntentEnvelope[], catalog: HookSc
 ## Related
 
 - Parent secondary: [[Phase-2-2-Execution-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-10-1900]]
-- Next tertiary: **2.2.3** — conflict resolution / merge policy (conceptual: Phase-2-2-3-…)
+- Next tertiary: **2.2.4** — deterministic hook emission / pre-commit handoff (conceptual: Phase-2-2-4-…); see [[Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]]

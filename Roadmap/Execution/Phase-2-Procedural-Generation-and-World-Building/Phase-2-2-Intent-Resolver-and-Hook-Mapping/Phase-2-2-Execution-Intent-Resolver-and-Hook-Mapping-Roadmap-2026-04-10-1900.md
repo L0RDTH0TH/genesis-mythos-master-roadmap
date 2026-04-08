@@ -10,7 +10,7 @@ priority: high
 progress: 40
 handoff_readiness: 85
 handoff_gaps:
-  - "Tertiary execution mirrors 2.2.3–2.2.5 not yet minted on parallel spine (2.2.1–2.2.2 on disk)."
+  - "Tertiary execution mirrors 2.2.4–2.2.5 not yet minted on parallel spine (2.2.1–2.2.3 on disk)."
 created: 2026-04-10
 tags:
   - roadmap
@@ -24,6 +24,7 @@ links:
   - "[[../Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Execution-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-08-1805]]"
   - "[[Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]]"
   - "[[Phase-2-2-2-Execution-Validate-Classify-Schema-and-Hook-Mapping-Roadmap-2026-04-08-2330]]"
+  - "[[Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]]"
 ---
 
 ## Phase 2.2 — Execution intent resolver and hook mapping (parallel spine)
@@ -75,7 +76,7 @@ func resolve_intents(envelopes: IntentEnvelope[], catalog_rev: CatalogRevision) 
 | `G-2.2-Hook-Schema-Binding` | **PASS** | Lane A/B + catalog revision semantics | `owner_signoff_G-2.2-Hook-Schema-Binding_2026-04-10` |
 | `G-2.2-Conflict-Policy` | **PASS** | Conflict classes + merge policy row | `owner_signoff_G-2.2-Conflict-Policy_2026-04-10` |
 | `G-2.2-Lane-Comparand-Parity` | **PASS** | Comparand table | `owner_signoff_G-2.2-Lane-Comparand-Parity_2026-04-10` |
-| `G-2.2-Tertiary-Chain-Deferred` | **FAIL (explicit, non-blocking)** | **2.2.1** minted [[Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]]; **2.2.2–2.2.5** pending | `owner_defer_G-2.2-Tertiary-Chain-Deferred_2026-04-10` |
+| `G-2.2-Tertiary-Chain-Deferred` | **FAIL (explicit, non-blocking)** | **2.2.1–2.2.3** minted ([[Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]], [[Phase-2-2-2-Execution-Validate-Classify-Schema-and-Hook-Mapping-Roadmap-2026-04-08-2330]], [[Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]]); **2.2.4–2.2.5** pending | `owner_defer_G-2.2-Tertiary-Chain-Deferred_2026-04-10` |
 
 ## Deferred safety / CI seams (explicit owner + timebox)
 
