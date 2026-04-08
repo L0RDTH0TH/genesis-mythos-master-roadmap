@@ -10,7 +10,13 @@ project-id: sandbox-genesis-mythos-master
 status: in-progress
 automation_level: semi
 current_phase: 6
-current_subphase_index: "6" # `phase6_primary_rollup_nl_gwt: complete` **2026-04-07**; conceptual next **`advance-phase`** (if PMG adds Phase **7**) / **RECAL**; **execution-track** bootstrap + next **`deepen`** live under [[Execution/workflow_state-execution]] (not a second bootstrap without a new queue line) — see ## Log **2026-04-07 21:05**.
+current_subphase_index: "6" # Track authority is **execution** via [[roadmap-state]] `roadmap_track: execution`; conceptual queue hints at this cursor are advisory-only unless an operator explicitly unlocks conceptual. `phase6_primary_rollup_nl_gwt: complete` **2026-04-07**; live next actions are **execution** deepen/recal/advance on [[Execution/workflow_state-execution]] (no duplicate bootstrap without an explicit new queue line) — see ## Log **2026-04-07 21:05**.
+conceptual_cursor_authority: advisory_only
+conceptual_deepen_permitted: false
+execution_authority_source: 1-Projects/sandbox-genesis-mythos-master/Roadmap/roadmap-state.md#roadmap_track
+execution_authority_expected_value: execution
+track_authority_repair_evidence_id: repair-track-authority-empty-bootstrap-sandbox-20260408T104700Z
+queue_mutation: none
 last_auto_iteration: ""
 iterations_per_phase:
   "1": 14

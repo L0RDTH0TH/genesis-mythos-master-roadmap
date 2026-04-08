@@ -2,7 +2,7 @@
 title: Phase 1.2 - Execution (Procedural generation graph skeleton)
 roadmap-level: secondary
 roadmap_track: execution
-conceptual_counterpart: "[[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-03-30-1605]]"
+conceptual_counterpart: "[[1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-03-30-1605]]"
 phase-number: 1
 subphase-index: "1.2"
 project-id: sandbox-genesis-mythos-master
@@ -103,11 +103,11 @@ function runGenerationGraph(graph, hooks, baseInput):
 
 ## Next structural targets
 
-1. Mint tertiary execution mirror **1.2.1** under this folder with node taxonomy, edge contracts, and deterministic identity/replay hooks.
-2. Re-run Phase 1 roll-up evidence gating after 1.2 sibling tertiary chain starts.
+1. Tertiary execution mirrors **1.2.1-1.2.3** are now minted under this folder; keep link parity and role-boundary contracts synchronized.
+2. Re-run Phase 1 roll-up evidence gating and attestation now that the 1.2 tertiary chain is complete.
 
 ## Related
 
-- Conceptual secondary: [[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-03-30-1605]]
+- Conceptual secondary: [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-03-30-1605]]
 - Execution primary: [[../Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]]
 - Execution state: [[../../roadmap-state-execution]] · [[../../workflow_state-execution]]
