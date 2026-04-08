@@ -19,6 +19,7 @@ Run **two Cursor chats** in parallel on **separate prompt-queue bundles** (sandb
 4. **Layer 0 hand-off** — The parent chat must invoke **`Task(subagent_type: queue)`** with:
    - **`## queue_lane_filter`** plus the lane token (lowercase), and
    - When parallel is on and the lane matches a configured track, **`## parallel_context`** (YAML) with **`resolved_prompt_queue_path`**, **`technical_bundle_root`**, sibling paths, **`parallel_track`**, **`parallel_branch_prefix`**, **`parallel_export_path`**, and **`lane_project_id`** / **`lane_project_root`** / **`roadmap_dir`** when Config defines **`lane_project_id`** (dispatcher.mdc).
+5. **Post-drain recovery expectation** — With lane trigger + config enabled, a fully drained lane can self-seed one continuation via hardened **A.1b** bootstrap when no usable continuation record exists. Bare **`EAT-QUEUE`** still bypasses per-lane bundles.
 
 ## Must-not
 
