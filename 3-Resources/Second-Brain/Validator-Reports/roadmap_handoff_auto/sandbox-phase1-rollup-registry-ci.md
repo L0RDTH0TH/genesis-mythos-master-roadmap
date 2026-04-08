@@ -22,7 +22,7 @@ Execution handoff-audit evidence note confirming that DEF-REG-CI remains intenti
 - Phase 1 execution mirrors available through tertiary **1.2.1** (primary **1**, secondary **1.1** + tertiary **1.1.1**, secondary **1.2** + tertiary **1.2.1**).
 - Deferred artifact class: registry and CI closure proof rows (full automation still execution-tail).
 - Ownership: `roadmap-execution-owner`.
-- Policy: non-blocking deferral until Phase 1 execution roll-up completion **after** tertiary **1.2.2** (subgraph-run semantics) is minted and linked.
+- Policy: non-blocking deferral for registry/CI **automation proof**; structural Phase 1 execution spine is mint-complete through tertiary **1.2.3** per [[../../../1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/roadmap-state-execution]] (supersedes pre-2026-04-08 “wait for 1.2.2” routing).
 
 ## Evidence links
 
@@ -34,5 +34,5 @@ Execution handoff-audit evidence note confirming that DEF-REG-CI remains intenti
 
 - DEF-REG-CI has documented owner, deadline, and execution-policy placement in [[../../../1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/roadmap-state-execution]].
 - Registry/CI **automation proof** remains intentionally deferred (non-blocking) while structural minting continues.
-- **Evidence closure (2026-04-08):** This note plus the execution deferral registry row satisfy **roll-up gate evidence** for `missing_roll_up_gates` / DEF-REG-CI traceability **up to** tertiary **1.2.1**.
-- **Remaining open item (not a DEF gap):** Primary Phase 1 roll-up + full `safety_unknown_gap` clearance still require execution tertiary **1.2.2** (subgraph-run semantics) — see blocker `missing_execution_node_1_2_2` on [[../../../1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/roadmap-state-execution]].
+- **Evidence closure (2026-04-08):** This note plus the execution deferral registry row satisfy **roll-up gate evidence** for `missing_roll_up_gates` / DEF-REG-CI traceability **up to** tertiary **1.2.1** (historical scope line; spine now includes **1.2.2** and **1.2.3** — see execution state).
+- **Superseded (2026-04-08+):** The prior “remaining open item” line that cited **`missing_execution_node_1_2_2`** is **obsolete** — tertiaries **1.2.2** and **1.2.3** are minted on the live parallel spine. **Remaining Phase 1 roll-up work** is **compare/attestation policy** (`phase1_rollup_attestation_pending`, `compare_validator_required: true` on [[../../../1-Projects/sandbox-genesis-mythos-master/Roadmap/Execution/workflow_state-execution]]), **not** a missing **1.2.2** node. Registry/CI **automation proof** remains intentionally deferred (`accepted_non_blocking`).

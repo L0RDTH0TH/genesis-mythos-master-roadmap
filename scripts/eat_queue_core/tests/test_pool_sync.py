@@ -75,6 +75,92 @@ def test_hydrate_filters_lane_and_shared(mini_vault: Path) -> None:
     assert len(out) == 2
 
 
+def test_merge_preserves_lane_only_not_in_central(mini_vault: Path) -> None:
+    """Track PQ lines that match the lane but are absent from the central pool are kept."""
+    pool = mini_vault / ".technical" / "prompt-queue.jsonl"
+    pool.write_text(
+        "\n".join(
+            [
+                _line(
+                    {
+                        "id": "a",
+                        "mode": "RESUME_ROADMAP",
+                        "queue_lane": "godot",
+                        "project_id": "godot-genesis-mythos-master",
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    target = Path(".technical/parallel/godot/prompt-queue.jsonl")
+    track = mini_vault / ".technical" / "parallel" / "godot"
+    track.mkdir(parents=True, exist_ok=True)
+    lone = _line(
+        {
+            "id": "lane-only-1",
+            "mode": "RESUME_ROADMAP",
+            "queue_lane": "godot",
+            "project_id": "godot-genesis-mythos-master",
+        }
+    )
+    (mini_vault / target).write_text(lone + "\n", encoding="utf-8")
+
+    res = hydrate_track_pq_from_pool(
+        vault_root=mini_vault,
+        lane_filter="godot",
+        target_pq=target,
+        strict_central_only=False,
+    )
+    assert res.ok
+    assert res.copied_count == 1
+    assert res.preserved_lane_only_count == 1
+    assert res.preserved_lane_only_ids == ["lane-only-1"]
+    assert res.written_line_count == 2
+
+    lines_out = (mini_vault / target).read_text(encoding="utf-8").strip().splitlines()
+    assert len(lines_out) == 2
+    ids = [json.loads(x)["id"] for x in lines_out]
+    assert ids == ["a", "lane-only-1"]
+
+
+def test_strict_central_only_drops_lane_only(mini_vault: Path) -> None:
+    pool = mini_vault / ".technical" / "prompt-queue.jsonl"
+    pool.write_text(
+        _line(
+            {
+                "id": "a",
+                "mode": "RESUME_ROADMAP",
+                "queue_lane": "sandbox",
+                "project_id": "sandbox-genesis-mythos-master",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    target = Path(".technical/parallel/sandbox/prompt-queue.jsonl")
+    lone = _line(
+        {
+            "id": "orphan",
+            "mode": "RESUME_ROADMAP",
+            "queue_lane": "sandbox",
+            "project_id": "sandbox-genesis-mythos-master",
+        }
+    )
+    (mini_vault / target).write_text(lone + "\n", encoding="utf-8")
+
+    res = hydrate_track_pq_from_pool(
+        vault_root=mini_vault,
+        lane_filter="sandbox",
+        target_pq=target,
+        strict_central_only=True,
+    )
+    assert res.preserved_lane_only_count == 0
+    assert res.written_line_count == 1
+    assert json.loads((mini_vault / target).read_text(encoding="utf-8").strip())["id"] == "a"
+
+
 def test_apply_queue_cleanup_dual_track(mini_vault: Path) -> None:
     track = mini_vault / ".technical" / "parallel" / "sandbox" / "prompt-queue.jsonl"
     pool = mini_vault / ".technical" / "prompt-queue.jsonl"

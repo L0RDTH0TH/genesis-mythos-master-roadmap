@@ -143,9 +143,16 @@ When the instruction contains **EAT-QUEUE**, **Process queue**, **EAT-CACHE**, o
 
 `python3 -m scripts.eat_queue_core.pool_sync --vault-root <vault> --lane <queue_lane_filter> --target-pq <PQ vault-relative>`
 
-Use **PQ** exactly as resolved in **A.0x** (vault-relative). **Do not** skip this step when conditions hold — the central pool **`.technical/prompt-queue.jsonl`** is the operator append target; **PQ** is overwritten with the lane-filtered subset.
+Optional CLI **`--strict-central-only`** forces **legacy** behavior: **PQ** is replaced with **only** the lane-filtered central-pool lines (lane-only rows already in the track **PQ** are **dropped**). When the flag is omitted, **`pool_sync`** reads Second-Brain-Config **`queue.pool_sync_strict_central_only`** (default **false**).
 
-- **Success:** Optionally append **PQAUD** one-line JSON with **`event: pool_hydrate_applied`**, **`lane`**, **`copied_count`**, **`copied_ids`** (from script stdout JSON) when **`queue.audit_log_enabled`** is not **false**.
+**Merge behavior (default, `pool_sync_strict_central_only: false`):** The script **merges** into **PQ**:
+
+1. All central-pool lines that match **`queue_lane_filter`** (track **`queue_lane`** ∪ **`shared`**, same rule as **A.2a**), in **central file order**.
+2. Plus any **lane-only** lines already present in the current track **PQ** file: valid JSONL rows whose **`id`** is **not** among those central lines, whose effective **`queue_lane`** passes **A.2a** for this lane, in **track file order** after the central block. Rows with a mismatched **`queue_lane`** for this track are **not** preserved (counted in script output as **`skipped_cross_lane_lines`**). **`id`** collisions resolve in favor of the **central** line.
+
+**Do not** skip this step when conditions hold. The central pool **`.technical/prompt-queue.jsonl`** remains the **primary append target** for new work; per-track **PQ** is **refreshed from the pool** without silently deleting legitimate lane-only entries that were never mirrored to the pool (unless strict mode is enabled).
+
+- **Success:** Optionally append **PQAUD** one-line JSON with **`event: pool_hydrate_applied`**, **`lane`**, **`copied_count`**, **`copied_ids`**, **`preserved_lane_only_count`**, **`preserved_lane_only_ids`**, **`written_line_count`** (from script stdout JSON) when **`queue.audit_log_enabled`** is not **false**.
 - **Failure (non-zero exit, invalid JSON, I/O):** Append **Errors.md** (`error_type: pool_hydrate_failure`), **Watcher-Result** **`status: failure`**, message prefix **`pool_hydrate_failed`** — **stop** the prompt-queue flow (do not read/dispatch **PQ** this run).
 
 ## A.0z. Lane-scoped project root (parallel track)

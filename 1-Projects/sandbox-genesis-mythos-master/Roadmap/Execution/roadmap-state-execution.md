@@ -12,7 +12,7 @@ roadmap_track: execution
 status: in-progress
 current_phase: 1
 completed_phases: []
-version: 3
+version: 4
 last_run: 2026-04-10T13:43:00Z
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
@@ -42,6 +42,8 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 - **State-sync (2026-04-08 queue repair):** `last_run` is pinned to the latest authoritative workflow row family (**2026-04-10 13:43:00Z** sync-outputs). Phase 1 primary roll-up remains intentionally **Open (advisory)** until compare-validator closure attestation clears blocker-family codes; this is a policy gate, not a metadata drift.
 - **Nested helper attestation evidence:** [[workflow_state-execution#Nested helper attestation evidence]] (machine-verifiable timestamps tracked there; do not treat prose-only claims as proof).
 - **Safety unknown gap (hygiene refresh 2026-04-08):** Hostile `safety_unknown_gap` is **not** tracked against tertiary **1.2.2** anymore because [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-03-30-1805]] is minted with deterministic closure and AC coverage. Residual safety uncertainty is now explicitly bounded to **cross-slice roll-up chronology/attestation completeness**; tertiary **1.2.3** is minted and the remaining blocker is `phase1_rollup_attestation_pending`.
+- **Workflow log supersession (2026-04-08 18:52Z, IRA):** [[workflow_state-execution]] ## Log row **`2026-04-08 15:23`** remains **append-only history** but must **not** be read as live “next mint **1.2.2**” routing — tertiaries **1.2.2**/**1.2.3** are minted; see **Phase summaries** + **2026-04-08 18:52** supersession row. **Primary rollup** stays Open only for **compare/attestation**, not missing subgraph nodes.
+- **Automation `safety_unknown_gap` bounds (IRA):** Residual “unknown” splits cleanly into (a) **DEF-REG-CI** / **DEF-GMM-245** automation-proof deferrals per the registry table — **not** silently production-closed — and (b) **roll-up/compare attestation** pending (`compare_validator_required: true`), **not** “missing **1.2.2** slice” once that note exists on disk.
 - **Roll-up evidence (DEF-\*):** Evidence notes [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci]] and [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245]] were refreshed on **2026-04-08** to include the **1.2.1** mirror and to mark **evidence-complete for L1 hostile review** for deferral traceability (automation proof still deferred per DEF rows).
 - Conceptual roadmap-state: [[../roadmap-state]]
 - Distilled core (shared): [[../distilled-core]]
@@ -91,11 +93,56 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 - Canonical tuple remains intentionally open while blocker-family codes persist: `phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`, `compare_validator_required: true`; follow-up must not be suppressed until compare pass clears `missing_roll_up_gates` and `blocker_tuple_still_open_explicit`.
 - Scope discipline maintained: execution authority surfaces only; no conceptual phase-note body edits; no queue mutation in Layer 2.
 
+### Handoff-audit post–empty-bootstrap reconcile (execution) — 2026-04-08T18:50Z — `followup-handoff-audit-exec-phase1-rollup-post-empty-bootstrap-20260408T181500Z`
+
+- **Post–`empty-bootstrap-sandbox-20260408T181500Z`:** reconciled execution cursor **`1.2.3`** and tertiary chain **1.2.1–1.2.3** mint-complete on the live parallel spine; updated Phase 1 execution primary closure-evidence block (`repair_run_id_latest`, `post_empty_bootstrap_reconcile`, `compare_to_report_path_lineage`) and superseded stale **## Next execution slices** pre-mint bullets that contradicted post-reset mint-complete reality.
+- **Tuple authority unchanged:** `phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`, `compare_validator_required: true` until a fresh nested compare pass clears `missing_roll_up_gates` / `blocker_tuple_still_open_explicit` (lineage anchor: [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-followup-handoff-audit-execution-rollup-closure-sandbox-20260408T120900Z-second-pass-20260408T121905Z]]).
+- **Scope:** execution authority surfaces only (`Roadmap/Execution/**`); no conceptual frozen-body edits; no prompt-queue mutation in Layer 2. `parent_run_id: eat-queue-sandbox-20260408-layer1` \| `pipeline_mode_used: balance`.
+
+### Handoff-audit compare-next DEF hygiene (execution) — 2026-04-08T20:18Z — `followup-handoff-audit-exec-phase1-rollup-compare-next-20260408T201800Z`
+
+- **Intent:** Continue Phase 1 primary rollup closure loop with pinned lineage awareness; refresh DEF evidence notes to remove stale **1.2.2** / `missing_execution_node_1_2_2` contradictions vs live spine (**1.2.1–1.2.3** minted).
+- **Nested cycle:** first pass [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-handoff-auto-exec-phase1-rollup-compare-next-20260408T201800Z-first-pass.md]] → IRA → hygiene on [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci]] + [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245]] → second pass [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-handoff-auto-exec-phase1-rollup-compare-next-20260408T201800Z-second-pass.md]] (`regression_status: improved`; residual `missing_roll_up_gates`, `blocker_tuple_still_open_explicit`).
+- **Authority:** **`phase_1_rollup_closed` not flipped** — tuple remains `phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`, `compare_validator_required: true` until a pass returns `log_only` with no rollup blocker-family codes per **## Phase 1 closure gate checklist**.
+- **Pinned lineage anchor (audit):** [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-followup-handoff-audit-execution-rollup-closure-sandbox-20260408T120900Z-second-pass-20260408T121905Z]] (supplementary; **not** a closure grant).
+- **Scope:** execution authority + validator-report hygiene only; no conceptual frozen-body edits; no prompt-queue mutation in Layer 2.
+
+### Handoff-audit compare-next Layer 2 (`233000Z` first pass) — 2026-04-08T23:30Z — `followup-handoff-audit-exec-phase1-rollup-compare-next-20260408T201801Z`
+
+- **Queue:** `followup-handoff-audit-exec-phase1-rollup-compare-next-20260408T201801Z` (`parent_run_id: eatq-sandbox-20260408-l1-a`, `pipeline_task_correlation_id: pcorr-sandbox-rollup-201801`).
+- **Nested `roadmap_handoff_auto` first pass:** [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-handoff-auto-exec-phase1-rollup-compare-next-20260408T233000Z-first-pass.md]] — `primary_code: missing_roll_up_gates`, `recommended_action: needs_work`, `reason_codes: [missing_roll_up_gates, blocker_tuple_still_open_explicit]` (policy gate: rollup tuple remains open until compare clears blocker families).
+- **IRA:** `.technical/Internal-Repair-Agent/roadmap/2026-04/sandbox-genesis-mythos-master-ira-call-1-followup-handoff-audit-exec-phase1-rollup-compare-next-20260408T201801Z.md` — aligned **`workflow_state-execution`** compare lineage pointers to **`233000Z`** first pass; **no** checklist flip / **no** `phase_1_rollup_closed` grant.
+- **Second nested compare:** see companion report path emitted after `compare_to_report_path` = first-pass `…233000Z-first-pass.md` (below once second pass exists).
+- **Authority unchanged:** `phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`, `compare_validator_required: true`.
+- **Scope:** execution authority surfaces only; lane **sandbox** / parallel_track **sandbox**.
+
+### Handoff-audit nested cycle replay (execution) — 2026-04-08T19:24Z — `followup-handoff-audit-exec-phase1-rollup-after-empty-bootstrap-replay-20260408T190000Z`
+
+- **Replay intent:** Post–empty-bootstrap queue lineage; re-run execution Phase **1** roll-up **`handoff-audit`** with balance-mode nested **`Task(validator)` → `Task(internal-repair-agent)` → `Task(validator)`** compare to lineage anchor `sandbox-genesis-mythos-master-followup-handoff-audit-execution-rollup-closure-sandbox-20260408T120900Z-second-pass-20260408T121905Z`.
+- **First nested pass:** [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-roadmap-handoff-auto-exec-20260408T192410Z.md]] — `primary_code: missing_roll_up_gates`, `recommended_action: needs_work`, `regression_status: same` (blocker families unchanged).
+- **Second nested pass (compare to first):** [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-roadmap-handoff-auto-exec-second-pass-20260408T201500Z.md]] — `regression_status: same`; rollup closure still blocked under **`execution_v1`**.
+- **Tuple authority unchanged:** `phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`, `compare_validator_required: true` — **no** closure flip until compare clears `missing_roll_up_gates` / `blocker_tuple_still_open_explicit`.
+- **Scope:** execution surfaces only; `parent_run_id: queue-eat-sandbox-20260408-layer1` \| `pipeline_mode_used: balance` \| `queue_lane: sandbox`.
+
 ### Handoff-audit repair compare hold (execution) — 2026-04-08T18:35Z — `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T130523Z`
 
 - Continuation of execution Phase 1 roll-up compare closure loop from origin `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T124512Z`: Layer 2 re-audited parallel-spine trace (primary + secondaries **1.1**/**1.2** + tertiaries **1.1.1** + **1.2.1–1.2.3**), updated closure-evidence `repair_run_id_latest` on [[Execution/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430#Handoff-audit closure evidence (execution)]], reaffirmed DEF evidence registry rows unchanged.
 - **Nested helpers:** `Task(validator)` and `Task(internal-repair-agent)` were **not invocable** in this Layer 2 runtime — no new validator report paths from this run; canonical tuple remains **open** (`phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`, `compare_validator_required: true`) until Layer 1 compare / post–little-val clears `missing_roll_up_gates` and `blocker_tuple_still_open_explicit` per prior compare artifacts (e.g. [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-followup-handoff-audit-execution-rollup-closure-sandbox-20260408T120900Z-second-pass-20260408T121905Z]]).
 - **Scope:** execution authority surfaces only; no conceptual phase-note body edits; no queue mutation in Layer 2. `parent_run_id: eatq-sandbox-layer1-20260408T183000Z` \| `force_layer1_post_lv: true`.
+
+### RESUME_ROADMAP deepen nested cycle (empty-queue bootstrap) — 2026-04-08T22:00Z — `empty-bootstrap-sandbox-20260408T181500Z`
+
+- **Nested `roadmap_handoff_auto`:** first pass [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-roadmap-handoff-auto-exec-empty-bootstrap-20260408T181500Z-20260408-validator-pass.md]] (`primary_code: missing_roll_up_gates`, `recommended_action: needs_work`, `severity: medium`).
+- **IRA (post–first pass):** [[../../../../.technical/Internal-Repair-Agent/roadmap/2026-04/sandbox-genesis-mythos-master-ira-call-1-empty-bootstrap-sandbox-20260408T181500Z.md]] — append-only authority note; **does not** flip `phase_1_rollup_closed` or retire `blocker_id: phase1_rollup_attestation_pending`.
+- **Policy:** spine mint-complete through **1.2.3**; remaining blocker is **roll-up compare attestation** (`phase1_rollup_attestation_pending`), not missing execution nodes.
+- **Scope:** `Roadmap/Execution/**` only; `parent_run_id: queue-eat-sandbox-20260408-layer1` \| `pipeline_mode_used: balance`.
+
+### Handoff-audit post–empty-bootstrap Layer 2 (execution) — 2026-04-08T22:05Z — `followup-handoff-audit-exec-phase1-post-empty-bootstrap-layer2-20260408T220500Z`
+
+- **Lineage compare (operator):** first pass [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-roadmap-handoff-auto-exec-empty-bootstrap-20260408T181500Z-20260408-validator-pass.md]]; second pass (compare-to-first) [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-roadmap-handoff-auto-exec-empty-bootstrap-20260408T181500Z-second-pass-compare-20260408T220500Z.md]] (`regression_status: same`, `primary_code: missing_roll_up_gates`, `reason_codes` include `missing_roll_up_gates`, `blocker_tuple_still_open_explicit`).
+- **Authority:** **`phase_1_rollup_closed` not flipped**; Phase 1 closure gate checklist rows for compare / `missing_roll_up_gates` remain **unchecked** until a pass returns `log_only` with blocker-family clear (per **## Phase 1 closure gate checklist** above).
+- **Runtime:** this dispatch could not launch **fresh** nested `Task(validator)` / `Task(internal-repair-agent)` (host: Cursor `Task` tool not exposed to Layer 2 here) — **no duplicate** nested cycle; 22:00Z artifacts remain the authoritative compare lineage. Layer 1 post–little-val hostile **`roadmap_handoff_auto`** still applies when enabled.
+- **Scope:** execution authority surfaces only; `parent_run_id: queue-eat-sandbox-20260408-layer1` \| `queue_lane: sandbox` \| `effective_track: execution`.
 
 ### Handoff-audit Layer2 nested cycle + IRA hygiene (execution) — 2026-04-08T21:00Z — `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T130523Z`
 
@@ -146,3 +193,10 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 - **Resolution:** consumed a stale bootstrap-era `RESUME_ROADMAP` `deepen` follow-up after confirming active execution mirrors already include Phase 1 primary, secondary branches **1.1** and **1.2**, and tertiary chain **1.1.1** + **1.2.1-1.2.3** in the parallel spine.
 - **Write discipline:** no remint, no flattening, no out-of-order phase creation; cursor stays at execution **`1.2.3`** and remains aligned with [[workflow_state-execution]].
 - **Continuation:** keep canonical roll-up tuple (`phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`) and route next action to execution `handoff-audit` compare closure.
+
+### HANDOFF_AUDIT_REPAIR — workflow log chronology — 2026-04-08T18:15Z — `handoff-audit-repair-empty-bootstrap-sandbox-20260408T181500Z`
+
+- **Issue:** provisional `state_hygiene_failure` from source `empty-bootstrap-sandbox-20260408T181500Z` — the corresponding ## Log data row had been appended **after** **2026-04-10** rows, breaking strict Timestamp monotonicity (contradicted sync-outputs claim of full chronological reorder).
+- **Repair:** moved the **`2026-04-08 18:15`** row to correct order (**after** `2026-04-08 16:42`, **before** `2026-04-08 18:35`); updated row prose + [[workflow_state-execution]] frontmatter `last_handoff_audit_run_id`.
+- **Authority unchanged:** `phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`; rollup closure still pending compare-attestation per execution policy.
+- **Scope:** execution surfaces only; no prompt-queue mutation; `parent_run_id: eat-queue-sandbox-20260408-layer1`.

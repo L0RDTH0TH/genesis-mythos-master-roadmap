@@ -17,11 +17,11 @@ Deterministic **`eat_queue_run_plan.json`** is produced by the **`scripts/eat_qu
 
 ## Central pool hydration (`pool_sync`)
 
-When **`queue.central_pool_fanout_enabled`** is **`true`** and **`full_cycle`** runs with **`--lane`** and **`--queue`** pointing at a **per-track** `prompt-queue.jsonl` (not the legacy pool path), **`run_full_eat_queue_cycle`** hydrates the track file from **`.technical/prompt-queue.jsonl`** before planning (same filter as Layer 1 **A.2a**). With **`--apply-cleanup`**, consumed ids are removed from **both** the track **PQ** and the central pool (`apply_queue_cleanup_dual_track`).
+When **`queue.central_pool_fanout_enabled`** is **`true`** and **`full_cycle`** runs with **`--lane`** and **`--queue`** pointing at a **per-track** `prompt-queue.jsonl` (not the legacy pool path), **`run_full_eat_queue_cycle`** **merges** the lane-filtered central pool into the track file before planning (same filter as Layer 1 **A.2a**), **preserving lane-only** rows already on disk unless **`queue.pool_sync_strict_central_only`** is **`true`** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.4**). With **`--apply-cleanup`**, consumed ids are removed from **both** the track **PQ** and the central pool (`apply_queue_cleanup_dual_track`).
 
 Layer 1 must still run **`python3 -m scripts.eat_queue_core.pool_sync`** per **A.0.4** when the orchestrator is off.
 
-CLI (manual / CI):
+CLI (manual / CI). Optional **`--strict-central-only`** forces overwrite with pool-only lines (drops lane-only tail):
 
 ```bash
 PYTHONPATH=. python3 -m scripts.eat_queue_core.pool_sync \

@@ -1,3 +1,41 @@
+### 2026-04-08 19:42 — Sandbox handoff-audit post-empty nested_attestation_failure (balance_mode_helper_skip)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-08T19:42:43Z | state-inconsistent |
+
+#### Trace
+- request_id: `followup-handoff-audit-exec-phase1-post-empty-bootstrap-layer2-20260408T220500Z`
+- PQ: `.technical/parallel/sandbox/prompt-queue.jsonl`
+- `Task(roadmap)` ledger: `nested_validator_first`, `ira_post_first_validator`, `nested_validator_second` → `task_error` / `task_tool_invoked: false` (`host_no_task_tool`).
+- Per queue.mdc strict nested return gates: **do not** add to `processed_success_ids`; disposition `nested_attestation_failure`.
+- Layer 1 `Task(validator)` echo: `nested_attestation_gap: true`, `contract_satisfied: false`, report `sandbox-genesis-mythos-master-roadmap-handoff-auto-L1-postlv-followup-handoff-audit-exec-phase1-post-empty-bootstrap-20260408T220500Z.md`.
+
+#### Summary
+**Root cause**: Roadmap subagent runtime could not invoke nested `Task(validator)` / IRA for balance-mode handoff-audit.
+**Impact**: Queue line **retained**; rollup sibling entry consumed separately with follow-up `201801Z` appended.
+**Suggested fixes**: Re-run EAT-QUEUE lane sandbox from a host where roadmap nested Task helpers are available, or rely on Layer 1 validator-only path with explicit operator acknowledgment.
+**Recovery**: Watcher-Result failure line; PQ still contains post-empty id.
+
+### 2026-04-08 19:25 — Sandbox RESUME_ROADMAP deepen nested attestation (balance helpers task_error)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-08T19:25:00Z | confidence-below-threshold |
+
+#### Trace
+- request_id: `empty-bootstrap-sandbox-20260408T181500Z`
+- PQ: `.technical/parallel/sandbox/prompt-queue.jsonl`
+- `Task(roadmap)` returned with `nested_validator_first` / `nested_validator_second` / `ira_post_first_validator` as `task_error` (`task_tool_invoked: false`) — Layer 2 host lacks nested Task primitive.
+- Layer 1 `Task(validator)` roadmap_handoff_auto (b1) completed: `severity: medium`, `primary_code: missing_roll_up_gates`, report `sandbox-genesis-mythos-master-roadmap-handoff-auto-l1-b1-empty-bootstrap-20260408T191500Z.md`.
+- A.7: entry **not** added to `processed_success_ids`; follow-up `followup-handoff-audit-exec-phase1-rollup-after-empty-bootstrap-replay-20260408T190000Z` appended to sandbox PQ.
+
+#### Summary
+**Root cause**: Mandatory balance-mode nested helper Tasks could not be invoked inside the roadmap subagent runtime; Layer 1 hostile validator ran separately.
+**Impact**: Dispatch treated as `nested_validation_provisional`; bootstrap line retained; handoff-audit follow-up queued.
+**Suggested fixes**: Re-run from a host where nested `Task(validator)` / IRA are available for roadmap, or process the appended handoff-audit line on the next EAT-QUEUE.
+**Recovery**: Watcher-Result lines + mirror; see Validator report path in trace.
+
 ### 2026-04-08 18:15 — EAT-QUEUE sandbox Task launch unavailable (Proof-on-failure)
 
 | pipeline | severity | approval | timestamp | error_type |
@@ -1038,3 +1076,21 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** All five sandbox PQ lines retained unchanged; no `processed_success_ids`; no A.7 consumption.
 - **Suggested fixes:** Re-run **EAT-QUEUE lane sandbox** from a parent chat where `Task(queue)` / nested `Task(roadmap)` is available, or process entries manually.
 - **Recovery:** Entries remain on disk for the next successful Layer 1 run; see Watcher-Result lines per `requestId`.
+
+### 2026-04-08 19:02 — Godot HANDOFF_AUDIT_REPAIR nested attestation (Layer 1)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-08T19:02:55Z | nested_attestation_failure |
+
+#### Trace
+- queue_lane_filter: godot
+- parallel_track: godot
+- requestId: `1cbcd635-5b00-4533-b52d-6b246b8dc133`
+- Roadmap return: `nested_validator_first`, `ira_post_first_validator`, `nested_validator_second` with `task_tool_invoked: false`, `host_error_class: nested_task_unavailable`
+- L1 `Task(validator)` b1 completed (medium / `missing_roll_up_gates` / needs_work); entry not added to `processed_success_ids`
+
+#### Summary
+- **Root cause:** Roadmap subagent host cannot invoke nested `Task(validator)` / `Task(internal-repair-agent)`; balance-mode ledger incomplete despite roadmap_core idempotent verify.
+- **Impact:** Repair-class line retained on **PQ**; two forward-class `RESUME_ROADMAP` deepen lines not dispatched (`repair_first` single initial slot used by repair attempt).
+- **Suggested fixes:** Re-run **EAT-QUEUE lane godot** from a host with full nested Task capability, or execute validators/IRA manually per validator report paths.
+- **Recovery:** All three lines remain in `.technical/parallel/godot/prompt-queue.jsonl` and central pool fanout subset.

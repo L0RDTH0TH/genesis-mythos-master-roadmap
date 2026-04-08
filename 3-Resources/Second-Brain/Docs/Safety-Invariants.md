@@ -48,6 +48,12 @@ If either fails: skip the destructive action; log #review-needed; continue with 
 
 ---
 
+## Parallel track PQ (central pool fanout)
+
+When **`queue.central_pool_fanout_enabled`** is true and **`queue.pool_sync_strict_central_only`** is **false** (default), **`pool_sync`** (**A.0.4**) **must not** drop valid per-track **PQ** lines solely because they are missing from the **central pool** — those **lane-only** rows are **merged** back after applying the pool subset (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Lane-only preservation). Strict central-only mode is **opt-in** for debugging or forced resync.
+
+---
+
 ## Nested subagent policy (orchestration safety)
 
 - **Single orchestrator**: Only the **main agent + Queue rule** are allowed to orchestrate:
