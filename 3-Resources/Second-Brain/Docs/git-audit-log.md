@@ -618,3 +618,19 @@ Use a level-3 heading per event for scanability:
 | eat_queue_run_id | — |
 | result | **Lock:** `acquire` succeeded (30s; track `sandbox`). **Hand-off:** Layer 1 block had **`changes_summary`** but no **`clarifier_input`**; **operator/Task** invoked GitForge with explicit “execute commit + audit” — commit message body includes that digest (strict `pending_clarifier` waived for this invocation). **Vault:** commit **`6fa1af9`** — `chore(vault): sandbox EAT-QUEUE bootstrap-exec + deepen (balance)` — staged **only** `.technical/parallel/sandbox/prompt-queue.jsonl`, `.technical/prompt-queue.jsonl`, `3-Resources/Watcher-Result.md`, `3-Resources/Watcher-Result-sandbox.md` (7 insertions / 3 deletions). **Submodules** `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` left **unstaged** (dirty submodule trees). **Tag:** annotated **`gitforge-l1-sandbox-eatq-20260407T120000Z`**. **Vault push:** not available — **`git remote -v` empty** (no `origin`). **`gitforge.modes.balance.export_sync`:** **false** — no rsync/Step 1b to `gmm-roadmap-export` / engine branch. **Release:** `gitforge_lock.py release` OK. |
 | error_excerpt | vault push: no configured remote / push destination |
+
+### 2026-04-08 05:46 UTC — manual operator | completed (engine export)
+
+| Field | Value |
+|-------|--------|
+| mode | balance (manual; mirrors GitForge engine Step 1b) |
+| branch_context | sandbox-genesis-mythos-master |
+| parallel_track | sandbox |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | — (not an EAT-QUEUE tail; operator publish) |
+| actions | audit_logged; export_repo_commit; push_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| integration_branch | iteration-2-roadmap-rules |
+| result | **Spine:** `git checkout origin/iteration-2-roadmap-rules -- .cursor scripts Docs README.md` on **`sandbox-genesis-mythos-master`**. **Step 1b:** `rsync --delete` vault `Roadmap/` + copied `sandbox-genesis-mythos-master-goal.md` and `sandbox-genesis-mythos-master-Roadmap-MOC.md` from `GMM_PROJECT_ROOT`. **Commit:** `a17b5f9` — `chore(engine): sync sandbox vault Roadmap + anchors to GitHub (integration spine)`. **Push:** `origin/sandbox-genesis-mythos-master` — https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/sandbox-genesis-mythos-master. Per [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|git-push-workflow]] (engine branch; rule-sterile spine + project delta). **Note:** Full `git merge origin/iteration-2-roadmap-rules` was aborted due to mass conflicts; spine refresh used **path checkout** from integration tip instead. |
+| error_excerpt | — |
