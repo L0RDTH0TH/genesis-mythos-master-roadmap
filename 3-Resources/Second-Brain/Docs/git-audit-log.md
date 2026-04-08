@@ -634,3 +634,23 @@ Use a level-3 heading per event for scanability:
 | integration_branch | iteration-2-roadmap-rules |
 | result | **Spine:** `git checkout origin/iteration-2-roadmap-rules -- .cursor scripts Docs README.md` on **`sandbox-genesis-mythos-master`**. **Step 1b:** `rsync --delete` vault `Roadmap/` + copied `sandbox-genesis-mythos-master-goal.md` and `sandbox-genesis-mythos-master-Roadmap-MOC.md` from `GMM_PROJECT_ROOT`. **Commit:** `a17b5f9` — `chore(engine): sync sandbox vault Roadmap + anchors to GitHub (integration spine)`. **Push:** `origin/sandbox-genesis-mythos-master` — https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/sandbox-genesis-mythos-master. Per [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|git-push-workflow]] (engine branch; rule-sterile spine + project delta). **Note:** Full `git merge origin/iteration-2-roadmap-rules` was aborted due to mass conflicts; spine refresh used **path checkout** from integration tip instead. |
 | error_excerpt | — |
+
+### 2026-04-08 18:41 UTC — gitforge | failed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules |
+| parallel_track | godot |
+| parallel_branch_prefix | godot- |
+| lane_project_id | godot-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted; export_sync_skipped; tag_attempted; lock_released |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| integration_branch | iteration-2-roadmap-rules |
+| eat_queue_run_id | — |
+| result | **Lock:** `acquire` succeeded (30s; track `godot`). **Branch:** vault **`iteration-2-roadmap-rules`** matches **`gitforge.integration_branch`** — integration rules apply (full vault commit allowed; not engine-only). **Hand-off:** EAT-QUEUE lane godot completed A.7 after **RESUME_ROADMAP deepen**; **`clarifier_input`** absent — **context** block used as run hint in commit body (same waiver pattern as 2026-04-07 sandbox audit). **Vault commit:** **`0b6db5a`** — `chore(vault): godot lane RESUME_ROADMAP deepen post-EAT-QUEUE A.7` — 259 files (full working tree `git add -A`). **Tag:** annotated **`gitforge-l1-godot-eatq-20260410`** on **`0b6db5a`**. **Push:** `git push --dry-run origin iteration-2-roadmap-rules` — **rejected** (remote ahead; non-fast-forward). **`git pull --rebase`:** aborted — **add/add conflicts** replaying unrelated local history. **`git merge origin/iteration-2-roadmap-rules`:** **refusing to merge unrelated histories**. **No force-push** (operator must reconcile). **`gitforge.modes.balance.export_sync`:** **false** — no automated rsync to **`gmm-roadmap-export`** / Step 1b engine line for **`godot-genesis-mythos-master`**. **Engine publish:** follow [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|git-push-workflow]] Step 1b manually with `GMM_PROJECT_ROOT=/home/darth/Documents/Second-Brain/1-Projects/godot-genesis-mythos-master` after vault remote is aligned. **Release:** `gitforge_lock.py release` OK. |
+| error_excerpt | push: non-FF; merge: unrelated histories; rebase: mass add/add conflicts |
