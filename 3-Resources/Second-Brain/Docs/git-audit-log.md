@@ -40,6 +40,26 @@ Use a level-3 heading per event for scanability:
 - Agent contract: `.cursor/agents/gitforge.md`
 - Config: [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**
 
+### 2026-04-08 20:03 UTC — gitforge | completed
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | iteration-2-roadmap-rules (vault); **sandbox-genesis-mythos-master** (export Step 1b); export checkout restored to **godot-genesis-mythos-master** after push |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; commit_attempted; push_attempted; export_sync_attempted |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parent_run_id | — |
+| eat_queue_run_id | — |
+| processed_summary | EAT-QUEUE sandbox lane: 2× RESUME_ROADMAP handoff-audit; Task dispatches clean |
+| result | **Lock:** `gitforge_lock.py acquire` (`parallel_track: sandbox`, timeout 30s) **ok**; **`release` ok**. **Vault:** commit **`bdaf76b`** on `iteration-2-roadmap-rules` — `chore(vault): sandbox A.7a — EAT-QUEUE 2x RESUME_ROADMAP handoff-audit (source: balance)` (25 files). **Submodules:** `Second-Brain-Starter-Kit`, `4-Archives/test-2-genesis-mythos-master` left unstaged. **Vault push:** **`git push origin iteration-2-roadmap-rules`** rejected (**non-fast-forward** vs remote); **`git pull --rebase`** aborted (**mass add/add conflicts** with unrelated remote history) — **vault tip not on GitHub**; operator should reconcile vault remote or use force-with-lease only if intended. **Export (Step 1b engine):** `git switch sandbox-genesis-mythos-master`; `rsync --delete` `Roadmap/` + anchors from `GMM_PROJECT_ROOT=/home/darth/Documents/Second-Brain/1-Projects/sandbox-genesis-mythos-master`; commit **`8132c7b`**; **push** `f97b903..8132c7b` to **`origin/sandbox-genesis-mythos-master` succeeded**. **Config `gitforge.modes.balance.export_sync`:** `false` — Step 1b run per sandbox lane / operator contract (roadmap-only engine line). **Tag:** not created. |
+| error_excerpt | vault push: non-fast-forward; rebase aborted (divergent histories) |
+
 ### 2026-04-07 06:39 UTC — gitforge | completed
 
 | Field | Value |
