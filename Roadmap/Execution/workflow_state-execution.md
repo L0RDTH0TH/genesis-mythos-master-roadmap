@@ -53,3 +53,11 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 | --- | --- | --- | --- |
 | `GMM-2.4.5-*` | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Execution-Layer-Boundary-and-Commit-Pipeline-Roadmap-<mint-ts>.md` | `open` | Track explicit mapping rows from conceptual deferred seam to execution slice evidence. |
 | `CI-deferrals` | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Execution-Foundation-and-Core-Architecture-Roadmap-2026-04-10-1315.md` | `open` | Bind CI seam to owner rows and promote to in-progress only when concrete CI-proof artifact path is added. |
+
+## Conceptual counterpart forward registry
+
+Pending **execution** mirrors on the **parallel spine** (no flat notes at `Execution/` root). Each row links the **conceptual** authority note to the future **execution** path and optional sandbox comparand.
+
+| ID | conceptual_counterpart | Sandbox canonical (comparand) | Planned execution mirror folder (not minted until deepen) | Status |
+| --- | --- | --- | --- | --- |
+| `exec-forward-p42-ux-20260408` | [[../Phase-4-Perspective-Split-and-Control-Systems/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence-Roadmap-2026-04-03-2120#Behavior (natural language)]] | [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Conceptual-Amendments/amend-frontend-player-ux-pc-swap-scheduling-lore-surface-2026-04-08-1400]] (**D-2026-04-08-frontend-player-ux-authority**) | `Roadmap/Execution/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence/` (mirror hierarchy; **Phase 4** not yet on execution tree) | `pending_mint` |

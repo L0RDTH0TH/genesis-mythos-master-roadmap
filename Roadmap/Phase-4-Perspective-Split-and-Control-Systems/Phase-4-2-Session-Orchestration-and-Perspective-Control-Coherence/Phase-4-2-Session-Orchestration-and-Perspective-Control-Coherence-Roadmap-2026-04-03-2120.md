@@ -26,7 +26,8 @@ links:
 ---
 
 > [!note] #handoff-review
-> `handoff_readiness: 86` — secondary **4.2 rollup complete** — **session orchestration** + **perspective-control coherence** over **one** canonical authority lane; **GWT-4.2-A–K** parity checked against **4.2.1–4.2.3** and upstream **3.1.2** / **3.1.4** / **4.1** lane semantics. Queue **`user_guidance`** that named **secondary 4.1 rollup** / **`current_subphase_index: 4.1`** was **stale**; authoritative live cursor was **4.2 rollup** per [[workflow_state]] + Layer 1 `effective_target`. **Tertiary 4.2.1** — [[Phase-4-2-1-Session-Scoped-Orchestration-Hooks-and-Perspective-Transition-Graph-Roadmap-2026-04-03-2125]]; **4.2.2** — [[Phase-4-2-2-Transition-Outcome-Ledger-and-Lane-Projection-Parity-Roadmap-2026-03-31-1200]]; **4.2.3** — [[Phase-4-2-3-Replay-Closure-Orchestration-Repair-and-Operator-Escalation-Readout-Roadmap-2026-03-31-1500]]. Next structural cursor: **4** (Phase **4 primary rollup** NL + **GWT-4** vs secondaries **4.1–4.2**), after **`RECAL-ROAD`** hygiene (~**80–81%** ctx util).
+> `handoff_readiness: 86` — secondary **4.2 rollup complete** — **session orchestration** + **perspective-control coherence** over **one** canonical authority lane; **GWT-4.2-A–K** parity checked against **4.2.1–4.2.3** and upstream **3.1.2** / **3.1.4** / **4.1** lane semantics. Queue **`user_guidance`** that named **secondary 4.1 rollup** / **`current_subphase_index: 4.1`** was **stale**; authoritative live cursor was **4.2 rollup** per [[workflow_state]] + Layer 1 `effective_target`. **Tertiary 4.2.1** — [[Phase-4-2-1-Session-Scoped-Orchestration-Hooks-and-Perspective-Transition-Graph-Roadmap-2026-04-03-2125]]; **4.2.2** — [[Phase-4-2-2-Transition-Outcome-Ledger-and-Lane-Projection-Parity-Roadmap-2026-03-31-1200]]; **4.2.3** — [[Phase-4-2-3-Replay-Closure-Orchestration-Repair-and-Operator-Escalation-Readout-Roadmap-2026-03-31-1500]].
+> **Historical (rollup-time routing):** “Next structural cursor: **4** (Phase **4 primary rollup** …)” described the **post-4.2** queue at **rollup completion** — **superseded** by later global progression (Phase **4** primary rollup through Phase **6**; see [[roadmap-state]] / [[workflow_state]] ## Log). **Live next-step:** use [[workflow_state]] + [[roadmap-state]] (**`roadmap_track: execution`** post **2026-04-08 parity sync**) + [[Execution/workflow_state-execution]] (e.g. forward registry **`exec-forward-p42-ux-20260408`** for Phase **4.2** UX → execution mirror).
 
 ## Phase 4.2 - Session orchestration and perspective control coherence
 
@@ -51,6 +52,17 @@ This secondary slice defines how perspective control modes coordinate with sessi
 1. Perspective control updates are accepted only through session-scoped orchestration hooks.
 2. Lane-specific presentation rules may differ, but control state transitions remain singular and replay-safe.
 3. Session transitions preserve ordering and checkpoint legality inherited from Phase 3 scheduling/durability rules.
+
+### Player-facing UX authority (sandbox-canonical comparand)
+
+**Canonical operator source (sandbox):** [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Conceptual-Amendments/amend-frontend-player-ux-pc-swap-scheduling-lore-surface-2026-04-08-1400]] — decisions anchor **D-2026-04-08-frontend-player-ux-authority** in [[1-Projects/sandbox-genesis-mythos-master/Roadmap/decisions-log|sandbox decisions-log]]. The following bindings apply **in parallel** to this godot Phase **4.2** slice (same design intent as the sandbox lane; godot-specific execution evidence will land under `Roadmap/Execution/` when Phase **4** execution mirrors are minted on the parallel spine).
+
+- **(A) Multi-PC swap (GTA V–class):** Active-character changes use a **zoom-out → traverse → possess** sequence; the prior body becomes NPC / off-camera per orchestration rules without a hard session reload. The **PerspectiveTransitionGraph** ([[Phase-4-2-1-Session-Scoped-Orchestration-Hooks-and-Perspective-Transition-Graph-Roadmap-2026-04-03-2125]]) must admit this transition **class** as a first-class **PerspectiveTransition** (labels + ordering vs session hooks).
+- **(B) Schedules — propose / approve / override:** Players may **propose** in-world schedules; the **DM** has **exclusive approval** — schedules commit only after **DM approve** or **DM override** (including veto or rewrite). No player-unilateral hard commitment that bypasses the single authority lane; aligns with Phase **3** scheduling / checkpoint seams.
+- **(C) Non-goals:** **Mobile / tablet spectator** client — **explicitly deprioritized** until a future product decision elevates it.
+- **(D) Lore / history surface:** Markdown- or Obsidian-shaped trees are **product serialization, chronicle, and audit** — not an instruction to ship the vault’s **automation spine** (queues, MCP, PARA pipelines) inside the runtime.
+
+**Execution track:** When `Roadmap/Execution/Phase-4-Perspective-Split-and-Control-Systems/Phase-4-2-…` execution notes exist, **`deepen`** there with AC/interface rows citing this block; pending registry: [[Execution/workflow_state-execution#Conceptual counterpart forward registry]].
 
 ## Interfaces
 
