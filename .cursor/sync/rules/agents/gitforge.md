@@ -25,3 +25,10 @@ GitForge runs in contexts that must still respect **core-guardrails** (no shell 
 
 - **Only** from Layer 1 **Queue** after **A.7a** conditions hold (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**), and **not** when **`effective_pipeline_mode`** is **`speed`** (GitForge skipped for fast pipeline runs).
 - **Never** from Layer 0 chat directly, never from Layer 2 pipelines.
+
+## GitHub parity invariant (Grok visibility)
+
+- **Operational rule:** Grok is treated as **GitHub-only** unless explicitly provided local artifacts. Therefore, Git operations must treat **published GitHub branch state** as the collaboration surface Grok can verify.
+- When roadmap/content changes are intended for Grok-reviewed branches, GitForge (or manual operator flow when GitForge is skipped) must ensure those changes are **committed and pushed** to the relevant remote branch(es), not left as local-only vault updates.
+- For dual-track runs, keep **all active branches** current (integration + affected engine lane branches) according to the export contract so Grok does not observe stale or contradictory branch state.
+- A run is not considered "Grok-visible complete" until post-push verification confirms the intended file paths are present on GitHub for each targeted branch.

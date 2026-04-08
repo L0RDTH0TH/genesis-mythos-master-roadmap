@@ -66,6 +66,14 @@ When Second-Brain-Config **`gitforge.enabled`** is **true**, post–**EAT-QUEUE*
 
 **References:** [[Subagent-Safety-Contract]], `.cursor/agents/gitforge.md`, `.cursor/rules/agents/gitforge.mdc`, [[Second-Brain-Config]] § **gitforge**.
 
+## Grok visibility rule (GitHub-first)
+
+- **Assumption:** Grok reviews only what is visible on GitHub unless given explicit local excerpts.
+- **Hard rule:** If a change must be visible to Grok, it is not complete until it is **exported, committed, pushed, and verified on the target GitHub branch(es)**.
+- Local vault-only state is treated as **draft/non-authoritative for Grok coordination**.
+- For dual-lane work, keep relevant branches in sync (integration + lane branches) so Grok does not read divergent states.
+- At the end of each publish cycle, verify the exact expected path(s) on GitHub before declaring readiness to Grok.
+
 ## Parallel dual-track EAT-QUEUE (v1)
 
 When Second-Brain-Config **`parallel_execution.enabled`** is **true**, two Cursor chats can run **`EAT-QUEUE lane sandbox`** and **`EAT-QUEUE lane godot`** with **separate** prompt queue files under **`.technical/parallel/<track>/`** (see [[Queue-Sources]] and [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**). **Git remains one vault `.git`:** GitForge uses a **global lock** at **`.technical/.gitforge.lock`** with **`parallel_execution.gitforge.lock_timeout_seconds`** (default 30s). If the lock is held, the second chat’s GitForge run **skips** with an explicit audit entry (**`gitforge_lock_held`**) — do **not** block the rest of Layer 1.
