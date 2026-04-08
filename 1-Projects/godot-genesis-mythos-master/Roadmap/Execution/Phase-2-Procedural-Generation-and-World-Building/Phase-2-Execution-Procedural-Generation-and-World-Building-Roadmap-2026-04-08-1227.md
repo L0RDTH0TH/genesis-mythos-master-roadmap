@@ -11,7 +11,7 @@ progress: 52
 handoff_readiness: 87
 handoff_audit_last: "2026-04-08T22:00:00Z"
 handoff_gaps:
-  - "Tertiaries 2.1.1–2.1.2 minted; tertiaries 2.1.3–2.1.5 and `phase2_gate_replay_traceability` closure still pending."
+  - "Tertiary **2.2.1** next under mirrored `Phase-2-2-Intent-Resolver-and-Hook-Mapping/`; `rollup_2_primary_from_2_2` open until chain + propagation."
 created: 2026-04-08
 tags:
   - roadmap
@@ -23,11 +23,12 @@ conceptual_counterpart: "[[../../Phase-2-Procedural-Generation-and-World-Buildin
 links:
   - "[[../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Execution-Foundation-and-Core-Architecture-Roadmap-2026-04-10-1315]]"
   - "[[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Execution-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-08-1805]]"
+  - "[[Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-Execution-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-10-1900]]"
 ---
 
 ## Phase 2 — Execution world-building spine (parallel mirror)
 
-This note anchors the execution mirror for conceptual Phase 2. Secondary **2.1** and tertiaries **2.1.1–2.1.2** are minted on the parallel spine with explicit gate rows; `rollup_2_primary_from_2_1` propagation is **re-validated** below. Next structural mint targets tertiaries **2.1.3+** when scheduled.
+This note anchors the execution mirror for conceptual Phase 2. Secondary **2.1** + tertiaries **2.1.1–2.1.5** are on the parallel spine; secondary **2.2** (intent resolver) minted **2026-04-10**. `rollup_2_primary_from_2_1` remains **closed** below; `rollup_2_primary_from_2_2` **open** until tertiary chain + propagation.
 
 ## Scope
 
@@ -50,19 +51,23 @@ This note anchors the execution mirror for conceptual Phase 2. Secondary **2.1**
 | --- | --- | --- | --- | --- |
 | `rollup_2_primary_from_2_1` | Secondary 2.1 execution roll-up (`G-2.1-*`) | **closed** | Re-validated **2026-04-08** from [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Execution-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-08-1805]]; owner token `owner_signoff_rollup_2_primary_from_2_1_2026-04-08` on this primary gate map row. | `G-2.1-*` rows show explicit PASS/FAIL verdicts with owner signoff tokens; tertiary chain defer recorded as explicit FAIL (non-blocking). |
 | `phase2_gate_seed_to_world` | Stage-family contract rows in 2.1 | **closed** | Stage-family matrix + ordering in secondary 2.1 (`S0`–`S5`). | Deterministic order keys and failure surfaces per row. |
-| `phase2_gate_validation_parity` | Dry-run vs run parity rows in 2.1.x | in-progress | Tertiaries **2.1.1** (`G-2.1.1-*`) — [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-1-Execution-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-08-2215]]; **2.1.2** (`G-2.1.2-*`) — [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-2-Execution-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-08-2230]]. | **Closed** when full 2.1.x chain carries replay/trace hooks and primary row signs off. |
-| `phase2_gate_replay_traceability` | Replay digest + lineage rows | open | **Pending lineage stub (execution-deferred):** placeholder fields `seed_id`, `manifest_digest`, `commit_envelope_id` tracked in [[#Pending replay lineage — phase2_gate_replay_traceability]]; bidirectional links to tertiaries **2.1.3–2.1.5** when minted. Not closed until chain rows exist. | Replay lineage rows reference seed, manifest digest, and commit envelope IDs with bidirectional links to evidence notes. |
+| `phase2_gate_validation_parity` | Dry-run vs run parity rows in 2.1.x | **closed** | **2026-04-10:** full **2.1.1–2.1.5** chain on disk with `G-2.1.*` rows — [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-1-Execution-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-08-2215]]; [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-2-Execution-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-08-2230]]; [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-3-Execution-Staged-Delta-Bundles-Merge-Seams-and-Apply-Ordering-Roadmap-2026-04-10-1810]]; [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-4-Execution-Bundle-Identity-Seam-Catalog-Stability-and-Replay-Diff-Roadmap-2026-04-08-2241]]; [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-5-Execution-Replay-Ledger-Canonical-Diff-Surface-and-Restore-Cursor-Roadmap-2026-04-10-1830]]. Matches [[../../workflow_state-execution#Execution gate tracker]] `phase2_gate_validation_parity` **closed**. | PASS/FAIL parity rows + tracker sign-off (this row). |
+| `phase2_gate_replay_traceability` | Replay digest + lineage rows | **closed** | **2026-04-10:** tertiaries **2.1.4–2.1.5** minted (bundle identity + replay ledger); see [[workflow_state-execution#Execution gate tracker]]. | Replay lineage rows reference seed, manifest digest, and commit envelope IDs with bidirectional links to evidence notes. |
+| `rollup_2_primary_from_2_2` | Secondary **2.2** execution roll-up (`G-2.2-*`) | open | Stub: [[Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-Execution-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-10-1900]] — tertiary chain **2.2.1+** pending. | PASS/FAIL tokens + owner signoff on secondary; primary row propagation after chain. |
 
 ### Pending replay lineage — `phase2_gate_replay_traceability`
 
-| Artifact key | Placeholder ID (stub) | Back-link target |
+> [!info] Superseded — authoritative lineage on tertiaries
+> The table below retained **historical stub IDs** for traceability. **`phase2_gate_replay_traceability`** is **closed** (see primary row above). Canonical seed→world / ledger fields live in tertiaries **2.1.3–2.1.5** and [[../../workflow_state-execution#Execution gate tracker]]; open structural work is **2.2.x** (see **Next structural execution target**).
+
+| Artifact key | Historical stub (retained) | Authoritative back-link |
 | --- | --- | --- |
-| `seed_id` | `SEED-STUB-PHASE2-2.1.x` | Tertiary chain **2.1.3+** (future) |
-| `manifest_digest` | `MANIFEST-DIGEST-STUB-PHASE2` | Same |
-| `commit_envelope_id` | `COMMIT-ENVELOPE-STUB-PHASE2` | Same |
+| `seed_id` | `SEED-STUB-PHASE2-2.1.x` | Merge/apply + ordering: [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-3-Execution-Staged-Delta-Bundles-Merge-Seams-and-Apply-Ordering-Roadmap-2026-04-10-1810]] |
+| `manifest_digest` | `MANIFEST-DIGEST-STUB-PHASE2` | Bundle identity + catalog: [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-4-Execution-Bundle-Identity-Seam-Catalog-Stability-and-Replay-Diff-Roadmap-2026-04-08-2241]] |
+| `commit_envelope_id` | `COMMIT-ENVELOPE-STUB-PHASE2` | Replay ledger + restore cursor: [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-5-Execution-Replay-Ledger-Canonical-Diff-Surface-and-Restore-Cursor-Roadmap-2026-04-10-1830]] |
 
 > [!note] Transparency
-> This block satisfies **evidence shape** without claiming gate closure. Full **closed** requires minted tertiaries **2.1.3–2.1.5** or explicit scoped FAIL rows per gate ID (not “scheduled” alone).
+> Tertiaries **2.1.3–2.1.5** are **minted**; gate closure for replay/traceability is recorded on this primary row and in **2.1.5**. Remaining open work is **rollup / 2.2.x** (not re-minting 2.1.x).
 
 ### Roll-up propagation receipt (`rollup_2_primary_from_2_1`)
 
@@ -87,7 +92,7 @@ func phase2_build_world(seed_bundle, profile, intents):
 
 1. **AC-2.0-1:** Phase 2 primary contains explicit gate anchors for secondary 2.1 roll-up propagation.
 2. **AC-2.0-2:** Lane A/B comparand semantics stay visible and machine-traceable in this note.
-3. **AC-2.0-3:** Next structural execution mint is unambiguous: tertiary **2.1.3** (next sibling) under mirrored execution path (secondary **2.1** minted; **2.1.1–2.1.2** complete).
+3. **AC-2.0-3:** Next structural execution mint is unambiguous: tertiary **2.2.1** (first child under secondary **2.2**) under `Phase-2-2-Intent-Resolver-and-Hook-Mapping/` — secondary **2.1** + tertiaries **2.1.1–2.1.5** complete; cursor **`2.2.1`** per [[../../workflow_state-execution]].
 4. **AC-2.0-4:** Deferred seam ownership remains explicit and non-blocking at this stage.
 
 ## Deferred seams (execution-open)
@@ -99,8 +104,8 @@ func phase2_build_world(seed_bundle, profile, intents):
 
 ## Next structural execution target
 
-- **Done:** Secondary **2.1** — [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Execution-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-08-1805]]; tertiaries **2.1.1** — [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-1-Execution-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-08-2215]]; **2.1.2** — [[Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-2-Execution-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-08-2230]].
-- **Next:** mint execution tertiary **2.1.3** (next conceptual sibling) under the same mirrored subtree, or `deepen` with explicit scope for replay-traceability gates.
+- **Done:** Secondary **2.1** + tertiaries **2.1.1–2.1.5** (seed-to-world chain); secondary **2.2** — [[Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-Execution-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-10-1900]] (`queue_entry_id: followup-deepen-exec-p21-mint-godot-20260410T180500Z` reconcile).
+- **Next:** mint execution tertiary **2.2.1** (intent envelope normalization) under mirrored `Phase-2-2-Intent-Resolver-and-Hook-Mapping/`.
 
 ## Related
 

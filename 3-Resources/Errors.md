@@ -1,3 +1,41 @@
+### 2026-04-08 20:58 — EAT-QUEUE godot Task launch unavailable (Proof-on-failure)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-08T20:58:35Z | mcp-api |
+
+#### Trace
+- vault: `/home/darth/Documents/Second-Brain`
+- PQ: `.technical/parallel/godot/prompt-queue.jsonl`
+- queue_lane_filter: `godot`
+- parallel_track: `godot`
+- entries: `followup-deepen-exec-p21-mint-godot-20260410T180500Z`, `followup-deepen-exec-p214-tertiary-godot-20260410T181500Z`, `followup-deepen-exec-p222-tertiary-godot-20260408T232000Z`
+- A.0.4 `pool_sync`: ok, `copied_count=3` from central pool
+- Cursor **`Task`** tool not available in this Layer 1 host; cannot invoke `Task(subagent_type: roadmap)` for RESUME_ROADMAP. Per Subagent-Safety-Contract Proof-on-failure; queue lines **not** consumed at A.7
+- A.0.5: `eat_queue_run_plan.json` exists with `parent_run_id=eatq-fullcycle-ccd8110c0e5d` — no matching `parent_run_id` in hand-off → advisory fallback to legacy A.1 ordering (no Python-orchestrator dispatch)
+
+#### Summary
+**Root cause**: Queue orchestrator runtime lacks the Cursor `Task` primitive required to launch the Roadmap subagent.
+**Impact**: All three godot-lane RESUME_ROADMAP lines remain on **PQ**; no pipeline mutations this run.
+**Suggested fixes**: Re-run **EAT-QUEUE lane godot** from the primary Cursor chat / host where `Task(queue)` and nested `Task(roadmap)` are available.
+**Recovery**: Watcher-Result canonical + godot mirror; PQ unchanged.
+
+### 2026-04-08 21:00 — EAT-QUEUE godot repeat (full_cycle refresh; Task still unavailable)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | low | none | 2026-04-08T21:00:23Z | plugin-unavailable |
+
+#### Trace
+- Re-ran `python3 -m scripts.eat_queue_core.full_cycle` → new **`parent_run_id=eatq-fullcycle-dabf6aabb884`**; first intent **`followup-deepen-exec-p21-mint-godot-20260410T180500Z`** (balance micro_workflow with nested validators + L1 post-lv)
+- Cursor **`Task`** tool still not available in this host; **`Task(roadmap)`** not invoked
+- **PQ** `.technical/parallel/godot/prompt-queue.jsonl` unchanged — three **`RESUME_ROADMAP`** lines remain
+
+#### Summary
+**Root cause**: Same host limitation as the 20:58 entry above.  
+**Impact**: No pipeline mutations; duplicate of prior blocked run.  
+**Suggested fixes**: Re-run **EAT-QUEUE lane godot** from a Cursor session where **`Task(queue)`** / **`Task(roadmap)`** are available.
+
 ### 2026-04-08 19:42 — Sandbox handoff-audit post-empty nested_attestation_failure (balance_mode_helper_skip)
 
 | pipeline | severity | approval | timestamp | error_type |
