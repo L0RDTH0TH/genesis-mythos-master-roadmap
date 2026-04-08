@@ -7,10 +7,14 @@ project-id: godot-genesis-mythos-master
 roadmap_track: execution
 status: in-progress
 priority: high
-progress: 15
-handoff_readiness: 82
+progress: 88
+handoff_readiness: 86
 handoff_gaps:
-  - "Tertiary **2.3.1–2.3.3** minted **2026-04-10** — remaining chain **2.3.4–2.3.5** not yet minted on execution spine."
+  - "Next structural execution target: secondary **2.4** under mirrored `Phase-2-4-*` (see [[../../workflow_state-execution]] `current_subphase_index`)."
+rollup_closure:
+  secondary_2_3_roll_up_closed_at: "2026-04-10T20:35:00Z"
+  owner_signoff_rollup_secondary_2_3_from_tertiaries: "owner_signoff_rollup_secondary_2_3_from_tertiaries_2026-04-10"
+  primary_propagation_token: "owner_signoff_rollup_2_primary_from_2_3_2026-04-10"
 created: 2026-04-10
 tags:
   - roadmap
@@ -26,6 +30,8 @@ links:
   - "[[Phase-2-3-1-Execution-Validation-Test-Plan-and-Acceptance-Criteria-Scaffold-Roadmap-2026-04-10-2105]]"
   - "[[Phase-2-3-2-Execution-Verification-Task-Decomposition-and-Failure-Payload-Contracts-Roadmap-2026-04-10-2145]]"
   - "[[Phase-2-3-3-Execution-Projection-Contract-Branch-Warm-Cache-Guardrails-and-Operator-Pick-Traceability-Roadmap-2026-04-10-2206]]"
+  - "[[Phase-2-3-4-Execution-Bound-Projection-Contract-Continuation-Warm-Cache-Validation-Trace-Roadmap-2026-04-10-2230]]"
+  - "[[Phase-2-3-5-Execution-Projection-Ordering-Rollup-Companion-and-Commit-Block-Parity-Roadmap-2026-04-10-1935]]"
 ---
 
 ## Phase 2.3 — Execution pipeline validation and pre-commit verification (parallel spine)
@@ -74,11 +80,21 @@ func validate_pre_commit(bundle: PreCommitVerificationBundle, gates: GateCatalog
 
 | Gate ID | Verdict | Evidence in this note | Owner signoff token |
 | --- | --- | --- | --- |
-| `G-2.3-Bundle-Assembly` | **OPEN** | Seam table + pseudocode stub | pending |
-| `G-2.3-Gate-Ordering` | **OPEN** | Spine-order row vs **2.1** | pending |
-| `G-2.3-Mandatory-Fail-Blocks-Commit` | **OPEN** | Pass/fail semantics | pending |
-| `G-2.3-Lane-Comparand-Parity` | **OPEN** | Comparand table | pending |
-| `G-2.3-Tertiary-Chain-Pending` | **OPEN** | Tertiaries **2.3.1–2.3.3** minted (**2026-04-10**); **2.3.4+** still pending | pending |
+| `G-2.3-Bundle-Assembly` | **PASS** | Seam table + pseudocode stub + tertiary evidence [[Phase-2-3-1-Execution-Validation-Test-Plan-and-Acceptance-Criteria-Scaffold-Roadmap-2026-04-10-2105]] | `owner_signoff_G-2.3-Bundle-Assembly_2026-04-10` |
+| `G-2.3-Gate-Ordering` | **PASS** | Spine-order row vs **2.1** + **2.3.2** task ordering | `owner_signoff_G-2.3-Gate-Ordering_2026-04-10` |
+| `G-2.3-Mandatory-Fail-Blocks-Commit` | **PASS** | Pass/fail semantics + **2.3.5** commit parity | `owner_signoff_G-2.3-Mandatory-Fail-Blocks-Commit_2026-04-10` |
+| `G-2.3-Lane-Comparand-Parity` | **PASS** | Comparand table (aligned across **2.3.1–2.3.5**) | `owner_signoff_G-2.3-Lane-Comparand-Parity_2026-04-10` |
+| `G-2.3-Tertiary-Chain-Complete` | **PASS** | Tertiary **2.3.1–2.3.5** PASS rows propagated below; secondary rollup row closed **2026-04-10** (`followup-deepen-exec-p23-rollup-godot-20260410T203500Z`) | `owner_signoff_rollup_secondary_2_3_from_tertiaries_2026-04-10` |
+
+## Tertiary evidence propagation (`G-2.3.*` ← **2.3.1–2.3.5**)
+
+| Secondary `G-2.3` gate | Upstream tertiaries | PASS basis (tertiary gate rows) |
+| --- | --- | --- |
+| `G-2.3-Bundle-Assembly` | **2.3.1** | `G-2.3.1-Matrix-Complete`, `G-2.3.1-AC-IDs` PASS — [[Phase-2-3-1-Execution-Validation-Test-Plan-and-Acceptance-Criteria-Scaffold-Roadmap-2026-04-10-2105]] |
+| `G-2.3-Gate-Ordering` | **2.3.2** + **2.3.1** matrix | `G-2.3.2-Tasks-Bound`, `G-2.3.2-Payload-Contracts` PASS — [[Phase-2-3-2-Execution-Verification-Task-Decomposition-and-Failure-Payload-Contracts-Roadmap-2026-04-10-2145]] |
+| `G-2.3-Mandatory-Fail-Blocks-Commit` | **2.3.5** + **2.3.2** | `G-2.3.5-Commit-Parity`, `G-2.3.5-Ordering-Determinism` PASS — [[Phase-2-3-5-Execution-Projection-Ordering-Rollup-Companion-and-Commit-Block-Parity-Roadmap-2026-04-10-1935]] |
+| `G-2.3-Lane-Comparand-Parity` | **2.3.1–2.3.5** | Lane A/B rows PASS on each tertiary (`G-2.3.*-*-Lane-Comparand-Parity` where present) |
+| `G-2.3-Tertiary-Chain-Complete` | **2.3.1–2.3.5** | Structural chain complete: **2.3.3** [[Phase-2-3-3-Execution-Projection-Contract-Branch-Warm-Cache-Guardrails-and-Operator-Pick-Traceability-Roadmap-2026-04-10-2206]]; **2.3.4** [[Phase-2-3-4-Execution-Bound-Projection-Contract-Continuation-Warm-Cache-Validation-Trace-Roadmap-2026-04-10-2230]]; **2.3.5** (above) |
 
 ## Deferred safety / CI seams (explicit owner + timebox)
 
