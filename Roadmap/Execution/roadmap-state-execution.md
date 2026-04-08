@@ -13,7 +13,7 @@ status: in-progress
 current_phase: 1
 completed_phases: []
 version: 1
-last_run: 2026-04-07T14:00:00Z
+last_run: 2026-04-08T15:26:00Z
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 ---
@@ -29,7 +29,7 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 - Phase 1: in-progress — **primary execution mirror minted 2026-04-10** — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]] (`handoff_readiness` **85** post–IRA hygiene; AC table + deferrals); **secondary 1.1 minted 2026-04-07** — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-03-30-0500]] (`handoff_readiness` **85**; typed interfaces + pseudocode + AC table); **tertiary 1.1.1 minted 2026-04-10** — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-03-30-0431]] (`handoff_readiness` **86**; commit gateway interfaces + deterministic AC rows); **secondary 1.2 minted 2026-04-10** — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-03-30-1605]] (`handoff_readiness` **86**; generation graph contracts + deterministic ordering AC rows); **tertiary 1.2.1 minted 2026-04-07** — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-03-30-1705]] (`handoff_readiness` **87**; node taxonomy, edge semantics, and deterministic topological-order AC rows); deferrals **DEF-REG-CI** / **DEF-GMM-245** remain explicit. **next:** execution tertiary **1.2.2** under the same parallel spine
 - Phase 2: pending
 - Phase 3: pending
-- Phase 4: pending
+- Phase 4: stub — **2026-04-08** execution mirror stub for conceptual **4.2** UX amendment (D-2026-04-08): [[Phase-4-Perspective-Split-and-Control-Systems/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence-Roadmap-2026-04-03-2120]] (`status: stub`; `handoff_readiness: 0`; parallel spine — not a roll-up). Authoritative conceptual behavior: [[../Phase-4-Perspective-Split-and-Control-Systems/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence/Phase-4-2-Session-Orchestration-and-Perspective-Control-Coherence-Roadmap-2026-04-03-2120]]
 - Phase 5: pending
 - Phase 6: pending
 
@@ -38,7 +38,8 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 - **Historical (pre–2026-04-10):** An empty `Roadmap/Execution/**` tree was **expected** immediately after bootstrap; the first execution **`RESUME_ROADMAP` `deepen`** mints the parallel spine.
 - **Current (2026-04-07):** Phase **1** primary + secondary **1.1** + tertiary **1.1.1** + secondary **1.2** + tertiary **1.2.1** execution mirrors are on disk — see **## Phase summaries**. Authoritative next structural target is tertiary **1.2.2** under `Phase-1-2-Procedural-Generation-Graph-Skeleton/`.
 - **Roll-up guardrail:** Phase 1 execution roll-up **must remain open** until tertiary **1.2.2** is minted and linked from both `1.2` and `1.2.1`; this prevents premature closure while structural evidence is still incomplete.
-- **Safety unknown gap:** `safety_unknown_gap` remains active for Phase 1 roll-up until 1.2.2 provides explicit subgraph-run semantics and closure-check evidence.
+- **Safety unknown gap (narrowed 2026-04-08):** Hostile `safety_unknown_gap` is **no longer a blanket “unknown”** — remaining scope is **explicit**: subgraph-run semantics + closure-check AC rows on execution tertiary **1.2.2** (see planned path in **Execution roll-up gate table**). Tertiary **1.2.1** already pins deterministic graph-pass semantics; **1.2.2** closes the last pre–roll-up safety slice.
+- **Roll-up evidence (DEF-\*):** Evidence notes [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci]] and [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245]] were refreshed on **2026-04-08** to include the **1.2.1** mirror and to mark **evidence-complete for L1 hostile review** for deferral traceability (automation proof still deferred per DEF rows).
 - Conceptual roadmap-state: [[../roadmap-state]]
 - Distilled core (shared): [[../distilled-core]]
 
@@ -46,8 +47,8 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 | Deferral ID | Status | Owner | Deadline | Planned artifact path | Resolution artifact |
 | --- | --- | --- | --- | --- | --- |
-| DEF-REG-CI | accepted_non_blocking | roadmap-execution-owner | 2026-04-21 | `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci.md` | [[../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci]] |
-| DEF-GMM-245 | accepted_non_blocking | roadmap-execution-owner | 2026-04-21 | `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245.md` | [[../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245]] |
+| DEF-REG-CI | accepted_non_blocking (evidence note refreshed 2026-04-08) | roadmap-execution-owner | 2026-04-21 | `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci.md` | [[../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci]] |
+| DEF-GMM-245 | accepted_non_blocking (evidence note refreshed 2026-04-08) | roadmap-execution-owner | 2026-04-21 | `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245.md` | [[../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245]] |
 
 ### Execution roll-up gate table (Phase 1)
 
@@ -62,3 +63,10 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note]
 > RECAL-ROAD outputs for the **execution** track can be appended here.
+
+### RECAL-ROAD — 2026-04-08T15:26Z — `l1-a5b-repair-recal-sandbox-p121-20260408T152500Z`
+
+- **Drift score (hygiene):** 0.00 — reconciled **[[workflow_state-execution]]** **`current_subphase_index`** with on-disk last minted tertiary (**`1.2.1`**); removed stale **`1.2.2`** cursor while **Phase-1-2-2** execution mirror is still **pending mint** (see **Execution roll-up gate table**).
+- **Workflow log vs gate table:** repaired contradictory “**1.2** Closed” phrasing in **2026-04-10 13:42** ## Log row; authoritative **1.2** row remains **Open (tertiary chain in progress)** with **`gate_check_result: pending`** until **1.2.2** exists.
+- **Decisions-log:** added **D-Exec-1** supersession note — archived pre-reset **D-Exec-1** cursor bullets are **historical** vs **D-Exec-operator-reset-2026-04-10** live tree.
+- **Validator cite (triggering pass):** [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-handoff-audit-exec-p121-20260408T152400Z.md]] (`primary_code: state_hygiene_failure`).

@@ -8,6 +8,8 @@ subphase-index: "1.2.1"
 project-id: sandbox-genesis-mythos-master
 status: in-progress
 handoff_readiness: 87
+handoff_gaps:
+  - "Primary Phase 1 roll-up remains open until execution tertiary 1.2.2 (subgraph-run semantics); DEF-* evidence notes refreshed 2026-04-08"
 progress: 54
 created: 2026-04-07
 tags:
