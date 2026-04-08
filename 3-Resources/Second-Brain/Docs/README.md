@@ -46,6 +46,7 @@ This folder documents the **post-migration** system: Cursor’s native subagents
 | [CODE-PARA-System](CODE-PARA-System.md) | Canonical CODE lane: PARA mapping, queue routing, safety gates |
 | [Roadmapping-System](Roadmapping-System.md) | Canonical roadmap lane: setup/resume, dual-track, state authority |
 | [Queue-Continuation-Spec](Queue-Continuation-Spec.md) | Machine-readable `queue_continuation` + `queue-continuation.jsonl`; empty-queue bootstrap (config-gated) |
+| [Spin-and-Anti-Spin](Spin-and-Anti-Spin.md) | Canonical **spin** (gate-block + same-path retries) vs telemetry; **anti-spin** intent and cross-refs |
 | [Conceptual-Autopilot-Verification-Checklist](Conceptual-Autopilot-Verification-Checklist.md) | Manual EAT-QUEUE checks for conceptual **`effective_track`** autopilot + **`conceptual_target_reached`** |
 | [Migration-Guide](Migration-Guide.md) | Before → after: monolithic rules to subagents |
 | [Examples](Examples.md) | Concrete usage: INGEST, RESUME-ROADMAP, DISTILL LENS, EAT-QUEUE |

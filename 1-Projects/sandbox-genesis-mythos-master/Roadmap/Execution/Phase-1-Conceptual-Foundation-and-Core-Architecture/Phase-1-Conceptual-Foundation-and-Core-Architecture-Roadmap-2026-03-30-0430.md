@@ -7,9 +7,9 @@ phase-number: 1
 subphase-index: "1"
 project-id: sandbox-genesis-mythos-master
 status: in-progress
-handoff_readiness: 86
+handoff_readiness: 87
 handoff_gaps:
-  - "Primary roll-up closure remains open until tertiary 1.2.1 is minted and audited."
+  - "Primary roll-up closure remains open until roll-up attestation closure evidence is attached (`phase1_rollup_attestation_pending`)."
 progress: 40
 created: 2026-04-10
 tags:
@@ -84,11 +84,37 @@ function executePipeline(mode: RunMode, graph: GraphDef, world: WorldStateV1):
 | **DEF-REG-CI** | Registry + CI proof closure | Execution (post–vertical slice) |
 | **DEF-GMM-245** | **GMM-2.4.5-*** automated compare tables | Execution (reference-only on conceptual) |
 
-## Handoff-audit evidence (2026-04-07)
+## Handoff-audit evidence (2026-04-08)
 
 - DEF roll-up closure evidence note (registry/CI): [[../../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-registry-ci]]
 - DEF roll-up closure evidence note (GMM-2.4.5): [[../../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-phase1-rollup-gmm245]]
-- Phase 1 primary roll-up status remains advisory-open until execution tertiary `1.2.1` is minted and a closure handoff-audit run records final gate closure.
+- Phase 1 tertiary chain `1.2.1` -> `1.2.3` is minted; canonical blocker tuple remains explicit in execution state until final attestation closure is attached: `phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`, `state: Open (advisory pending closure attestation)`.
+
+## Handoff-audit closure evidence (execution)
+
+- `audit_run_id`: `followup-handoff-audit-exec-phase1-rollup-sandbox-20260408T090832Z`
+- `latest_audit_run_id`: `followup-handoff-audit-execution-rollup-closure-sandbox-20260408T120900Z`
+- `audited_scope`: `Phase 1 execution roll-up (1.1 + 1.2 + tertiary 1.2.1-1.2.3 chain + DEF evidence references)`
+- `checklist_outcomes`: `tertiary chain minted=yes; DEF evidence links present=yes; canonical blocker tuple explicit=yes; closure flip requested=no`
+- `unresolved_items_count`: `1` (pending closure attestation compare pass)
+- `reviewer_stamp`: `layer2-roadmap-handoff-audit`
+- `timestamp_utc`: `2026-04-08T09:08:32Z`
+- `validator_report`: [[../../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-execution-followup-handoff-audit-exec-phase1-rollup-sandbox-20260408T090832Z]]
+- `state_refs`: [[../roadmap-state-execution]] · [[../workflow_state-execution]]
+- `closure_proof_artifact`: [[../../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-execution-phase1-rollup-closure-proof-20260408T092247Z]]
+- `closure_compare_artifact`: [[../../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-followup-handoff-audit-execution-rollup-closure-sandbox-20260408T120900Z-second-pass-20260408T121905Z]]
+- `closure_gate`: `keep tuple open until compare validator returns log_only and no missing_roll_up_gates reason codes`
+- `repair_run_id`: `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T122234Z`
+- `repair_intent`: `Resolve blocker-family closure evidence gaps without flipping tuple state prematurely; keep follow-up enabled until compare pass is clean.`
+- `repair_run_id_latest`: `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T130523Z`
+- `repair_origin_request_id`: `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T122234Z`
+- `repair_continuation_intent`: `Continue execution roll-up compare closure loop; retain open-advisory tuple until blocker-family codes clear on compare validator.`
+- `repair_run_id_prior`: `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T124512Z`
+- `closure_evidence_matrix`:
+  - `secondary_1_1_chain`: `closed` (1.1 + 1.1.1 linked and auditable)
+  - `secondary_1_2_chain`: `closed` (1.2 + 1.2.1-1.2.3 linked and auditable)
+  - `deferral_evidence`: `present` (DEF-REG-CI + DEF-GMM-245 report links present)
+  - `tuple_state`: `open_advisory` (`phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`)
 
 ## Next execution slices (mirror order)
 

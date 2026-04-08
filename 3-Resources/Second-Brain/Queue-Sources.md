@@ -82,6 +82,12 @@ When receipt rows were never written (**tracking off**, pre-migration runs, or I
 
 ---
 
+## Spin (canonical meaning)
+
+**Spin** (operator sense): automation **repeatedly hits a designed gate it must not pass** on the current path and keeps trying to **force through** that choke point instead of **expanding elsewhere** in the project. Canonical definition and how anti-spin maps to intent: [[3-Resources/Second-Brain/Docs/Spin-and-Anti-Spin|Spin-and-Anti-Spin]].
+
+---
+
 ## EAT-QUEUE BREAK-SPIN
 
 **Trigger:** User says **EAT-QUEUE BREAK-SPIN** (or **Process queue** with **BREAK-SPIN**) — same **EAT-QUEUE** pass as usual; [[.cursor/rules/always/dispatcher.mdc|dispatcher]] routes to **`Task(queue)`**.
@@ -127,6 +133,20 @@ When receipt rows were never written (**tracking off**, pre-migration runs, or I
 ## Queue continuation (machine-readable)
 
 **Spec:** [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]] — structured **`queue_continuation`** object on **RoadmapSubagent** returns; durable **`.technical/queue-continuation.jsonl`** when **`queue_continuation.continuation_log_enabled`** in [[3-Resources/Second-Brain-Config|Second-Brain-Config]]; **A.1b** empty-queue bootstrap when **`empty_queue_bootstrap_enabled`** (tail **`empty_queue_bootstrap_tail_lines`**, TTL **`empty_queue_bootstrap_max_age_minutes`**). If strict `continuation_eligible` filtering produces no candidate, optional forced fallback **`empty_queue_bootstrap_force_when_unfinished`** may seed one continuation for projects whose `Roadmap/roadmap-state.md` is not `complete` (lookback override: **`empty_queue_bootstrap_force_max_age_minutes`**). If still no record, optional **`empty_queue_bootstrap_prompt_craft_on_no_record`** invokes PromptCraft with unresolved-roadmap hints, and **`empty_queue_bootstrap_deterministic_when_no_record`** provides a final deterministic one-line fallback. **PromptCraft** uses **`craft_source: empty_queue_bootstrap`** and no-record path **`craft_source: empty_queue_bootstrap_no_record`**. Does not replace **`queue_followups`** / **`queue_next`**. **Gate streak persistence:** [[3-Resources/Second-Brain/Docs/Queue-Gate-State-Spec|Queue-Gate-State-Spec]] (**`queue.gate_state_path`**); Layer 1 **A.5f** + optional **`scripts/queue-gate-compute.py`** when Config **`queue.gate_block_detection_enabled`** / **`queue.deterministic_gate_script_enabled`** (see **queue.mdc**).
+
+### Empty-queue bootstrap — dual-track hardened (2026-04-08)
+
+- **Ordering:** lane hydration (**A.0.4**) runs before **A.1b**; hydration copies only existing central-pool lines into lane PQ. Bootstrap remains the recovery path when there are no usable records.
+- **No early exit on empty lane PQ:** For prompt-queue runs, missing/unreadable/empty **PQ** must continue into **A.2** so the zero-valid-entry branch invokes **A.1b**. Empty file state is not a terminal condition by itself.
+- **No-record handling:** Missing/unreadable/empty lane **QCONT** is treated as no-record context (not immediate abort). With **`queue_continuation.empty_queue_bootstrap_create_missing_qcont: true`**, Layer 1 may initialize missing lane QCONT and continue.
+- **Lane-aware deterministic synthesis:** On no-record deterministic branch, synthesized continuation should resolve lane context first and produce a single line that preserves lane routing:
+  - `mode: "RESUME_ROADMAP"`
+  - `project_id` from active lane mapping (`lane_project_id` when available)
+  - `params.action` from `queue_continuation.bootstrap_action`
+  - `params.roadmap_track` from `queue_continuation.bootstrap_track`
+  - `queue_lane` set to active lane for lane-filtered runs
+- **Expected outcome:** `EAT-QUEUE lane sandbox|godot` can self-seed one safe continuation line after total lane drain, while keeping legacy single-queue behavior unchanged outside lane-routed runs.
+- **Bootstrap outcome visibility:** Each **A.1b** invocation must emit an explicit Watcher branch outcome (`empty-queue bootstrap appended`, `empty_queue_bootstrap_deduped_*`, `empty_queue_bootstrap_no_record`, or `OPERATOR ALARM: empty queue bootstrap failed`) so lane-empty recovery is never silent.
 
 **Cursor visibility:** Add `!.technical/queue-continuation.jsonl` beside `prompt-queue.jsonl` in root `.cursorignore` if the file is treated as excluded.
 

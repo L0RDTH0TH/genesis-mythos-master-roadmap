@@ -98,6 +98,23 @@ Allowed shapes:
 - `queue_followups: { next_entry?: { mode: "RESUME_ROADMAP", params?: object, source_file?: string, id?: string, idempotency_key?: string }, suppress_next?: boolean, reason?: string }`
 - `chain_request` (per Subagent-Safety-Contract) when dependencies must run before continuing. In this architecture, `chain_request.queue_items_appended` must be `false` (or omitted) because this subagent does not write queue files; the Queue/Dispatcher is responsible for appending/dispatching dependencies.
 
+## Decision-tracking enforcement (roadmap decisions-log)
+
+When this subagent writes or amends meaningful decision entries in `Roadmap/decisions-log.md`:
+
+1. **Non-trivial decisions require explicit options**
+   - Include an options/tradeoff representation (`Option A/B/C` style or equivalent table semantics) with `why selected` and `why rejected` rationale.
+2. **Append-only behavior**
+   - Do not rewrite historical rationale in place; append dated amendments/clarifications.
+3. **Required linkage block**
+   - Include at least one concrete linkage to roadmap artifacts (phase note, execution state, validator report, queue id) when applicable.
+4. **World Impact conditional requirement**
+   - If the decision affects front-end blindspots or living-world behavior (for example character switching, pacing/time controls, codex/lore surfaces, react feedback loops), include a `World Impact` line and at least one linkage to:
+     - a front-end flow artifact, or
+     - a markdown lore/codex hook artifact.
+5. **Automation compatibility**
+   - Preserve grep-stable conventions from `Decisions-Log-Operator-Pick-Convention` (`Operator pick logged`, `Conceptual authority decision`, `Decision record (...)`) so decisions-preflight and queue checks remain deterministic.
+
 ## Behavior
 
 **Entry condition (hand-off required when queue-dispatched):** When this pipeline was invoked by the Queue subagent for a queue entry, the hand-off block for that entry (task, queue entry, invariants, state files, return format per [Subagent-Safety-Contract](3-Resources/Second-Brain/Subagent-Safety-Contract.md)) must have been **output** as the first content for that entry. If you are running for a queue entry and that hand-off was **not** output above for it, do **not** run the following steps; state: "Hand-off missing. Queue processor must output the hand-off block for this entry before pipeline steps." and stop.

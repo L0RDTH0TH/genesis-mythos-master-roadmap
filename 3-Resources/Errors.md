@@ -1,3 +1,42 @@
+### 2026-04-08 18:15 — EAT-QUEUE sandbox Task launch unavailable (Proof-on-failure)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-08T18:15:00Z | mcp-api |
+
+#### Trace
+- vault: `/home/darth/Documents/Second-Brain`
+- PQ: `.technical/parallel/sandbox/prompt-queue.jsonl`
+- queue_lane_filter: `sandbox`
+- queue_entry_id: `empty-bootstrap-sandbox-20260408T181500Z`
+- detail: Cursor `Task` tool not available in this Layer-1 run host; cannot launch `Task(subagent_type: roadmap)` for RESUME_ROADMAP dispatch. Per Subagent-Safety-Contract Proof-on-failure.
+
+#### Summary
+**Root cause**: Pipeline dispatch requires the Task subagent tool; it was not exposed to the executing queue context.
+**Impact**: A.1b appended bootstrap line remains on sandbox PQ; no roadmap subagent ran.
+**Suggested fixes**: Re-run EAT-QUEUE lane sandbox from a parent where Task launches succeed, or trigger RESUME_ROADMAP directly with a full hand-off.
+**Recovery**: Queue line retained for retry; no A.7 consumption for this entry.
+
+### 2026-04-08 10:47 — Sandbox Bootstrap Provisional Hygiene Failure
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | high | pending | 2026-04-08T10:47:30Z | state_hygiene_failure |
+
+#### Trace
+- request_id: `empty-bootstrap-sandbox-20260408T104041Z`
+- lane: `sandbox`
+- nested_validator_first: invoked (`task_tool_invoked: true`)
+- ira_post_first_validator: invoked (`task_tool_invoked: true`)
+- nested_validator_second: invoked (`task_tool_invoked: true`)
+- layer1_validator: invoked (`status: success`, `severity: high`, `primary_code: state_hygiene_failure`)
+- queue_followup_appended: `repair-track-authority-empty-bootstrap-sandbox-20260408T104700Z`
+
+#### Summary
+**Root cause**: Bootstrap deterministic deepen targeted conceptual while authoritative lane roadmap state is execution; validation remained in hygiene failure with missing roll-up gates and no material state change.
+**Impact**: Bootstrap entry was dispatched but not treated as clean success; original queue line retained and a repair follow-up was appended.
+**Suggested fixes**: Process the queued repair `RESUME_ROADMAP` handoff-audit entry for execution-track authority and state hygiene reconciliation.
+**Recovery**: `#review-needed` — keep queue draining on repair path; do not clean-drain this request until hygiene gates pass.
+
 ---
 title: Pipeline and Workflow Errors
 created: 2026-02-26
@@ -906,3 +945,96 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** **A.7** did **not** consume the expand id; **suppress_clean_drain**; remaining PQ lines `repair-handoff-audit-sandbox-exec-phase1-2-1-20260407T040834Z` and `followup-deepen-exec-phase1-2-2-sandbox-20260407T040834Z` **not** dispatched in this run.
 - **Suggested fixes:** Append sandbox work to **central pool** before `pool_sync`, or disable fanout for track-only appends; fix conceptual `workflow_state.md` log row and handoff-review stamps per validator **next_artifacts**; re-run EAT-QUEUE when nested `Task` is available in roadmap host.
 - **Recovery:** Sandbox **PQ** file restored to three lines (expand first, then repair, then deepen). Run-Telemetry: `.technical/Run-Telemetry/sandbox/eatq-layer1-sandbox-operator-expand-p42-20260408T213500Z.md`.
+
+### 2026-04-08 10:57 — Queue L1 roadmap hygiene gate
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | high | pending | 2026-04-08T10:57:57.578262Z | state-hygiene-failure |
+
+#### Trace
+- queue_lane_filter: sandbox
+- entries: repair-track-authority-empty-bootstrap-sandbox-20260408T104700Z, empty-bootstrap-sandbox-20260408T104041Z
+- Layer1 hostile validator result: severity=high, primary_code=state_hygiene_failure
+
+#### Summary
+- **Root cause:** Roadmap control surfaces still contain conflicting authority narrative across execution state files.
+- **Impact:** Both dispatched roadmap entries treated as provisional failure; clean drain suppressed.
+- **Suggested fixes:** Run HANDOFF_AUDIT_REPAIR entries to reconcile authority and state hygiene before next deepen.
+- **Recovery:** Queue retained originals and enqueued repair/follow-up lines; see Watcher-Result for requestIds.
+
+### 2026-04-08 11:29 — Queue L1 nested attestation failure (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | high | pending | 2026-04-08T11:29:44Z | nested_attestation_failure |
+
+#### Trace
+- queue_lane_filter: godot
+- requestId: followup-6-2-3-godot-20260408T112321Z
+- nested_subagent_ledger reported `task_tool_invoked: false` for required balance deepen helper steps:
+  - nested_validator_first
+  - ira_post_first_validator
+  - nested_validator_second
+
+#### Summary
+- **Root cause:** Roadmap return claimed success and material change but did not provide required nested helper invocation proof for balance/deepen.
+- **Impact:** Entry was not cleanly consumed; clean drain suppressed; follow-up and hygiene-repair lines were appended for controlled continuation.
+- **Suggested fixes:** Re-run via repair handoff-audit and ensure nested helper cycle attestation is present before marking success.
+- **Recovery:** See `Watcher-Result.md` and `Watcher-Result-godot.md` line for `followup-6-2-3-godot-20260408T112321Z`; queued repair id `repair-handoff-audit-godot-conceptual-hygiene-20260408T112944Z`.
+
+### 2026-04-08 11:37 — Queue L1 provisional deepen with little-val failure (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | high | pending | 2026-04-08T11:37:56Z | state_hygiene_failure |
+
+#### Trace
+- queue_lane_filter: godot
+- requestId: empty-bootstrap-godot-20260408T113255Z
+- result_status: #review-needed
+- little_val_ok: false
+- nested_subagent_ledger missing required balance deepen second validator proof:
+  - nested_validator_second.task_tool_invoked=false
+
+#### Summary
+- **Root cause:** Roadmap deepen run returned provisional with unresolved workflow-state log hygiene and failed little-val gate.
+- **Impact:** Entry was not treated as success; bootstrap line was marked `queue_failed`; clean drain remained suppressed.
+- **Suggested fixes:** Run the queued high-priority handoff-audit repair and reconcile state hygiene before next deepen.
+- **Recovery:** Follow-up queued as `repair-handoff-audit-godot-conceptual-hygiene-20260408T113756Z`; see watcher lines for same request id.
+
+### 2026-04-08 12:22 — Queue L1 provisional handoff audit (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-08T12:22:34Z | state_hygiene_failure |
+
+#### Trace
+- queue_lane_filter: sandbox
+- requestId: followup-handoff-audit-execution-rollup-closure-sandbox-20260408T120900Z
+- L1 hostile validator verdict: `severity=medium`, `recommended_action=needs_work`
+- primary_code: `missing_roll_up_gates`
+- reason_codes:
+  - `missing_roll_up_gates`
+  - `blocker_tuple_still_open_explicit`
+  - `state_hygiene_followup_suppressed`
+
+#### Summary
+- **Root cause:** Roadmap handoff-audit returned with unresolved blocker-family gate signals and suppressed follow-up despite pending hygiene closure.
+- **Impact:** Clean success was denied; queue entry was consumed only as provisional disposition and replaced with a high-priority repair follow-up.
+- **Suggested fixes:** Re-run handoff-audit repair with explicit closure evidence for roll-up gates and blocker tuple transition before any clean drain.
+- **Recovery:** Repair queued as `handoff-audit-repair-sandbox-genesis-mythos-master-20260408T122234Z`; see canonical and sandbox watcher lines for the original request id.
+
+### 2026-04-08 18:23 — Sandbox EAT-QUEUE Task launch unavailable (host)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-08T18:23:37Z | task_tool_unavailable |
+
+#### Trace
+- queue_lane_filter: sandbox
+- parallel_track: sandbox
+- PQ: `.technical/parallel/sandbox/prompt-queue.jsonl`
+- entries_blocked: 5 (HANDOFF_AUDIT_REPAIR x1, RESUME_ROADMAP x4)
+- detail: Cursor `Task` subagent tool not available in this execution context; no `Task(roadmap)` / `Task(validator)` dispatches performed per Subagent-Safety-Contract Proof-on-failure
+
+#### Summary
+- **Root cause:** Host did not expose the Task tool required for Layer 1 pipeline dispatch; queue orchestration cannot launch Roadmap/Validator subagents from this run.
+- **Impact:** All five sandbox PQ lines retained unchanged; no `processed_success_ids`; no A.7 consumption.
+- **Suggested fixes:** Re-run **EAT-QUEUE lane sandbox** from a parent chat where `Task(queue)` / nested `Task(roadmap)` is available, or process entries manually.
+- **Recovery:** Entries remain on disk for the next successful Layer 1 run; see Watcher-Result lines per `requestId`.

@@ -62,7 +62,7 @@ Preferred **familial** bundle for reliable **repair-first** + **Pass 3** inline 
 
 ### queue_continuation (empty-queue bootstrap after lane drain)
 
-When the **lane** **PQ** is **empty** after **Pass 3** / **A.7** (desired after balance work + repair churn), **Layer 1** **A.1b** (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**) may **append** the next **`RESUME_ROADMAP`** **`deepen`** from **`.technical/…/queue-continuation.jsonl`** (**QCONT**) or **unfinished-roadmap** fallback per **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**. **`continuation_log_enabled: true`** is required so **A.5e** can populate **QCONT**; if **QCONT** is **missing or empty**, **A.1b** step **2** fails (**queue.mdc**) — keep roadmap runs emitting **`queue_continuation`** and logging enabled.
+When the **lane** **PQ** is **empty** after **Pass 3** / **A.7** (desired after balance work + repair churn), **Layer 1** **A.1b** (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**) may **append** the next **`RESUME_ROADMAP`** **`deepen`** from **`.technical/…/queue-continuation.jsonl`** (**QCONT**) or **unfinished-roadmap** fallback per **[[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-Spec]]**. **`continuation_log_enabled: true`** is still required so **A.5e** can populate **QCONT**, but missing/empty QCONT is now treated as no-record context (not an immediate bootstrap abort).
 
 **Operator intent (balance → next balance cycle):** next bootstrapped line should be **`effective_pipeline_mode`** **balance** (familial **`speed_mode: balance`**), **`params.roadmap_track`** from **`queue_continuation.bootstrap_track`** (default **`conceptual`**), **`params.action`** from **`queue_continuation.bootstrap_action`** (default **`deepen`**) — reflected when **Layer 1** builds the candidate from **`suggested_next`** or **deterministic** **A.1b** step **10** (**not** separate **Queue-Continuation-Spec** v1 schema keys). Override **`bootstrap_track`** in this YAML (or align **[[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]]** defaults) when focus shifts to **execution** or another track.
 
@@ -77,6 +77,7 @@ queue_continuation:
   empty_queue_bootstrap_prompt_craft: false
   empty_queue_bootstrap_prompt_craft_on_no_record: false
   empty_queue_bootstrap_deterministic_when_no_record: true
+  empty_queue_bootstrap_create_missing_qcont: true  # when true, A.1b may initialize missing lane QCONT before no-record fallback; when false, no init, still no-record flow
   bootstrap_track: conceptual   # params.roadmap_track on synthesized deepen lines; use execution, procedural, etc. when needed
   bootstrap_action: deepen      # params.action when synthesizing; must match RESUME_ROADMAP allowed actions
   # bootstrap_source: token workflow_state.md (default) → Layer 1 resolves the file by bootstrap_track:
@@ -193,7 +194,7 @@ parallel_execution:
 - **Pipeline tier:** **`effective_pipeline_mode`** **`speed`** → GitForge is **not** called (fast runs skip automatic vault git). **`balance`** and **`quality`** → **one** **`Task(gitforge)`** after **A.7**, hand-off **`mode: balance`** for both; **`quality`** is traced via **`source_pipeline_mode`** (same git rules as balance — quality is stricter **pipeline** enforcement, not a separate export tier).
 - **export_repo_root**: absolute path to the `gmm-roadmap-export` checkout (see [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]).
 - **integration_branch**: branch name for the **canonical system mirror** — complete `.cursor/` (including **`.cursor/sync/`**), full queue **`scripts/`** (`eat_queue_core`, `queue-gate-compute.py`, **`gitforge_lock.py`**), full **`Docs/`** + **`Docs/Core/`** (all top-level `3-Resources/Second-Brain/*.md`) + **`Docs/Second-Brain-User-Flows/`** (see workflow § Branch purposes and export coverage). Default `iteration-2-roadmap-rules`.
-- **Engine branches (convention):** **`sandbox-genesis-mythos-master`**, **`godot-genesis-mythos-master`** — **rule-sterile** lines: spine must match **`origin/<integration_branch>`**; publish **`Roadmap/`** (includes **`Roadmap/Execution/`** when the project is on the **execution** roadmap track) + anchors from the matching **`lane_project_id`** / `GMM_PROJECT_ROOT`. Pairs with **EAT-QUEUE** **`sandbox`** / **`godot`** lanes via **`parallel_execution.tracks[]`**. Align with [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1b and [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]].
+- **Engine branches (convention):** **`sandbox-genesis-mythos-master`**, **`godot-genesis-mythos-master`** — **roadmap-only** lines: publish **`Roadmap/`** (includes **`Roadmap/Execution/`** when the project is on the **execution** roadmap track) + anchors from the matching **`lane_project_id`** / `GMM_PROJECT_ROOT`. Do **not** publish global `.cursor/`, `scripts/`, or system `Docs/` on engine branches. Pairs with **EAT-QUEUE** **`sandbox`** / **`godot`** lanes via **`parallel_execution.tracks[]`**. Align with [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1b and [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]].
 - **invoke_on_empty_queue**: false — when false, skip GitForge when there were no prompt-queue entries to process after A.1 (Step 0–only or empty file).
 - **invoke_only_on_clean_success**: true — when true, skip GitForge if any prompt-queue entry this run got a failure disposition.
 
@@ -233,7 +234,10 @@ gitforge:
       - "Roadmap/"
       - "<PROJ_ID>-goal.md"
       - "<PROJ_ID>-Roadmap-MOC.md"
-    engine_spine_source: "origin/<integration_branch>"
+    engine_forbidden_prefixes:
+      - ".cursor/"
+      - "scripts/"
+      - "Docs/"
   invoke_on_empty_queue: false
   invoke_only_on_clean_success: true
   modes:

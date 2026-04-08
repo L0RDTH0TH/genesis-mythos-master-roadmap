@@ -39,6 +39,8 @@ Emitted as a **fenced YAML block** at the end of a **RoadmapSubagent** return (a
 
 ### Additive fields (schema_version 1 — anti-spin telemetry)
 
+**Intent:** Telemetry here supports **anti-spin** — lateral expansion when **gates** block the current path; see [[3-Resources/Second-Brain/Docs/Spin-and-Anti-Spin|Spin-and-Anti-Spin]] for the canonical operator definition (not only flat-delta heuristics).
+
 When **`queue.gate_block_detection_enabled`** or **`queue.spin_detection_enabled`** is true and the dispositioned entry is **`RESUME_ROADMAP`** (primary mode), Layer 1 **A.5e** **must** merge these into the **`.technical/queue-continuation.jsonl`** line (use explicit empty objects when not computed, not omission):
 
 | Field | Type | Required when flags on | Description |

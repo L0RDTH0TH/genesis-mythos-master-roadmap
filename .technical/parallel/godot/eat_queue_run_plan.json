@@ -1,24 +1,7 @@
 {
   "schema_version": 1,
-  "parent_run_id": "eatq-godot-20260407T120000Z",
-  "intents": [
-    {
-      "op": "dispatch",
-      "subagent_type": "roadmap",
-      "queue_entry_id": "followup-deepen-exec-p11-spine-godot-20260410T131600Z",
-      "project_id": "godot-genesis-mythos-master",
-      "queue_pass_phase": "initial",
-      "pass_id": "pass1",
-      "dispatch_ordinal": 1,
-      "micro_workflow": [
-        "roadmap_core",
-        "nested_validator_first",
-        "ira",
-        "nested_validator_second",
-        "l1_post_lv"
-      ]
-    }
-  ],
+  "parent_run_id": "eatq-20260408-godot-layer1",
+  "intents": [],
   "consumed_ids": [],
   "strict_mode": true,
   "effective_pipeline_mode": "balance",

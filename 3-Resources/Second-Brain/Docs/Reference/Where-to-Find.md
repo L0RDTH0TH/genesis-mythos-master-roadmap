@@ -51,6 +51,7 @@ Single index so the needle is always in the haystack: where to look for config, 
 | Need | Location |
 |------|----------|
 | **Queue sources** (mode → file, validation, RESUME-ROADMAP append, canonical order, Task-Queue) | [Queue-Sources](../../Queue-Sources.md) |
+| **Spin vs anti-spin** (operator meaning, gates, lateral expansion) | [Spin-and-Anti-Spin](../Spin-and-Anti-Spin.md) |
 | **Queue alias table** (RECAL-ROAD, REVERT-PHASE, etc. → RESUME-ROADMAP params) | [Queue-Alias-Table](../../Queue-Alias-Table.md) |
 | **Prompt queue file** | `.technical/prompt-queue.jsonl` |
 | **Task queue** | `3-Resources/Task-Queue.md` |

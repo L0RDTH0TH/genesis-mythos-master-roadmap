@@ -22,7 +22,7 @@ Use **`git branch --show-current`** in **`export_repo_root`** (Config **`gitforg
 | Export checkout branch | Intent | Mirror procedure (vault → export) |
 |------------------------|--------|-------------------------------------|
 | **`integration_branch`** (e.g. `iteration-2-roadmap-rules`) | **Canonical collaboration branch** — complete picture of **how the system is built and run** (agents, rules, skills, **`.cursor/sync`**, Python queue stack, **`gitforge_lock.py`**, full `Docs/` + **all** `Docs/Core/` backbone `*.md` + **Second-Brain-User-Flows**). | **Step 1 — integration** in [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]. Optionally append one engine’s `Roadmap/` + anchors if `GMM_PROJECT_ROOT` is set. |
-| **Engine line** (e.g. `sandbox-genesis-mythos-master`, `godot-genesis-mythos-master`) | **Per-engine roadmap** for collaborators reading that engine’s phases; spine must **not** drift from integration. | Refresh spine from **`origin/<integration_branch>`** (merge or re-run integration Step 1), then **Step 1b — engine** only (`Roadmap/` + `<PROJ_ID>-goal.md` + MOC from matching **`GMM_PROJECT_ROOT`**). |
+| **Engine line** (e.g. `sandbox-genesis-mythos-master`, `godot-genesis-mythos-master`) | **Per-engine roadmap** for collaborators reading that engine’s phases; branch is roadmap-only. | Run **Step 1b — engine** only (`Roadmap/` + `<PROJ_ID>-goal.md` + MOC from matching **`GMM_PROJECT_ROOT`**). Do **not** publish `.cursor/`, `scripts/`, or system `Docs/` on engine branches. |
 
 **Config mirror:** Second-Brain-Config **`gitforge.export_contract`** documents the same paths for tooling and audits.
 
@@ -94,10 +94,10 @@ When Second-Brain-Config **`parallel_execution.enabled`** is **true** (or the ha
 
 ---
 
-## Branch policy (rule-sterile engine branches)
+## Branch policy (rule-empty engine branches)
 
 - **`gitforge.integration_branch`** is the **complete canonical mirror**: **`.cursor/`** (agents, rules, skills, **`.cursor/sync/`**), **`scripts/`** (`eat_queue_core`, `queue-gate-compute.py`, **`gitforge_lock.py`**), and **`Docs/`** (including **`Docs/Core/`** full backbone and **`Docs/Second-Brain-User-Flows/`**).
-- On an **engine** branch (name **not** equal to **`integration_branch`**): **never** publish a partial ruleset as authoritative. **Refresh spine from `origin/<integration_branch>`**, then sync **only** **Roadmap/** + anchors per **Step 1b** in the **git-push-workflow** doc.
+- On an **engine** branch (name **not** equal to **`integration_branch`**): publish **roadmap+anchors only**. Do not publish `.cursor/`, `scripts/`, or system `Docs/`.
 - Vault **git** operations (commit/push) apply to **whatever repo** contains the vault; export repo is a **separate** clone — follow the workflow for **`GMM_PROJECT_ROOT`** and branch alignment.
 
 ---
@@ -109,6 +109,11 @@ When Second-Brain-Config **`parallel_execution.enabled`** is **true** (or the ha
 3. **Remotes:** If **`vault`** or **`export_repo_root`** has no **`upstream`**, log to **git-audit-log** with `action: remote_check_failed` and instruct operator once; do not guess remotes.
 4. **Credentials / sandbox:** Push may fail in sandboxed agents — log failure; automation is **best-effort**.
 5. **Append** every run to **[[3-Resources/Second-Brain/Docs/git-audit-log|git-audit-log]]** (ISO timestamp, `mode`, `branch_context`, `queue_success`, `actions_attempted`, `result`, optional `error_excerpt` sanitized).
+6. **Engine branch guard:** When current export branch is not **`integration_branch`**, fail the run if staged/changed paths include any of:
+   - `.cursor/**`
+   - `scripts/**`
+   - `Docs/**` (except engine-local roadmap docs explicitly allowed by future policy)
+   Return **`status: failed`** and log `reason: engine_branch_forbidden_global_surfaces`.
 
 **Vault filesystem:** Core guardrails discourage shell **mv/cp/rm** on vault content; **git** CLI for commit/push is allowed here as the dedicated git contract surface.
 

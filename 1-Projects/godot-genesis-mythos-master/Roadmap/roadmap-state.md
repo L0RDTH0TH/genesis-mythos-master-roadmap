@@ -7,7 +7,7 @@ tags:
   - godot-genesis-mythos-master
 para-type: Project
 project-id: godot-genesis-mythos-master
-status: generating
+status: in-progress
 current_phase: 6
 completed_phases:
   - 1
@@ -15,11 +15,12 @@ completed_phases:
   - 3
   - 4
   - 5
-version: 81
-last_run: "2026-04-08-2145"
+version: 82
+last_run: "2026-04-08-1706"
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 roadmap_track: execution
+cursor_authority_model: "workflow_state.current_phase/current_subphase_index are canonical cursor fields; roadmap_track selects default lane routing."
 ---
 
 # Roadmap state — godot-genesis-mythos-master
@@ -91,6 +92,10 @@ roadmap_track: execution
 
 > [!note]
 > RECAL-ROAD outputs (drift, handoff drift, recommendations) can be appended here.
+
+- **2026-04-08 (handoff-audit hygiene — conceptual queue-lock reconcile):** Queue `empty-bootstrap-godot-20260408T103834Z` ran as explicit **conceptual** deepen and minted [[Phase-6-2-Scenario-Matrix-and-Feedback-Closure-Bundle-Roadmap-2026-04-08-1605]] with cursor advance through `6.2.3` in [[workflow_state]] (now advanced to `6.2` for secondary rollup). **Canonical cursor authority for this lineage** is `workflow_state.current_phase/current_subphase_index`; `roadmap_track: execution` remains the project default lane selector only and is not a competing cursor pointer. No `Roadmap/Execution/**` mutation occurred in this conceptual pass. Validator context: `primary_code: state_hygiene_failure`, `reason_codes: contradictions_detected, safety_unknown_gap` (repair closure note).
+- **2026-04-08 (handoff-audit repair — conceptual deferred-evidence reconciliation):** Queue `handoff-audit-repair-empty-bootstrap-godot-20260408T120110Z` (repair-class) re-audited conceptual handoff framing for [[Phase-6-Prototype-Assembly-Testing-and-Iteration/Phase-6-Prototype-Assembly-Testing-and-Iteration-Roadmap-2026-03-30-0430]] and confirmed `handoff_readiness: 86`, `handoff_gaps: []`, `handoff_audit_last` updated on phase note, with no structural cursor change (`[[workflow_state]]` remains `current_phase: 6`, `current_subphase_index: "6"`). L1 validator advisory (`primary_code: missing_roll_up_gates`, `reason_codes: missing_roll_up_gates, execution_deferred_evidence_gap`) is treated as **execution-deferred/non-blocking** for conceptual completion and is now explicitly mirrored in roadmap audit narrative. No `Roadmap/Execution/**` mutation occurred.
+- **Immediate conceptual routing (2026-04-08):** Immediate conceptual next action is **secondary 6.2 rollup** using [[workflow_state]] `current_subphase_index: "6.2"` unless operator explicitly selects `handoff-audit` or `recal` for hygiene-only repairs.
 
 - **2026-04-07 (handoff-audit — repair queue; L1 post-LV `state_hygiene_failure` — [[decisions-log]] Conceptual autopilot **18:35Z** vs **21:05**):** Supersession stamp on **Conceptual autopilot** row **18:35Z** — explicit **post-2026-04-07 21:05** live routing (**`advance-phase`** / **`bootstrap-execution-track`** / **`RECAL`**) so **“next Phase 6 primary rollup”** is not read as current after **`phase6_primary_rollup_nl_gwt: complete`**. Validator cite: `.technical/Validator/roadmap-handoff-auto-godot-gmm-20260407T220800Z-l1postlv-followup-secondary61-rollup.md`. Queue: `repair-l1-hygiene-decisions-log-supersession-godot-20260407T221000Z` \| `parent_run_id: eatq-godot-20260408-layer1` \| `queue_lane: godot` \| **Drift 0.00** / **handoff drift 0.00** (decisions-log hygiene only).
 
