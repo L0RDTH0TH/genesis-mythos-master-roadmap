@@ -2,12 +2,14 @@
 title: Phase 6 — Prototype Assembly, Testing, and Iteration
 roadmap-level: primary
 phase-number: 6
-subphase-index: "1"
+subphase-index: "6"
 project-id: godot-genesis-mythos-master
-status: active
+status: complete
 priority: high
-progress: 80
+progress: 100
 handoff_readiness: 86
+handoff_gaps: []
+handoff_audit_last: 2026-04-08T17:37:56Z
 phase6_primary_checklist: complete
 phase6_primary_rollup_nl_gwt: complete
 created: 2026-03-30
@@ -19,6 +21,7 @@ para-type: Project
 links:
   - "[[godot-genesis-mythos-master-Roadmap-2026-03-30-0430]]"
   - "[[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-06-1200]]"
+  - "[[Phase-6-2-Scenario-Matrix-and-Feedback-Closure-Bundle-Roadmap-2026-04-08-1605]]"
   - "[[Phase-5-Rule-System-Integration-and-Extensibility-Roadmap-2026-03-30-0430]]"
   - "[[Phase-4-Perspective-Split-and-Control-Systems-Roadmap-2026-03-30-0430]]"
   - "[[Phase-3-Living-Simulation-and-Dynamic-Agency-Roadmap-2026-03-30-0430]]"
@@ -45,6 +48,7 @@ Assemble the **Q3 2026** **vertical slice**: one **replay-stable** path from **w
 `progress` is **0–100** for this note’s conceptual slice depth: **~25** = primary NL checklist complete enough to mint secondaries (**6.1+**); **~50+** = secondaries drafted; **100** = phase-ready for execution handoff (instrumentation closure still execution-deferred).
 
 - **Cursor authority:** For **RESUME_ROADMAP** / Layer 1 routing, **`[[workflow_state]]` frontmatter `current_subphase_index`** is authoritative. After rollback ([[Branches/phase-6-operator-rollback-20260405/ROLLBACK-MANIFEST-20260405]]), **secondary 6.1** was re-minted **2026-04-07** — [[Phase-6-1-Vertical-Slice-Manifest-and-InstrumentationIntent-Bundle-Roadmap-2026-04-06-1200]]; **secondary 6.1 rollup** complete **2026-04-07** (CDR [[Conceptual-Decision-Records/deepen-phase-6-1-secondary-rollup-nl-gwt-active-tree-2026-04-07-1805]]); **`phase6_primary_rollup_nl_gwt: complete`** **2026-04-07** (CDR [[Conceptual-Decision-Records/deepen-phase-6-primary-rollup-nl-gwt-active-tree-2026-04-07-2105]]); **`current_subphase_index: "6"`** — next operator **`advance-phase`** / **`bootstrap-execution-track`** / **RECAL** per PMG (no Phase **7** spine in this vault unless added).
+- **Post-6.2 conceptual checkpoint (2026-04-08):** Secondary [[Phase-6-2-Scenario-Matrix-and-Feedback-Closure-Bundle-Roadmap-2026-04-08-1605]] reached rollup-complete status (`6.2.1`-`6.2.3` complete with `handoff_readiness: 86`) and remains linked as conceptual authority extension of Phase 6 primary; this pass keeps **`subphase-index: "6"`** stable to avoid cursor forks between primary and secondary closure narratives.
 
 ## Scope
 

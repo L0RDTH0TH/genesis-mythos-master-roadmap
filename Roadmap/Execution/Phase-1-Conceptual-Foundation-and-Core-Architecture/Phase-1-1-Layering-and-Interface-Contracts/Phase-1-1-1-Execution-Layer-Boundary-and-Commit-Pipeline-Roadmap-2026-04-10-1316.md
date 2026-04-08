@@ -5,10 +5,12 @@ phase-number: 1
 subphase-index: "1.1.1"
 project-id: godot-genesis-mythos-master
 roadmap_track: execution
-status: active
+status: complete
 priority: high
-progress: 41
+progress: 100
 handoff_readiness: 86
+handoff_gaps:
+  - "Follow-on execution 1.2 slice is pending; this tertiary is complete for 1.1 rollup."
 created: 2026-04-10
 tags:
   - roadmap
@@ -84,8 +86,10 @@ func tick_pipeline(raw_intents):
 | Gate anchor | Evidence in this note | Status |
 | --- | --- | --- |
 | `rollup_1_1_from_1_1_1` | Boundary matrix + comparand parity + failure pseudocode branch | ready-for-1.1-rollup |
-| `G-1.1-Commit-Seam` | `IWorldCommitGateway` stub + reject handling path | in-progress |
-| `G-1.1-Boundary-Isolation` | Allowed/forbidden edge table | in-progress |
+| `G-1.1-Commit-Seam` | `IWorldCommitGateway` stub + reject handling path | pass |
+| `G-1.1-Boundary-Isolation` | Allowed/forbidden edge table | pass |
+| `G-1.1-Comparand-Parity` | Lane A/B comparand table states consistent seam behavior expectations | pass |
+| `G-1.1-Risk-Baseline` | Deferred seams and acceptance criteria preserve non-blocking risk boundaries | pass |
 
 ## Deferred seams (explicit)
 

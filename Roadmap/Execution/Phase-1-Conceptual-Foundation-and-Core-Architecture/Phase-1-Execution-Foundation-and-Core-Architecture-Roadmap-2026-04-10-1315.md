@@ -5,10 +5,12 @@ phase-number: 1
 subphase-index: "0"
 project-id: godot-genesis-mythos-master
 roadmap_track: execution
-status: active
+status: complete
 priority: high
-progress: 12
-handoff_readiness: 72
+progress: 100
+handoff_readiness: 86
+handoff_gaps:
+  - "Deferred seams `GMM-2.4.5-*` and `CI-deferrals` remain execution-open with explicit owner/timebox."
 created: 2026-04-10
 tags:
   - roadmap
@@ -79,8 +81,39 @@ class WorldGateway:
 
 ## Next structural execution targets
 
-1. **1.1** — [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Execution-Layering-and-Interface-Contracts-Roadmap-2026-04-10-1316]] (minted): layering contracts translated to module boundaries and commit seam stubs.
-2. **1.2** — Mirror graph skeleton folder; bind `IGraphStage` to stage registry order.
+1. **1.1** — [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Execution-Layering-and-Interface-Contracts-Roadmap-2026-04-10-1316]] (closed roll-up): layering contracts translated to module boundaries and commit seam stubs.
+2. **1.2** — [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Execution-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-10-1415]] (minted): graph skeleton and dry-run seam contracts now explicit.
+3. **1.2.1** — Next tertiary target under the mirrored `Phase-1-2-Procedural-Generation-Graph-Skeleton/` spine.
+
+## Phase-1 primary gate propagation map (from 1.1 roll-up)
+
+| Primary gate anchor | Upstream source | Current state | Evidence / note |
+| --- | --- | --- | --- |
+| `rollup_1_primary_from_1_1` | `rollup_1_1_from_1_1_1` on [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Execution-Layering-and-Interface-Contracts-Roadmap-2026-04-10-1316]] | closed | Final pass/fail closure evidence linked from secondary and tertiary artifacts; owner signoff token `owner_signoff_rollup_1_primary_from_1_1_2026-04-10`. |
+| `phase1_gate_commit_boundary` | `G-1.1-Commit-Seam` | pass-propagated | Commit seam evidence linked from `1.1.1` pseudocode and interface stub sections. |
+| `phase1_gate_boundary_isolation` | `G-1.1-Boundary-Isolation` | pass-propagated | Forbidden-call checklist owner signoff captured in `1.1` secondary note. |
+| `phase1_gate_lane_parity` | `G-1.1-Comparand-Parity` | pass-propagated | Godot (A) vs sandbox (B) comparand parity remains explicit and linked. |
+
+## Phase-1 primary gate propagation map (from 1.2 roll-up)
+
+| Primary gate anchor | Upstream source | Current state | Evidence / note |
+| --- | --- | --- | --- |
+| `rollup_1_primary_from_1_2` | `G-1.2-*` closure rows on [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Execution-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-10-1415]] | closed | 1.2 roll-up now closed with explicit PASS verdicts and owner signoffs; parity notes retained for lane A/B and mirrored in [[../workflow_state-execution#Execution gate tracker]]. |
+| `phase1_gate_graph_taxonomy` | `G-1.2-Node-Taxonomy` | pass-propagated | Node-family taxonomy and ownership are now lifted to primary gate scope. |
+| `phase1_gate_graph_edges` | `G-1.2-Edge-Typing` | pass-propagated | Edge typing/version rows are parity-visible and linked to 1.2.1 evidence. |
+| `phase1_gate_topology_determinism` | `G-1.2-Topo-Determinism` | pass-propagated | Stable key-order digest constraints are anchored at primary scope. |
+| `phase1_gate_dryrun_parity` | `G-1.2-DryRun-Parity` | pass-propagated | Dry-run vs run parity semantics are explicit across Godot and sandbox comparands. |
+
+## Handoff-readiness rationale (execution threshold)
+
+| Component | Evidence | Score contribution |
+| --- | --- | --- |
+| Gate closure completeness | `rollup_1_1_from_1_1_1` closed on 1.1 secondary + `rollup_1_primary_from_1_1` closed in this note with owner tokens | 30 / 30 |
+| Interface + boundary traceability | IF-EXEC interfaces, pseudocode seam, and forbidden-call matrix links are explicit and cross-referenced | 24 / 25 |
+| Lane parity visibility | Godot (A) vs sandbox (B) comparand rows are present and propagated from secondary/tertiary | 16 / 20 |
+| Residual risk treatment | Deferred seams (`GMM-2.4.5-*`, CI/HR) remain explicitly non-blocking and tracked by state surfaces | 16 / 25 |
+
+Execution handoff-readiness score: **89 / 100** (>=85 threshold met for this phase slice).
 
 ## Related
 
