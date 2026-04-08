@@ -101,6 +101,7 @@ Regex hint: `Decision record \(([^)]+)\):`
 
 ## See also
 
+- [[Docs/Decision-Tracking-Framework|Decision-Tracking-Framework]] — canonical schema (tradeoff table, rationale, world impact, linkages)
 - [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] — Definitions and authority
 - [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] — EAT-QUEUE Step 0c / decisions preflight
 - [[Templates/Roadmap/Artifacts/decisions-log|decisions-log template]]

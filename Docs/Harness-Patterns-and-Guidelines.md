@@ -110,6 +110,30 @@ Read-only skills: `vault_mutations: false` (other fields optional).
 | **advisory** | Harness gap (e.g. unparseable ledger, missing **`blocked_scope`** on hard-block path) logged to **Errors.md** and/or **`harness_outcome: advisory`** (or `harness_blocked_scope_missing: true`) in **Watcher-Result** **`trace`**—**do not** change consume/clear semantics beyond what **(b0)** already enforced. **Default** when `harness_validation_mode: advisory`. |
 | **strict_fail** | **`harness_validation_mode: strict`**: treat as harness contract failure—apply **`nested_attestation_failure`** / refuse consumption parity with **(b0)(ii)–(iv)** as if **`strict_nested_ledger_all_pipelines`** / **`strict_nested_return_gates`** applied to the failing check, including missing **`blocked_scope`** when §2.2 requires it. |
 
+### 4.1 Decision completeness signals (queue/harness)
+
+For pipeline returns that add or amend `D-*` decisions, Layer 1 harness should carry decision completeness signals in parse-safe key/value fragments inside Watcher `trace` and (when needed) Errors:
+
+| Signal | Meaning |
+|-------|---------|
+| `decision_option_class` | `explicit_options` \| `single_option` \| `deferred` |
+| `decision_rationale_present` | `true` \| `false` |
+| `decision_linkages_present` | `true` \| `false` |
+| `decision_world_impact_required` | `true` \| `false` |
+| `decision_world_impact_present` | `true` \| `false` |
+| `decision_hygiene` | `pass` \| `needs_repair` |
+
+Interpretation by mode:
+
+- **Advisory mode (`harness_validation_mode: advisory`)**: retain normal consume behavior; emit `decision_hygiene=needs_repair` and log to Errors for follow-up.
+- **Strict mode (`harness_validation_mode: strict`)**: when required fields are missing, treat as harness failure equivalent to `strict_fail` and block queue success consumption for that entry.
+
+Minimum requirement for front-end/living-world decisions:
+
+- `decision_world_impact_required=true`
+- `decision_world_impact_present=true`
+- and at least one linkage to a frontend flow artifact or markdown lore/codex hook.
+
 ```mermaid
 flowchart TD
   dispatch[Layer1_Task_pipeline]
