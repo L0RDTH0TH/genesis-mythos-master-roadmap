@@ -733,3 +733,23 @@ Use a level-3 heading per event for scanability:
 | integration_branch | iteration-2-roadmap-rules |
 | result | **Lock:** `acquire` OK (30s; track `godot`); **`release`** OK. **Vault:** commit **`3cf7ff7`** — `chore(vault): post EAT-QUEUE godot lane A.7a (balance)` (144 files). **`git push origin iteration-2-roadmap-rules`:** rejected **non-fast-forward** vs remote. **`git pull --rebase`:** aborted — **mass add/add conflicts** replaying divergent history (rebase **aborted**; working tree restored to **`3cf7ff7`**). **Operator:** reconcile vault remote vs local (separate clone histories on same GitHub repo) before push — e.g. coordinated merge, or push vault to a different remote/branch per policy. **Export (engine Step 1b):** checkout **`godot-genesis-mythos-master`**; `rsync --delete` `1-Projects/godot-genesis-mythos-master/Roadmap/` → export `Roadmap/` + anchor copies. **Commit:** **`caa2d11`** — `chore(export): sync godot Roadmap from vault (GitForge godot lane)`. **Push:** **`origin/godot-genesis-mythos-master`** — `129e795..caa2d11`. **`gitforge.modes.balance.export_sync`:** false in Config — engine mirror still run for **godot lane** hand-off (roadmap-only branch). |
 | error_excerpt | vault push: non-fast-forward; rebase conflicts — vault commit local-only until operator resolves |
+
+### 2026-04-08 21:35 UTC — gitforge | partial (vault push blocked; export integration + sandbox engine ok)
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | vault: `iteration-2-roadmap-rules`; export: `iteration-2-roadmap-rules` then `sandbox-genesis-mythos-master` |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; vault_commit_attempted; vault_push_attempted; tag_attempted; export_integration_commit_push; export_engine_step1b_commit_push; lock_acquire; lock_release |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| integration_branch | iteration-2-roadmap-rules |
+| eat_queue_run_id | followup-ha-exec-p1-postbootstrap-followup-chain-20260410T185500Z |
+| result | **Lock:** `acquire` OK (30s; track `sandbox`); **`release`** OK. **Clarifier:** queue run id + sandbox A.7a context supplied in Layer 1 hand-off (strict empty-`clarifier_input` waived per prior git-audit precedent). **Vault:** commit **`b50d021`** — `chore(vault): sandbox EAT-QUEUE A.7a followup-ha-exec-p1-postbootstrap 20260410T185500Z (balance)` (41 files). **`git push origin iteration-2-roadmap-rules`:** rejected **non-fast-forward**. **`git pull --rebase`:** aborted — **mass add/add conflicts** (rebase **aborted**; restored **`b50d021`**). **Tag:** annotated **`gitforge-l1-sandbox-eatq-20260410T185500Z`** on **`b50d021`** — **`git push origin` tag** succeeded (tag visible on GitHub; branch tip there does not include `b50d021` until vault history reconciled). **Export repo (`gmm-roadmap-export`):** (1) **`iteration-2-roadmap-rules`** — Step 1 integration rsync from vault → commit **`f578ffc`** — pushed **`4d8bbe6..f578ffc`**. (2) **`sandbox-genesis-mythos-master`** — Step 1b engine mirror from `1-Projects/sandbox-genesis-mythos-master` → commit **`68fbb97`** — pushed **`7dac306..68fbb97`**. **`gitforge.modes.balance.export_sync`:** **false** — mirrors run explicitly for **sandbox lane** publish (same pattern as 2026-04-08 19:49 UTC godot partial entry in this log). |
+| error_excerpt | vault branch push: non-fast-forward; rebase conflicts — vault commits local until operator reconciles with `origin/iteration-2-roadmap-rules` |
