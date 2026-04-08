@@ -125,6 +125,7 @@ function executePipeline(mode: RunMode, graph: GraphDef, world: WorldStateV1):
   - `secondary_1_2_chain`: `closed` (1.2 + 1.2.1-1.2.3 linked and auditable)
   - `deferral_evidence`: `present` (DEF-REG-CI + DEF-GMM-245 report links present)
   - `tuple_state`: `open_advisory` (`phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`)
+- `postbootstrap_followup_chain_queue_id`: `followup-ha-exec-p1-postbootstrap-followup-chain-20260410T185500Z` (2026-04-10T18:55Z handoff-audit; nested `Task` cycle **not** re-run in Layer 2 — await **Layer 1** hostile `roadmap_handoff_auto` or host **`Task`** availability)
 
 ## Next execution slices (mirror order)
 
