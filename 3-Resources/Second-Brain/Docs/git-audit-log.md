@@ -40,6 +40,26 @@ Use a level-3 heading per event for scanability:
 - Agent contract: `.cursor/agents/gitforge.md`
 - Config: [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**
 
+### 2026-04-08 21:22 UTC — gitforge | completed (vault pending_clarifier)
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | **iteration-2-roadmap-rules** (vault); **sandbox-genesis-mythos-master** (export Step 1b) |
+| parallel_track | sandbox |
+| parallel_branch_prefix | sandbox- |
+| lane_project_id | sandbox-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; export_sync_attempted; push_attempted (export) |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parent_run_id | eatq-sandbox-20260408-p1 |
+| eat_queue_run_id | — |
+| processed_summary | EAT-QUEUE lane sandbox: RESUME_ROADMAP handoff-audit; L1 validator; PQ follow-up (per hand-off) |
+| result | **Lock:** `gitforge_lock.py acquire` (`parallel_track: sandbox`, timeout 30s) **ok**; **`release`** after audit append. **Vault:** **no commit** — hand-off lacked **`clarifier_input`** (agents/gitforge.md balance table → `pending_clarifier`); working tree dirty (sandbox + godot roadmap execution, parallel PQ/telemetry, watcher lines, untracked validator/telemetry). Operator: re-invoke GitForge with **`clarifier_input`** or commit manually on `iteration-2-roadmap-rules`. **Export (Step 1b engine):** `git switch sandbox-genesis-mythos-master`; `rsync --delete` `Roadmap/` from `GMM_PROJECT_ROOT=/home/darth/Documents/Second-Brain/1-Projects/sandbox-genesis-mythos-master`; commit **`7dac306`** (`8132c7b..7dac306`); **push** to **`origin/sandbox-genesis-mythos-master` succeeded**. **Config `gitforge.modes.balance.export_sync`:** `false` — Step 1b run per sandbox lane contract (roadmap-only engine line). **Tag:** not created. |
+| error_excerpt | — |
+
 ### 2026-04-08 21:17 UTC — gitforge | completed
 
 | Field | Value |

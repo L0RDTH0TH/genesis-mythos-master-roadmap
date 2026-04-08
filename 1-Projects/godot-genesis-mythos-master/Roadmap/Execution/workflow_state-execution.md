@@ -12,12 +12,12 @@ roadmap_track: execution
 status: in-progress
 automation_level: semi
 current_phase: 2
-current_subphase_index: "2.2.4"
-cursor_transition: "phase2_primary_execution_mint_from_phase1_closure"
+current_subphase_index: "2.3"
+cursor_transition: "rollup_2_2_tertiary_chain_closed_to_phase23_mint"
 last_auto_iteration: ""
 iterations_per_phase:
   "1": 5
-  "2": 11
+  "2": 13
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -25,8 +25,8 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: "51"
-last_conf: "87"
+last_ctx_util_pct: "55"
+last_conf: "85"
 ---
 
 # Workflow state (execution) — godot-genesis-mythos-master
@@ -72,6 +72,8 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 | 2026-04-08 23:15 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]] | 20 | 2 | 47 | 53 | 80 | 51700 / 128000 | +2 | 88 | Minted execution tertiary **2.2.1** (intent envelope normalization + identity binding) on mirrored spine; `G-2.2.1-*` PASS rows + explicit non-blocking defer for registry/CI; composes **2.1** **S1** seam + **2.1.5** replay/diff cursor hooks. Queue cited **2.1.5** mint + parity gates — **2.1.5** already complete (**Iter 18**); **stale_queue_target_reconciled: true** → authoritative cursor was **`2.2.1`**. Cursor → **`2.2.2`**. `queue_entry_id: followup-deepen-exec-p215-tertiary-godot-20260408T231500Z` \| `parent_run_id: eatq-layer1-godot-20260408` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_221_intent_envelope_identity` |
 | 2026-04-08 23:30 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-2-Execution-Validate-Classify-Schema-and-Hook-Mapping-Roadmap-2026-04-08-2330]] | 21 | 2 | 49 | 51 | 80 | 53300 / 128000 | +2 | 88 | Minted execution tertiary **2.2.2** (validate / classify / hook-schema mapping) on mirrored spine; `G-2.2.2-*` PASS rows + explicit non-blocking defer for `GMM-2.4.5-*` / CI; composes **2.2.1** envelopes + catalog revision binding. Queue `followup-deepen-exec-p21-mint-godot-20260410T180500Z` targeted **secondary 2.1** — **already minted** (**Iter 12**); **stale_queue_target_reconciled: true** → authoritative cursor **`2.2.2`**. Cursor → **`2.2.3`**. `queue_entry_id: followup-deepen-exec-p21-mint-godot-20260410T180500Z` \| `parent_run_id: eatq-godot-20260408T180500Z` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_222_validate_classify_schema` |
 | 2026-04-08 23:50 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]] | 22 | 2 | 51 | 49 | 80 | 54900 / 128000 | +2 | 87 | Minted execution tertiary **2.2.3** (conflict resolution / precedence / merge policy) on mirrored spine; `G-2.2.3-*` PASS rows + explicit non-blocking defer for `GMM-2.4.5-*` / CI; composes **2.2.2** classified intents + outlines. Queue `followup-deepen-exec-p222-tertiary-godot-20260408T232000Z` cited **2.2.2** mint — **already on disk** (**Iter 21**); **stale_queue_target_reconciled: true** → authoritative cursor **`2.2.3`**. Cursor → **`2.2.4`**. `queue_entry_id: followup-deepen-exec-p222-tertiary-godot-20260408T232000Z` \| `parent_run_id: eatq-godot-layer1-20260408T232000Z` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_223_conflict_merge_policy` |
+| 2026-04-08 23:51 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-4-Execution-Deterministic-Hook-Emission-Envelope-and-Pre-Commit-Payload-Handoff-Roadmap-2026-04-08-2351]] | 23 | 2 | 53 | 47 | 80 | 56500 / 128000 | +2 | 86 | Minted execution tertiary **2.2.4** (deterministic hook emission envelope + pre-commit payload handoff) on mirrored spine; composes **2.2.3** `ResolvedIntentSet` + `ConflictDecisionLog`; `G-2.2.4-*` PASS rows + explicit non-blocking defer for `GMM-2.4.5-*` / CI; **stale_queue_target_reconciled: false** (queue aligned with **`2.2.4`** cursor). Cursor → **`2.2.5`**. `queue_entry_id: followup-deepen-exec-p224-tertiary-godot-20260408T235100Z` \| `parent_run_id: eatq-layer1-godot-p224-20260408` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_224_hook_emit_precommit` |
+| 2026-04-10 17:05 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-5-Execution-Envelope-Validation-Labels-and-Bundle-Chunk-Ordering-Boundary-Roadmap-2026-04-10-1705]] | 24 | 2 | 55 | 45 | 80 | 58100 / 128000 | +2 | 85 | Minted execution tertiary **2.2.5** (validation labels + chunked bundle boundary + **rollup registry receipt**) on mirrored spine; composes **2.2.4** pre-commit bundles; `G-2.2.5-*` PASS rows + explicit non-blocking defer for `GMM-2.4.5-*` / CI; **closed** **`rollup_2_primary_from_2_2`** with primary propagation row + owner token on Phase 2 primary. Cursor → **`2.3`** (next: mirrored **Phase-2-3-Pipeline-Validation-and-Pre-Commit-Verification** secondary). `queue_entry_id: followup-deepen-exec-p225-tertiary-godot-20260410T170500Z` \| `parent_run_id: eatq-layer1-godot-pass3-p225-20260410` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_225_registry_rollup_closure` |
 
 ## Execution gate tracker
 
@@ -83,7 +85,7 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 | `rollup_2_primary_from_2_1` | Secondary **2.1** execution mirror + `G-2.1-*` evidence rows | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Execution-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-08-1805.md` → primary [[roadmap-state-execution#Phase summaries]] | `closed` | **2026-04-08:** `G-2.1-*` table complete on secondary 2.1; Phase 2 primary gate map row closed with `owner_signoff_rollup_2_primary_from_2_1_2026-04-08`. Tertiary defer tracked as explicit FAIL (non-blocking). |
 | `phase2_gate_validation_parity` | Tertiary chain **2.1.1–2.1.5** + `G-2.1.*` evidence rows | [[roadmap-state-execution#Phase summaries]] — Phase **2** tertiaries under `Phase-2-1-Pipeline-Stages-Seed-to-World/` | `closed` | **2026-04-10:** PASS rows for **2.1.1–2.1.5** on disk + summary updated; advisory execution-deferred seams remain explicit non-blocking FAIL rows only. |
 | `phase2_gate_replay_traceability` | **2.1.4–2.1.5** replay/diff + primary rollup hooks | [[roadmap-state-execution#Phase summaries]] + Phase 2 primary [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Execution-Procedural-Generation-and-World-Building-Roadmap-2026-04-08-1227]] | `closed` | **2026-04-10:** **2.1.5** minted with replay-ledger + diff + restore hooks; primary pending lineage table updated to bidirectional links (registry/CI still deferred per map). |
-| `rollup_2_primary_from_2_2` | Secondary **2.2** execution mirror + `G-2.2-*` + tertiary chain | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-Execution-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-10-1900.md` | `open` | **2026-04-08:** **2.2.1–2.2.3** on disk — closure pending tertiary **2.2.4–2.2.5** + primary propagation row. |
+| `rollup_2_primary_from_2_2` | Secondary **2.2** execution mirror + `G-2.2-*` + tertiary chain | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-Execution-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-10-1900.md` | `closed` | **2026-04-10:** Tertiary **2.2.5** minted — [[Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-5-Execution-Envelope-Validation-Labels-and-Bundle-Chunk-Ordering-Boundary-Roadmap-2026-04-10-1705]]; registry/evidence receipt closes chain; primary propagation row updated on Phase 2 primary (`owner_signoff_rollup_2_primary_from_2_2_2026-04-10`). |
 
 ## Deferred safety seam closure map
 

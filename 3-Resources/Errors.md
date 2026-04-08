@@ -1,3 +1,27 @@
+### 2026-04-08 21:23 — EAT-QUEUE sandbox Task unavailable (Proof-on-failure)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-08T21:22:54Z | mcp-api |
+
+#### Trace
+- vault: `/home/darth/Documents/Second-Brain`
+- PQ: `.technical/parallel/sandbox/prompt-queue.jsonl`
+- queue_lane_filter: `sandbox`
+- parallel_track: `sandbox`
+- lane_project_id: `sandbox-genesis-mythos-master`
+- entries considered: 3 × `RESUME_ROADMAP` (`action: handoff-audit`), ids: `followup-ha-exec-p1-postbootstrap-followup-chain-20260410T185500Z`, `followup-ha-exec-p1-post-l1-or-host-task-20260410T190500Z`, `followup-ha-exec-p1-await-l1-postlv-then-handoff-20260410T190000Z`
+- **A.0.4** `pool_sync`: ok, `copied_count=0`, `preserved_lane_only_count=3`, `written_line_count=3` (lane-only rows not in central pool)
+- **A.0** Step 0 wrappers: scanned `Ingest/Decisions/**`; no `approved: true` wrappers requiring apply (all sampled wrappers `approved: false`)
+- **A.0.5** `eat_queue_run_plan.json`: `intents=[]`, `parent_run_id=null` → skip Python orchestrator dispatch; legacy **A.1** ordering
+- Cursor **`Task`** tool not available in this Layer 1 host; cannot invoke `Task(subagent_type: roadmap)` for RESUME_ROADMAP. Per Subagent-Safety-Contract Proof-on-failure; queue lines **not** consumed at **A.7**
+
+#### Summary
+**Root cause**: Queue orchestrator runtime lacks the Cursor `Task` primitive required to launch the Roadmap subagent.
+**Impact**: All three sandbox-lane lines remain on **PQ**; no pipeline mutations this run.
+**Suggested fixes**: Re-run **EAT-QUEUE lane sandbox** from the primary Cursor chat / host where `Task(queue)` and nested `Task(roadmap)` are available.
+**Recovery**: Watcher-Result canonical + sandbox mirror; PQ unchanged.
+
 ### 2026-04-08 20:58 — EAT-QUEUE godot Task launch unavailable (Proof-on-failure)
 
 | pipeline | severity | approval | timestamp | error_type |
