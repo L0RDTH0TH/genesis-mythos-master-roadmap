@@ -36,10 +36,11 @@ This folder documents the **post-migration** system: Cursor’s native subagents
 | [GitHub-Export-Repository-README](GitHub-Export-Repository-README.md) | Source for **root `README.md`** on [genesis-mythos-master-roadmap](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap) (product + repo layout + branches); copied during vault → export sync |
 | [Architecture](Architecture.md) | Delegation flow, Mermaid diagram, Queue vs direct triggers |
 | [Subagent-List](Subagent-List.md) | Table: name, description, responsibilities, triggers |
-| [Creating-Subagents](Creating-Subagents.md) | How to add or change a subagent; template and conventions |
+| [Creating-Subagents](Subagents/Creating-Subagents.md) | How to add or change a subagent; template, **Harness requirements**, conventions ([stub](Creating-Subagents.md) for legacy path) |
 | [Delegation-Patterns](Delegation-Patterns.md) | Hand-off structure, fallback, queue dispatch |
 | [Safety-Invariants](Safety-Invariants.md) | Backups, snapshots, confidence bands, Watcher, Errors |
 | [Subagent-Layers-Reference](Subagent-Layers-Reference.md) | Indexed layer model (L0–L2), helper family, conditional obligation, TodoWrite |
+| [Harness-Patterns-and-Guidelines](Harness-Patterns-and-Guidelines.md) | Pipeline skeleton, return contract (`nested_subagent_ledger`, `blocked_scope`), skill harness, queue **A.5i** telemetry |
 | [Prompt-Craft-Subagent](Prompt-Craft-Subagent.md) | Machine recovery queue crafting (`Task(prompt_craft)`); not the question-led crafter |
 | [Entire-System-Reference](Entire-System-Reference.md) | Full-system canonical contract: funnels, queues, CODE PARA, roadmap, safety, observability |
 | [CODE-PARA-System](CODE-PARA-System.md) | Canonical CODE lane: PARA mapping, queue routing, safety gates |
@@ -51,6 +52,8 @@ This folder documents the **post-migration** system: Cursor’s native subagents
 | [Pipelines/Queue-Pipeline](Pipelines/Queue-Pipeline.md) | Step 0, two queues, dispatch, Watcher-Result, clear/tag |
 | [Pipelines/Research-Pipeline](Pipelines/Research-Pipeline.md) | RESEARCH-AGENT queue-only flow, project_id + linked_phase, research-agent-run |
 | [User-Flows/EAT-QUEUE-Flow](User-Flows/EAT-QUEUE-Flow.md) | EAT-QUEUE user journey: Step 0 → read → dispatch → Watcher-Result |
+| [User-Flows/EAT-QUEUE-Pass-3-Operator-Guide](User-Flows/EAT-QUEUE-Pass-3-Operator-Guide.md) | Pass 3 inline drain: pending flags vs pre-existing repair rows, `repair_first` slot, diagrams |
+| [Core/Config-Profiles](Core/Config-Profiles.md) | Familial **`speed_mode` / `repair_strategy` / `validator_tier`** → flat Config keys; deepMerge order; Crafter + queue resolver |
 | [Rules/Always-Rules-Overview](Rules/Always-Rules-Overview.md) | Index of all always rules (and context entry points) with one-line purpose |
 | [Skills/Queue-and-Shared-Skills](Skills/Queue-and-Shared-Skills.md) | Step 0 skills, queue-cleanup, obsidian-snapshot, task/roadmap queue skills |
 | [Operations/Backup-and-Restore](Operations/Backup-and-Restore.md) | Backups, snapshots, retention, RESTORE MODE, Restore-Queue — single reference |

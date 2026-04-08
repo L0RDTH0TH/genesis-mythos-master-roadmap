@@ -15,6 +15,21 @@ You **do not** read or write the prompt queue (**PQ** — legacy `.technical/pro
 
 ---
 
+## Export surfaces by branch type (normative)
+
+Use **`git branch --show-current`** in **`export_repo_root`** (Config **`gitforge.export_repo_root`**) together with **`gitforge.integration_branch`** and **`parallel_execution.tracks[]`** (`lane_project_id`, `export_path`, `branch_prefix`) to choose the correct mirror procedure.
+
+| Export checkout branch | Intent | Mirror procedure (vault → export) |
+|------------------------|--------|-------------------------------------|
+| **`integration_branch`** (e.g. `iteration-2-roadmap-rules`) | **Canonical collaboration branch** — complete picture of **how the system is built and run** (agents, rules, skills, **`.cursor/sync`**, Python queue stack, **`gitforge_lock.py`**, full `Docs/` + **all** `Docs/Core/` backbone `*.md` + **Second-Brain-User-Flows**). | **Step 1 — integration** in [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]. Optionally append one engine’s `Roadmap/` + anchors if `GMM_PROJECT_ROOT` is set. |
+| **Engine line** (e.g. `sandbox-genesis-mythos-master`, `godot-genesis-mythos-master`) | **Per-engine roadmap** for collaborators reading that engine’s phases; spine must **not** drift from integration. | Refresh spine from **`origin/<integration_branch>`** (merge or re-run integration Step 1), then **Step 1b — engine** only (`Roadmap/` + `<PROJ_ID>-goal.md` + MOC from matching **`GMM_PROJECT_ROOT`**). |
+
+**Config mirror:** Second-Brain-Config **`gitforge.export_contract`** documents the same paths for tooling and audits.
+
+When **`export_sync`** (or operator policy) triggers an export run: **never** treat an engine branch as the authoritative rules source; always point collaborators at **`integration_branch`** for full coverage.
+
+---
+
 ## Hand-off (required)
 
 Layer 1 passes a structured block (YAML or JSON). Minimum fields:
@@ -49,9 +64,9 @@ When Second-Brain-Config **`parallel_execution.enabled`** is **true** (or the ha
 **Timeout:** `parallel_execution.gitforge.lock_timeout_seconds` (default **30**)  
 **Policy:** `lock_last_wins` — poll until the lock file is absent or you can create it exclusively, up to the timeout. If the timeout elapses while another holder still owns the lock, **do not** block Layer 1 further: append **git-audit-log** with `action: skip`, `reason: gitforge_lock_held` (or equivalent), `parallel_track` from hand-off when known, and return **`status: skipped`** with message **`GitForge skipped — lock held by other track`**.
 
-**Acquire (normative pattern):** Use an **exclusive create** (e.g. `open(O_CREAT | O_EXCL)` or equivalent) to write a small JSON payload `{ "parallel_track", "pid", "started_iso" }`. If creation fails because the file exists, sleep briefly (e.g. 100–200 ms) and retry until timeout.
+**Acquire (normative pattern):** Prefer the vault helper (deterministic, O_EXCL): from **`vault_root`**, run **`python3 scripts/gitforge_lock.py acquire --vault-root <vault_root> --track <parallel_track|unknown> --timeout <parallel_execution.gitforge.lock_timeout_seconds>`** and treat exit code **1** as lock timeout (**skip** GitForge per policy below). Alternatively use an **exclusive create** manually (e.g. `open(O_CREAT | O_EXCL)`) to write the same JSON payload `{ "parallel_track", "pid", "started_iso" }`, polling until timeout.
 
-**Release:** Delete the lock file in a **`finally`** (or equivalent) after commit/export attempt completes, **only if** this run created the lock (verify contents / pid if needed to avoid deleting another track’s lock).
+**Release:** Run **`python3 scripts/gitforge_lock.py release --vault-root <vault_root>`** in a **`finally`** after commit/export completes. The helper removes the lock when the **holder PID in the file is no longer running** (normal after a separate **`acquire`** process exited) or when it matches the current process. If another **live** process holds the lock, **`release`** exits **1** and the file stays. If not using the script, delete the lock file **only** when safe (same semantics: holder exited or you own the lock).
 
 **Branch / export:** When **`parallel_branch_prefix`** is set, incorporate it into audit fields and any track-specific branch naming described in [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] so sandbox and godot exports do not collide conceptually.
 
@@ -81,8 +96,8 @@ When Second-Brain-Config **`parallel_execution.enabled`** is **true** (or the ha
 
 ## Branch policy (rule-sterile engine branches)
 
-- **`iteration-2-roadmap-rules`** (or Config **`gitforge.integration_branch`**) is the **canonical spine** for **`.cursor/`**, **`.cursor/agents`**, **skills**, and mirrored **Docs** in the **export** repo.
-- On an **engine** branch (any branch name **not** equal to **`integration_branch`**): **never** publish a dirty mix of vault `.cursor/` into export. **Refresh spine from the integration tip** before rsync (e.g. checkout integration in export clone, copy spine, then checkout engine and sync only **Roadmap/** + anchors per workflow). Exact shell steps live in the **git-push-workflow** doc.
+- **`gitforge.integration_branch`** is the **complete canonical mirror**: **`.cursor/`** (agents, rules, skills, **`.cursor/sync/`**), **`scripts/`** (`eat_queue_core`, `queue-gate-compute.py`, **`gitforge_lock.py`**), and **`Docs/`** (including **`Docs/Core/`** full backbone and **`Docs/Second-Brain-User-Flows/`**).
+- On an **engine** branch (name **not** equal to **`integration_branch`**): **never** publish a partial ruleset as authoritative. **Refresh spine from `origin/<integration_branch>`**, then sync **only** **Roadmap/** + anchors per **Step 1b** in the **git-push-workflow** doc.
 - Vault **git** operations (commit/push) apply to **whatever repo** contains the vault; export repo is a **separate** clone — follow the workflow for **`GMM_PROJECT_ROOT`** and branch alignment.
 
 ---

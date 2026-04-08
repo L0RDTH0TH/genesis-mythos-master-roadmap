@@ -14,7 +14,16 @@ _SCRIPTS = Path(__file__).resolve().parents[2]
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
-from eat_queue_core.full_cycle import queue_rewrite_ids, run_full_eat_queue_cycle  # noqa: E402
+from eat_queue_core.full_cycle import (  # noqa: E402
+    emit_intent_tracking_for_plan_pass,
+    enrich_plan_dict,
+    queue_rewrite_ids,
+    read_queue_rationale_enforcement_enabled,
+    read_tracking_intent_receipts_enabled,
+    run_full_eat_queue_cycle,
+    validate_option_evaluation_for_entry,
+)
+from eat_queue_core.models import DispatchIntent, EatQueueRunPlan, QueueEntry  # noqa: E402
 from eat_queue_core.plan import build_plan, load_queue_file  # noqa: E402
 
 
@@ -110,6 +119,138 @@ class FullCycleGoldenTest(unittest.TestCase):
             self.assertEqual(res.final_repair_lines_remaining, 0)
             final = load_queue_file(qpath) if qpath.is_file() else []
             self.assertEqual(len(final), 0)
+
+    def test_option_evaluation_missing_under_enforcement(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            cfg_dir = root / "3-Resources" / "Second-Brain"
+            cfg_dir.mkdir(parents=True)
+            (cfg_dir / "Second-Brain-Config.md").write_text(
+                "queue:\n  rationale_enforcement_enabled: true\n",
+                encoding="utf-8",
+            )
+            entry = QueueEntry(
+                id="oe-1",
+                mode="RESUME_ROADMAP",
+                project_id=PROJECT,
+                params={"action": "deepen", "roadmap_track": "execution", "project_id": PROJECT},
+            )
+            res = validate_option_evaluation_for_entry(
+                entry, vault_root=root, rationale_enforcement=True
+            )
+            self.assertFalse(res.ok)
+            self.assertIn("option_evaluation_missing", res.divergence_codes)
+
+    def test_emit_intent_tracking_writes_receipt_jsonl(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            tech = root / ".technical"
+            tech.mkdir(parents=True)
+            qpath = tech / "prompt-queue.jsonl"
+            entry = QueueEntry(
+                id="track-1",
+                mode="RESUME_ROADMAP",
+                project_id=PROJECT,
+                queue_lane="sandbox",
+                params={"action": "deepen", "roadmap_track": "execution", "project_id": PROJECT},
+            )
+            plan = EatQueueRunPlan(
+                parent_run_id="pr-test",
+                intents=[
+                    DispatchIntent(
+                        queue_entry_id="track-1",
+                        project_id=PROJECT,
+                        queue_pass_phase="initial",
+                        pass_id="pass1",
+                        dispatch_ordinal=1,
+                    )
+                ],
+                consumed_ids=["track-1"],
+            )
+            enriched = enrich_plan_dict(
+                plan,
+                [entry],
+                initial_action="deepen",
+                initial_profile="balance",
+                strict_mode=True,
+                full_cycle_pass_index=1,
+                full_cycle_passes_total=1,
+            )
+            msgs = emit_intent_tracking_for_plan_pass(
+                vault_root=root,
+                queue_path=qpath,
+                enriched=enriched,
+                entries_lane=[entry],
+                lane_filter="sandbox",
+            )
+            comms = tech / "task-handoff-comms.jsonl"
+            self.assertTrue(comms.is_file())
+            text = comms.read_text(encoding="utf-8")
+            self.assertIn("intent_snapshot", text)
+            self.assertIn("intent_actual_receipt", text)
+            self.assertIn("parallel_track", text)
+            self.assertIn("sandbox", text)
+            self.assertTrue(any("intent_snapshot" in m for m in msgs))
+
+    def test_resume_deepen_phase1_receipt_provisional_when_no_goal_file(self) -> None:
+        """RESUME_ROADMAP deepen + execution track + rationale on: valid OE shape but quote check may flag without goal file."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            cfg_dir = root / "3-Resources" / "Second-Brain"
+            cfg_dir.mkdir(parents=True)
+            (cfg_dir / "Second-Brain-Config.md").write_text(
+                "queue:\n  rationale_enforcement_enabled: true\n",
+                encoding="utf-8",
+            )
+            tech = root / ".technical"
+            tech.mkdir(parents=True)
+            qpath = tech / "prompt-queue.jsonl"
+            oe = {
+                "master_goal_ref": "missing-goal.md",
+                "alternatives": [
+                    {"id": "a", "summary": "x", "alignment_score": 1.0},
+                ],
+                "chosen": "a",
+                "rationale": "short",
+            }
+            line = {
+                "id": "phase1-deepen",
+                "mode": "RESUME_ROADMAP",
+                "project_id": PROJECT,
+                "params": {
+                    "action": "deepen",
+                    "roadmap_track": "execution",
+                    "project_id": PROJECT,
+                    "option_evaluation": oe,
+                },
+            }
+            qpath.write_text(json.dumps(line) + "\n", encoding="utf-8")
+            res = run_full_eat_queue_cycle(
+                initial_action="deepen",
+                initial_profile="balance",
+                max_passes=1,
+                strict_mode=True,
+                vault_root=root,
+                queue_path=qpath,
+                plan_path=tech / "eat_queue_run_plan.json",
+                decisions_path=tech / "eat-queue-decisions.jsonl",
+                parent_run_id="golden-phase1",
+                apply_cleanup=False,
+            )
+            self.assertEqual(res.passes_run, 1)
+            comms = tech / "task-handoff-comms.jsonl"
+            self.assertTrue(comms.is_file())
+            lines = [json.loads(x) for x in comms.read_text(encoding="utf-8").splitlines() if x.strip()]
+            receipts = [x for x in lines if x.get("record_type") == "intent_actual_receipt"]
+            self.assertEqual(len(receipts), 1)
+            self.assertEqual(receipts[0].get("queue_entry_id"), "phase1-deepen")
+            self.assertIn(receipts[0].get("status_class"), ("success", "provisional_success"))
 
 
 def load_queue_file_from_text(text: str):

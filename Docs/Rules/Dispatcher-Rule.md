@@ -53,6 +53,4 @@ Canonical detail: [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-S
 
 ## Delegation and fallback
 
-- **Real subagents:** Pipeline execution (ingest, roadmap, distill, express, archive, organize, research) MAY be delegated to `.cursor/agents/<name>.md` using the mandatory hand-off template from Subagent-Safety-Contract.
-- **Fallback:** When not delegating, run the pipeline from `.cursor/rules/legacy-agents/<name>.mdc`.
-- **Rollback:** To revert to rule-based mode only, comment out or rename `.cursor/agents/*.md` so Cursor stops using them; ensure dispatcher/queue flow uses legacy-agents/ for pipeline execution.
+- **Task-only dispatch:** Pipeline execution is delegated via the Cursor **`Task`** tool and **Subagent-Safety-Contract** hand-offs. There is **no** same-run inline pipeline execution and **no** production fallback to `.cursor/rules/legacy-agents/` (legacy rules are reference-only). On `Task` failure, use **Proof-on-failure** ([[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § Proof-on-failure): Task-Handoff-Comms `return_in` when enabled, Errors.md, Watcher-Result; do not clear queue entries as success. **Parallel lanes:** resolved **PQ** and **task-handoff-comms** path per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x** / **parallel_context** — see full rule [.cursor/rules/always/dispatcher.mdc](.cursor/rules/always/dispatcher.mdc).

@@ -34,6 +34,8 @@ The **Dispatcher** (`.cursor/rules/always/dispatcher.mdc`) routes these phrases 
 
 ## Prompt-queue flow (Part A) — steps
 
+Step IDs match **`.cursor/rules/agents/queue.mdc`**. **A.7a** (GitForge) follows **A.7**; there is **no** A.8.
+
 1. **A.0 — Always-check wrappers (runs first, every run)**  
    Enumerate `Ingest/Decisions/**`. For each wrapper with `approved: true` (or `re-wrap: true` / `re-try: true`) and not processed: use **feedback-incorporate** → apply per wrapper_type (ingest apply-mode, phase-direction, handoff-readiness, organize, archive, distill-apply-from-wrapper, express-apply-from-wrapper, low-confidence, error). Update wrapper; **move wrapper to** `4-Archives/Ingest-Decisions/` (ensure_structure, per-change snapshot, move dry_run then commit). Set **approved_wrappers_remaining** if any approved unprocessed wrappers remain. Then proceed to A.1 (no dependency on queue file containing CHECK_WRAPPERS).
 
@@ -44,19 +46,25 @@ The **Dispatcher** (`.cursor/rules/always/dispatcher.mdc`) routes these phrases 
    Require `mode` (string). Filter out `queue_failed === true` / "queue-failed" tags. If zero valid entries, exit. Fast-path: if valid entry count === 1, skip dedup/order and go to A.5.
 
 4. **A.3 — Dedup**  
-   Same (mode, prompt, source_file) → keep first by timestamp. Do not drop same source_file with different modes. Optional: when `auto_cleanup_after_process`, after A.8 run **queue-cleanup** skill.
+   Same (mode, prompt, source_file) → keep first by timestamp. Do not drop same source_file with different modes. Optional: when `auto_cleanup_after_process`, after **A.7** run **queue-cleanup** skill.
 
 5. **A.4 — Ordering**  
    CHECK_WRAPPERS meta-entries first, then canonical pipeline order per [Queue-Sources](../../Queue-Sources.md) (INGEST MODE → FORCE-WRAPPER → … → RESUME-ROADMAP → … → DISTILL → EXPRESS → ARCHIVE → … → CURATE-CLUSTER).
 
 6. **A.5 — Dispatch (with pre-dispatch checks)**  
-   For each entry: CHECK_WRAPPERS no-op; verify source_file exists if non-empty; validate mode and merged params. **A.4z — Effective pipeline profile:** merge **`effective_pipeline_mode`** and **`effective_profile_snapshot`** into roadmap and research **`Task`** hand-offs (`layer1_resolver_hints` / `## effective_pipeline_profile`). **Post–little-val (b1):** roadmap-class entries may **profile-skip** Layer 1 hostile validator per `l1_post_lv_policy` unless **`validator_context.force_layer1_post_lv`**; see [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] and `.cursor/rules/agents/queue.mdc` **A.5 (b1)**. **Normalize aliases:** RECAL-ROAD, REVERT-PHASE, SYNC-PHASE-OUTPUTS, HANDOFF-AUDIT, RESUME-FROM-LAST-SAFE, EXPAND-ROAD → set `mode: "RESUME-ROADMAP"` and merge `params.action` (and phase/userText as needed). **RESUME-ROADMAP:** approved roadmap-next-step wrapper → resolve approved_option to params.action; context-tracking default-on; bootstrap (if no roadmap-state.md, dispatch ROADMAP MODE same project from queue first if present). **Match mode to pipeline:** delegate to `.cursor/agents/<name>.md` (or legacy-agents) per Subagent-Safety-Contract. Guidance-aware: feedback-incorporate when prompt or user_guidance present; pass guidance_text and hard_target_path. Process one entry fully before the next.
+   For each entry: CHECK_WRAPPERS no-op; verify source_file exists if non-empty; validate mode and merged params. **A.4z — Effective pipeline profile:** merge **`effective_pipeline_mode`** and **`effective_profile_snapshot`** into roadmap and research **`Task`** hand-offs (`layer1_resolver_hints` / `## effective_pipeline_profile`). **Nested attestation (b0), post–little-val (b1), A.5b–A.5h** (tiered outcome, follow-ups, PromptCraft, continuation, gate record, audit, nightly ledger) live under **A.5** in `queue.mdc`. **Post–little-val (b1):** roadmap-class entries may **profile-skip** Layer 1 hostile validator per `l1_post_lv_policy` unless **`validator_context.force_layer1_post_lv`**; see [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profiles|Pipeline-Validator-Profiles]] and `.cursor/rules/agents/queue.mdc` **A.5 (b1)**. **Normalize aliases:** RECAL-ROAD, REVERT-PHASE, SYNC-PHASE-OUTPUTS, HANDOFF-AUDIT, RESUME-FROM-LAST-SAFE, EXPAND-ROAD → set `mode: "RESUME_ROADMAP"` and merge `params.action` (and phase/userText as needed). **RESUME-ROADMAP:** approved roadmap-next-step wrapper → resolve approved_option to params.action; context-tracking default-on; bootstrap (if no roadmap-state.md, dispatch ROADMAP MODE same project from queue first if present). **Match mode to pipeline:** delegate to `.cursor/agents/<name>.md` (or legacy-agents) per Subagent-Safety-Contract. Guidance-aware: feedback-incorporate when prompt or user_guidance present; pass guidance_text and hard_target_path. Process one entry fully before the next.
 
-7. **A.6 — Log**  
-   Append one line per processed request to `3-Resources/Watcher-Result.md`: `requestId: <id> | status: success|failure | message: "..." | trace: "..." | completed: <ISO8601>`.
+7. **A.5i — Layer 2 return harness validation**  
+   After **A.5 (b0)**–**(b1)** / **A.5b** for a pipeline **Task** disposition, **before** primary **Watcher-Result** **(c)**: parse return for **`nested_subagent_ledger`**, **`blocked_scope`** (required on hard-block path), attestation; honor **`queue.harness_validation_mode`** (`advisory` \| `strict`). See [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4 and `queue.mdc` **A.5i**.
 
-8. **A.7 — Clear passed entries only**  
+8. **A.6 — Log**  
+   Append one line per processed request to `3-Resources/Watcher-Result.md`: `requestId: <id> | status: success|failure | message: "..." | trace: "..." | completed: <ISO8601>` (ledger / harness tags per `queue.mdc` **A.6**).
+
+9. **A.7 — Clear passed entries only**  
    Build processed_success_ids from entries that completed with status success. **Re-read** `.technical/prompt-queue.jsonl`. Omit lines whose id is in processed_success_ids; keep all other lines (including pipeline-appended). Add failed/skipped entries with `queue_failed: true`. If approved_wrappers_remaining, append one CHECK_WRAPPERS entry. Write merged content back.
+
+10. **A.7a — GitForge (optional)**  
+    One **`Task(gitforge)`** after successful **A.7** when Config gates pass (`queue.mdc` **A.7a**).
 
 ---
 
@@ -78,6 +86,7 @@ The **Dispatcher** (`.cursor/rules/always/dispatcher.mdc`) routes these phrases 
 
 ## References
 
+- [Harness-Patterns-and-Guidelines](../Harness-Patterns-and-Guidelines.md) — pipeline skeleton, **`blocked_scope`**, **A.5i**, **`harness_validation_mode`**
 - [Pipeline-Validator-Profiles](../Pipeline-Validator-Profiles.md) — `pipeline_mode`, `effective_profile_snapshot`, L1 skip / escalation
 - [Queue-Sources](../../Queue-Sources.md) — canonical order, validation, RESUME-ROADMAP append, remove-stale
 - [Rules/Dispatcher-Rule](../Rules/Dispatcher-Rule.md)

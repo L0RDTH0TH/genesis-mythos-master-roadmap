@@ -98,7 +98,13 @@ See [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-He
 - **Frozen for automation:** Further **`RESUME_ROADMAP` `deepen`** (or `advance-phase`) that **depends** on the contradicted / incoherent / unsafe spine **for that scope** until repair completes or human overrides.
 - **Allowed without waiting:** Other **`project_id`s**; modes that do not assume the frozen contract (e.g. **INGEST_MODE** on unrelated notes, **DISTILL_MODE** on Resources, **RESEARCH_AGENT** for another project); **`RESUME_ROADMAP`** with **`action: recal`**, **`handoff-audit`**, **`sync-outputs`**, **`resume-from-last-safe`** when scoped to reconcile.
 
-Pipeline returns SHOULD include **`blocked_scope`** in structured return metadata: `{ "project_id": "...", "phase_ids": [], "paths": [] }` when a hard block applies.
+### 4.1 Return metadata: `blocked_scope`
+
+**Normative** (MUST emit) when a **hard block** or tiered outcome triggers the scoped freeze in §4 above. **Optional** on returns with no hard-block path.
+
+- **Canonical YAML shape, fields, and Layer 1 handling:** [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §2.2.
+- **`allowed_pivots`:** MUST align with [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] **repair-first** ordering and the §3 action matrix (same **`project_id`**).
+- **Layer 1:** Parses **`blocked_scope`** in **A.5i**; echoes into **Watcher-Result** when present; **`advisory`** vs **`strict`** per **`queue.harness_validation_mode`**.
 
 ---
 
@@ -110,7 +116,7 @@ When a **hard block** or surviving **`contradictions_detected`** applies to scop
 2. **Repair lines MUST sort before** other **`RESUME_ROADMAP`** lines for the **same** `project_id` that would **deepen** or **advance** the same spine.  
    **Rationale:** `RECAL-ROAD` normalizes to `RESUME_ROADMAP`, so mode-order alone does not separate recal from deepen — use **`queue_priority: repair`** (integer, lower = earlier) or **`validator_repair_followup: true`** plus **sub-sort** in auto-eat-queue (see Queue-Sources).
 3. **Orthogonal** entries (other projects / no dependency) **continue** in canonical order without waiting for S’s repair.
-4. **Pass 3 (inline repair drain, same EAT-QUEUE run):** After Layer 1 **A.5b** (or repair-class **A.5d** recovery) appends a **`RESUME_ROADMAP`** repair line, **`queue.inline_a5b_repair_drain_enabled`** (Second-Brain-Config) gates whether **Pass 3** runs: re-read **`prompt-queue.jsonl`**, tag **`dispatch_pass: inline`**, and dispatch **`Task(roadmap)`** on the new **`id`** before **A.7**, within **`max_repair_roadmap_dispatches_per_project_per_run`** (shared with cleanup-pass repair dispatches) and **`max_inline_a5b_repair_generations_per_run`**. See [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.4c**, **A.5.0**, **A.5b**.
+4. **Pass 3 (inline repair drain, same EAT-QUEUE run):** After Layer 1 **A.5b** (or repair-class **A.5d** recovery) appends a **`RESUME_ROADMAP`** repair line, **`queue.inline_a5b_repair_drain_enabled`** (Second-Brain-Config) gates whether **Pass 3** runs: re-read **`prompt-queue.jsonl`**, tag **`dispatch_pass: inline`**, and dispatch **`Task(roadmap)`** on the new **`id`** before **A.7**, within **`max_repair_roadmap_dispatches_per_project_per_run`** (shared with cleanup-pass repair dispatches) and **`max_inline_a5b_repair_generations_per_run`**. **Pending flags** (not merely “a repair row exists on disk”) are required for Pass 3 entry; see [[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]. See [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.4c**, **A.5.0**, **A.5b**.
 
 ---
 
@@ -144,7 +150,7 @@ When `mode` is **`PRIMARY-DEP-...`** (chain):
 See [[3-Resources/Second-Brain/Parameters|Parameters]] / [[3-Resources/Second-Brain-Config|Second-Brain-Config]]:
 
 - `max_incoherence_retries` — cap guided retries for `incoherence` (default 0–1). **Wiring:** Roadmap subagent applies the decrement contract in `.cursor/agents/roadmap.md` § **Incoherence bounded retry** (and `roadmap.mdc`); Layer 1 **A.5b** uses the same formula on post–little-val repair lines when `primary_code` is `incoherence` (see Queue-Sources § Tiered validator queue fields).
-- `validator.tiered_blocks_enabled` — if false, fall back to legacy “high or block_destructive always no Success” (optional kill-switch).
+- `validator.tiered_blocks_enabled` — if false, fall back to legacy “high or block_destructive always no Success” (optional kill-switch). **Familial alias:** [[3-Resources/Second-Brain/Docs/Core/Config-Profiles|Config-Profiles]] **`validator_tier`** (`forgiving` ↔ tiered on, `aggressive` ↔ this flag false).
 
 ---
 
