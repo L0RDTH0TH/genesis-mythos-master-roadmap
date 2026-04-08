@@ -195,6 +195,13 @@ Call **obsidian_ensure_structure** with `folder_path` = parent of the execution 
    - Next phase if current phase is fully deepened (per granularity for that phase).
    - Use [Roadmap Structure](Roadmap Structure.md) path patterns and frontmatter: `roadmap-level` (primary | secondary | tertiary | task), `phase-number`, `subphase-index` (e.g. "1.1", "1.1.1").
 
+  3.0 **Ahead-of-schedule pre-mint guard (future-phase obstacle isolation):**
+  - Before selecting the next target, scan candidate notes/folders under **`phaseTreeRoot`** for phase prefixes greater than **`current_phase`** (for example pre-generated `Phase-4-*` while cursor is in Phase 1/2/3).
+  - Treat those artifacts as **non-authoritative** for this run: do not use them to satisfy "already exists", do not advance cursor because they exist, and do not let them block creation for the active cursor phase.
+  - Keep the run focused on the authoritative cursor from **active_workflow_state** (`current_phase`, `current_subphase_index`).
+  - Add a lightweight trace in **Status / Next** and/or Errors.md when detected, e.g. `pre_mint_future_phase_detected: true` with phase list, so operators can quarantine or clean them deliberately.
+  - If an operation would write into one of those future-phase artifacts during this run, abort that write and return `#review-needed` with reason `future_phase_premint_collision` instead of mutating out-of-order slices.
+
   3.1 **Conceptual NL checklist prioritization (refine current node first)**:
   - When **`active_track === conceptual`**, before selecting a *next* missing child node, resolve the existing roadmap note that corresponds to **the current cursor** (**`current_phase`** and **`current_subphase_index`**).
   - Run **conceptual-checklist gap detection** against that *existing* note content using the checklist requirements in **`Conceptual-Execution-Handoff-Checklist.md`** (Scope, Behavior, Interfaces, Edge cases, Open questions, Pseudo-code readiness).

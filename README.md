@@ -48,7 +48,7 @@ The detailed vision and phases live in the **Project Master Goal** and **`Roadma
 ## Clone expectations
 
 - **Complete system reference (build + run):** Clone or check out **`iteration-2-roadmap-rules`**. This is the **authoritative** mirror for agents, rules, skills, **sync**, Python queue tooling, and **full** documentation backbone — not a trimmed “core only” subset.
-- **Engine-only branches** emphasize **`Roadmap/`** and anchors for one engine line; **`.cursor/`** and **`Docs/`** on those branches should match **`origin/iteration-2-roadmap-rules`** at publish time (**rule-sterile** procedure in **`Docs/git-push-workflow-2026-04-02-0446.md`**). For queue contracts or subagent behavior, **always** use the **integration** branch as source of truth.
+- **Engine-only branches** are **roadmap-only** outputs: publish **`Roadmap/`** + anchors for one engine line; do **not** publish global `.cursor/`, `scripts/`, or system `Docs/` there. For queue contracts or subagent behavior, **always** use the **integration** branch as source of truth.
 
 ## Operator mirror workflow
 

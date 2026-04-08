@@ -35,6 +35,7 @@ from .models import (
 from .pool_sync import (
     hydrate_track_pq_from_pool,
     read_central_pool_fanout_enabled,
+    read_pool_sync_strict_central_only,
     read_queue_rationale_enforcement_enabled,
     read_tracking_intent_receipts_enabled,
 )
@@ -514,11 +515,17 @@ def run_full_eat_queue_cycle(
             vault_root=root,
             lane_filter=lane_filter,  # type: ignore[arg-type]
             target_pq=rel_target,
+            strict_central_only=read_pool_sync_strict_central_only(root),
         )
         if not hr.ok:
             raise ValueError(hr.messages[0] if hr.messages else "pool_sync hydrate failed")
         messages = [
             f"pool_hydrate: copied {hr.copied_count} id(s) from {hr.pool_path} to {hr.target_pq}"
+            + (
+                f"; preserved_lane_only={hr.preserved_lane_only_count}"
+                if hr.preserved_lane_only_count
+                else ""
+            )
         ]
         if hr.messages:
             messages.extend(hr.messages)
