@@ -125,6 +125,9 @@ function executePipeline(mode: RunMode, graph: GraphDef, world: WorldStateV1):
   - `secondary_1_2_chain`: `closed` (1.2 + 1.2.1-1.2.3 linked and auditable)
   - `deferral_evidence`: `present` (DEF-REG-CI + DEF-GMM-245 report links present)
   - `tuple_state`: `open_advisory` (`phase_1_rollup_closed: false`, `blocker_id: phase1_rollup_attestation_pending`)
+- `postbootstrap_followup_chain_queue_id`: `followup-ha-exec-p1-postbootstrap-followup-chain-20260410T185500Z` (2026-04-10T18:55Z handoff-audit; nested `Task` cycle **not** re-run in Layer 2 — await **Layer 1** hostile `roadmap_handoff_auto` or host **`Task`** availability)
+- `l1_post_lv_roadmap_handoff_auto_gate`: [[../../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-handoff-auto-exec-followup-ha-p1-233000z-chain-l1-gate-20260410T182600Z.md]] — hostile receipt for queue **`followup-ha-exec-p1-233000z-chain-l1-gate-20260410T182600Z`**; rollup tuple **unchanged** pending **`log_only`** clearing `missing_roll_up_gates` / `blocker_tuple_still_open_explicit` (no closure grant).
+- `l1_nested_compare_second_pass_182600Z`: [[../../../../3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/sandbox-genesis-mythos-master-handoff-auto-exec-followup-ha-p1-233000z-second-pass-20260410T182600Z-compare.md]] — compare vs first pass after IRA pointer hygiene; **`regression_status: same`** for rollup closure disposition (metadata traceability improved only).
 
 ## Next execution slices (mirror order)
 
