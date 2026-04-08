@@ -117,6 +117,18 @@ These profile and honesty rules apply **in addition to** the backup, snapshot, a
 
 ---
 
+## Rationale honesty (`option_evaluation`)
+
+When [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] **`queue.rationale_enforcement_enabled`** is **true**, queue entries subject to [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § **`params.option_evaluation`** must satisfy:
+
+- **Verbatim anchor:** **`rationale`** must contain a **substring** that appears **verbatim** in the file resolved by **`master_goal_ref`** (after normalizing vault-relative paths). This is a **cheap structural** anti-fabrication check — it does not prove semantic correctness.
+- **Score sanity:** If **every** **`alternatives[]`** item includes **`alignment_score`**, **`chosen`** must identify an alternative whose score **equals the maximum** among alternatives (ties allowed).
+- **Structural validity:** **`chosen`** must match one **`alternatives[].id`**; **`validator_ref`**, when present, should point to a real validator report path or a **`task_correlation_id`** present in **task-handoff-comms** (best-effort verification in harness).
+
+Violations produce **`divergence_codes`** on **`intent_actual_receipt`** rows (e.g. **`rationale_quote_missing`**, **`alignment_score_mismatch`**, **`option_evaluation_invalid`**) per Queue-Sources; runs may still complete with **`status_class: provisional_success`** unless Layer 1 strict policy is enabled.
+
+---
+
 ## No shell vault ops
 
 - **Never** use shell `cp`, `mv`, or `rm` to mutate Obsidian vault contents.

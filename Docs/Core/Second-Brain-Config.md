@@ -116,6 +116,7 @@ queue_continuation:
 - **re_try_max_loops**: 3 — cap on re-try spins per thread (e.g. same section/phase_path). When exceeded, abort re-try and create cap-hit wrapper (A: Force approve, B: Prune branch, 0: Re-wrap full phase). Document in Parameters.md.
 - **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read **EQPLAN** (`eat_queue_run_plan.json` colocated with **PQ** — legacy `.technical/eat_queue_run_plan.json` or per-track under `.technical/parallel/<track>/`; see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**) produced by `python3 -m scripts.eat_queue_core.full_cycle` / plan and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
 - **central_pool_fanout_enabled**: when **true**, Layer 1 **A.0.4** runs **`pool_sync`** before wrappers so **`.technical/prompt-queue.jsonl`** (pool) is filtered into per-track **PQ**; **A.7** removes consumed ids from **pool** and **PQ** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.4**, **A.7**).
+- **rationale_enforcement_enabled** (`true` \| `false`, default **`false`**): when **`true`**, Layer 1 ([[.cursor/rules/agents/queue.mdc|queue.mdc]]) **must** require **`params.option_evaluation`** on gated **`RESUME_ROADMAP`** lines (execution track — see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Parallel execution tracking). The Python harness validates shape when emitting plans.
 - **allowed_lanes** (under **`queue:`** YAML): list of strings allowed for **`queue_lane`** on prompt-queue JSONL lines and for Layer 0 **`EAT-QUEUE lane <name>`**. Default in YAML below: `default`, `shared`, `sandbox`, `godot`, `core`. Unknown lane on append or filter → reject / error (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes).
 - **harness_validation_mode** (`advisory` \| `strict`, default **`advisory`**): Layer 1 **A.5i** after pipeline **Task** returns — parse **`nested_subagent_ledger`**, **`blocked_scope`** on hard-block paths; **`strict`** upgrades refusals per [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4.
 - **roadmap_pass_order** (`repair_first` \| `forward_first`): Layer 1 **A.4c** roadmap multi-dispatch; default **`repair_first`** aligns with familial **`repair_strategy: repair_first`** (overridable flat key).
@@ -128,6 +129,7 @@ The following **`queue:`** block is machine-readable for `scripts/queue-gate-com
 queue:
   python_orchestrator_enabled: true
   central_pool_fanout_enabled: true
+  rationale_enforcement_enabled: false
   harness_validation_mode: advisory
   roadmap_pass_order: repair_first
   inline_a5b_repair_drain_enabled: true
@@ -140,6 +142,15 @@ queue:
     - sandbox
     - godot
     - core
+
+## tracking (intent receipts / observability)
+
+- **intent_receipts_enabled** (`true` \| `false`, default **`true`**): when **`true`**, `scripts.eat_queue_core` appends **`intent_snapshot`** / **`intent_actual_receipt`** rows to **`task-handoff-comms.jsonl`** beside **PQ** (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Parallel execution tracking). **Speed-mode opt-out:** set **`tracking.intent_receipts_enabled: false`** below (or omit and override in a forked Config) to skip receipt appends and reduce JSONL growth.
+
+```yaml
+tracking:
+  intent_receipts_enabled: true
+```
 
 ## parallel_execution (dual-track EAT-QUEUE; two Cursor chats)
 
@@ -182,7 +193,7 @@ parallel_execution:
 - **Pipeline tier:** **`effective_pipeline_mode`** **`speed`** → GitForge is **not** called (fast runs skip automatic vault git). **`balance`** and **`quality`** → **one** **`Task(gitforge)`** after **A.7**, hand-off **`mode: balance`** for both; **`quality`** is traced via **`source_pipeline_mode`** (same git rules as balance — quality is stricter **pipeline** enforcement, not a separate export tier).
 - **export_repo_root**: absolute path to the `gmm-roadmap-export` checkout (see [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]).
 - **integration_branch**: branch name for the **canonical system mirror** — complete `.cursor/` (including **`.cursor/sync/`**), full queue **`scripts/`** (`eat_queue_core`, `queue-gate-compute.py`, **`gitforge_lock.py`**), full **`Docs/`** + **`Docs/Core/`** (all top-level `3-Resources/Second-Brain/*.md`) + **`Docs/Second-Brain-User-Flows/`** (see workflow § Branch purposes and export coverage). Default `iteration-2-roadmap-rules`.
-- **Engine branches (convention):** **`sandbox-genesis-mythos-master`**, **`godot-genesis-mythos-master`** — **rule-sterile** lines: spine must match **`origin/<integration_branch>`**; publish only **`Roadmap/`** + anchors from the matching **`lane_project_id`** / `GMM_PROJECT_ROOT`. Align with [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1b.
+- **Engine branches (convention):** **`sandbox-genesis-mythos-master`**, **`godot-genesis-mythos-master`** — **rule-sterile** lines: spine must match **`origin/<integration_branch>`**; publish **`Roadmap/`** (includes **`Roadmap/Execution/`** when the project is on the **execution** roadmap track) + anchors from the matching **`lane_project_id`** / `GMM_PROJECT_ROOT`. Pairs with **EAT-QUEUE** **`sandbox`** / **`godot`** lanes via **`parallel_execution.tracks[]`**. Align with [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1b and [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]].
 - **invoke_on_empty_queue**: false — when false, skip GitForge when there were no prompt-queue entries to process after A.1 (Step 0–only or empty file).
 - **invoke_only_on_clean_success**: true — when true, skip GitForge if any prompt-queue entry this run got a failure disposition.
 

@@ -1,6 +1,7 @@
 ---
 title: Dual-track EAT-QUEUE operator guide
 created: 2026-04-05
+updated: 2026-04-08
 tags: [second-brain, eat-queue, parallel, operator]
 para-type: Resource
 status: active
@@ -47,6 +48,10 @@ When parallel routing applies, **PQ** and siblings live under `.technical/parall
 - `control-plane-nightly.jsonl` (when **A.5h** runs and nightly ledger is enabled — colocated with **PQ** for parallel tracks)
 
 **Task hand-off comms** for the lane: `{technical_bundle_root}/task-handoff-comms.jsonl` (see dispatcher.mdc).
+
+## Engine GitHub branches and execution track (2026-04)
+
+- **Branches `sandbox-genesis-mythos-master` / `godot-genesis-mythos-master`** on the export remote are the **published** engine lines for the same vault projects wired in **`parallel_execution.tracks[]`** (`lane_project_id`). They are **not** “lane names” in git — they are **branch + project** identifiers. After **execution-track** cleanup, both GMM projects keep **`roadmap_track: execution`** in **`roadmap-state.md`**; ongoing automation targets **`Roadmap/Execution/`** (see [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]). When you sync **`Roadmap/`** to GitHub (Step 1b), the **Execution** subtree is part of the tree — operators should not strip it.
 
 ## Further reading
 

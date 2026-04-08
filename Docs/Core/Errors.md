@@ -811,3 +811,52 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** No RESUME_ROADMAP deepen for Phase **2.5**; no L1 **(b1)** post–little-val.
 - **Suggested fixes:** Run **EAT-QUEUE lane godot** from a Cursor session where **`Task(queue)`** can call **`Task(roadmap)`**; keep active godot lines in **both** central pool and track **PQ**, or adjust workflow so **`pool_sync`** does not drop track-only rows.
 - **Recovery:** Re-run when Task is available; **`followup-deepen-exec-phase2-5-...`** still on godot **PQ**.
+
+### 2026-04-07 13:22 — EAT-QUEUE sandbox Phase 1 exec deepen — L1 post–little-val hard block (state_hygiene_failure)
+
+| Field | Value |
+|-------|--------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | medium |
+| approval | pending |
+| timestamp | 2026-04-07T13:22:00Z |
+| error_type | confidence-below-threshold |
+
+#### Trace
+
+- **Queue entry:** `followup-deepen-exec-phase1-sandbox-post-bootstrap-20260410T130500Z` — `RESUME_ROADMAP` deepen execution.
+- **`Task(roadmap)`:** Success; material mint under `Roadmap/Execution/`; nested ledger attested **`nested_validator_first`**, **`ira_post_first_validator`**, **`nested_validator_second`** with **`task_tool_invoked: true`**.
+- **`Task(validator)` (L1 b1):** Report `.technical/Validator/roadmap-handoff-auto-sandbox-genesis-mythos-master-exec-p1-2026-04-07T132000Z.md` — **`severity: high`**, **`recommended_action: block_destructive`**, **`primary_code: state_hygiene_failure`** (execution-track strictness).
+- **A.5b:** Repair line **`repair-l1-handoff-audit-sandbox-exec-p1-20260407T132100Z`** appended to `.technical/parallel/sandbox/prompt-queue.jsonl`; forward follow-up **`followup-deepen-exec-phase1-1-sandbox-20260410T131600Z`** retained.
+
+#### Summary
+
+- **Root cause:** Layer 1 hostile validator disagreed with “clean success” for execution hygiene / roll-up evidence (TBD rows, telemetry credibility per report).
+- **Impact:** Triggering queue line **consumed** with **provisional** disposition; **not** a clean Success drain; next runs should process **repair-first** line then **deepen** follow-up.
+- **Suggested fixes:** Run **`handoff-audit`** repair when ready; address gaps in L1 report; re-run **EAT-QUEUE lane sandbox**.
+- **Recovery:** Repair and deepen entries remain on sandbox **PQ**; Run-Telemetry: `.technical/Run-Telemetry/sandbox/eatq-layer1-sandbox-20260407T132200Z.md`.
+
+### 2026-04-07 07:42 — EAT-QUEUE godot Phase 1.1 execution deepen provisional (state_hygiene_failure)
+
+| Field | Value |
+|-------|--------|
+| pipeline | queue-eat-queue (Layer 1) |
+| severity | high |
+| approval | pending |
+| timestamp | 2026-04-07T07:42:02Z |
+| error_type | state-inconsistent |
+
+#### Trace
+
+- **Queue entry:** `followup-deepen-exec-p11-spine-godot-20260410T131600Z` — `RESUME_ROADMAP` deepen execution.
+- **`Task(roadmap)`:** Returned `#review-needed`; `material_state_change_asserted: true`; nested ledger shows mandatory balance helpers invoked (`nested_validator_first`, `ira_post_first_validator`, `nested_validator_second` all `task_tool_invoked: true`).
+- **Nested second validator (L2):** `.technical/Validator/roadmap-handoff-auto-godot-genesis-mythos-master-20260407T074201Z.md` with `severity: high`, `recommended_action: block_destructive`, `primary_code: incoherence`.
+- **L1 hostile validator (b1):** `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/godot-genesis-mythos-master-20260410T131600Z-followup-deepen-exec-p11-spine-godot.md` with `severity: high`, `recommended_action: block_destructive`, `primary_code: state_hygiene_failure`.
+- **Continuation enforcement:** Appended repair lines `repair-recal-exec-p11-godot-20260407T074201Z` and `repair-handoff-audit-godot-exec-p11-20260407T074201Z` to `.technical/parallel/godot/prompt-queue.jsonl`; original triggering line marked `queue_failed: true`.
+
+#### Summary
+
+- **Root cause:** Execution workflow/roadmap markers are inconsistent after deepen (`1.1` vs `1.1.1` lineage and roll-up closure state).
+- **Impact:** Run is treated as `provisional_success` with `suppress_clean_drain=true`; clean success consumption is blocked pending repair.
+- **Suggested fixes:** Process queued `handoff-audit`/`recal` repair entries first (repair-first), then re-run deepen only after hygiene passes.
+- **Recovery:** Queue continuation recorded in `.technical/parallel/godot/queue-continuation.jsonl`; Watcher lines written to canonical and godot mirror with `hygiene_issues_logged`.

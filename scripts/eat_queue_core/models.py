@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class ValidationResult(BaseModel):
@@ -42,3 +42,27 @@ class EatQueueRunPlan(BaseModel):
     parent_run_id: str
     intents: list[DispatchIntent]
     consumed_ids: list[str]
+
+
+class OptionAlternative(BaseModel):
+    """One row in params.option_evaluation.alternatives."""
+
+    id: str
+    summary: str
+    alignment_score: float | None = None
+
+
+class OptionEvaluation(BaseModel):
+    """Queue-Sources / RESUME_ROADMAP params.option_evaluation (canonical shape)."""
+
+    master_goal_ref: str
+    alternatives: list[OptionAlternative] = Field(min_length=1)
+    chosen: str
+    rationale: str
+    validator_ref: str | None = None
+
+
+class OptionEvaluationValidationResult(BaseModel):
+    ok: bool
+    divergence_codes: list[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)

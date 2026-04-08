@@ -13,9 +13,11 @@ manifest when ``build_plan`` lists both). **A.7 queue rewrite** must remove
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
@@ -24,8 +26,253 @@ from pydantic import BaseModel, Field
 from .lanes import FALLBACK_ALLOWED_LANES, filter_entries_by_lane, validate_lane_filter_token
 from .plan import append_decisions, build_plan, emit_plan_json, load_queue_file
 from .workflows import micro_workflow_for_entry
-from .models import EatQueueRunPlan, QueueEntry
-from .pool_sync import hydrate_track_pq_from_pool, read_central_pool_fanout_enabled
+from .models import (
+    EatQueueRunPlan,
+    OptionEvaluation,
+    OptionEvaluationValidationResult,
+    QueueEntry,
+)
+from .pool_sync import (
+    hydrate_track_pq_from_pool,
+    read_central_pool_fanout_enabled,
+    read_queue_rationale_enforcement_enabled,
+    read_tracking_intent_receipts_enabled,
+)
+
+
+def parallel_track_for_lane(lane_filter: str | None) -> str:
+    if lane_filter in ("sandbox", "godot"):
+        return lane_filter
+    return "-"
+
+
+def effective_queue_lane(entry: QueueEntry) -> str:
+    return (entry.queue_lane or "default").strip().lower()
+
+
+def entry_needs_option_evaluation(entry: QueueEntry, rationale_enforcement: bool) -> bool:
+    if not rationale_enforcement:
+        return False
+    mode = (entry.mode or "").upper()
+    primary = mode.split("-")[0].strip()
+    if primary != "RESUME_ROADMAP":
+        return False
+    p = entry.params or {}
+    return p.get("roadmap_track") == "execution"
+
+
+def resolve_goal_file(vault_root: Path, master_goal_ref: str) -> Path | None:
+    ref = master_goal_ref.strip().strip('"').strip("'")
+    if not ref or ".." in ref or ref.startswith("/"):
+        return None
+    root = vault_root.resolve()
+    cand = (root / ref).resolve()
+    try:
+        cand.relative_to(root)
+    except ValueError:
+        return None
+    return cand if cand.is_file() else None
+
+
+def validate_option_evaluation_for_entry(
+    entry: QueueEntry,
+    *,
+    vault_root: Path,
+    rationale_enforcement: bool,
+) -> OptionEvaluationValidationResult:
+    if not entry_needs_option_evaluation(entry, rationale_enforcement):
+        return OptionEvaluationValidationResult(ok=True)
+    raw = (entry.params or {}).get("option_evaluation")
+    if raw is None:
+        return OptionEvaluationValidationResult(
+            ok=False,
+            divergence_codes=["option_evaluation_missing"],
+            errors=["missing params.option_evaluation"],
+        )
+    try:
+        oe = OptionEvaluation.model_validate(raw)
+    except Exception as e:
+        return OptionEvaluationValidationResult(
+            ok=False,
+            divergence_codes=["option_evaluation_invalid"],
+            errors=[str(e)],
+        )
+    errors: list[str] = []
+    codes: list[str] = []
+    ids = {a.id for a in oe.alternatives}
+    if oe.chosen not in ids:
+        errors.append("chosen id not in alternatives")
+        codes.append("option_evaluation_invalid")
+    scores = [a.alignment_score for a in oe.alternatives]
+    if scores and all(x is not None for x in scores):
+        chosen_o = next(x for x in oe.alternatives if x.id == oe.chosen)
+        assert chosen_o.alignment_score is not None
+        mx = max(s for s in scores if s is not None)
+        if chosen_o.alignment_score + 1e-9 < mx:
+            errors.append("chosen alignment_score is not tied for max")
+            codes.append("alignment_score_mismatch")
+    goal = resolve_goal_file(vault_root, oe.master_goal_ref)
+    if goal is not None and oe.rationale.strip():
+        blob = goal.read_text(encoding="utf-8", errors="replace")
+        snippet = oe.rationale.strip()
+        chunk = snippet[: min(80, len(snippet))]
+        if len(chunk) >= 12 and chunk not in blob:
+            errors.append("rationale missing verbatim substring from master_goal_ref file")
+            codes.append("rationale_quote_missing")
+    return OptionEvaluationValidationResult(ok=len(errors) == 0, divergence_codes=codes, errors=errors)
+
+
+def _params_fingerprint(params: dict | None) -> str:
+    if not params:
+        return "empty"
+    try:
+        b = json.dumps(params, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    except (TypeError, ValueError):
+        return "unhashable"
+    return hashlib.sha256(b).hexdigest()[:16]
+
+
+def append_task_handoff_jsonl(path: Path, obj: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    line = json.dumps(obj, ensure_ascii=False) + "\n"
+    prev = path.read_text(encoding="utf-8") if path.is_file() else ""
+    path.write_text(prev + line, encoding="utf-8")
+
+
+def build_intent_snapshot_row(
+    *,
+    vault_root: Path,
+    parent_run_id: str,
+    entry: QueueEntry,
+    parallel_track: str,
+    params_hash: str,
+) -> dict[str, Any]:
+    rid = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    lane = effective_queue_lane(entry)
+    return {
+        "schema_version": 1,
+        "task_correlation_id": rid,
+        "parent_task_correlation_id": None,
+        "record_type": "intent_snapshot",
+        "iso_timestamp": now,
+        "timestamp": now,
+        "from_actor": "eat_queue_core",
+        "to_actor": "intent_tracking",
+        "subagent_type": "intent_tracking",
+        "queue_entry_id": entry.id,
+        "parent_run_id": parent_run_id,
+        "project_id": entry.project_id or "-",
+        "vault_root": str(vault_root),
+        "parallel_track": parallel_track,
+        "queue_lane": lane,
+        "mode": entry.mode,
+        "params_hash": params_hash,
+        "body": json.dumps({"params_hash": params_hash}, ensure_ascii=False),
+        "sanitization_rules_applied": [],
+    }
+
+
+def build_intent_receipt_row(
+    *,
+    vault_root: Path,
+    parent_run_id: str,
+    entry: QueueEntry,
+    parallel_track: str,
+    oe_res: OptionEvaluationValidationResult,
+    intent_snapshot_task_correlation_id: str | None,
+) -> dict[str, Any]:
+    rid = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    lane = effective_queue_lane(entry)
+    status_class = "success" if oe_res.ok else "provisional_success"
+    div = list(dict.fromkeys(oe_res.divergence_codes))
+    planned = (entry.params or {}).get("action") if isinstance(entry.params, dict) else None
+    planned_action = str(planned) if planned is not None else "dispatch"
+    body_obj = {
+        "status_class": status_class,
+        "divergence_codes": div,
+        "planned_action": planned_action,
+        "actual_action": "eat_queue_plan_emitted",
+        "ledger_ref": [rid],
+    }
+    return {
+        "schema_version": 1,
+        "task_correlation_id": rid,
+        "parent_task_correlation_id": None,
+        "record_type": "intent_actual_receipt",
+        "iso_timestamp": now,
+        "timestamp": now,
+        "from_actor": "eat_queue_core",
+        "to_actor": "intent_tracking",
+        "subagent_type": "intent_tracking",
+        "queue_entry_id": entry.id,
+        "parent_run_id": parent_run_id,
+        "project_id": entry.project_id or "-",
+        "vault_root": str(vault_root),
+        "parallel_track": parallel_track,
+        "queue_lane": lane,
+        "mode": entry.mode,
+        "status_class": status_class,
+        "status": "ok" if oe_res.ok else "provisional",
+        "divergence_codes": div,
+        "planned_action": planned_action,
+        "actual_action": "eat_queue_plan_emitted",
+        "ledger_ref": body_obj["ledger_ref"],
+        "retryable": not oe_res.ok,
+        "intent_snapshot_id": intent_snapshot_task_correlation_id,
+        "body": json.dumps(body_obj, ensure_ascii=False),
+        "sanitization_rules_applied": [],
+    }
+
+
+def emit_intent_tracking_for_plan_pass(
+    *,
+    vault_root: Path,
+    queue_path: Path,
+    enriched: dict[str, Any],
+    entries_lane: list[QueueEntry],
+    lane_filter: str | None,
+) -> list[str]:
+    if not read_tracking_intent_receipts_enabled(vault_root):
+        return []
+    comms_path = queue_path.parent / "task-handoff-comms.jsonl"
+    by_id = {e.id: e for e in entries_lane}
+    rationale_enf = read_queue_rationale_enforcement_enabled(vault_root)
+    parallel_track = parallel_track_for_lane(lane_filter)
+    pr = str(enriched.get("parent_run_id", "-"))
+    msgs: list[str] = []
+    for intent in enriched.get("intents") or []:
+        qeid = intent.get("queue_entry_id")
+        if not isinstance(qeid, str):
+            continue
+        e = by_id.get(qeid)
+        if e is None:
+            continue
+        ph = _params_fingerprint(e.params if isinstance(e.params, dict) else None)
+        snap = build_intent_snapshot_row(
+            vault_root=vault_root,
+            parent_run_id=pr,
+            entry=e,
+            parallel_track=parallel_track,
+            params_hash=ph,
+        )
+        append_task_handoff_jsonl(comms_path, snap)
+        msgs.append(f"intent_snapshot {qeid}")
+        oe_res = validate_option_evaluation_for_entry(
+            e, vault_root=vault_root, rationale_enforcement=rationale_enf
+        )
+        rec = build_intent_receipt_row(
+            vault_root=vault_root,
+            parent_run_id=pr,
+            entry=e,
+            parallel_track=parallel_track,
+            oe_res=oe_res,
+            intent_snapshot_task_correlation_id=snap["task_correlation_id"],
+        )
+        append_task_handoff_jsonl(comms_path, rec)
+        msgs.append(f"intent_actual_receipt {qeid} {rec['status_class']}")
+    return msgs
 
 
 def _entry_action(e: QueueEntry) -> str:
@@ -313,6 +560,15 @@ def run_full_eat_queue_cycle(
 
         emit_enriched_plan(ppath, enriched)
         plans_out.append(enriched)
+        it_msgs = emit_intent_tracking_for_plan_pass(
+            vault_root=root,
+            queue_path=qpath,
+            enriched=enriched,
+            entries_lane=entries_lane,
+            lane_filter=lane_filter,
+        )
+        if it_msgs:
+            messages.extend(it_msgs)
         summaries.append(execute_roadmap_with_plan(plan))
         passes = pass_idx + 1
 

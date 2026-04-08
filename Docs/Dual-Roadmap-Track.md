@@ -72,6 +72,10 @@ Advisory flags in `workflow_state` ## Log **Status / Next** (config: `prompt_def
 
 **Conceptual** track does **not** require execution-only artifacts (e.g. depth-4 pseudo-code blocks) for **advance-phase** on phases 5–6 or for deepen **pre-create** at depth ≥4. **Execution** track keeps those gates. Deterministic rules and observability fields live in [[3-Resources/Second-Brain/Docs/Control-Plane-Heuristics-v2|Control-Plane-Heuristics-v2]]; Config: `roadmap.control_plane_v2`.
 
+## Execution tracking linkage (`ledger_ref`)
+
+On the **execution** track, **`1-Projects/<project_id>/Roadmap/Execution/roadmap-state-execution.md`** frontmatter **must** include **`ledger_ref`** as a **YAML array of strings** (stable ids from **`intent_actual_receipt`** rows in **`task-handoff-comms.jsonl`**, e.g. receipt **`task_correlation_id`** or synthetic receipt id) for **each phase rollup** when a deepen or decision-closing run completes. This links junior-visible execution state to the nervous-system receipt trail (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Parallel execution tracking). **`workflow_state-execution.md`** may mirror the same **`ledger_ref`** for the active cursor when operators want a single scroll point.
+
 ## Related
 
 - [[3-Resources/Second-Brain/Docs/Conceptual-Execution-Handoff-Checklist|Conceptual-Execution-Handoff-Checklist]]

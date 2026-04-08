@@ -30,6 +30,7 @@ Example line (chained): `requestId: abc123 | chain_id: queue-456 | segment: RESE
 - **message**: Short human-readable summary; use quotes and escape internal double quotes as `\"`.
 - **trace**: For failures, the **full error stack or log excerpt** (not a one-liner). For success, empty string or short note. Escape internal double quotes as `\"`.
 - **completed**: ISO 8601 timestamp when the run finished (e.g. `2026-02-27T12:34:56.789Z`). Enables lag estimation: compare with the timestamp on the matching line in `Watcher-Signal.md` (triggered at) to compute end-to-end delay.
+- **Intent receipts (parallel tracking):** **`status`** remains only **`success`** or **`failure`**. When **`intent_actual_receipt`** uses **`status_class: provisional_success`** (e.g. missing **`option_evaluation`** under enforcement), Layer 1 **should** echo **`status_class=provisional_success`** and **`divergence_codes=[...]`** inside **`trace`** (parse-safe key=value fragments) so **`task-handoff-comms.jsonl`** and Watcher lines stay joinable per [Queue-Sources](3-Resources/Second-Brain/Queue-Sources.md) § Parallel execution tracking.
 
 ## Path and format
 

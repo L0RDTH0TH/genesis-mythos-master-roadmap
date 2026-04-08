@@ -26,6 +26,62 @@ When **`parallel_execution.enabled`** is **true** and **`default_to_legacy`** is
 
 ---
 
+## Parallel execution tracking — task-handoff receipts + `option_evaluation`
+
+**Canonical JSONL:** Per-track **`{technical_bundle_root}/task-handoff-comms.jsonl`** (same bundle as **PQ** per **A.0x**). Extends [[3-Resources/Second-Brain/Docs/Task-Handoff-Comms-Spec|Task-Handoff-Comms-Spec]] with **orchestration** rows (`handoff_out` / `return_in`) plus **receipt** rows below. When [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] **`tracking.intent_receipts_enabled`** is **`false`**, Layer 1 / harness **must not** append receipt rows (handoff pairs unchanged when **`task_handoff_comms.enabled`** is true).
+
+### New `record_type` values (receipts)
+
+| `record_type` | Purpose |
+|---------------|---------|
+| `intent_snapshot` | Intent captured at plan/dispatch boundary for a queue entry (mode, params fingerprint, lane/track context). |
+| `intent_actual_receipt` | Final intent-vs-actual row for that entry after the planned dispatch slice (synthetic completion in Python harness; Layer 1 fills live outcomes). |
+
+### Required fields on `intent_actual_receipt` rows
+
+All receipt objects **must** include **`schema_version`** (int, use **`1`**) and **`record_type`**.
+
+- **Identity / join:** `timestamp` (ISO 8601 UTC), `queue_entry_id`, `parent_run_id`, `task_correlation_id` (use `"-"` if not yet assigned).
+- **Parallel / lane:** `parallel_track` (e.g. `sandbox`, `godot`, or `"-"` for legacy single-bundle), `queue_lane` (effective lane token; `"default"` when omitted on entry).
+- **Outcome:** `status_class` — `success` \| `provisional_success` \| `failure`; `status` — short string for Watcher-compatible mirroring; `divergence_codes[]` — only codes from the **allowlist** in this section; `planned_action`, `actual_action` (strings); optional `retryable` (bool).
+- **Intent carry:** `mode` (queue mode string); `params_hash` (optional stable hash of canonical params) and/or `intent_snapshot_id` (correlation to a prior `intent_snapshot` row).
+- **Phase 7 forward-ref:** `ledger_ref[]` — array of stable ids (receipt id, `task_correlation_id`, or synthetic id) **to be copied** into **`roadmap-state-execution.md`** frontmatter on phase rollups when execution state is updated; may be **empty** until state is stamped (see [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] § Execution tracking linkage).
+- **References (optional):** `telemetry_path`, `validator_report_path`, `execution_state_refs[]`.
+
+### `divergence_codes` allowlist (receipt rows)
+
+Initial codes (extend only via doc + harness PR): `option_evaluation_missing`, `option_evaluation_invalid`, `rationale_quote_missing`, `alignment_score_mismatch`, `unknown_divergence_code`, `validator_ref_unresolved`. Unknown codes → treat as **`#review-needed`** / harness flags **`unknown_divergence_code`**.
+
+### `RESUME_ROADMAP` — `params.option_evaluation` (exact shape)
+
+When [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] **`queue.rationale_enforcement_enabled`** is **`true`**, **mandatory** for **`RESUME_ROADMAP`** (and chain primary **`RESUME_ROADMAP`**) entries where **`params.roadmap_track`** is **`execution`** **or** project **`effective_track`** is **execution** (Layer 1 resolution per § **`effective_track` resolution**). Optional when enforcement is **false**.
+
+```json
+{
+  "master_goal_ref": "<vault-relative path or wiki-link target to PMG / goal section>",
+  "alternatives": [
+    { "id": "<string>", "summary": "<string>", "alignment_score": <number> }
+  ],
+  "chosen": "<id matching one alternative>",
+  "rationale": "<string; when enforcement on must include verbatim substring present in master goal file for master_goal_ref—see Safety-Invariants § Rationale honesty>",
+  "validator_ref": "<optional vault path or task-handoff correlation id>"
+}
+```
+
+**Normative:** `chosen` **must** equal one **`alternatives[].id`**. If **every** alternative has **`alignment_score`**, **`chosen`** must reference an alternative whose score **equals the maximum** (ties allowed). **`agent_reasoning`** remains **advisory-only** and does **not** satisfy this object.
+
+### Enforcement policy (Python harness + Layer 1)
+
+When **`queue.rationale_enforcement_enabled`** is **true** and a gated entry lacks valid **`option_evaluation`**: **do not** hard-drop the queue line by default — emit **`intent_actual_receipt`** with **`status_class: provisional_success`**, **`divergence_codes`** including **`option_evaluation_missing`** or **`option_evaluation_invalid`**, and **`planned_action`** / **`actual_action`** describing the gap. Operators may tighten to **block consumption** in a future Config flag; until then **provisional + codes** preserves traceability without stalling the queue.
+
+**Config:** **`tracking.intent_receipts_enabled`** (default **true**); **`queue.rationale_enforcement_enabled`** (default **false**). **Speed-mode opt-out:** set **`tracking.intent_receipts_enabled: false`** in Second-Brain-Config to skip receipt appends.
+
+### Receipt backfill (optional)
+
+When receipt rows were never written (**tracking off**, pre-migration runs, or I/O failure), operators may **reconstruct** approximate intent→outcome joins by pairing existing **`handoff_out`** / **`return_in`** lines in **`task-handoff-comms.jsonl`** with **`prompt-queue-audit.jsonl`** **`entry_consumed`** / **`line_removed`** events and Run-Telemetry paths — then append synthetic **`intent_actual_receipt`** rows only when a human has verified the mapping (do not auto-fabricate **`ledger_ref[]`**).
+
+---
+
 ## EAT-QUEUE BREAK-SPIN
 
 **Trigger:** User says **EAT-QUEUE BREAK-SPIN** (or **Process queue** with **BREAK-SPIN**) — same **EAT-QUEUE** pass as usual; [[.cursor/rules/always/dispatcher.mdc|dispatcher]] routes to **`Task(queue)`**.
