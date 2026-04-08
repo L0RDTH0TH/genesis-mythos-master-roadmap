@@ -10,3 +10,7 @@
 {"ts": "2026-04-08T18:59:52.978123Z", "parent_run_id": "eatq-godot-20260408T200000Z", "rule_id": "fsm:partitioned->pass1_done", "from_state": "partitioned", "to_state": "pass1_done", "queue_entry_id": null, "reason": "plan_pass1"}
 {"ts": "2026-04-08T18:59:52.978244Z", "parent_run_id": "eatq-godot-20260408T200000Z", "rule_id": "fsm:pass1_done->pass3_done", "from_state": "pass1_done", "to_state": "pass3_done", "queue_entry_id": null, "reason": "plan_pass3"}
 {"ts": "2026-04-08T18:59:52.978280Z", "parent_run_id": "eatq-godot-20260408T200000Z", "rule_id": "fsm:pass3_done->emitted", "from_state": "pass3_done", "to_state": "emitted", "queue_entry_id": null, "reason": "emit"}
+{"ts": "2026-04-08T19:52:11.504710Z", "parent_run_id": "eatq-fullcycle-ccd8110c0e5d", "rule_id": "fsm:start->partitioned", "from_state": "start", "to_state": "partitioned", "queue_entry_id": null, "reason": "partition"}
+{"ts": "2026-04-08T19:52:11.504819Z", "parent_run_id": "eatq-fullcycle-ccd8110c0e5d", "rule_id": "fsm:partitioned->pass1_done", "from_state": "partitioned", "to_state": "pass1_done", "queue_entry_id": null, "reason": "plan_pass1"}
+{"ts": "2026-04-08T19:52:11.504912Z", "parent_run_id": "eatq-fullcycle-ccd8110c0e5d", "rule_id": "fsm:pass1_done->pass3_done", "from_state": "pass1_done", "to_state": "pass3_done", "queue_entry_id": null, "reason": "plan_pass3"}
+{"ts": "2026-04-08T19:52:11.504961Z", "parent_run_id": "eatq-fullcycle-ccd8110c0e5d", "rule_id": "fsm:pass3_done->emitted", "from_state": "pass3_done", "to_state": "emitted", "queue_entry_id": null, "reason": "emit"}

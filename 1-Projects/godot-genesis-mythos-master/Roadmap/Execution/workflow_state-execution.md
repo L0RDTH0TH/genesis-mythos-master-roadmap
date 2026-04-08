@@ -12,12 +12,12 @@ roadmap_track: execution
 status: in-progress
 automation_level: semi
 current_phase: 2
-current_subphase_index: "2.1.5"
+current_subphase_index: "2.2"
 cursor_transition: "phase2_primary_execution_mint_from_phase1_closure"
 last_auto_iteration: ""
 iterations_per_phase:
   "1": 5
-  "2": 6
+  "2": 7
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -25,8 +25,8 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: "41"
-last_conf: "90"
+last_ctx_util_pct: "43"
+last_conf: "89"
 ---
 
 # Workflow state (execution) — godot-genesis-mythos-master
@@ -67,6 +67,7 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 | 2026-04-08 22:30 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-2-Execution-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-08-2230]] | 15 | 2 | 37 | 63 | 80 | 43700 / 128000 | +2 | 91 | Minted execution tertiary **2.1.2** on mirrored spine (sibling to **2.1.1**); explicit `G-2.1.2-*` label-layer replay parity + boundary-hook rows composing with **2.1.1** ordering digest; cursor → **`2.1.3`**. Queue: `followup-deepen-exec-p212-tertiary-godot-20260408T223000Z` \| `parent_run_id: eatq-godot-20260408-layer1-batch` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_212_label_mapping` |
 | 2026-04-10 18:10 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-3-Execution-Staged-Delta-Bundles-Merge-Seams-and-Apply-Ordering-Roadmap-2026-04-10-1810]] | 16 | 2 | 39 | 61 | 80 | 45300 / 128000 | +2 | 90 | Minted execution tertiary **2.1.3** on mirrored spine: **stage seams S0→S5**, `StagedDeltaBundle` merge/apply ordering, `G-2.1.3-*` PASS rows + explicit non-blocking defer for `GMM-2.4.5-*` / CI; godot (A) vs sandbox (B) comparand; junior stub pseudocode at seams. Queue entry targeted “secondary 2.1” but vault already had secondary — **reconciled to authoritative cursor `2.1.3`** (idempotent forward). Cursor → **`2.1.4`**. `queue_entry_id: followup-deepen-exec-p21-mint-godot-20260410T180500Z` \| `parent_run_id: eatq-godot-20260408-layer1-batch` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_213_stage_seams` |
 | 2026-04-08 22:41 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-4-Execution-Bundle-Identity-Seam-Catalog-Stability-and-Replay-Diff-Roadmap-2026-04-08-2241]] | 17 | 2 | 41 | 59 | 80 | 46800 / 128000 | +2 | 90 | Minted execution tertiary **2.1.4** on mirrored spine: **BundleIdentity**, **SeamCatalogRevision**, replay-equivalence + deterministic bundle diff, `G-2.1.4-*` PASS rows + explicit non-blocking defer for `GMM-2.4.5-*` / CI; godot (A) vs sandbox (B) comparand; composes **2.1.3** seams. **Ahead-of-schedule guard:** queue `user_guidance` cited **2.1.3** but authoritative pre-read cursor was already **`2.1.4`** — **stale_queue_target_reconciled: true** (mint **2.1.4**, not duplicate **2.1.3**). Cursor → **`2.1.5`**. `queue_entry_id: followup-deepen-exec-p213-tertiary-godot-20260408T224100Z` \| `parent_run_id: eatq-godot-layer1-20260408-p213` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_214_bundle_identity_replay_diff` |
+| 2026-04-10 18:35 | deepen | [[1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-5-Execution-Replay-Ledger-Canonical-Diff-Surface-and-Restore-Cursor-Roadmap-2026-04-10-1830]] | 18 | 2 | 43 | 57 | 80 | 48500 / 128000 | +2 | 89 | Minted execution tertiary **2.1.5** (replay ledger + canonical diff + restore cursor) on mirrored spine; `G-2.1.5-*` PASS rows + explicit non-blocking defer for `GMM-2.4.5-*` / CI; composes **2.1.4** + **2.1.3** seam references; closes **2.1.x** tertiary chain for `phase2_gate_validation_parity`. Queue cited “secondary 2.1 mint” — **reconciled:** secondary already present; authoritative cursor was **`2.1.5`**. Cursor → **`2.2`** (next: mirrored **Phase-2-2-Intent-Resolver-and-Hook-Mapping**). `queue_entry_id: followup-deepen-exec-p21-mint-godot-20260410T180500Z` \| `parent_run_id: eatq-fullcycle-ccd8110c0e5d` \| `queue_lane: godot` \| `pipeline_mode_used: balance` \| `ctx_token_strategy: execution_tertiary_215_replay_ledger_diff_restore` |
 
 ## Execution gate tracker
 
@@ -76,8 +77,8 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 | `rollup_1_primary_from_1_1` | `1.1` secondary rollup | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Execution-Foundation-and-Core-Architecture-Roadmap-2026-04-10-1315.md` | `closed` | Phase-1 primary gate map now includes closure verdict + owner signoff token `owner_signoff_rollup_1_primary_from_1_1_2026-04-10`; no residual open rows from 1.1 roll-up. |
 | `rollup_1_primary_from_1_2` | `1.2` secondary rollup (`G-1.2-*`) | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Execution-Foundation-and-Core-Architecture-Roadmap-2026-04-10-1315.md` | `closed` | Phase-1 primary gate map includes propagated 1.2 closure anchors (`phase1_gate_graph_taxonomy`, `phase1_gate_graph_edges`, `phase1_gate_topology_determinism`, `phase1_gate_dryrun_parity`) with lane A/B parity language aligned to the 1.2 secondary evidence rows. |
 | `rollup_2_primary_from_2_1` | Secondary **2.1** execution mirror + `G-2.1-*` evidence rows | `1-Projects/godot-genesis-mythos-master/Roadmap/Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Execution-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-08-1805.md` → primary [[roadmap-state-execution#Phase summaries]] | `closed` | **2026-04-08:** `G-2.1-*` table complete on secondary 2.1; Phase 2 primary gate map row closed with `owner_signoff_rollup_2_primary_from_2_1_2026-04-08`. Tertiary defer tracked as explicit FAIL (non-blocking). |
-| `phase2_gate_validation_parity` | Tertiary chain **2.1.1–2.1.5** + `G-2.1.*` evidence rows | [[roadmap-state-execution#Phase summaries]] — Phase **2** tertiaries under `Phase-2-1-Pipeline-Stages-Seed-to-World/` | `in-progress` | **PASS** rows for **2.1.1–2.1.4** on disk; **2.1.5** pending mint — exit when **2.1.5** complete + summary updated (advisory execution-deferred seams may remain explicit FAIL). |
-| `phase2_gate_replay_traceability` | **2.1.4–2.1.5** replay/diff + primary rollup hooks | [[roadmap-state-execution#Phase summaries]] + Phase 2 primary [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Execution-Procedural-Generation-and-World-Building-Roadmap-2026-04-08-1227]] | `open` | **2.1.5** minted with chain evidence; `phase2_gate_replay_traceability` moves toward **closed** in [[roadmap-state-execution]] (IRA repair **2026-04-08**). |
+| `phase2_gate_validation_parity` | Tertiary chain **2.1.1–2.1.5** + `G-2.1.*` evidence rows | [[roadmap-state-execution#Phase summaries]] — Phase **2** tertiaries under `Phase-2-1-Pipeline-Stages-Seed-to-World/` | `closed` | **2026-04-10:** PASS rows for **2.1.1–2.1.5** on disk + summary updated; advisory execution-deferred seams remain explicit non-blocking FAIL rows only. |
+| `phase2_gate_replay_traceability` | **2.1.4–2.1.5** replay/diff + primary rollup hooks | [[roadmap-state-execution#Phase summaries]] + Phase 2 primary [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Execution-Procedural-Generation-and-World-Building-Roadmap-2026-04-08-1227]] | `closed` | **2026-04-10:** **2.1.5** minted with replay-ledger + diff + restore hooks; primary pending lineage table updated to bidirectional links (registry/CI still deferred per map). |
 
 ## Deferred safety seam closure map
 
