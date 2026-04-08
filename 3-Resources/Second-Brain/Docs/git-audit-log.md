@@ -634,3 +634,22 @@ Use a level-3 heading per event for scanability:
 | integration_branch | iteration-2-roadmap-rules |
 | result | **Spine:** `git checkout origin/iteration-2-roadmap-rules -- .cursor scripts Docs README.md` on **`sandbox-genesis-mythos-master`**. **Step 1b:** `rsync --delete` vault `Roadmap/` + copied `sandbox-genesis-mythos-master-goal.md` and `sandbox-genesis-mythos-master-Roadmap-MOC.md` from `GMM_PROJECT_ROOT`. **Commit:** `a17b5f9` — `chore(engine): sync sandbox vault Roadmap + anchors to GitHub (integration spine)`. **Push:** `origin/sandbox-genesis-mythos-master` — https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/tree/sandbox-genesis-mythos-master. Per [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|git-push-workflow]] (engine branch; rule-sterile spine + project delta). **Note:** Full `git merge origin/iteration-2-roadmap-rules` was aborted due to mass conflicts; spine refresh used **path checkout** from integration tip instead. |
 | error_excerpt | — |
+
+### 2026-04-08 19:49 UTC — gitforge | partial (vault push blocked; engine export ok)
+
+| Field | Value |
+|-------|--------|
+| mode | balance |
+| source_pipeline_mode | balance |
+| branch_context | vault: `iteration-2-roadmap-rules`; export: `godot-genesis-mythos-master` |
+| parallel_track | godot |
+| parallel_branch_prefix | godot- |
+| lane_project_id | godot-genesis-mythos-master |
+| queue_success | true |
+| actions | audit_logged; vault_commit_attempted; vault_push_attempted; export_sync_attempted; export_push_attempted; lock_acquire; lock_release |
+| vault_root | /home/darth/Documents/Second-Brain |
+| export_repo_root | /home/darth/Documents/gmm-roadmap-export |
+| parallel_export_path | /home/darth/Documents/gmm-roadmap-export |
+| integration_branch | iteration-2-roadmap-rules |
+| result | **Lock:** `acquire` OK (30s; track `godot`); **`release`** OK. **Vault:** commit **`3cf7ff7`** — `chore(vault): post EAT-QUEUE godot lane A.7a (balance)` (144 files). **`git push origin iteration-2-roadmap-rules`:** rejected **non-fast-forward** vs remote. **`git pull --rebase`:** aborted — **mass add/add conflicts** replaying divergent history (rebase **aborted**; working tree restored to **`3cf7ff7`**). **Operator:** reconcile vault remote vs local (separate clone histories on same GitHub repo) before push — e.g. coordinated merge, or push vault to a different remote/branch per policy. **Export (engine Step 1b):** checkout **`godot-genesis-mythos-master`**; `rsync --delete` `1-Projects/godot-genesis-mythos-master/Roadmap/` → export `Roadmap/` + anchor copies. **Commit:** **`caa2d11`** — `chore(export): sync godot Roadmap from vault (GitForge godot lane)`. **Push:** **`origin/godot-genesis-mythos-master`** — `129e795..caa2d11`. **`gitforge.modes.balance.export_sync`:** false in Config — engine mirror still run for **godot lane** hand-off (roadmap-only branch). |
+| error_excerpt | vault push: non-fast-forward; rebase conflicts — vault commit local-only until operator resolves |
