@@ -194,7 +194,7 @@ parallel_execution:
 - **Pipeline tier:** **`effective_pipeline_mode`** **`speed`** → GitForge is **not** called (fast runs skip automatic vault git). **`balance`** and **`quality`** → **one** **`Task(gitforge)`** after **A.7**, hand-off **`mode: balance`** for both; **`quality`** is traced via **`source_pipeline_mode`** (same git rules as balance — quality is stricter **pipeline** enforcement, not a separate export tier).
 - **export_repo_root**: absolute path to the `gmm-roadmap-export` checkout (see [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]).
 - **integration_branch**: branch name for the **canonical system mirror** — complete `.cursor/` (including **`.cursor/sync/`**), full queue **`scripts/`** (`eat_queue_core`, `queue-gate-compute.py`, **`gitforge_lock.py`**), full **`Docs/`** + **`Docs/Core/`** (all top-level `3-Resources/Second-Brain/*.md`) + **`Docs/Second-Brain-User-Flows/`** (see workflow § Branch purposes and export coverage). Default `iteration-2-roadmap-rules`.
-- **Engine branches (convention):** **`sandbox-genesis-mythos-master`**, **`godot-genesis-mythos-master`** — **rule-sterile** lines: spine must match **`origin/<integration_branch>`**; publish **`Roadmap/`** (includes **`Roadmap/Execution/`** when the project is on the **execution** roadmap track) + anchors from the matching **`lane_project_id`** / `GMM_PROJECT_ROOT`. Pairs with **EAT-QUEUE** **`sandbox`** / **`godot`** lanes via **`parallel_execution.tracks[]`**. Align with [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1b and [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]].
+- **Engine branches (convention):** **`sandbox-genesis-mythos-master`**, **`godot-genesis-mythos-master`** — **roadmap-only** lines: publish **`Roadmap/`** (includes **`Roadmap/Execution/`** when the project is on the **execution** roadmap track) + anchors from the matching **`lane_project_id`** / `GMM_PROJECT_ROOT`. Do **not** publish global `.cursor/`, `scripts/`, or system `Docs/` on engine branches. Pairs with **EAT-QUEUE** **`sandbox`** / **`godot`** lanes via **`parallel_execution.tracks[]`**. Align with [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1b and [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]].
 - **invoke_on_empty_queue**: false — when false, skip GitForge when there were no prompt-queue entries to process after A.1 (Step 0–only or empty file).
 - **invoke_only_on_clean_success**: true — when true, skip GitForge if any prompt-queue entry this run got a failure disposition.
 
@@ -234,7 +234,10 @@ gitforge:
       - "Roadmap/"
       - "<PROJ_ID>-goal.md"
       - "<PROJ_ID>-Roadmap-MOC.md"
-    engine_spine_source: "origin/<integration_branch>"
+    engine_forbidden_prefixes:
+      - ".cursor/"
+      - "scripts/"
+      - "Docs/"
   invoke_on_empty_queue: false
   invoke_only_on_clean_success: true
   modes:
