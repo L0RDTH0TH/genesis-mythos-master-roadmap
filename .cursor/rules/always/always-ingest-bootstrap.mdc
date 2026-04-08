@@ -1,9 +1,0 @@
----
-description: "On INGEST MODE / Process Ingest / run ingests, ingest behavior is handled by IngestSubagent (agents/ingest.mdc). This file is a redirect only."
-globs: "*"
-alwaysApply: true
----
-
-# always-ingest-bootstrap
-
-When the user says **"INGEST MODE"**, **"Process Ingest"**, or **"run ingests"**, ingest processing is handled by the **IngestSubagent** ([agents/ingest.mdc](.cursor/rules/agents/ingest.mdc)). That subagent runs non-MD handling, embedded image normalization, Phase 1 full-autonomous-ingest (propose + Decision Wrapper), and Phase 2 apply-mode when triggered by approved wrappers via EAT-QUEUE. No ingest logic here; routing is via system-funnels and dispatcher to IngestSubagent.

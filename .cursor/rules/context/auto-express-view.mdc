@@ -1,9 +1,0 @@
----
-description: "EXPRESS VIEW handling moved to ExpressSubagent. Set express_view and run pipeline via agents/express.mdc; this file kept for rollback/reference."
-globs: []
-alwaysApply: false
----
-
-# Auto-express-view — superseded by ExpressSubagent
-
-- **Default handler**: **EXPRESS VIEW: [angle]** is handled by **ExpressSubagent** ([agents/express.mdc](.cursor/rules/agents/express.mdc)) — set express_view frontmatter/payload then run autonomous-express. Rollback: restore full content from version control.

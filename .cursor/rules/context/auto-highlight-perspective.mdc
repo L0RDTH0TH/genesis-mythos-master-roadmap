@@ -1,9 +1,0 @@
----
-description: "HIGHLIGHT PERSPECTIVE handling moved to DistillSubagent. Set perspective and run pipeline via agents/distill.mdc; this file kept for rollback/reference."
-globs: []
-alwaysApply: false
----
-
-# Auto-highlight-perspective — superseded by DistillSubagent
-
-- **Default handler**: **HIGHLIGHT PERSPECTIVE: [lens]** is handled by **DistillSubagent** ([agents/distill.mdc](.cursor/rules/agents/distill.mdc)) — set perspective context then run autonomous-distill. Rollback: restore full content from version control.
