@@ -52,13 +52,13 @@ Non-execution track: this §0 **does not** apply to Research for conceptual-only
 
 | # | Allowlist prefix | Notes |
 |---|------------------|--------|
-| 1 | **`https://docs.godotengine.org/en/stable/`** | Stable English manual (covers **`/classes/`**, **`/tutorials/`**, and all subtrees under **`/en/stable/`**). |
-| 2 | **`https://docs.godotengine.org/en/stable/classes/`** | Class API reference (redundant with row 1 for matching; listed explicitly for operators). |
-| 3 | **`https://docs.godotengine.org/en/stable/tutorials/`** | Tutorials subtree (redundant with row 1; listed explicitly). |
+| 1 | **`https://docs.godotengine.org/en/stable/`** | Stable English manual (covers **`/classes/`** and subtrees under **`/en/stable/`**). |
+| 2 | **`https://docs.godotengine.org/en/stable/classes/`** | Class API reference (listed explicitly for playable **GDScript** / API precision). |
+| 3 | **`https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/`** | **GDScript** tutorial subtree — primary grammar surface for a **playable GDScript game** master goal. |
 | 4 | **`https://godotengine.org/article/`** | Official **godotengine.org** articles only. |
 | 5 | **`https://godotengine.org/releases/`** | Official release notes / download lineage pages only. |
 
-**Reject for godot execution citations (non-exhaustive):** Any URL that does **not** start with **one** of rows **1–5** — including **`https://docs.godotengine.org/en/4.x/`**, **`/latest/`**, **`https://docs.godotengine.org/`** without **`/en/stable/`** for docs paths, **`https://godotengine.org/`** without **`/article/`** or **`/releases/`** prefix, community forums, Asset Library, GitHub raw, or **sandbox-lane** URLs (cppreference, MSVC, GCC docs).
+**Reject for godot execution citations (non-exhaustive):** Any URL that does **not** start with **one** of rows **1–5** — including **`https://docs.godotengine.org/en/4.x/`**, **`/latest/`**, **`https://docs.godotengine.org/`** without **`/en/stable/`** for docs paths, **`https://godotengine.org/`** without **`/article/`** or **`/releases/`** prefix, community forums, Asset Library, GitHub raw, or **sandbox-lane** URLs (cppreference, Clang/llvm docs, MSVC, GCC onlinedocs, Core Guidelines site).
 
 ### `sandbox` lane — allowlist prefixes (vetted)
 
@@ -66,10 +66,12 @@ Non-execution track: this §0 **does not** apply to Research for conceptual-only
 |---|------------------|--------|
 | 1 | **`https://en.cppreference.com/w/`** | cppreference wiki (**`/w/`** subtree). |
 | 2 | **`https://cplusplus.com/reference/`** | cplusplus **reference** subtree only. |
-| 3 | **`https://gcc.gnu.org/onlinedocs/`** | GCC official onlinedocs. |
-| 4 | **`https://learn.microsoft.com/en-us/cpp/`** | Microsoft C++ language reference ( **`en-us/cpp/`** path). |
+| 3 | **`https://gcc.gnu.org/onlinedocs/`** | GCC official onlinedocs (vendor FSF). |
+| 4 | **`https://clang.llvm.org/docs/`** | Clang official documentation (**LLVM** vendor). |
+| 5 | **`https://isocpp.github.io/CppCoreGuidelines/`** | ISO C++ Core Guidelines (published **`isocpp.github.io`** corpus; prefix matches main **`CppCoreGuidelines`** page and subordinate paths). |
+| 6 | **`https://learn.microsoft.com/en-us/cpp/`** | Microsoft C++ language reference ( **`en-us/cpp/`** path). |
 
-**Reject for sandbox execution citations:** Any URL that does **not** start with **one** of rows **1–4** — including bare `https://en.cppreference.com/`, `https://cplusplus.com/` without **`reference/`**, **`https://learn.microsoft.com/`** without **`/en-us/cpp/`**, or **godot-lane** URLs (Godot docs, godotengine.org).
+**Reject for sandbox execution citations:** Any URL that does **not** start with **one** of rows **1–6** — including bare `https://en.cppreference.com/`, `https://cplusplus.com/` without **`reference/`**, **`https://learn.microsoft.com/`** without **`/en-us/cpp/`**, **`https://clang.llvm.org/`** outside **`/docs/`**, or **godot-lane** URLs (Godot docs, godotengine.org).
 
 ---
 
@@ -82,7 +84,7 @@ If **any** URL or URL-like substring in the hand-off, **`params`**, **`user_guid
 - **`openai`**, **`anthropic`**, **`chat.openai`**
 - **`reddit`**, **`medium.com`**, **`stackoverflow.com`** (not allowlisted)
 - **`docs.python.org`**, **Godot docs** (`docs.godotengine.org` not under **`/en/stable/`**), **`godotengine.org`** paths outside **`/article/`** / **`/releases/`** on **sandbox** lane (wrong lane or disallowed path)
-- **`cppreference`**, **`cplusplus`**, **`gcc.gnu.org`**, **`learn.microsoft.com`** on **godot** lane (wrong lane — C/C++ / toolchain docs are **sandbox** only)
+- **`cppreference`**, **`cplusplus`**, **`gcc.gnu.org`**, **`clang.llvm.org`**, **`isocpp.github.io`**, **`learn.microsoft.com`** on **godot** lane (wrong lane — C/C++ / toolchain / Core Guidelines docs are **sandbox** only)
 - **`evil.com`**, unknown TLD placeholders, or **any** host not matching the **strict** allowlist prefix for the active lane
 
 ---

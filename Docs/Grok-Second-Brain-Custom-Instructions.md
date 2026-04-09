@@ -1,15 +1,15 @@
 ---
 created: 2026-04-05
-updated: 2026-04-13
+updated: 2026-04-14
 tags: [second-brain, grok, custom-instructions, documentation-first]
 title: Grok — Second Brain custom instructions
 source: "Final draft 2026-04-05; paste into Grok Chat custom instructions (not Cursor rules)."
-version: 2026-04-13
+version: 2026-04-14
 ---
 
 # Grok — Second Brain custom instructions
 
-**Version:** 2026-04-13 (execution-track **§0** multi-prefix Research URL allowlists on integration `.cursor/` + `Docs/`; Run Telemetry Summary on `Docs/Core/` + prior GitHub mirror)
+**Version:** 2026-04-14 (execution-track **§0** multi-prefix Research URL allowlists — GDScript tutorial path, Clang, Core Guidelines — on integration `.cursor/` + `Docs/`; Run Telemetry Summary on `Docs/Core/` + prior GitHub mirror)
 
 **Published on GitHub (integration branch):** [Grok-Second-Brain-Custom-Instructions.md on `iteration-2-roadmap-rules`](https://github.com/L0RDTH0TH/genesis-mythos-master-roadmap/blob/iteration-2-roadmap-rules/Docs/Grok-Second-Brain-Custom-Instructions.md) — same content as vault `3-Resources/Second-Brain/Docs/Grok-Second-Brain-Custom-Instructions.md` after export sync. **Do not treat this file as vault-only**; link or attach the GitHub URL when configuring Grok if you want the public committed revision.
 
@@ -83,8 +83,8 @@ When the user asks about **execution-track** deepen, **code-precision Research**
 - **Normative file (integration branch):** `.cursor/rules/agents/execution-research-whitelist.mdc` (diff-friendly mirror: `.cursor/sync/rules/agents/execution-research-whitelist.md`). **Roadmap harness** lists **§0** as the **first** mandatory nested gate **before** lane guards (`.cursor/agents/roadmap.md`).
 - **Order:** **Snapshot** (per safety contract) → **pre-`Task(research)` hand-off URL scan** on prompt/params/guidance/parallel context → only then **`Task(research)`** → post-return URL scan. A bad URL (e.g. **`https://evil.com/`**, Wikipedia, GitHub raw, wrong lane) must produce **`task_error`** + **`url_whitelist_violation`**, **honesty ledger** entry, and **abort the entire deepen** for execution structural success — **before** Research runs when the violation is in the hand-off.
 - **Strict allowlist prefixes (HTTPS only):**
-  - **Lane `godot`:** Multi-prefix **OR** — **`https://docs.godotengine.org/en/stable/`** (incl. **`/classes/`**, **`/tutorials/`**), **`https://godotengine.org/article/`**, **`https://godotengine.org/releases/`** (see [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]]).
-  - **Lane `sandbox`:** Multi-prefix **OR** — **`https://en.cppreference.com/w/`**, **`https://cplusplus.com/reference/`**, **`https://gcc.gnu.org/onlinedocs/`**, **`https://learn.microsoft.com/en-us/cpp/`** (see same rule).
+  - **Lane `godot`:** Multi-prefix **OR** — **`https://docs.godotengine.org/en/stable/`**, **`.../classes/`**, **`.../tutorials/scripting/gdscript/`**, **`https://godotengine.org/article/`**, **`https://godotengine.org/releases/`** (see [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]]).
+  - **Lane `sandbox`:** Multi-prefix **OR** — **`https://en.cppreference.com/w/`**, **`https://cplusplus.com/reference/`**, **`https://gcc.gnu.org/onlinedocs/`**, **`https://clang.llvm.org/docs/`**, **`https://isocpp.github.io/CppCoreGuidelines/`**, **`https://learn.microsoft.com/en-us/cpp/`** (see same rule).
 - **Config signal:** **`parallel_execution.tracks[].research_whitelist_enforced`** (default **true**) — Layer 1 may log parse-safe **`research_url_intent_audit`** / **`layer1_resolver_hints`** so EAT-QUEUE telemetry shows §0 is active; see **`Docs/Core/Second-Brain-Config.md`** on the integration branch.
 - **Cross-links:** **`Docs/Dual-Roadmap-Track.md`**, **`Docs/Dry-Run-Appendix-Godot-Execution-Gates-2026-04-11.md`** (dry-run proof row), **`Docs/Roadmap-Gate-Catalog-By-Track.md`**.
 

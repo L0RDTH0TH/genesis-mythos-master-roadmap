@@ -32,7 +32,7 @@ Run **before** snapshot-backed destructive edits to **`Roadmap/Execution/**`** p
 ### 0. Research URL whitelist (hardened — **must** match harness §0)
 
 - **Prerequisite:** Harness **§0** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] **already passed** pre-hand-off scan; do **not** skip.
-- For **any** nested **`Task(subagent_type: "research")`** whose consumables will justify **new** GDScript constructs: citation / fetch URLs **must** match **one** of the **godot** lane prefix rows in [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **Allowlists** (stable **`docs.godotengine.org/en/stable/`** tree, **`godotengine.org/article/`**, **`godotengine.org/releases/`** — **OR**-prefix list only). Reject **`/en/4.x/`**, **`/latest/`**, non-HTTPS, **sandbox**-lane URLs, `http://`.
+- For **any** nested **`Task(subagent_type: "research")`** whose consumables will justify **new** GDScript constructs: citation / fetch URLs **must** match **one** of the **godot** lane prefix rows in [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **Allowlists** (stable **`docs.godotengine.org/en/stable/`**, **`.../classes/`**, **`.../tutorials/scripting/gdscript/`**, **`godotengine.org/article/`**, **`godotengine.org/releases/`** — **OR**-prefix list only). Reject **`/en/4.x/`**, **`/latest/`**, non-HTTPS, **sandbox**-lane URLs, `http://`.
 - If Research returns **any** non-allowlisted URL → **`task_error`**, **`nested_subagent_ledger`** **`url_whitelist_violation`**, **honesty ledger** entry — **abort entire deepen** for execution success; **no** destructive write may succeed on the blocked scope.
 
 ### 1. `conceptual_counterpart`
