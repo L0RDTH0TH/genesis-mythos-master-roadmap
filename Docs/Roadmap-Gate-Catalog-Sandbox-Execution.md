@@ -9,6 +9,7 @@ links:
   - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-By-Track|Roadmap-Gate-Catalog-By-Track]]"
   - "[[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]"
   - "[[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Sandbox-Lane|Pipeline-Validator-Profile-Sandbox-Lane]]"
+  - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Design-Intent-Alignment|Roadmap-Gate-Catalog-Design-Intent-Alignment]]"
   - "[[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]]"
   - "[[3-Resources/Second-Brain-Config|Second-Brain-Config]]"
 ---
@@ -47,6 +48,18 @@ Godot, **default**, **shared**, and **core** lanes do **not** use this overlay u
 | **URL whitelist (automatic §0)** | **Before** **`Task(research)`**, enforce [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] — **sandbox** lane **multi-prefix OR**: **`https://en.cppreference.com/w/`**, **`https://cplusplus.com/reference/`**, **`https://gcc.gnu.org/onlinedocs/`**, **`https://clang.llvm.org/docs/`**, **`https://isocpp.github.io/CppCoreGuidelines/`**, **`https://learn.microsoft.com/en-us/cpp/`**; hand-off scan **before** Research; **non-whitelisted URLs → `task_error` + `url_whitelist_violation` + honesty ledger**; **abort entire deepen**; no execution write. |
 | **Verbatim grammar citation** | For each **new** construct, the execution note **must** include a short **authority** block: quoted **verbatim** passage from an **allowlisted** official reference (e.g. cppreference) **plus** stable URL. Paraphrase-only without quote **does not** satisfy this gate. |
 | **Validator alignment** | **`roadmap_handoff_auto`** (and aligned types) **must** treat violations per [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]] — typically **`recommended_action: block_destructive`** / **`severity: high`**. |
+
+---
+
+## Gate family — `design_intent_alignment`
+
+Execution items must align to conceptual design authority and inspiration intent, not only syntax correctness.
+
+| Requirement | Normative behavior |
+|-------------|-------------------|
+| **Intent traceability** | Require **`conceptual_counterpart`** plus concrete inspiration source citation(s) studied for this decision (for example Halo 3 orchestration cadence, BG3 dialogue signal behavior, Dwarf Fortress rollback discipline). |
+| **Intent Mapping block** | Execution note must include a short **Intent Mapping** section: design intent target, inspiration anchors, execution mechanism in this item, validation signal. |
+| **Failure handling** | Missing / untraceable intent mapping → **`primary_code: design_intent_alignment_violation`**, **`recommended_action: block_destructive`**; do not claim structural Success. |
 
 ---
 

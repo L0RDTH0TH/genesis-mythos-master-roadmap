@@ -9,6 +9,7 @@ links:
   - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-By-Track|Roadmap-Gate-Catalog-By-Track]]"
   - "[[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]"
   - "[[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Godot-Lane|Pipeline-Validator-Profile-Godot-Lane]]"
+  - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Design-Intent-Alignment|Roadmap-Gate-Catalog-Design-Intent-Alignment]]"
   - "[[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Godot-Code-Precision|Validator-Tiered-Blocks-Godot-Code-Precision]]"
   - "[[3-Resources/Second-Brain-Config|Second-Brain-Config]]"
 ---
@@ -46,6 +47,18 @@ Sandbox, **default**, **shared**, and **core** lanes do **not** use this overlay
 | **Research helper** | Before minting or expanding execution notes that introduce **new** constructs (not a trivial rename of an already-cited pattern), RoadmapSubagent **must** invoke **ResearchSubagent** via **`Task(subagent_type: "research")`** per [[.cursor/agents/roadmap|agents/roadmap.md]] nested Research contract — **not** `web_search` or **`research-agent-run`** alone as a substitute for that **`Task`**. |
 | **Verbatim grammar citation** | For each **new** construct, the execution note **must** include a short **authority** block: quoted **verbatim** passage from official material **plus** stable URL whose prefix matches **one** of the **godot** lane rows in [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **Allowlists** — **`https://docs.godotengine.org/en/stable/`**, **`.../stable/classes/`**, **`.../stable/tutorials/scripting/gdscript/`**, **`https://godotengine.org/article/`**, **`https://godotengine.org/releases/`** (multi-prefix **OR**; playable **GDScript** precision; no blanket hosts). Paraphrase-only without quote **does not** satisfy this gate. |
 | **Validator alignment** | **`roadmap_handoff_auto`** (and aligned types) **must** treat violations per [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Godot-Code-Precision|Validator-Tiered-Blocks-Godot-Code-Precision]] — typically **`recommended_action: block_destructive`** / **`severity: high`**. |
+
+---
+
+## Gate family — `design_intent_alignment`
+
+Execution items must align to conceptual design authority and inspiration intent, not only syntax correctness.
+
+| Requirement | Normative behavior |
+|-------------|-------------------|
+| **Intent traceability** | Require **`conceptual_counterpart`** plus concrete inspiration source citation(s) studied for this decision (for example Halo 3 orchestration cadence, BG3 dialogue signal behavior, Dwarf Fortress rollback discipline). |
+| **Intent Mapping block** | Execution note must include a short **Intent Mapping** section: design intent target, inspiration anchors, execution mechanism in this item, validation signal. |
+| **Failure handling** | Missing / untraceable intent mapping → **`primary_code: design_intent_alignment_violation`**, **`recommended_action: block_destructive`**; do not claim structural Success. |
 
 ---
 

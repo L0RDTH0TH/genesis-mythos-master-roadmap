@@ -35,6 +35,7 @@ These keys mirror the shape in Pipeline-Validator-Profiles § **Canonical profil
 | **`l1_post_lv_policy`** | **`always`** | After every successful roadmap-class return with **`little_val_ok`** and valid **`validator_context`**, Layer 1 runs post–little-val **`Task(validator)`** — **no** `minimal` / `conditional_nonhard_skip` shortcut for this lane + track. |
 | **`nested_ira_policy`** | **`always`** | When the nested Validator→IRA cycle applies, run the **full** cycle (no **`clean_skip`** on first-pass **`log_only`**) if **`sandbox_code_precision`** or linkage gates could be under-tested. |
 | **`research_synthesis_depth`** | **`full`** | Pre-deepen / scoped Research for **new C/C++ constructs** uses full synthesis depth per [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]]; aligns with Pipeline-Validator-Profiles § **4** escalation when safety signals exist. |
+| **`design_intent_alignment_enforced`** | **`true`** | Hostile passes must require Intent Mapping + inspiration citations per [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Design-Intent-Alignment|Roadmap-Gate-Catalog-Design-Intent-Alignment]] before execution writes are considered safe. |
 | **`sandbox_code_precision_enforced`** | **`true`** | Hostile passes **must** evaluate **`sandbox_code_precision`** **before** treating **`Roadmap/Execution/**` writes as safe to land; see [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]]. |
 | **`target_nested_validator_passes`** | **`4`** | Soft budget / telemetry expectation consistent with **`extreme`** baseline; does **not** override Validator-Tiered-Blocks-Spec hard blocks. |
 
@@ -44,10 +45,11 @@ These keys mirror the shape in Pipeline-Validator-Profiles § **Canonical profil
 
 1. **URL whitelist:** Enforce [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] for **`sandbox`** **before** accepting Research consumables for citations.
 2. **Linkage:** Confirm **`conceptual_counterpart`** on target execution phase notes and **`ledger_ref`** on **`roadmap-state-execution.md`** per [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]].
-3. **Research + citation:** For **new** C/C++ constructs, nested **Research** **`Task`** + verbatim allowlisted citation (see Roadmap-Gate-Catalog-Sandbox-Execution).
-4. **Structural write:** Mint or update notes under **`Roadmap/Execution/`**.
-5. **Nested Validator → IRA → compare:** Per Pipeline-Validator-Profiles § **5 Safety escalation** when any hard signal fires.
-6. **Layer 1 post–little-val:** With **`l1_post_lv_policy: always`**, Queue runs **A.5b** hostile pass.
+3. **Design intent:** Enforce **`design_intent_alignment`** (intent mapping + inspiration citations) per [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Design-Intent-Alignment|Roadmap-Gate-Catalog-Design-Intent-Alignment]] before code-precision acceptance.
+4. **Research + citation:** For **new** C/C++ constructs, nested **Research** **`Task`** + verbatim allowlisted citation (see Roadmap-Gate-Catalog-Sandbox-Execution).
+5. **Structural write:** Mint or update notes under **`Roadmap/Execution/`**.
+6. **Nested Validator → IRA → compare:** Per Pipeline-Validator-Profiles § **5 Safety escalation** when any hard signal fires.
+7. **Layer 1 post–little-val:** With **`l1_post_lv_policy: always`**, Queue runs **A.5b** hostile pass.
 
 ---
 

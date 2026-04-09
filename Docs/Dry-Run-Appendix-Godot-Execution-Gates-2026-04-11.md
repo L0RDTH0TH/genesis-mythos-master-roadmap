@@ -75,6 +75,7 @@ links:
 | §0 check | Result |
 |---------|--------|
 | **Pre-`Task(research)` abort (godot)** | Hand-off containing e.g. **`https://evil.com/`** or non-allowlisted path (e.g. **`https://docs.godotengine.org/en/latest/...`**) → **§0** **`url_whitelist_violation`** **before** Research — same contract as Part B sandbox row. |
+| **Design intent alignment (new gate)** | Execution item missing **Intent Mapping** block and inspiration citations (for example no explicit Halo 3 / BG3 / Dwarf Fortress anchor) → **`design_intent_alignment_violation`** with **`recommended_action: block_destructive`**; structural write blocked until mapping is added. |
 | **Example — newly explicit pass (godot)** | **`https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html`** — **passes** §0 (prefix **`https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/`**); **`https://godotengine.org/article/...`** still passes via **`/article/`** prefix. |
 
 ---
@@ -107,6 +108,7 @@ links:
 |-------|--------|
 | **Automatic guard** | [[.cursor/rules/agents/sandbox-execution-guard|sandbox-execution-guard]] applies on **`parallel_track: sandbox`** + **`effective_track: execution`** + **`project_id: sandbox-genesis-mythos-master`** — **no** manual step (see [[.cursor/agents/roadmap|agents/roadmap.md]]). |
 | **Research URL allowlist (strict, multi-prefix)** | [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] — **`sandbox`** lane **OR**-prefix list: cppreference **`/w/`**, cplusplus **`reference/`**, **GCC onlinedocs**, **Clang `clang.llvm.org/docs/`**, **`isocpp.github.io/CppCoreGuidelines/`**, **MSVC `learn.microsoft.com/en-us/cpp/`**. Non-whitelisted URLs → **`task_error`** + **`url_whitelist_violation`** + honesty ledger. |
+| **Design intent alignment (new gate)** | Execution item must include **Intent Mapping** + inspiration citations + conceptual trace. Missing mapping in sandbox lane emits **`design_intent_alignment_violation`** and blocks destructive continuation. |
 | **Example — newly explicit pass (sandbox)** | **`https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html`** — **passes** §0 (prefix **`https://clang.llvm.org/docs/`**); would **fail** on **godot** lane. |
 | **Pre-`Task(research)` abort** | **2026-04-12:** If hand-off contains e.g. **`https://evil.com/`** or any disallowed host, **§0** fails **before** Research launches — **entire deepen aborts**; no lane guard “success” path for structural writes. |
 

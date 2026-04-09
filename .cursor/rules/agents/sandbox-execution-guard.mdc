@@ -35,17 +35,23 @@ Run **before** snapshot-backed destructive edits to **`Roadmap/Execution/**`** p
 - For **any** nested **`Task(subagent_type: "research")`** for **new** C/C++ constructs: citation / fetch URLs **must** match **one** of the **sandbox** lane prefix rows in [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **Allowlists** (cppreference **`/w/`**, cplusplus **`reference/`**, **GCC onlinedocs**, **Clang `clang.llvm.org/docs/`**, **ISO C++ Core Guidelines `isocpp.github.io/CppCoreGuidelines/`**, **MSVC `learn.microsoft.com/en-us/cpp/`** — **OR**-prefix list only). Reject bare site roots, **godot**-lane URLs, `http://`.
 - If Research returns **any** non-allowlisted URL → **`task_error`**, **`url_whitelist_violation`**, **honesty ledger** — **abort entire deepen**; **no** destructive write may succeed on the blocked scope.
 
-### 1. `conceptual_counterpart`
+### 1. `design_intent_alignment`
+
+- Every execution item must carry explicit design-intent traceability: **`conceptual_counterpart`** wikilink to conceptual authority, concrete inspiration source citation(s), and a short **Intent Mapping** block that explains how this execution item implements the chosen design decision.
+- Intent Mapping must include: design intent target, inspiration anchor(s), execution mechanism, and validation signal. Missing or hand-wavy intent mapping is a hard gate failure.
+- On violation: return **#review-needed** / failure with **`primary_code: design_intent_alignment_violation`**, **`recommended_action: block_destructive`**; do not claim structural Success.
+
+### 2. `conceptual_counterpart`
 
 - For **every** execution **phase mirror** note created or materially edited: ensure frontmatter **`conceptual_counterpart`** is a valid wikilink to the **conceptual** sibling under **`Roadmap/`** (same relative path **without** **`Execution/`** in the conceptual target).
 - **Exempt:** **`roadmap-state-execution.md`** and **`workflow_state-execution.md`** — they do **not** carry **`conceptual_counterpart`**; they carry **`ledger_ref`** instead (see [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] § Execution tracking linkage).
 
-### 2. `ledger_ref`
+### 3. `ledger_ref`
 
 - When a run **closes a rollup**, **updates execution canonical state**, or appends receipt-correlated closure: ensure **`roadmap-state-execution.md`** frontmatter will include **`ledger_ref`** as a YAML array of stable ids from **`task-handoff-comms.jsonl`** / **`intent_actual_receipt`** (e.g. **`task_correlation_id`**) per Dual-Roadmap-Track.
 - If **`ledger_ref`** cannot be updated honestly this run, **do not** claim Success for execution structural completion that depends on that receipt trail; return **#review-needed** with **`primary_code: execution_linkage_violation`** per [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]].
 
-### 3. `sandbox_code_precision` (Research + verbatim C/C++ citation)
+### 4. `sandbox_code_precision` (Research + verbatim C/C++ citation)
 
 - For **each new** C/C++-shaped construct (headers, **`static_assert`**, ownership / lifetime, **`restrict`**, ABI or compilation flags in narrative): **must** invoke **ResearchSubagent** via **`Task(subagent_type: "research")`** before relying on that construct in committed narrative — per [[.cursor/agents/roadmap|agents/roadmap.md]] nested Research contract (**not** `web_search` / skill-only substitution).
 - The execution note **must** contain a **verbatim** quoted passage from an **allowlisted** official reference **plus** stable URL (see [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **`sandbox`** allowlist).

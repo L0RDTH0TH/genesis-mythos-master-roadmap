@@ -55,6 +55,7 @@ Validators SHOULD emit codes from this set for roadmap handoff types (extend onl
 | `safety_critical_ambiguity` | Automation-unsafe ambiguity |
 | `safety_unknown_gap` | Gaps, deferrals, weak traceability (usually needs_work) |
 | `incoherence` | Boundaries unrestatable per §1.1 |
+| `design_intent_alignment_violation` | Execution item lacks traceable conceptual intent mapping / inspiration evidence |
 | `missing_*` / checklist codes | Completeness (e.g. `missing_task_decomposition`) → usually needs_work |
 
 **`primary_code` (when multiple codes):** Order of precedence for **routing Layer 1 pivots** and **hard-block** decisions:
@@ -63,7 +64,8 @@ Validators SHOULD emit codes from this set for roadmap handoff types (extend onl
 2. `contradictions_detected`  
 3. `incoherence`  
 4. `safety_critical_ambiguity`  
-5. else highest-severity finding among remainder (e.g. `safety_unknown_gap` alone does not force block_destructive).
+5. `design_intent_alignment_violation` (execution lane overlays)  
+6. else highest-severity finding among remainder (e.g. `safety_unknown_gap` alone does not force block_destructive).
 
 Document `primary_code` in the validator return / report when more than one code is present.
 
@@ -173,3 +175,12 @@ See [[3-Resources/Second-Brain/Parameters|Parameters]] / [[3-Resources/Second-Br
 ## 11. Sandbox lane execution addendum
 
 **C / C++** code-precision and execution linkage codes (**`sandbox_code_precision_violation`**, **`execution_linkage_violation`**) for **`parallel_track: sandbox`** + **`effective_track: execution`** are defined in [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]]. Base §2 / §3 matrices apply; that note adds the action rows for the **C-powered** sandbox engine lane without changing conceptual-track behavior. **Lane isolation:** do **not** apply Godot **`godot_code_precision_*`** codes to sandbox artifacts or vice versa.
+
+## 12. Design intent alignment addendum (execution overlays)
+
+Execution lane overlays also enforce **`design_intent_alignment`** per [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Design-Intent-Alignment|Roadmap-Gate-Catalog-Design-Intent-Alignment]].
+
+- Canonical reason code: **`design_intent_alignment_violation`**
+- Typical severity: **high**
+- Typical recommended action: **`block_destructive`**
+- Scope: execution items missing conceptual intent traceability (conceptual counterpart + inspiration citations + Intent Mapping block)
