@@ -40,28 +40,36 @@ Non-execution track: this §0 **does not** apply to Research for conceptual-only
 
 ---
 
-## Allowlists (HTTPS only — strict prefix)
+## Allowlists (HTTPS only — strict prefix, **multi-prefix OR**)
+
+**No blanket policy:** Only **official, stable vendor / first-party documentation** prefixes listed below. No forums, wikis, blogs, or “helpful mirrors” unless a future amendment adds an explicit prefix row here.
 
 **Scheme:** **`https` only.** Reject **`http://`**, protocol-relative URLs, and non-HTTPS schemes.
 
-**Matching rule:** Normalize URL to a string; a URL **passes** iff it **starts with** (case-sensitive path segment after host) exactly one **allowlist prefix** for **`active_execution_lane`**. Trailing path segments **after** the prefix are allowed **only** where the prefix is defined as a directory prefix below (no userinfo, no other hosts).
+**Matching rule:** Normalize URL to a string; a URL **passes** iff it **starts with** (byte-for-byte prefix match after scheme) **at least one** of the **allowlist prefixes** for **`active_execution_lane`** (logical **OR** — first matching prefix wins). No userinfo (`user@host`), no port tricks — host and path must match the prefix exactly as written. Trailing path segments after the prefix are allowed.
 
-### `godot` lane
+### `godot` lane — allowlist prefixes (vetted)
 
-| Allowlist prefix | Meaning |
-|------------------|---------|
-| **`https://docs.godotengine.org/en/stable/`** | **Only** the **stable** English docs tree. Reject **`/en/4.x/`**, **`/latest/`**, **`/en/stable`** (no trailing slash variants that skip **`/en/stable/`**), and any path not under this prefix. |
+| # | Allowlist prefix | Notes |
+|---|------------------|--------|
+| 1 | **`https://docs.godotengine.org/en/stable/`** | Stable English manual (covers **`/classes/`**, **`/tutorials/`**, and all subtrees under **`/en/stable/`**). |
+| 2 | **`https://docs.godotengine.org/en/stable/classes/`** | Class API reference (redundant with row 1 for matching; listed explicitly for operators). |
+| 3 | **`https://docs.godotengine.org/en/stable/tutorials/`** | Tutorials subtree (redundant with row 1; listed explicitly). |
+| 4 | **`https://godotengine.org/article/`** | Official **godotengine.org** articles only. |
+| 5 | **`https://godotengine.org/releases/`** | Official release notes / download lineage pages only. |
 
-**Reject for godot execution citations:** `https://docs.godotengine.org/` without **`/en/stable/`** immediately after host path; any other host.
+**Reject for godot execution citations (non-exhaustive):** Any URL that does **not** start with **one** of rows **1–5** — including **`https://docs.godotengine.org/en/4.x/`**, **`/latest/`**, **`https://docs.godotengine.org/`** without **`/en/stable/`** for docs paths, **`https://godotengine.org/`** without **`/article/`** or **`/releases/`** prefix, community forums, Asset Library, GitHub raw, or **sandbox-lane** URLs (cppreference, MSVC, GCC docs).
 
-### `sandbox` lane
+### `sandbox` lane — allowlist prefixes (vetted)
 
-| Allowlist prefix | Meaning |
-|------------------|---------|
-| **`https://en.cppreference.com/w/`** | Reference wiki pages under **`/w/`** only. Reject **`/w/index.html`** gaming via query strings that change host — still must start with this prefix. |
-| **`https://cplusplus.com/reference/`** | **`reference/`** subtree only. Reject root `https://cplusplus.com/` without **`reference/`**. |
+| # | Allowlist prefix | Notes |
+|---|------------------|--------|
+| 1 | **`https://en.cppreference.com/w/`** | cppreference wiki (**`/w/`** subtree). |
+| 2 | **`https://cplusplus.com/reference/`** | cplusplus **reference** subtree only. |
+| 3 | **`https://gcc.gnu.org/onlinedocs/`** | GCC official onlinedocs. |
+| 4 | **`https://learn.microsoft.com/en-us/cpp/`** | Microsoft C++ language reference ( **`en-us/cpp/`** path). |
 
-**Reject for sandbox execution citations:** Any URL not starting with one of the two rows above (including bare `https://en.cppreference.com/` or `https://cplusplus.com/` without the required path).
+**Reject for sandbox execution citations:** Any URL that does **not** start with **one** of rows **1–4** — including bare `https://en.cppreference.com/`, `https://cplusplus.com/` without **`reference/`**, **`https://learn.microsoft.com/`** without **`/en-us/cpp/`**, or **godot-lane** URLs (Godot docs, godotengine.org).
 
 ---
 
@@ -73,8 +81,8 @@ If **any** URL or URL-like substring in the hand-off, **`params`**, **`user_guid
 - **`github`**, **`raw.githubusercontent`**, **`gist.github`**
 - **`openai`**, **`anthropic`**, **`chat.openai`**
 - **`reddit`**, **`medium.com`**, **`stackoverflow.com`** (not allowlisted)
-- **`docs.python.org`**, **`godotengine.org`** on **sandbox** lane (wrong lane)
-- **`cppreference`**, **`cplusplus`** on **godot** lane (wrong lane)
+- **`docs.python.org`**, **Godot docs** (`docs.godotengine.org` not under **`/en/stable/`**), **`godotengine.org`** paths outside **`/article/`** / **`/releases/`** on **sandbox** lane (wrong lane or disallowed path)
+- **`cppreference`**, **`cplusplus`**, **`gcc.gnu.org`**, **`learn.microsoft.com`** on **godot** lane (wrong lane — C/C++ / toolchain docs are **sandbox** only)
 - **`evil.com`**, unknown TLD placeholders, or **any** host not matching the **strict** allowlist prefix for the active lane
 
 ---

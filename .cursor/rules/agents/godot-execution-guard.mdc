@@ -32,7 +32,7 @@ Run **before** snapshot-backed destructive edits to **`Roadmap/Execution/**`** p
 ### 0. Research URL whitelist (hardened — **must** match harness §0)
 
 - **Prerequisite:** Harness **§0** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] **already passed** pre-hand-off scan; do **not** skip.
-- For **any** nested **`Task(subagent_type: "research")`** whose consumables will justify **new** GDScript constructs: only **`https://docs.godotengine.org/en/stable/`** prefixes are valid citation URLs (see whitelist rule — reject **`/en/4.x/`**, other hosts, `http://`).
+- For **any** nested **`Task(subagent_type: "research")`** whose consumables will justify **new** GDScript constructs: citation / fetch URLs **must** match **one** of the **godot** lane prefix rows in [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **Allowlists** (stable **`docs.godotengine.org/en/stable/`** tree, **`godotengine.org/article/`**, **`godotengine.org/releases/`** — **OR**-prefix list only). Reject **`/en/4.x/`**, **`/latest/`**, non-HTTPS, **sandbox**-lane URLs, `http://`.
 - If Research returns **any** non-allowlisted URL → **`task_error`**, **`nested_subagent_ledger`** **`url_whitelist_violation`**, **honesty ledger** entry — **abort entire deepen** for execution success; **no** destructive write may succeed on the blocked scope.
 
 ### 1. `conceptual_counterpart`
@@ -48,7 +48,7 @@ Run **before** snapshot-backed destructive edits to **`Roadmap/Execution/**`** p
 ### 3. `godot_code_precision` (Research + verbatim Godot 4.x citation)
 
 - For **each new** GDScript-shaped construct (signals, **`@onready`**, **`await`**, typed callables, **`class_name`**, **`.gd` API** usage in fenced blocks): **must** invoke **ResearchSubagent** via **`Task(subagent_type: "research")`** before relying on that construct in committed narrative — per [[.cursor/agents/roadmap|agents/roadmap.md]] nested Research contract (**not** `web_search` / skill-only substitution).
-- The execution note **must** contain a **verbatim** quoted passage from **Godot** official **stable** documentation **plus** stable URL under **`https://docs.godotengine.org/en/stable/`** only.
+- The execution note **must** contain a **verbatim** quoted passage from **Godot** official **stable** documentation or other **godot**-lane allowlisted first-party pages **plus** stable URL whose prefix matches [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **`godot` lane** (multi-prefix **OR**).
 - If any of: Python idioms, Godot 3 syntax, wrong signal wiring, or missing citation for a **new** construct → **do not** write; return **#review-needed** / failure with Validator-facing **`godot_code_precision_violation`** ( **`recommended_action: block_destructive`** ).
 
 ---

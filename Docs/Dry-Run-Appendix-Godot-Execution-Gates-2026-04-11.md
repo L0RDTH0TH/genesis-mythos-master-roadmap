@@ -13,7 +13,7 @@ links:
 
 # Dry-run appendix — Execution gates (Godot + Sandbox lanes)
 
-**Part A — Godot (`godot-genesis-mythos-master`):** Static scan of project-root MOC, master goal, and all **`Roadmap/Execution/**/*.md`** notes for **`conceptual_counterpart`** and **`ledger_ref`** against [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] and [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]]. **Part B — Sandbox (`sandbox-genesis-mythos-master`):** Same contract **when** Execution tree exists; precision stack is [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]] (**C/C++**). **Both lanes:** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] **§0** runs **before** **`Task(research)`** — **Godot:** **`https://docs.godotengine.org/en/stable/`** only; **Sandbox:** **`https://en.cppreference.com/w/`** and **`https://cplusplus.com/reference/`** only — **no cross-lane URLs** for code-precision. **Method:** automated frontmatter grep + manual classification. **Last hygiene pass:** 2026-04-11 (godot ledger backfill + **2.4.1** tertiary); **2026-04-12** (strict §0 prefixes + pre-hand-off abort row + Config `research_whitelist_enforced`).
+**Part A — Godot (`godot-genesis-mythos-master`):** Static scan of project-root MOC, master goal, and all **`Roadmap/Execution/**/*.md`** notes for **`conceptual_counterpart`** and **`ledger_ref`** against [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] and [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]]. **Part B — Sandbox (`sandbox-genesis-mythos-master`):** Same contract **when** Execution tree exists; precision stack is [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]] (**C/C++**). **Both lanes:** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] **§0** runs **before** **`Task(research)`** — **Godot (multi-prefix OR):** **`https://docs.godotengine.org/en/stable/`** (incl. **`/classes/`**, **`/tutorials/`**), **`https://godotengine.org/article/`**, **`https://godotengine.org/releases/`**; **Sandbox (multi-prefix OR):** **`https://en.cppreference.com/w/`**, **`https://cplusplus.com/reference/`**, **`https://gcc.gnu.org/onlinedocs/`**, **`https://learn.microsoft.com/en-us/cpp/`** — **no cross-lane URLs** for code-precision. **Method:** automated frontmatter grep + manual classification. **Last hygiene pass:** 2026-04-11 (godot ledger backfill + **2.4.1** tertiary); **2026-04-12** (strict §0 + abort rows); **2026-04-13** (expanded vetted prefix lists).
 
 ---
 
@@ -74,7 +74,8 @@ links:
 
 | §0 check | Result |
 |---------|--------|
-| **Pre-`Task(research)` abort (godot)** | Hand-off containing e.g. **`https://evil.com/`** or non-**`/en/stable/`** Godot docs → **§0** **`url_whitelist_violation`** **before** Research — same contract as Part B sandbox row. |
+| **Pre-`Task(research)` abort (godot)** | Hand-off containing e.g. **`https://evil.com/`** or non-allowlisted path (e.g. **`https://docs.godotengine.org/en/latest/...`**) → **§0** **`url_whitelist_violation`** **before** Research — same contract as Part B sandbox row. |
+| **Example — newly explicit pass (godot)** | **`https://godotengine.org/article/godot-4-2-arrives/`** — **passes** §0 (prefix **`https://godotengine.org/article/`**); would **fail** on **sandbox** lane (wrong lane). |
 
 ---
 
@@ -105,16 +106,17 @@ links:
 | Check | Result |
 |-------|--------|
 | **Automatic guard** | [[.cursor/rules/agents/sandbox-execution-guard|sandbox-execution-guard]] applies on **`parallel_track: sandbox`** + **`effective_track: execution`** + **`project_id: sandbox-genesis-mythos-master`** — **no** manual step (see [[.cursor/agents/roadmap|agents/roadmap.md]]). |
-| **Research URL allowlist (strict)** | [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] — only **`https://en.cppreference.com/w/`** and **`https://cplusplus.com/reference/`**. Non-whitelisted URLs → **`task_error`** + **`url_whitelist_violation`** + honesty ledger. |
+| **Research URL allowlist (strict, multi-prefix)** | [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] — **`sandbox`** lane **OR**-prefix list: cppreference **`/w/`**, cplusplus **`reference/`**, **GCC onlinedocs**, **MSVC `learn.microsoft.com/en-us/cpp/`**. Non-whitelisted URLs → **`task_error`** + **`url_whitelist_violation`** + honesty ledger. |
+| **Example — newly explicit pass (sandbox)** | **`https://learn.microsoft.com/en-us/cpp/cpp/templates/welcome-to-cpp`** — **passes** §0; would **fail** on **godot** lane (MSVC docs are **sandbox**-only). |
 | **Pre-`Task(research)` abort** | **2026-04-12:** If hand-off contains e.g. **`https://evil.com/`** or any disallowed host, **§0** fails **before** Research launches — **entire deepen aborts**; no lane guard “success” path for structural writes. |
 
 ---
 
 ## Cross-lane summary (both lanes)
 
-| Lane | `gate_catalog_id` | Code-precision family | Research allowlist (strict prefix) |
-|------|-------------------|------------------------|-------------------------------------|
-| **godot** | **`execution_godot_v1`** | **`godot_code_precision`** | **`https://docs.godotengine.org/en/stable/`** |
-| **sandbox** | **`execution_sandbox_v1`** | **`sandbox_code_precision`** | **`https://en.cppreference.com/w/`**, **`https://cplusplus.com/reference/`** |
+| Lane | `gate_catalog_id` | Code-precision family | Research allowlist (vetted multi-prefix **OR**) |
+|------|-------------------|------------------------|--------------------------------------------------|
+| **godot** | **`execution_godot_v1`** | **`godot_code_precision`** | **`docs.godotengine.org/en/stable/`** (+ explicit **`/classes/`**, **`/tutorials/`**), **`godotengine.org/article/`**, **`godotengine.org/releases/`** |
+| **sandbox** | **`execution_sandbox_v1`** | **`sandbox_code_precision`** | **`en.cppreference.com/w/`**, **`cplusplus.com/reference/`**, **`gcc.gnu.org/onlinedocs/`**, **`learn.microsoft.com/en-us/cpp/`** |
 
-**Assessment:** Backbone + rules **2026-04-12** (hardened): **§0** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] runs **first** (pre-hand-off URL scan **before** **`Task(research)`**); Config **`research_whitelist_enforced: true`** on **`parallel_execution.tracks[]`** for Layer 1 audit hints. Violation **cannot** reach successful execution structural completion without bypassing contract (hosts **evil.com** / Wikipedia / GitHub raw blocked at earliest scan).
+**Assessment:** Backbone + rules **2026-04-13**: **§0** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] runs **first** (pre-hand-off URL scan **before** **`Task(research)`**); **multi-prefix OR** per lane; Config **`research_whitelist_enforced: true`** on **`parallel_execution.tracks[]`** for Layer 1 audit hints. **Good URL** (matches any lane prefix) → Research may launch after scan. **Bad URL** (e.g. **`https://evil.com/`**, wrong lane, **`/latest/`** Godot docs) → **`task_error`** + **`url_whitelist_violation`** at §0 — **before** **`Task(research)`** when embedded in hand-off.

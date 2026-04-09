@@ -32,7 +32,7 @@ Run **before** snapshot-backed destructive edits to **`Roadmap/Execution/**`** p
 ### 0. Research URL whitelist (hardened — **must** match harness §0)
 
 - **Prerequisite:** Harness **§0** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] **already passed** pre-hand-off scan.
-- For **any** nested **`Task(subagent_type: "research")`** for **new** C/C++ constructs: only **`https://en.cppreference.com/w/`** and **`https://cplusplus.com/reference/`** prefixes (see whitelist — reject bare site roots, Godot URLs, `http://`).
+- For **any** nested **`Task(subagent_type: "research")`** for **new** C/C++ constructs: citation / fetch URLs **must** match **one** of the **sandbox** lane prefix rows in [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] § **Allowlists** (cppreference **`/w/`**, cplusplus **`reference/`**, **GCC onlinedocs**, **Microsoft `learn.microsoft.com/en-us/cpp/`** — **OR**-prefix list only). Reject bare site roots, **godot**-lane URLs, `http://`.
 - If Research returns **any** non-allowlisted URL → **`task_error`**, **`url_whitelist_violation`**, **honesty ledger** — **abort entire deepen**; **no** destructive write may succeed on the blocked scope.
 
 ### 1. `conceptual_counterpart`
