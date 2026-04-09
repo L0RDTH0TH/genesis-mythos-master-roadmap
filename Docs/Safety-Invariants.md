@@ -197,6 +197,15 @@ On **any** pipeline or workflow step failure:
 
 ---
 
+## Run Telemetry Summary (EAT-QUEUE)
+
+- After **A.7** (queue rewrite), when **`telemetry_summary`** gates pass, Layer 1 **overwrites** **`3-Resources/Second-Brain/Docs/Core/Run-Telemetry-Summary.md`** via **`scripts/generate_telemetry_summary.py`** (see [[.cursor/skills/telemetry-summary/SKILL.md|telemetry-summary]], [[.cursor/rules/agents/queue.mdc|queue.mdc]] **Run Telemetry Summary**).
+- **Not** a substitute for append-only **Watcher-Result** lines — it is a **derived**, **committed** first surface for operators and **GitHub / Grok** (copied next to **Watcher-Result** in [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]] Step 1).
+- **Speed** runs skip when **`telemetry_summary.skip_on_speed_mode`** is **true** (aligned with GitForge **A.7a**).
+- Script failure **must not** roll back **A.7**; log **`telemetry-summary-failure`** to **Errors.md** best-effort.
+
+---
+
 ## Roadmap state
 
 - **Before mutating:** Read `roadmap-state.md` and `workflow_state.md` under `1-Projects/<project_id>/Roadmap/`.

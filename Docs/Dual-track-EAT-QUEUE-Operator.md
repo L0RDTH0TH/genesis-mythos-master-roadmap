@@ -1,7 +1,7 @@
 ---
 title: Dual-track EAT-QUEUE operator guide
 created: 2026-04-05
-updated: 2026-04-08
+updated: 2026-04-09
 tags: [second-brain, eat-queue, parallel, operator]
 para-type: Resource
 status: active
@@ -29,8 +29,9 @@ Run **two Cursor chats** in parallel on **separate prompt-queue bundles** (sandb
 ## Expect
 
 1. **Watcher-Result** — Appends go to the **canonical** path (`parallel_execution.watcher.canonical_path`) for the Obsidian plugin. Concurrent appends may **interleave** (best-effort v1). When **`enable_mirrors`** is true, each track also mirrors to **`Watcher-Result-sandbox.md`** / **`Watcher-Result-godot.md`** for a per-chat tail.
-2. **GitForge** — After **A.7**, balance/quality runs invoke GitForge once. If the lock is held, return is **`skipped`** with message like **`GitForge skipped — lock held by other track`** and an audit line — **queue consumption is not rolled back**.
-3. **Deterministic lock helper** — GitForge should run **`python3 scripts/gitforge_lock.py acquire`** before git and **`release`** in a **`finally`** from the vault root (see [[.cursor/agents/gitforge.md|agents/gitforge.md]]). **`release`** clears the lock when the acquirer process has exited; if a **live foreign** process still holds the lock, exit code **1** means another track is active — do not delete manually unless you know that process is stuck.
+2. **Run Telemetry Summary** — After **A.7**, when **`telemetry_summary`** gates pass, Layer 1 runs **`scripts/generate_telemetry_summary.py`** (see [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **telemetry_summary**, [[.cursor/skills/telemetry-summary/SKILL.md|telemetry-summary]]) and overwrites **`3-Resources/Second-Brain/Docs/Core/Run-Telemetry-Summary.md`** (clean first surface + decisions table + Watcher excerpt). **`speed`** skips when **`skip_on_speed_mode`** is true. Exported next to **Watcher-Result** on the integration branch per [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]].
+3. **GitForge** — After telemetry summary (when run), balance/quality runs invoke GitForge once. If the lock is held, return is **`skipped`** with message like **`GitForge skipped — lock held by other track`** and an audit line — **queue consumption is not rolled back**.
+4. **Deterministic lock helper** — GitForge should run **`python3 scripts/gitforge_lock.py acquire`** before git and **`release`** in a **`finally`** from the vault root (see [[.cursor/agents/gitforge.md|agents/gitforge.md]]). **`release`** clears the lock when the acquirer process has exited; if a **live foreign** process still holds the lock, exit code **1** means another track is active — do not delete manually unless you know that process is stuck.
 
 ## Step 0 (wrappers) and parallel lanes
 

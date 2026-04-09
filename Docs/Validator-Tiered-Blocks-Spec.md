@@ -8,6 +8,8 @@ links:
   - "[[3-Resources/Second-Brain/Validator-Reference|Validator-Reference]]"
   - "[[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]"
   - "[[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]]"
+  - "[[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Godot-Code-Precision|Validator-Tiered-Blocks-Godot-Code-Precision]]"
+  - "[[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]]"
 ---
 
 # Validator tiered blocks and queue pivots
@@ -161,3 +163,13 @@ See [[3-Resources/Second-Brain/Parameters|Parameters]] / [[3-Resources/Second-Br
 - **ValidatorSubagent** **need not** emit a **`reason_code`** or **`primary_code`** for stagnation; stagnation is **not** part of the §2 closed-set unless you explicitly extend §2 in a future revision.
 - **RoadmapSubagent** and **Parameters** § Conceptual subphase exit treat **`stagnation_suspected`** as a valid **slice-exit** trigger alongside **`conceptual_max_deepen_per_subphase`** (see [[3-Resources/Second-Brain/Parameters|Parameters]] § Anti-Circling & Overnight Safety).
 - **Layer 1** may record **`stagnation_triggered`** disposition on **`prompt-queue-audit.jsonl`** when consuming a line whose Roadmap return carried the flag ([[3-Resources/Second-Brain/Docs/Queue-Audit-Log-Spec|Queue-Audit-Log-Spec]]).
+
+---
+
+## 10. Godot lane execution addendum
+
+**Godot 4.x** code-precision and execution linkage codes (**`godot_code_precision_violation`**, **`execution_linkage_violation`**) for **`parallel_track: godot`** + **`effective_track: execution`** are defined in [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Godot-Code-Precision|Validator-Tiered-Blocks-Godot-Code-Precision]]. Base §2 / §3 matrices apply; that note adds the action rows without changing conceptual-track behavior.
+
+## 11. Sandbox lane execution addendum
+
+**C / C++** code-precision and execution linkage codes (**`sandbox_code_precision_violation`**, **`execution_linkage_violation`**) for **`parallel_track: sandbox`** + **`effective_track: execution`** are defined in [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]]. Base §2 / §3 matrices apply; that note adds the action rows for the **C-powered** sandbox engine lane without changing conceptual-track behavior. **Lane isolation:** do **not** apply Godot **`godot_code_precision_*`** codes to sandbox artifacts or vice versa.

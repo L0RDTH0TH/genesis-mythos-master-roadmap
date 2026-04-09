@@ -104,5 +104,6 @@ When decisions are intended to be Grok-visible, completion requires GitHub parit
 2. commit
 3. push
 4. verify target branch paths on GitHub
+5. when the change affects **Grok Chat** grounding (execution gates, queue semantics, lane rules), update **`Docs/Grok-Second-Brain-Custom-Instructions.md`** in the same integration cycle ([[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|git-push-workflow]] **Grok visibility rule**)
 
 Local vault-only decision updates are draft for Grok coordination until published.

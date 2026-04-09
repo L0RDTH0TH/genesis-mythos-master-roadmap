@@ -77,6 +77,12 @@ Single-page index of the core contract, safety, and ledger docs the agents and v
   - Export/Git path: `Docs/Roadmap-Gate-Catalog-By-Track.md`  
   - Purpose: Catalog of conceptual vs execution gates and their semantics.
 
+- **Execution Research URL whitelist (mandatory §0)**  
+  - Path in vault: `.cursor/rules/agents/execution-research-whitelist.mdc`  
+  - Export/Git path: `.cursor/rules/agents/execution-research-whitelist.mdc` (same on integration branch)  
+  - Sync mirror: `.cursor/sync/rules/agents/execution-research-whitelist.md`  
+  - Purpose: Strict per-lane HTTPS prefixes for execution-track Research (`godot` vs `sandbox`); pre-`Task(research)` hand-off scan; `task_error` + `url_whitelist_violation` + honesty ledger on violation; **Grok-visible** summary in `Docs/Grok-Second-Brain-Custom-Instructions.md`.
+
 ---
 
 ## Queue, continuation, and task comms
@@ -102,7 +108,7 @@ Single-page index of the core contract, safety, and ledger docs the agents and v
 
 If you are a secondary agent (Grok, validator, or tooling) trying to locate the contracts:
 
-- **Grok Chat (custom instructions)**: `3-Resources/Second-Brain/Docs/Grok-Second-Brain-Custom-Instructions.md` — for **Grok web/app UI** only (not Cursor). Grok sees **git**, not live Obsidian/MCP; doc tells Grok to ground answers in **committed** repo files and not pretend runtime access.
+- **Grok Chat (custom instructions)**: `3-Resources/Second-Brain/Docs/Grok-Second-Brain-Custom-Instructions.md` — for **Grok web/app UI** only (not Cursor). Grok sees **git**, not live Obsidian/MCP; doc tells Grok to ground answers in **committed** repo files and not pretend runtime access. After automation changes, operators must **export + push** per **`Docs/git-push-workflow-2026-04-02-0446.md`** (**Grok visibility rule**) so Grok matches GitHub.
 - Start here: `Docs/Contract-Index.md` (this file).
 - Then follow:
   - `Docs/Safety-Invariants.md`
@@ -110,5 +116,6 @@ If you are a secondary agent (Grok, validator, or tooling) trying to locate the 
   - `Docs/Nested-Subagent-Ledger-Spec.md`
   - `Docs/Pipeline-Validator-Profiles.md`
   - `.cursor/agents/roadmap.md`
+  - `.cursor/rules/agents/execution-research-whitelist.mdc` (execution-track Research §0)
 
 All of these paths exist on the `iteration-2-roadmap-rules` branch in the export repo.

@@ -161,6 +161,7 @@ tracking:
 - **default_to_legacy**: when **true**, ignore bundle routing even if enabled (single `.technical/prompt-queue.jsonl`).
 - **GitForge**: global **`.technical/.gitforge.lock`** with **`lock_timeout_seconds`**; **`policy: lock_last_wins`** — if lock not acquired, skip GitForge and log (see [[.cursor/agents/gitforge.md|agents/gitforge.md]]).
 - **lane_project_id** (per **`tracks[]`** row): slug under **`1-Projects/`** for **A.0z** / **A.2a.1** — dual-track roadmap state must stay under **`1-Projects/<lane_project_id>/`** for that lane.
+- **research_whitelist_enforced** (per **`tracks[]`** row, optional boolean, default **true** when omitted): when **true**, Layer 1 / resolver **should** emit **`research_url_intent_audit: allowlist_active`** (or equivalent parse-safe **`layer1_resolver_hints`** / **`queue_continuation`** fragment) so EAT-QUEUE runs log that [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] §0 applies before **`Task(research)`** on execution-track code-precision. Operators may set **false** only for emergency debugging (not normative).
 - **Watcher**: keep canonical **`watcher.canonical_path`** for the Obsidian plugin; optional **per-track mirrors** when **`watcher.enable_mirrors`** is true (see [[.cursor/rules/always/watcher-result-append.mdc|watcher-result-append]]).
 
 Machine-readable block (keep aligned with bullets):
@@ -176,12 +177,14 @@ parallel_execution:
       technical_subdir: parallel/sandbox
       branch_prefix: sandbox-
       export_path: "/home/darth/Documents/gmm-roadmap-export"
+      research_whitelist_enforced: true
     - id: godot
       lane: godot
       lane_project_id: godot-genesis-mythos-master
       technical_subdir: parallel/godot
       branch_prefix: godot-
       export_path: "/home/darth/Documents/gmm-roadmap-export"
+      research_whitelist_enforced: true
   gitforge:
     lock_timeout_seconds: 30
     policy: lock_last_wins
@@ -230,7 +233,7 @@ gitforge:
       - "scripts/queue-gate-compute.py"
       - "scripts/gitforge_lock.py"
       - "Docs/"  # from 3-Resources/Second-Brain/Docs/
-      - "Docs/Core/*.md"  # all top-level Second-Brain dev *.md + Roadmap Structure + Watcher/Errors copies
+      - "Docs/Core/*.md"  # all top-level Second-Brain dev *.md + Roadmap Structure + Watcher/Errors + Run-Telemetry-Summary copies
       - "Docs/Second-Brain-User-Flows/"
     engine_includes:
       - "Roadmap/"
@@ -246,6 +249,28 @@ gitforge:
     fast: { tag: false, export_sync: false }
     balance: { tag: true, export_sync: false }
     extreme: { tag: true, export_sync: false, require_confirmation: false }
+```
+
+## telemetry_summary (EAT-QUEUE committed summary)
+
+- **enabled**: when **true**, Layer 1 runs **`scripts/generate_telemetry_summary.py`** after **A.7** and **before** **A.7a** GitForge when gates pass (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **Run Telemetry Summary**). Produces a **clean first-surface** markdown file for operators and **GitHub / Grok** (mirrored with **`Docs/Core/`** in [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]).
+- **canonical_path**: vault-relative path to the **overwritten** latest summary (default below).
+- **skip_on_speed_mode**: when **true** (default), **`speed`** runs skip summary generation (aligned with GitForge **A.7a** speed skip).
+- **invoke_only_on_clean_success** / **invoke_on_empty_queue**: mirror **gitforge** defaults — skip when dispatch failures or empty consumption (see queue.mdc).
+- **require_gitforge_enabled**: when **false** (default), summary runs even if **`gitforge.enabled`** is **false**; set **true** to tie invocation to GitForge’s master switch.
+- **archive_enabled** / **archive_dir**: optional **append-only** timestamped copies (`Run-Telemetry-Summary--<ISO>.md`).
+- **dry_run**: no persistent key — use script **`--dry-run`** for stdout-only.
+
+```yaml
+telemetry_summary:
+  enabled: true
+  canonical_path: "3-Resources/Second-Brain/Docs/Core/Run-Telemetry-Summary.md"
+  skip_on_speed_mode: true
+  invoke_on_empty_queue: false
+  invoke_only_on_clean_success: true
+  require_gitforge_enabled: false
+  archive_enabled: false
+  archive_dir: "3-Resources/Second-Brain/Docs/Core/Run-Telemetry-Archive"
 ```
 
 ## task_harden (capability probing)

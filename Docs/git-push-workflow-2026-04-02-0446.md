@@ -1,7 +1,7 @@
 ---
 title: Git Push Workflow (Vault → Export Repo → GitHub)
 created: 2026-04-02
-updated: 2026-04-08
+updated: 2026-04-12
 tags: [ops, git, workflow, export, roadmap]
 source: Second-Brain internal ops note
 ---
@@ -31,7 +31,7 @@ The export repo carries **three collaboration roles** (branch names are the curr
 1. **Cursor backbone (authoritative + sync mirror)** — `rsync --delete`: `.cursor/agents/`, `.cursor/rules/`, `.cursor/skills/`, **`.cursor/sync/`** (required: mirrored `.md` copies of rules/skills for tooling and diff-friendly collaboration).
 2. **Python queue system + lock helper** — `scripts/eat_queue_core/` (full package, include `tests/`, exclude `__pycache__`), `scripts/queue-gate-compute.py`, **`scripts/gitforge_lock.py`**.
 3. **Official system docs** — `Docs/` ← `3-Resources/Second-Brain/Docs/` (`rsync --delete`).
-4. **Complete dev backbone in `Docs/Core/`** — copy **every** `*.md` at **`3-Resources/Second-Brain/`** (vault dev root only; excludes `Validator-Reports/` and other subfolders), plus **`Roadmap Structure.md`** from the vault workspace root, plus **`3-Resources/Errors.md`**, **`Watcher-Result.md`**, **`Watcher-Signal.md`** (runtime contract surfaces).
+4. **Complete dev backbone in `Docs/Core/`** — copy **every** `*.md` at **`3-Resources/Second-Brain/`** (vault dev root only; excludes `Validator-Reports/` and other subfolders), plus **`Roadmap Structure.md`** from the vault workspace root, plus **`3-Resources/Errors.md`**, **`Watcher-Result.md`**, **`Watcher-Signal.md`**, and **`3-Resources/Second-Brain/Docs/Core/Run-Telemetry-Summary.md`** (EAT-QUEUE committed telemetry first surface; overwritten each balance/quality run when **`telemetry_summary.enabled`** — see [[Second-Brain-Config]] § **telemetry_summary**).
 5. **User-flow supplements** — `Docs/Second-Brain-User-Flows/` ← `3-Resources/Second-Brain/Second-Brain-User-Flows/` (`rsync --delete`).
 
 Optional on integration: **`Roadmap/`** + `<proj>-goal.md` + MOC when you intentionally embed a **reference** engine on the integration line; otherwise integration commits may be **system-only**.
@@ -73,6 +73,7 @@ When Second-Brain-Config **`gitforge.enabled`** is **true**, post–**EAT-QUEUE*
 - Local vault-only state is treated as **draft/non-authoritative for Grok coordination**.
 - For dual-lane work, keep relevant branches in sync (integration + lane branches) so Grok does not read divergent states.
 - At the end of each publish cycle, verify the exact expected path(s) on GitHub before declaring readiness to Grok.
+- **Grok Chat contract:** When behavior relevant to **Grok Chat** (operator-facing summaries, execution-track gates, queue semantics) changes, update **`Docs/Grok-Second-Brain-Custom-Instructions.md`** in the **same** integration publish cycle so pasted custom instructions and the **integration** branch stay aligned (vault `3-Resources/Second-Brain/Docs/Grok-Second-Brain-Custom-Instructions.md` → export **`Docs/Grok-Second-Brain-Custom-Instructions.md`**).
 
 ## Parallel dual-track EAT-QUEUE (v1)
 
@@ -175,6 +176,9 @@ cp "${VAULT}/Roadmap Structure.md" "${EXPORT_ROOT}/Docs/Core/Roadmap Structure.m
 cp "${VAULT}/3-Resources/Errors.md" "${EXPORT_ROOT}/Docs/Core/Errors.md"
 cp "${VAULT}/3-Resources/Watcher-Result.md" "${EXPORT_ROOT}/Docs/Core/Watcher-Result.md"
 cp "${VAULT}/3-Resources/Watcher-Signal.md" "${EXPORT_ROOT}/Docs/Core/Watcher-Signal.md"
+if [ -f "${SB}/Docs/Core/Run-Telemetry-Summary.md" ]; then
+  cp "${SB}/Docs/Core/Run-Telemetry-Summary.md" "${EXPORT_ROOT}/Docs/Core/Run-Telemetry-Summary.md"
+fi
 
 # User-flow supplements (prompt crafter, onboarding)
 mkdir -p "Docs/Second-Brain-User-Flows"

@@ -4,6 +4,11 @@ created: 2026-03-24
 tags: [second-brain, roadmap, conceptual, execution]
 links:
   - "[[3-Resources/Second-Brain/Docs/Conceptual-Execution-Handoff-Checklist|Conceptual-Execution-Handoff-Checklist]]"
+  - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]]"
+  - "[[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Godot-Lane|Pipeline-Validator-Profile-Godot-Lane]]"
+  - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]]"
+  - "[[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Sandbox-Lane|Pipeline-Validator-Profile-Sandbox-Lane]]"
+  - "[[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]]"
 ---
 
 # Dual roadmap track (conceptual vs execution)
@@ -33,6 +38,18 @@ All layers use the same precedence — see [[3-Resources/Second-Brain/Queue-Sour
 2. Else use **`roadmap_track`** from **`roadmap-state.md`** frontmatter (default **`conceptual`** if absent).
 
 **Gate catalogs** differ by track — see [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-By-Track|Roadmap-Gate-Catalog-By-Track]].
+
+### Godot lane (execution)
+
+When **`parallel_track`** is **`godot`**, **`effective_track`** is **`execution`**, and **`project_id`** is **`godot-genesis-mythos-master`** (see [[3-Resources/Second-Brain-Config|Second-Brain-Config]] § **`parallel_execution.tracks`**), agents **must** follow [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]] (**`gate_catalog_id: execution_godot_v1`**) and [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Godot-Lane|Pipeline-Validator-Profile-Godot-Lane]]. **Runtime enforcement:** [[.cursor/rules/agents/godot-execution-guard|godot-execution-guard]] (after **§0** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]]). **Citation URLs (strict):** only **`https://docs.godotengine.org/en/stable/`** prefixes.
+
+### Sandbox lane (execution)
+
+When **`parallel_track`** is **`sandbox`**, **`effective_track`** is **`execution`**, and **`project_id`** is **`sandbox-genesis-mythos-master`**, agents **must** follow [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]] (**`gate_catalog_id: execution_sandbox_v1`**) and [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Sandbox-Lane|Pipeline-Validator-Profile-Sandbox-Lane]]. **Sandbox** is the **C-powered** lane — **not** GDScript. **Runtime enforcement:** [[.cursor/rules/agents/sandbox-execution-guard|sandbox-execution-guard]] (after **§0** whitelist). **Citation URLs (strict):** only **`https://en.cppreference.com/w/`** and **`https://cplusplus.com/reference/`** prefixes.
+
+### Execution track — §0 whitelist + harness (all lanes)
+
+**§0** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] runs **first** (pre-snapshot, **pre-`Task(research)` hand-off URL scan**). Violation **aborts entire deepen** **before** Research — **`task_error`**, **`url_whitelist_violation`**, **honesty ledger**; **no** destructive success. Then lane guards run. Config **`parallel_execution.tracks[].research_whitelist_enforced`** (default **true**) signals Layer 1 to log allowlist intent for EAT-QUEUE.
 
 ## Why not `.cursorignore`
 
@@ -76,8 +93,20 @@ Advisory flags in `workflow_state` ## Log **Status / Next** (config: `prompt_def
 
 On the **execution** track, **`1-Projects/<project_id>/Roadmap/Execution/roadmap-state-execution.md`** frontmatter **must** include **`ledger_ref`** as a **YAML array of strings** (stable ids from **`intent_actual_receipt`** rows in **`task-handoff-comms.jsonl`**, e.g. receipt **`task_correlation_id`** or synthetic receipt id) for **each phase rollup** when a deepen or decision-closing run completes. This links junior-visible execution state to the nervous-system receipt trail (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Parallel execution tracking). **`workflow_state-execution.md`** may mirror the same **`ledger_ref`** for the active cursor when operators want a single scroll point.
 
+**Hard requirement:** A RESUME_ROADMAP / roadmap pipeline run **must not** return **Success** for execution-track work that **claims** rollup closure, receipt alignment, or “execution state fully updated” while **`ledger_ref`** on **`roadmap-state-execution.md`** is **missing** or **incomplete** relative to receipts produced in that run — treat as **#review-needed** / Validator **`block_destructive`** (**`execution_linkage_violation`**) per the lane’s tiered precision doc ([[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Godot-Code-Precision|Validator-Tiered-Blocks-Godot-Code-Precision]] for **godot**, [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]] for **sandbox**). Backfill **`ledger_ref`** in a dedicated hygiene pass when historical runs omitted it.
+
+## Execution phase mirrors (`conceptual_counterpart`)
+
+Every **new** execution **phase** note under **`Roadmap/Execution/`** (mirrored tree; not the two Execution-root state files) **must** include frontmatter **`conceptual_counterpart`** linking to the conceptual note at the same relative path under **`Roadmap/`** (excluding the **`Execution/`** segment). Missing link on a minted execution phase note is **`execution_linkage_violation`** for validation. See linkage hygiene in [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]] (godot) and [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]] (sandbox).
+
 ## Related
 
 - [[3-Resources/Second-Brain/Docs/Conceptual-Execution-Handoff-Checklist|Conceptual-Execution-Handoff-Checklist]]
 - [[3-Resources/Second-Brain/Parameters|Parameters]] § Dual roadmap track
+- [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]] · [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Godot-Lane|Pipeline-Validator-Profile-Godot-Lane]] · [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Godot-Code-Precision|Validator-Tiered-Blocks-Godot-Code-Precision]]
+- [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]] · [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Sandbox-Lane|Pipeline-Validator-Profile-Sandbox-Lane]] · [[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Sandbox-Code-Precision|Validator-Tiered-Blocks-Sandbox-Code-Precision]]
+- [[3-Resources/Second-Brain/Docs/Dry-Run-Appendix-Godot-Execution-Gates-2026-04-11|Dry-Run-Appendix-Godot-Execution-Gates-2026-04-11]]
 - `.cursor/rules/context/dual-roadmap-track.mdc` (agent enforcement)
+- `.cursor/rules/agents/godot-execution-guard.mdc` (godot lane execution runtime hook)
+- `.cursor/rules/agents/sandbox-execution-guard.mdc` (sandbox lane execution runtime hook)
+- `.cursor/rules/agents/execution-research-whitelist.mdc` (execution Research URL allowlist; prompt-injection guard)

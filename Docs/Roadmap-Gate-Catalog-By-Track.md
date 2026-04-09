@@ -8,6 +8,8 @@ links:
   - "[[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]"
   - "[[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]]"
   - "[[3-Resources/Second-Brain/Docs/Validator-Tiered-Blocks-Spec|Validator-Tiered-Blocks-Spec]]"
+  - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]]"
+  - "[[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]]"
 ---
 
 # Roadmap gate catalog by track
@@ -16,7 +18,7 @@ links:
 
 **Conceptual** and **execution** roadmaps answer different questions. Validators, Layer 1 repair policy, and anti-spin **`gate_block_signal`** must not treat **execution-only** debt as a hard failure on a **conceptual** track. This note lists gate families per track. Canonical resolution: [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § **`effective_track` resolution**.
 
-**`gate_catalog_id`:** Use string **`conceptual_v1`** or **`execution_v1`** in continuation telemetry when logging which catalog applied.
+**`gate_catalog_id`:** Use string **`conceptual_v1`** or **`execution_v1`** in continuation telemetry when logging which catalog applied. For **godot lane + execution** (**`parallel_track: godot`**, **`lane_project_id: godot-genesis-mythos-master`**), also log **`execution_godot_v1`** per [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]].
 
 ---
 
@@ -48,10 +50,20 @@ Execution-deferred and advisory signals **must** be logged verbosely for traceab
 | **Handoff** | Junior handoff bundle, acceptance criteria, WBS | Standard **`roadmap_handoff_auto`** / **hand-off-audit** behavior. |
 | **Coherence** | Same as conceptual | **Hard block** when true block codes apply. |
 
+### Godot lane overlay (`parallel_track === godot`, execution)
+
+Additional gate families (**`godot_code_precision`**, linkage hygiene) apply only when **`effective_track === execution`** and the resolver has **`parallel_track: godot`** for **`godot-genesis-mythos-master`**. Full table: [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Godot-Execution|Roadmap-Gate-Catalog-Godot-Execution]]. Validator profile overlay: [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Godot-Lane|Pipeline-Validator-Profile-Godot-Lane]]. **Research URL allowlist:** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] (**godot** → **`https://docs.godotengine.org/en/stable/`** only; **§0** pre-`Task(research)` scan).
+
+### Sandbox lane overlay (`parallel_track === sandbox`, execution)
+
+Additional gate families (**`sandbox_code_precision`**, linkage hygiene) apply only when **`effective_track === execution`** and the resolver has **`parallel_track: sandbox`** for **`sandbox-genesis-mythos-master`**. Full table: [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Sandbox-Execution|Roadmap-Gate-Catalog-Sandbox-Execution]]. Validator profile overlay: [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Sandbox-Lane|Pipeline-Validator-Profile-Sandbox-Lane]]. **Sandbox** targets **C / C++** precision — **not** GDScript; **zero overlap** with the Godot lane docs. **Research URL allowlist:** [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] (**sandbox** → **`https://en.cppreference.com/w/`** and **`https://cplusplus.com/reference/`** only; **§0** pre-`Task(research)` scan).
+
 ---
 
 ## Cross-references
 
 - [[.cursor/rules/agents/validator.mdc|validator.mdc]] — **`roadmap_handoff_auto`** branch with **`effective_track`**.
 - [[.cursor/rules/agents/queue.mdc|queue.mdc]] — **A.5b** conceptual skip, **`layer1_resolver_hints`**, **`record-outcome`** **`blocked_track`**.
+- [[scripts/queue-gate-compute.py|queue-gate-compute.py]] — **`gate_key`** includes track when **`queue.gate_key_includes_track`** is true.
+ed_track`**.
 - [[scripts/queue-gate-compute.py|queue-gate-compute.py]] — **`gate_key`** includes track when **`queue.gate_key_includes_track`** is true.
