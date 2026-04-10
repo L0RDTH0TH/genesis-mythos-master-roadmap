@@ -695,6 +695,10 @@ See [[3-Resources/Second-Brain/Docs/Queue-Continuation-Spec|Queue-Continuation-S
 
 **Reference:** [[.cursor/agents/gitforge.md|agents/gitforge.md]], [[.cursor/rules/agents/gitforge.mdc|gitforge.mdc]], [[3-Resources/Second-Brain/Docs/git-audit-log|git-audit-log]], [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**.
 
+## Curator mandatory backup (full vault; after Watcher / telemetry / GitForge)
+
+When Part A **mutated vault files** (queue rewrites, logs, any note write), **after** **A.7** and **A.7a** (GitForge) per contract, **before** Layer 1 declares **Success**: run **`./scripts/curator_snapshot.sh "<short summary>"`** per [[.cursor/rules/agents/curator-mandatory-backup|curator-mandatory-backup]]. If **`curator_snapshot`** fails or push fails → **`task_error`**, **halt** — **not** a clean queue run. **GitForge** remains the **public export** path; **Curator** is **private full-vault** backup only.
+
 ---
 
 # Part B — Task-queue flow (PROCESS TASK QUEUE)

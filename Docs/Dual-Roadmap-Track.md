@@ -55,6 +55,8 @@ When **`parallel_track`** is **`sandbox`**, **`effective_track`** is **`executio
 
 Conceptual notes must stay **readable** in Cursor and Obsidian. Protection is **contractual** (frontmatter `frozen: true` + agent rules), not filesystem hiding.
 
+**Full-vault backup:** Any session that **writes** conceptual or execution roadmap files still ends with **Curator** commit + push per [[.cursor/rules/agents/curator-mandatory-backup|curator-mandatory-backup]] (does not change conceptual vs execution semantics).
+
 ## Manual flip
 
 Follow the checklist in [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] § Dual roadmap track (snapshot → set `roadmap_track: execution` → stamp frozen conceptual notes → bootstrap `Templates/Roadmap/Execution`).

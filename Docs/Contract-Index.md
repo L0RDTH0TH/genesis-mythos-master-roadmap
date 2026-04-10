@@ -27,6 +27,16 @@ Single-page index of the core contract, safety, and ledger docs the agents and v
     - Nested subagent policy (orchestration boundaries).
     - Helper profile + honesty summary (mandatory helpers, no misrepresentation).
 
+- **Backup and Recovery Strategy**  
+  - Path in vault: `3-Resources/Second-Brain/Docs/Backup-and-Recovery-Strategy.md`  
+  - Export/Git path: `Docs/Backup-and-Recovery-Strategy.md`  
+  - Purpose: Curator (private git) vs Syncthing vs `gmm-roadmap-export`; restore order; operator setup; GitHub Actions expectations.
+
+- **Execution safety blacklist (move-to-trash)**  
+  - Path in vault: `.cursor/rules/agents/execution-safety-blacklist.mdc`  
+  - Export/Git path: `.cursor/rules/agents/execution-safety-blacklist.mdc`  
+  - Purpose: Forbid raw `rm` / `find -delete` on vault paths; require move-to-trash under `.trash/` + manifest; pairs with curator-mandatory-backup.
+
 - **Nested Subagent Ledger Spec**  
   - Path in vault: `3-Resources/Second-Brain/Docs/Nested-Subagent-Ledger-Spec.md`  
   - Export/Git path: `Docs/Nested-Subagent-Ledger-Spec.md`  
@@ -35,6 +45,26 @@ Single-page index of the core contract, safety, and ledger docs the agents and v
     - Forbidden combinations (e.g. `invoked_ok` + `task_tool_invoked: false` on mandated helpers).
     - Allowed `skipped` / `not_applicable` reason codes.
     - Run-Telemetry integration.
+
+---
+
+## Operator publish (Curator + export)
+
+- **vault-git-publish-checklist**  
+  - Path in vault: `.cursor/skills/vault-git-publish-checklist/SKILL.md`  
+  - Export/Git path: `.cursor/skills/vault-git-publish-checklist/SKILL.md` (mirrored with integration **Step 1** rsync)  
+  - Purpose: Human checklist — **Curator snapshot first**, then `gitforge.export_repo_root` checkout and **Step 1** vs **Step 1b** per `Docs/git-push-workflow-2026-04-02-0446.md`. Does not replace the GitForge subagent.
+
+- **gitforge-operator**  
+  - Path in vault: `.cursor/skills/gitforge-operator/SKILL.md`  
+  - Export/Git path: `.cursor/skills/gitforge-operator/SKILL.md`  
+  - Purpose: Operator/debug companion for [[.cursor/agents/gitforge|GitForge]] — links to `agents/gitforge.md`, Config `gitforge.*`, skip conditions; no duplicated branch tables.
+
+- **publish-to-github (context rule)**  
+  - Path in vault: `.cursor/rules/context/publish-to-github.mdc`  
+  - Export/Git path: `.cursor/rules/context/publish-to-github.mdc`  
+  - Sync mirror: `.cursor/sync/rules/context/publish-to-github.md`  
+  - Purpose: Chat intent (e.g. “update the githubs”) — **`curator_snapshot.sh`** first; **GitForge only** after EAT-QUEUE **A.7a** (not standalone `Task(gitforge)`); otherwise manual steps per skills + git-push workflow.
 
 ---
 

@@ -44,9 +44,11 @@ Sync **only**:
 
 Do **not** copy `.cursor/`, `scripts/`, or system `Docs/` into engine branches.
 
-## Isolated export = GMM roadmap **and** engine exports (one place)
+## Isolated exports (two lanes)
 
-- **Only** the export checkout (`gmm-roadmap-export`) is mirrored from the vault and pushed to GitHub. The vault itself is **not** the publish target.
+- **Private lane:** `gmm-curator-export` pushes to Curator `main` (full-vault mirror).
+- **Public lane:** `gmm-roadmap-export` pushes selective exports to `genesis-mythos-master-roadmap`.
+- The vault itself is **not** a push target for either lane; it is the source mirrored into each export checkout.
 - **Engine-specific published trees live in that same export repo** — not a second export folder, not a separate “engine-only” remote by default. Branches (and any renames) are how you separate Godot vs sandbox (or other) lines on GitHub.
 - **Lineage:** Treat **`iteration-2-roadmap-rules`** as the current integration tip. When you add an engine line, **branch from that tip** (and rename locally/remotely if your workflow calls for it). Example:
   ```bash
@@ -59,6 +61,15 @@ Do **not** copy `.cursor/`, `scripts/`, or system `Docs/` into engine branches.
   ```
 - **Per sync:** Checkout the branch you intend to update **before** rsync/commit so the right line moves on GitHub. For the **integration** branch, run **Step 1 — integration (full system mirror)**. For **engine** branches, run **Step 1b — engine (project delta only)**.
 - **Vault:** Two engine projects → two paths under `1-Projects/` (e.g. `godot-genesis-mythos-master`, `sandbox-genesis-mythos-master`). Set `GMM_PROJECT_ROOT` to match the branch you are publishing.
+
+## Reusable pattern for future projects
+
+Use the same two-lane pattern for every new project to keep behavior predictable:
+
+- **Private backup lane:** one dedicated export checkout per vault (for this vault: `gmm-curator-export`) that mirrors the full vault and pushes to private Curator.
+- **Public publish lane:** one dedicated export checkout per public repo (for this vault: `gmm-roadmap-export`) that mirrors only approved public surfaces.
+- Keep path names stable once chosen; add lanes instead of renaming active lanes.
+- New project lines should be added as branches and `GMM_PROJECT_ROOT` targets inside the public lane, not as new ad-hoc push sources from the vault.
 
 ## GitForge contract (v1)
 

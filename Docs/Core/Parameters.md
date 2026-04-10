@@ -9,6 +9,8 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 
 **TL;DR** — Confidence bands: High ≥85% (destructive after snapshot), Mid 68–84% (one refinement loop), Low <68% (propose-only). Tunable via Second-Brain-Config. RESUME_ROADMAP params (action, queue_next, enable_context_tracking, …) and context-utilization tracking; research/gap params; roadmap config (drift_score_threshold, conf_phase_complete_threshold).
 
+**Whole-vault recovery:** [[3-Resources/Second-Brain/Docs/Backup-and-Recovery-Strategy|Backup-and-Recovery-Strategy]] (Curator vs Syncthing vs export).
+
 ---
 
 ## Quick Reference — Confidence bands

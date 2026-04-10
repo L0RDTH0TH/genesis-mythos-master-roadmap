@@ -91,10 +91,9 @@ All rules and skills that interact with Obsidian via MCP must obey the following
     - Log `#review-needed` and continue with non-destructive alternatives.
 
 - **No shell file operations on the vault**:
-  - Never use shell `cp`, `mv`, or `rm` to mutate the Obsidian vault contents.
+  - Never use shell **`cp`** to mutate vault content. **Delete intent:** never use **`rm`**, **`rmdir`**, **`find ... -delete`** — use **move-to-trash** per [[.cursor/rules/agents/execution-safety-blacklist|execution-safety-blacklist]] (`./scripts/move-to-trash.sh` → **`.trash/<timestamp>/`** + manifest). **Narrow `mv` allowed only for:** (1) that script; (2) the user-invoked attachment move skill (Ingest → 5-Attachments/) with backup and logging.
   - When Obsidian MCP tools **are available**, moves/renames/deletes must go through MCP tools (e.g. `obsidian_move_note`, `obsidian_rename_note`, `obsidian_delete_note`) with backup and snapshot gates.
   - When Obsidian MCP tools **are not available**, agents MAY perform content mutations and lightweight structural changes (e.g. creating or removing files/directories) using the host environment’s safe file tools (such as Cursor’s `Read`/`ApplyPatch` primitives), while still honoring confidence bands and snapshot/backup intent as best as the environment allows.
-  - The only exception for shell is the dedicated, user-invoked attachment move skill, which may run `mv` only for Ingest → 5-Attachments/ and must still obey backup and logging rules.
 
 - **Backups and snapshot directories**:
   - `BACKUP_DIR` (external backup) and `Backups/Per-Change/`, `Backups/Batch/` (in-vault snapshots) are treated as **append-only**; rules and skills must not overwrite or delete files here except via explicit, user-triggered retention/restore flows.
@@ -103,7 +102,7 @@ All rules and skills that interact with Obsidian via MCP must obey the following
 - **Roadmap-specific note**:
   - The **roadmap subagent and its skills** follow this same intent when Obsidian MCP is unavailable in a Task environment:
     - Structural mutations to roadmap artifacts MAY be applied via inline edits (`Read`/`ApplyPatch`) instead of `obsidian_*` tools, but backups/snapshots and confidence bands MUST still be treated as conceptual gates (best-effort approximations when snapshot/backup tools cannot be called).
-    - Shell `cp`/`mv`/`rm` remain forbidden for roadmap just as for other pipelines.
+    - Shell **`cp`** and raw **`rm`** remain forbidden; **move-to-trash** (`./scripts/move-to-trash.sh`) is the only shell relocation pattern for delete intent, same as other pipelines.
     - Nested helpers (little val, Validator, Internal Repair Agent, Research) remain required or optional exactly as defined in the roadmap contracts; lack of MCP does not relax those helper obligations.
 
 - **Structure before move**:
@@ -121,6 +120,10 @@ The following paths and files are globally protected and must not be moved, rena
 - MCP backup directories referenced in `~/.cursor/mcp.json` for the Obsidian servers.
 
 Pipelines may read from these paths but must not mutate them except as part of explicit, user-triggered snapshot/restore/retention flows.
+
+## Curator mandatory backup (post-edit)
+
+When a session **mutates vault files** (any pipeline, rule edit, or tool write), **before** reporting **Success** or ending the run: follow [[.cursor/rules/agents/curator-mandatory-backup|curator-mandatory-backup]] — **`git status --porcelain`**, then **`./scripts/curator_snapshot.sh "<short summary>"`** from vault root when non-empty. Failure → **`task_error`**, **halt**. Does **not** replace GitForge public export ([[.cursor/agents/gitforge|GitForge]] / `gmm-roadmap-export`).
 
 ## Error Handling & Logging
 

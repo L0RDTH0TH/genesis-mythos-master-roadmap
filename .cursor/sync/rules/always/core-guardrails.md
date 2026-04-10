@@ -85,9 +85,8 @@ All rules and skills that interact with Obsidian via MCP must obey the following
     - Log `#review-needed` and continue with non-destructive alternatives.
 
 - **No shell file operations on the vault**:
-  - Never use shell `cp`, `mv`, or `rm` to mutate the Obsidian vault contents.
-  - All moves/renames/deletes must go through MCP tools (e.g. `obsidian_move_note`, `obsidian_rename_note`, `obsidian_delete_note`) with backup and snapshot gates.
-  - The only exception is the dedicated, user-invoked attachment move skill, which must still obey backup and logging rules.
+  - Never use shell **`cp`**. **Delete intent:** never **`rm`**, **`rmdir`**, **`find ... -delete`** — use **move-to-trash** ([[.cursor/rules/agents/execution-safety-blacklist|execution-safety-blacklist]]): `./scripts/move-to-trash.sh` → `.trash/<timestamp>/` + `.trash/TRASH-MANIFEST.log`. **Narrow `mv`:** only that script, or the user-invoked attachment move skill (Ingest → 5-Attachments/).
+  - When MCP **is available**, moves/renames/deletes go through MCP tools with backup/snapshot gates; when unavailable, follow the same intent (ApplyPatch / move-to-trash script as appropriate).
 
 - **Backups and snapshot directories**:
   - `BACKUP_DIR` (external backup) and `Backups/Per-Change/`, `Backups/Batch/` (in-vault snapshots) are treated as **append-only**; rules and skills must not overwrite or delete files here except via explicit, user-triggered retention/restore flows.
@@ -108,6 +107,10 @@ The following paths and files are globally protected and must not be moved, rena
 - MCP backup directories referenced in `~/.cursor/mcp.json` for the Obsidian servers.
 
 Pipelines may read from these paths but must not mutate them except as part of explicit, user-triggered snapshot/restore/retention flows.
+
+## Curator mandatory backup (post-edit)
+
+When a session **mutates vault files** (any pipeline, rule edit, or tool write), **before** reporting **Success** or ending the run: follow [[.cursor/rules/agents/curator-mandatory-backup|curator-mandatory-backup]] — **`git status --porcelain`**, then **`./scripts/curator_snapshot.sh "<short summary>"`** from vault root when non-empty. Failure → **`task_error`**, **halt**. Does **not** replace GitForge public export ([[.cursor/agents/gitforge|GitForge]] / `gmm-roadmap-export`).
 
 ## Error Handling & Logging
 

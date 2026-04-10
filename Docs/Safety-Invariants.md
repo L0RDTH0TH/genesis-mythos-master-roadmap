@@ -14,6 +14,13 @@ Consolidated safety invariants for all subagents and the Queue. Full logic lives
 
 ---
 
+## Curator git hygiene (agents)
+
+- After **mutating vault files**, agents **must** run **`./scripts/curator_snapshot.sh`** (private **`curator`** remote, branch **`main`**) per [[.cursor/rules/agents/curator-mandatory-backup|curator-mandatory-backup]] before claiming **Success**. If push fails, report **`task_error`** — do **not** treat the session as stably backed up.
+- **Delete intent** remains **move-to-trash** only — [[.cursor/rules/agents/execution-safety-blacklist|execution-safety-blacklist]]; **GitForge** / public export is a **separate** remote path.
+
+---
+
 ## Per-change snapshots
 
 - **Before:** move, rename, split, structural distill, append_to_hub, or other destructive/structural step — call obsidian-snapshot skill with **type per-change** for the target note when **confidence ≥ 85%**.
@@ -137,9 +144,19 @@ Violations produce **`divergence_codes`** on **`intent_actual_receipt`** rows (e
 
 ## No shell vault ops
 
-- **Never** use shell `cp`, `mv`, or `rm` to mutate Obsidian vault contents.
-- All moves/renames/deletes go through MCP tools with backup and snapshot gates.
-- **Exception:** Documented, **user-invoked** attachment-move skill (Ingest → 5-Attachments/) only; backup and logging still apply.
+- **Never** use shell **`cp`** or non-trash **`mv`** to mutate Obsidian vault note content for pipelines — use MCP tools with backup and snapshot gates.
+- **Delete intent:** **Never** use **`rm`**, **`rm -rf`**, **`rmdir`**, **`find ... -delete`**, or shell **`unlink`** on vault paths. **Rewrite** removal as **move-to-trash**: relocate under **`.trash/<timestamp>/`** and append **`.trash/TRASH-MANIFEST.log`** per [[.cursor/rules/agents/execution-safety-blacklist|execution-safety-blacklist]]; use **`./scripts/move-to-trash.sh`** from vault root when shell is required.
+- **Exception (narrow shell `mv`):** Only **`scripts/move-to-trash.sh`** may use `mv` toward **`.trash/`** for delete intent. **Exception:** Documented, **user-invoked** attachment-move skill (Ingest → 5-Attachments/) only; backup and logging still apply.
+- **Reference:** [[.cursor/rules/agents/execution-safety-blacklist|execution-safety-blacklist]], [[3-Resources/Second-Brain/Docs/Backup-and-Recovery-Strategy|Backup-and-Recovery-Strategy]] § Move-to-trash and Obsidian trash.
+
+---
+
+## Version control vs sync (operator-level)
+
+- **MCP backups and per-change snapshots** (sections above) still govern **pipeline** destructive steps. They do **not** replace **whole-vault** version history.
+- **Private git on `Curator`** (with Obsidian Git or manual commits) is the recommended **recoverable** layer for the full vault tree. **Syncthing** is convenience sync across devices — **not** a substitute for `git reset` / clone recovery when history matters. **Public export** (`gmm-roadmap-export` → `genesis-mythos-master-roadmap`) is for collaboration and published contracts, not private full-vault backup. See [[3-Resources/Second-Brain/Docs/Backup-and-Recovery-Strategy|Backup-and-Recovery-Strategy]].
+- **Agents:** **Never** use shell `rm -rf` or bulk destructive commands on vault roots; use **move-to-trash** for delete intent (see above). **Human-operated** Curator + documented restore order closes whole-vault recovery gaps.
+- **Reference:** [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] (`.stignore` / Syncthing and `.git/`).
 
 ---
 

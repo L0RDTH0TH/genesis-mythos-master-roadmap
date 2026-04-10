@@ -69,3 +69,7 @@ Echo **`gate_catalog_id: execution_godot_v1`**, **`effective_track: execution`**
 
 - [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]] — parallel spine, **`ledger_ref`**, **`conceptual_counterpart`**.
 - [[.cursor/agents/roadmap|agents/roadmap.md]] — lane-scoped **`roadmap_dir`**, nested **`Task`** helpers.
+
+## Terminal vault hygiene (after Success-eligible writes)
+
+If this run **wrote or rewrote vault files** under this guard’s scope, **`./scripts/curator_snapshot.sh`** is the **mandatory last step** — see [[.cursor/rules/agents/curator-mandatory-backup|curator-mandatory-backup]]. On script or push failure → **`task_error`**, **no** Success.

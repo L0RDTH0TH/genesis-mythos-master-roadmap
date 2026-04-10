@@ -98,6 +98,18 @@ queue_continuation:
 - age_days: 90
 - no_activity_days: 60
 
+## vault_backup (documentation-only)
+
+Operator checklist for **private Curator export checkout** + **Curator**; not consumed by queue processors until explicitly wired. Full narrative: [[3-Resources/Second-Brain/Docs/Backup-and-Recovery-Strategy|Backup-and-Recovery-Strategy]].
+
+```yaml
+vault_backup:
+  private_export_repo_root: "/home/darth/Documents/gmm-curator-export"
+  curator_remote_name: curator   # preferred; falls back to origin if only that exists
+  default_branch: main
+  obsidian_git_recommended: true
+```
+
 ## highlight
 
 - default_key: "3-Resources/Highlightr-Color-Key.md"
