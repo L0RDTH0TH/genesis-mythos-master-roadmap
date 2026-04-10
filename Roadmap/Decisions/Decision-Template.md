@@ -1,13 +1,13 @@
 ---
-title: Decision Template
+title: Decision Template (Godot)
 created: 2026-04-08
-tags: [decision-template, roadmap]
-source: "[[Docs/Decision-Tracking-Framework]]"
+tags: [decision-template, roadmap, godot]
+source: "[[3-Resources/Second-Brain/Docs/Decision-Tracking-Framework]]"
 ---
 
-# Decision template
+# Decision template (godot)
 
-Use this template for new `D-*` entries in roadmap decisions logs.
+Use this template for new `D-*` entries in the godot roadmap decisions log.
 
 ## Required blocks
 

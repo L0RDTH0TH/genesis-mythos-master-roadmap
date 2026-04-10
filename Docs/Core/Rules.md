@@ -82,6 +82,7 @@ flowchart TD
   Phrase -->|EXPRESS MODE| Express[auto-express]
   Phrase -->|ORGANIZE MODE| Organize[auto-organize]
   Phrase -->|ROADMAP MODE, Resume roadmap| Roadmap[auto-roadmap]
+  Phrase -->|update the githubs, publish vault| Publish[publish-to-github]
   Phrase -->|No match| Other[Other rules or none]
   Ingest --> fullIngest[full-autonomous-ingest]
   Queue --> queueProc[Queue processor]
@@ -91,6 +92,7 @@ flowchart TD
   Roadmap --> multiRunRoadmap[multi-run roadmap default; one-shot deprecated]
   Express --> autoExpress[autonomous-express]
   Organize --> autoOrganize[autonomous-organize]
+  Publish --> curatorPublish[curator_snapshot then export guidance]
 ```
 
 ---
