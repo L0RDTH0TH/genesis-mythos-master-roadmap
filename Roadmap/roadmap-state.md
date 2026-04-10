@@ -24,6 +24,8 @@ roadmap_track: execution
 
 # Roadmap state — sandbox-genesis-mythos-master
 
+Execution authority: for execution-track runs, cursor and sequencing authority are `Execution/workflow_state-execution.md` + `Execution/roadmap-state-execution.md`.
+
 > [!warning] Execution track remint (vault recovery, 2026-04-09)
 > The live `Roadmap/Execution/**` tree was moved to [[../../../4-Archives/execution-tracks-vault-recovery-remint-2026-04-09/sandbox-genesis-mythos-master/Roadmap/Execution]]. Coordination restarts at [[Execution/roadmap-state-execution]] and [[Execution/workflow_state-execution]]. Sentences below that describe a **prior** live execution cursor may be **stale** until remint progresses.
 
