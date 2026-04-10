@@ -24,6 +24,9 @@ roadmap_track: execution
 
 # Roadmap state — sandbox-genesis-mythos-master
 
+> [!warning] Execution track remint (vault recovery, 2026-04-09)
+> The live `Roadmap/Execution/**` tree was moved to [[../../../4-Archives/execution-tracks-vault-recovery-remint-2026-04-09/sandbox-genesis-mythos-master/Roadmap/Execution]]. Coordination restarts at [[Execution/roadmap-state-execution]] and [[Execution/workflow_state-execution]]. Sentences below that describe a **prior** live execution cursor may be **stale** until remint progresses.
+
 ## Phase summaries
 
 - Phase 1: complete — conceptual primary + **1.1** / **1.2** slices + glue row; `handoff_readiness` 82 on [[Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]]; advance logged `resume-gmm-advance-p2-post-glue-20260330T212000Z`
