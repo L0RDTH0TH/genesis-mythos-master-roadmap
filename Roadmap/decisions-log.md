@@ -17,6 +17,9 @@ status: active
 
 ## Decisions
 
+- **D-Exec-vault-recovery-remint-2026-04-09 (godot):** Full `Roadmap/Execution/**` parallel spine archived to [[../../../4-Archives/execution-tracks-vault-recovery-remint-2026-04-09/godot-genesis-mythos-master/Roadmap/Execution]] after vault recovery; fresh Execution root holds [[Execution/roadmap-state-execution]] + [[Execution/workflow_state-execution]] with cursor reset to Phase **1** / `"1"`. **Next:** `bootstrap-execution-track` then `RESUME_ROADMAP` `deepen` with `queue_lane: godot`. Older decision rows linking archived execution paths remain historical.
+  - **Linkages:** [[Execution/workflow_state-execution]], [[../../../4-Archives/execution-tracks-vault-recovery-remint-2026-04-09/godot-genesis-mythos-master/Roadmap/Execution]].
+
 - **D-2026-04-08-frontend-player-ux-authority (godot mirror):** Godot lane adopts sandbox canonical authority for player-facing UX and scheduling semantics from [[1-Projects/sandbox-genesis-mythos-master/Roadmap/Conceptual-Amendments/amend-frontend-player-ux-pc-swap-scheduling-lore-surface-2026-04-08-1400]]; fold path logged under conceptual autopilot (`operator-expand-phase42-ux-amendment-godot-20260408T140500Z`).
   - **World Impact:** Aligns possession/swap feel and DM schedule authority semantics across lanes, reducing player confusion and campaign drift.
   - **Options considered (2026-04-08):** **Option A selected** — adopt sandbox-canonical UX authority and mirror through godot conceptual/execution path. **Option B rejected** — diverge godot UX contract from sandbox in this tranche. **Option C rejected** — defer all parity until later execution-only pass.

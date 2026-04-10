@@ -1,6 +1,6 @@
 ---
 title: Roadmap State (Execution) — godot-genesis-mythos-master
-created: 2026-04-10
+created: 2026-04-09
 tags:
   - roadmap
   - state
@@ -10,11 +10,10 @@ para-type: Project
 project-id: godot-genesis-mythos-master
 roadmap_track: execution
 status: in-progress
-current_phase: 2
-completed_phases:
-  - 1
-version: 34
-last_run: 2026-04-10-2035
+current_phase: 1
+completed_phases: []
+version: 1
+last_run: 2026-04-09-remint
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 ---
@@ -23,32 +22,17 @@ handoff_drift_last_recal: 0.0
 
 Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
-**Current posture:** The **parallel execution spine is minted** under `Roadmap/Execution/` (see **Phase summaries** below and [[workflow_state-execution]] ## Log). This file plus [[workflow_state-execution]] remain the **Execution root** coordination surfaces; phase notes live under mirrored `Phase-*` folders — **not** “only two files until first mint” (that sentence was **historical**).
-
-> [!note] Historical — operator reset / first-mint
-> Prior live notes were archived under `4-Archives/godot-genesis-mythos-master/Roadmap-Execution-reset-2026-04-10-operator/`. Authority: [[../decisions-log|decisions-log]] **D-Exec-operator-reset-2026-04-10 (godot)**. Dual-track: [[3-Resources/Second-Brain/Docs/Dual-Roadmap-Track|Dual-Roadmap-Track]]. **Bootstrap queue (historical idempotency key):** `operator-bootstrap-exec-godot-first-mint-20260410T130100Z`.
+> [!note] Vault recovery remint (2026-04-09)
+> Prior parallel spine (all phase notes) was archived to [[../../../../4-Archives/execution-tracks-vault-recovery-remint-2026-04-09/godot-genesis-mythos-master/Roadmap/Execution]]. This Execution root was reset for a clean remint. **Next:** `RESUME_ROADMAP` with `params.action: bootstrap-execution-track` (verify `roadmap_track: execution` on [[../roadmap-state]]), then `deepen` with `queue_lane: godot` and `project_id: godot-genesis-mythos-master`.
 
 ## Phase summaries
 
-- Phase 1: complete — execution primary + secondary + tertiary mirror minted **2026-04-10** — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Execution-Foundation-and-Core-Architecture-Roadmap-2026-04-10-1315]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Execution-Layering-and-Interface-Contracts-Roadmap-2026-04-10-1316]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Execution-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-1316]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Execution-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-10-1415]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Execution-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-10-1416]]; `rollup_1_1_from_1_1_1` is **closed**, `rollup_1_primary_from_1_1` is **closed**, and the Phase-1 primary now also carries propagated **1.2 roll-up closure** (`rollup_1_primary_from_1_2`) with explicit `G-1.2-*` pass anchors. Canonical cursor transition remains `1.2_rollup_closed_to_phase1_primary_reconcile` (see [[workflow_state-execution]]). Deferred seam checkpoints stay open and canonical in [[workflow_state-execution#Deferred safety seam closure map]] (`GMM-2.4.5-*` review `2026-04-22`, `CI-deferrals` review `2026-04-29`).
-- Phase 2: in-progress — execution primary [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Execution-Procedural-Generation-and-World-Building-Roadmap-2026-04-08-1227]]; secondary **2.1** minted **2026-04-08** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Execution-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-08-1805]]; tertiaries **2.1.1–2.1.5** on disk (validation parity + replay traceability gates **closed** per [[workflow_state-execution]]). Secondary **2.2** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-Execution-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-10-1900]]; tertiaries **2.2.1** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-1-Execution-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-08-2315]], **2.2.2** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-2-Execution-Validate-Classify-Schema-and-Hook-Mapping-Roadmap-2026-04-08-2330]], **2.2.3** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-3-Execution-Conflict-Resolution-Priority-Ordering-and-Merge-Policy-Roadmap-2026-04-08-2350]], **2.2.4** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-4-Execution-Deterministic-Hook-Emission-Envelope-and-Pre-Commit-Payload-Handoff-Roadmap-2026-04-08-2351]], **2.2.5** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-5-Execution-Envelope-Validation-Labels-and-Bundle-Chunk-Ordering-Boundary-Roadmap-2026-04-10-1705]] (`G-2.2.5-*`; queue `followup-deepen-exec-p225-tertiary-godot-20260410T170500Z`). **`rollup_2_primary_from_2_1`** **closed**. **`rollup_2_primary_from_2_2`** **closed** (**2026-04-10** — registry receipt + primary propagation). Secondary **2.3** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-3-Pipeline-Validation-and-Pre-Commit-Verification/Phase-2-3-Execution-Pipeline-Validation-and-Pre-Commit-Verification-Roadmap-2026-04-10-1805]] (**2026-04-10**; `G-2.3-*` **PASS** + tertiary propagation table); tertiaries **2.3.1–2.3.5** on disk with per-tertiary `G-2.3.*-*` rows — links in Phase 2 primary / secondary **2.3**. **`rollup_2_primary_from_2_3`** **closed** **2026-04-10** (`owner_signoff_rollup_2_primary_from_2_3_2026-04-10`; queue `followup-deepen-exec-p23-rollup-godot-20260410T203500Z`). **Next:** `RESUME_ROADMAP` `deepen` — **secondary 2.4** mint (`current_subphase_index: "2.4"` in [[workflow_state-execution]]).
-- Phase 3: pending
-- Phase 4: pending — conceptual **Phase 4.2** UX authority fold **2026-04-08** registered for future parallel-spine mint — see [[workflow_state-execution#Conceptual counterpart forward registry]] (`exec-forward-p42-ux-20260408`).
-- Phase 5: pending
-- Phase 6: pending
+- Phase 1: pending — no execution phase notes under `Execution/` after remint (only this file + [[workflow_state-execution]]).
+- Phases 2–6: pending
 
 ## Notes
 
-### Operator metric mapping (execution)
-
-**Orthogonal metrics (do not conflate):** **Confidence** / **last_conf** on the latest ## Log data row = per-deepen run self-assessed pipeline confidence for that **Iter** (0–100). **handoff_readiness** on a phase/tertiary note = slice-level delegatability / checklist score on that note’s body (0–100). **progress** on a note = estimated slice completion — not required to equal **Confidence**. **Iter 28** deepen: ## Log Confidence **81** vs tertiary **2.3.3** frontmatter **handoff_readiness: 85** is intentional unless a note explicitly states they share one rubric.
-
-- Conceptual roadmap-state: [[../roadmap-state]]
-- Distilled core (shared): [[../distilled-core]]
-- **L1 B1 repair (`cc3f8215` lineage, 2026-04-08) — historical:** Prior narrative claimed **`last_run: 2026-04-10-1800`** as newest stamp; **superseded** by **2026-04-08** tertiary **2.1.1** mint + state touch — **authoritative `last_run` is frontmatter** (see **`last_run` semantics** below). **do not** infer **`last_run`** from **`queue_utc`** on [[Execution/workflow_state-execution]] row **`cc3f8215-ee7e-4613-96bc-c0f97893710c`** alone. Phase 2 primary `handoff_audit_last` aligned to **`2026-04-08T22:00:00Z`** in [[Execution/Phase-2-Procedural-Generation-and-World-Building/Phase-2-Execution-Procedural-Generation-and-World-Building-Roadmap-2026-04-08-1227]]; see [[decisions-log]] row **D-Exec-handoff-audit-repair-cc3f8215-20260408**.
-- State hygiene repair note (2026-04-10 14:42): canonical execution chronology normalized and cursor transition token made machine-explicit after validator hard-block report `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/godot-genesis-mythos-master-followup-deepen-exec-p12-rollup-godot-20260408T084210Z.md`.
-- **`last_run` semantics:** Frontmatter **`last_run`** is the **single machine stamp** for the latest **authoritative execution-track state touch** on this file (lexical `YYYY-MM-DD-HHMM`, vault-local). **Current value:** **`2026-04-10-2035`** — secondary **2.3** rollup closure (`followup-deepen-exec-p23-rollup-godot-20260410T203500Z`, Iter **31** in [[workflow_state-execution]]). Prior **2026-04-10-1935** stamp (**2.3.5** tertiary) remains valid historical ordering context. Queue-hygiene / `HANDOFF_AUDIT_REPAIR` rows may still carry historical **`queue_utc`** in [[workflow_state-execution]] — use that file’s ## Log + **`Iter Obj`** + causal ordering note as authority for repair lineage, not **`Timestamp`** sort alone.
-- **SUPERSEDED (2026-04-08)** — Handoff-audit repair (2026-04-08 12:58Z queue `1cbcd635-5b00-4533-b52d-6b246b8dc133`): historical narrative that “next structural action remains **mint execution 2.1**” is **obsolete**. **As of tertiary 2.2.4 mint (2026-04-08, Iter 23):** canonical next deepen is **`2.2.5`** per **Phase summaries** above and `current_subphase_index: "2.2.5"` in [[workflow_state-execution]] (secondary **2.2** + tertiaries **2.2.1–2.2.4** on disk). This bullet is **archival only**; do **not** use it as live routing authority — prefer **Phase summaries** + [[workflow_state-execution]] ## Log.
+- Conceptual [[../workflow_state]] is unchanged; execution automation log is [[workflow_state-execution]].
 
 ## Consistency reports (RECAL-ROAD)
 
