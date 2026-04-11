@@ -11,12 +11,13 @@ project-id: godot-genesis-mythos-master
 roadmap_track: execution
 status: in-progress
 automation_level: semi
-current_phase: 1
-current_subphase_index: "1.2.4"
+current_phase: 2
+current_subphase_index: "2"
 cursor_transition: "operator_execution_reset_2026-04-10"
-last_auto_iteration: "followup-deepen-exec-phase1-123-godot-20260412T000100Z"
+last_auto_iteration: "followup-deepen-exec-phase1-primary-glue-godot-20260412T023000Z"
 iterations_per_phase:
-  "1": 13
+  "1": 16
+  "2": 0
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -24,7 +25,7 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 42
+last_ctx_util_pct: 45
 last_conf: 87
 ---
 
@@ -36,6 +37,9 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 
 | Timestamp | Action | Target | Iter Obj | Iter Phase | Ctx Util % | Leftover % | Threshold | Est. Tokens / Window | Util Delta % | Confidence | Status / Next |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-04-12 02:30 | deepen | Phase 1 execution primary glue (`1`) | 16 | 1 | 45 | 55 | 80 | 43200 / 128000 | 1 | 87 | **Primary glue** on [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]] — safety invariants SI-P1-01–04 + dry-run hooks DH-P1-01–03 bound to [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-12-0215|1.2.5]] manifest/versioning; stable Godot doc links (`class_json`, `class_resourceloader`); rollup/CI IDs **not** claimed closed (**D-Exec-rollup-deferral**). Cursor **`1` → Phase 2 / `2`**. Next: mint **Phase 2 execution primary** on parallel spine. `telemetry_utc: 2026-04-12T02:30:00.000Z` \| `parent_run_id: eatq-godot-20260411T230000Z` \| `queue_entry_id: followup-deepen-exec-phase1-primary-glue-godot-20260412T023000Z`. |
+| 2026-04-12 02:15 | deepen | Phase 1 execution tertiary 1.2.5 | 15 | 1 | 44 | 56 | 80 | 42500 / 128000 | 1 | 87 | Minted parallel-spine tertiary [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-12-0215]] — graph schema version + interchange manifest + static pre-run validation + Godot `JSON` `parse` + `ResourceLoader` `load` verbatim citations (parse/load metaphor); **`missing_roll_up_gates`** / manifest-hash CI / rollup verdicts **not** claimed closed (**D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Phase **1.2** tertiary chain **1.2.1–1.2.5** structurally complete on execution spine. Cursor **`1.2.5` → `1`**. Next: deepen **Phase 1 primary** glue / safety invariants + dry-run hooks on [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]] (parallel-spine primary execution mirror). `telemetry_utc: 2026-04-12T02:15:00.000Z` \| `parent_run_id: eat-queue-godot-20260412-layer1` \| `queue_entry_id: followup-deepen-exec-phase1-125-godot-20260412T021500Z`. |
+| 2026-04-12 02:05 | deepen | Phase 1 execution tertiary 1.2.4 | 14 | 1 | 43 | 57 | 80 | 41800 / 128000 | 1 | 87 | Minted parallel-spine tertiary [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-12-0205]] — seed bundles + stable identity + determinism / replay + Godot `RandomNumberGenerator` `seed` / `randomize` + `@GlobalScope.randomize` verbatim citations (RNG metaphor); **`missing_roll_up_gates`** / golden replay CI / rollup verdicts **not** claimed closed (**D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Cursor **`1.2.4` → `1.2.5`**. Next: tertiary **1.2.5** (graph versioning / interchange manifests). `telemetry_utc: 2026-04-12T02:05:00.000Z` \| `parent_run_id: layer1-eatq-godot-20260411T121000Z` \| `queue_entry_id: followup-deepen-exec-phase1-124-godot-20260412T012000Z`. |
 | 2026-04-12 00:15 | deepen | Phase 1 execution tertiary 1.2.3 | 13 | 1 | 42 | 58 | 80 | 41000 / 128000 | 1 | 87 | Minted parallel-spine tertiary [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-12-0015]] — stage families + specialization + pipeline roles + Godot `add_to_group` / `SceneTree.get_nodes_in_group` verbatim citations (grouping metaphor); **`missing_roll_up_gates`** / family-registry CI / rollup verdicts **not** claimed closed (**D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Cursor **`1.2.3` → `1.2.4`**. Next: tertiary **1.2.4** (determinism / seed bundles / replay). `telemetry_utc: 2026-04-12T00:15:00.000Z` \| `parent_run_id: layer1-eatq-godot-20260411T235959Z` \| `queue_entry_id: followup-deepen-exec-phase1-123-godot-20260412T000100Z`. |
 | 2026-04-11 23:59 | handoff-audit | Phase 1 execution (parent_run_id join-key hygiene) | 12 | 1 | 41 | 59 | 80 | 40200 / 128000 | 0 | 88 | **HANDOFF_AUDIT_REPAIR** — reconciled `parent_run_id` dual-truth for queue `followup-deepen-exec-phase1-122-godot-20260411T234500Z`: vault log + `roadmap-state-execution` consistency now use **`eat-queue-godot-20260411-layer1`** (Layer 1 / Run-Telemetry join key) per [[.technical/parallel/godot/Run-Telemetry/validator-layer1-postlv-followup-deepen-exec-phase1-122-godot-20260411T234500Z|L1 post-LV validator]]. Supersedes mistaken token `eatq-layer1-godot-20260411T234500Z` on **2026-04-11 23:45** deepen row (edited in place). Cursor unchanged **`1.2.3`**. Next: tertiary **1.2.3** deepen. `telemetry_utc: 2026-04-11T23:59:00.000Z` \| `parent_run_id: eat-queue-godot-20260411-layer1` \| `queue_entry_id: a5b-handoff-audit-hygiene-godot-20260411T235959Z`. |
 | 2026-04-11 23:45 | deepen | Phase 1 execution tertiary 1.2.2 | 12 | 1 | 41 | 59 | 80 | 40200 / 128000 | 1 | 87 | Minted parallel-spine tertiary [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-2345]] — serial / wave / subgraph-closure / prefix semantics + Godot `process_mode` / `process_priority` verbatim citations (hosting metaphor); **`missing_roll_up_gates`** / CI / rollup verdicts **not** claimed closed (**D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Cursor **`1.2.2` → `1.2.3`**. Next: tertiary **1.2.3** (stage families specialization). `telemetry_utc: 2026-04-11T23:45:00.000Z` \| `parent_run_id: eat-queue-godot-20260411-layer1` \| `queue_entry_id: followup-deepen-exec-phase1-122-godot-20260411T234500Z`. |
