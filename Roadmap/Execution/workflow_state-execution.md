@@ -12,11 +12,11 @@ roadmap_track: execution
 status: in-progress
 automation_level: semi
 current_phase: 1
-current_subphase_index: "1.1.4"
+current_subphase_index: "1.1.5"
 cursor_transition: "operator_execution_reset_2026-04-10"
-last_auto_iteration: "followup-deepen-exec-phase1-113-godot-20260411T001500Z"
+last_auto_iteration: "followup-deepen-exec-phase1-114-godot-20260411T182000Z"
 iterations_per_phase:
-  "1": 7
+  "1": 8
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -24,7 +24,7 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 36
+last_ctx_util_pct: 37
 last_conf: 87
 ---
 
@@ -36,6 +36,7 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 
 | Timestamp | Action | Target | Iter Obj | Iter Phase | Ctx Util % | Leftover % | Threshold | Est. Tokens / Window | Util Delta % | Confidence | Status / Next |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-04-11 21:05 | deepen | Phase 1 execution tertiary 1.1.4 | 8 | 1 | 37 | 63 | 80 | 36500 / 128000 | 1 | 87 | Minted parallel-spine tertiary [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-11-2105]] — `push_error` / `push_warning` / `assert` citations + failure-class seam sketch; **`missing_roll_up_gates`** / CI IDs **not** claimed closed (execution-deferred **D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Cursor **`1.1.4` → `1.1.5`**. Next: tertiary **1.1.5** deepen (cross-layer observability / test seams) or attach CI run rows. `telemetry_utc: 2026-04-11T21:05:00.000Z` \| `parent_run_id: eatq-godot-20260411T210500Z` \| `queue_entry_id: followup-deepen-exec-phase1-114-godot-20260411T182000Z`. |
 | 2026-04-11 14:45 | deepen | Phase 1 execution tertiary 1.1.3 | 7 | 1 | 36 | 64 | 80 | 36000 / 128000 | 2 | 87 | Minted parallel-spine tertiary [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]] — SceneTree `_enter_tree`/`_exit_tree` order + `add_child` wiring; **`missing_roll_up_gates`** / CI IDs **not** claimed closed (execution-deferred **D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Cursor **`1.1.3` → `1.1.4`**. Next: tertiary **1.1.4** deepen (error boundaries / failure propagation) or attach CI run rows. Queue stamp `20260411T001500Z`; processed `telemetry_utc: 2026-04-11T14:45:00.000Z` \| `parent_run_id: layer1-eatq-godot-20260411T120800Z` \| `queue_entry_id: followup-deepen-exec-phase1-113-godot-20260411T001500Z`. |
 | 2026-04-11 13:05 | handoff-audit | Phase 1 execution (workflow ## Log dual-truth repair) | 6 | 1 | 34 | 66 | 80 | 34800 / 128000 | 0 | 88 | **HANDOFF_AUDIT_REPAIR** — reconciled **12:00** row vs frontmatter **`current_subphase_index: "1.1.3"`** and **00:12** deepen (L1 pass3 `state_hygiene_failure` on log narrative): Status/Next now matches authoritative cursor **`1.1.3`**; cites [[3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/godot-genesis-mythos-master-handoff-audit-repair-exec-rollup-pass3-20260411T130000Z|pass3-20260411T130000Z]]. **`missing_roll_up_gates`** unchanged (execution-deferred). Next: **deepen** tertiary **1.1.3** (dependency direction / lifecycle) or attach CI run rows. `telemetry_utc: 2026-04-11T13:05:00.000Z` \| `parent_run_id: layer1-eatq-godot-20260411T120800Z` \| `queue_entry_id: repair-workflow-log-dual-truth-godot-20260411T130500Z`. |
 | 2026-04-11 00:12 | deepen | Phase 1 execution tertiary 1.1.2 | 5 | 1 | 35 | 65 | 80 | 35500 / 128000 | 1 | 87 | Minted parallel-spine tertiary [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]] — Resource/epoch invalidation + Godot stable citations; **`missing_roll_up_gates`** / CI IDs **not** claimed closed (execution-deferred D-Exec-rollup-deferral-missing-roll-up-gates-20260411). Cursor **`1.1.2` → `1.1.3`**. Next: tertiary **1.1.3** deepen (dependency direction / lifecycle). `telemetry_utc: 2026-04-11T00:12:00.000Z` \| `parent_run_id: eatq-godot-20260411-deepen-112` \| `queue_entry_id: followup-deepen-exec-phase1-112-godot-20260411T001200Z`. |

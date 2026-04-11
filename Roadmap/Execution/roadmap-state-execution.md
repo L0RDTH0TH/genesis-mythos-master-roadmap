@@ -12,8 +12,8 @@ roadmap_track: execution
 status: in-progress
 current_phase: 1
 completed_phases: []
-version: 12
-last_run: "2026-04-11-1530"
+version: 13
+last_run: "2026-04-11-2105"
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 ledger_ref:
@@ -29,6 +29,8 @@ ledger_ref:
   - "repair-workflow-log-dual-truth-godot-20260411T130500Z"
   - "exec-p1-tertiary-113-mint-20260411T1445Z"
   - "queue:followup-deepen-exec-phase1-113-godot-20260411T001500Z"
+  - "exec-p1-tertiary-114-mint-20260411T2105Z"
+  - "queue:followup-deepen-exec-phase1-114-godot-20260411T182000Z"
 ---
 
 # Roadmap state (execution) — godot-genesis-mythos-master
@@ -36,11 +38,11 @@ ledger_ref:
 Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note] Execution authority reset (2026-04-10)
-> Live authority: [[workflow_state-execution]] `current_phase: 1`, `current_subphase_index: "1.1.4"`. Tertiaries **1.1.1**–**1.1.3** minted on parallel spine; next deepen targets tertiary **1.1.4**. Prior execution mint narratives under archived trees are historical only.
+> Live authority: [[workflow_state-execution]] `current_phase: 1`, `current_subphase_index: "1.1.5"`. Tertiaries **1.1.1**–**1.1.4** minted on parallel spine; next deepen targets tertiary **1.1.5**. Prior execution mint narratives under archived trees are historical only.
 
 ## Phase summaries
 
-- Phase 1: execution remint — primary **1** + secondary **1.1** + tertiaries **1.1.1**–**1.1.3** on parallel spine: [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]]; `workflow_state-execution` cursor **`1.1.4`** (next tertiary deepen).
+- Phase 1: execution remint — primary **1** + secondary **1.1** + tertiaries **1.1.1**–**1.1.4** on parallel spine: [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-11-2105]]; `workflow_state-execution` cursor **`1.1.5`** (next tertiary deepen).
 - Phases 2–6: pending
 
 ## Notes
@@ -55,6 +57,8 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note]
 > RECAL-ROAD outputs for the **execution** track can be appended here.
+
+- 2026-04-11 (deepen — tertiary **1.1.4**): Queue `followup-deepen-exec-phase1-114-godot-20260411T182000Z` minted [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-11-2105]] — `push_error` / `push_warning` / `assert` verbatim citations, failure-class seam sketch, explicit **no rollup/CI closure** language; **`missing_roll_up_gates`** remains **open** (execution-deferred). Next structural target: tertiary **1.1.5**. `parent_run_id: eatq-godot-20260411T210500Z`.
 
 - 2026-04-11 (deepen — tertiary **1.1.3**): Queue `followup-deepen-exec-phase1-113-godot-20260411T001500Z` minted [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]] — SceneTree lifecycle order (`_enter_tree` / `_ready` / `_exit_tree`), `add_child` / `remove_child` seam sketch, explicit **no rollup/CI closure** language; **`missing_roll_up_gates`** remains **open** (execution-deferred). Next structural target: tertiary **1.1.4**. `parent_run_id: layer1-eatq-godot-20260411T120800Z`.
 
