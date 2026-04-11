@@ -32,7 +32,7 @@ Parent execution secondary: [[Phase-1-1-Layering-and-Interface-Contracts-Roadmap
 ## Slice status vs execution cursor
 
 - This note is the **1.1.1** execution spec slice (commit pipeline).
-- **`workflow_state-execution`** **`current_subphase_index: 1.1.2`** is the **next** structural deepen step after this mint; the cursor has already advanced past 1.1.1 in automation state.
+- **`workflow_state-execution`** **`current_subphase_index: 1.1.3`** is the **next** structural deepen step after sibling **1.1.2** mint; the cursor has advanced past 1.1.1 in automation state.
 
 ## Alignment to conceptual Phase-1-1-1
 

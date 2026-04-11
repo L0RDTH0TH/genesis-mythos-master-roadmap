@@ -1,0 +1,2 @@
+node_id	role	ports_in	ports_out
+example_seed_gen	generator	seed_bundle	stage_delta_v0

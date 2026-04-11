@@ -1,0 +1,10 @@
+# Stub — DAG audit (Phase 1.2 execution secondary)
+
+Placeholder for AC-1.2.E1. Replace with real edge list / topo proof when tooling exists.
+
+edges (placeholder):
+  seed_expand -> biome_mask
+  biome_mask -> entity_spawn
+  entity_spawn -> narrative_glue
+
+status: stub — not a verified acyclicity proof
