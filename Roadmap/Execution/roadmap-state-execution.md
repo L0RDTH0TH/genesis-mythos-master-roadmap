@@ -13,8 +13,8 @@ status: in-progress
 current_phase: 2
 completed_phases:
   - 1
-version: 29
-last_run: "2026-04-12-1831"
+version: 34
+last_run: "2026-04-12-2115"
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 ledger_ref:
@@ -59,6 +59,16 @@ ledger_ref:
   - "queue:followup-deepen-exec-phase2-211-godot-20260412T161600Z"
   - "exec-p2-tertiary-212-mint-20260412T1831Z"
   - "queue:followup-deepen-exec-phase2-212-godot-20260412T183100Z"
+  - "exec-p2-tertiary-213-mint-20260412T1832Z"
+  - "queue:followup-deepen-exec-phase2-213-godot-20260412T183200Z"
+  - "exec-p2-tertiary-214-mint-20260412T2005Z"
+  - "queue:followup-deepen-exec-phase2-214-godot-20260412T200500Z"
+  - "exec-p2-tertiary-215-mint-20260412T2105Z"
+  - "queue:followup-deepen-exec-phase2-215-godot-20260412T201000Z"
+  - "exec-p2-secondary-22-mint-20260412T2110Z"
+  - "queue:followup-deepen-exec-phase2-22-godot-20260412T211000Z"
+  - "exec-p2-tertiary-221-mint-20260412T2115Z"
+  - "queue:followup-deepen-exec-phase2-221-godot-20260412T211500Z"
 ---
 
 # Roadmap state (execution) — godot-genesis-mythos-master
@@ -66,12 +76,12 @@ ledger_ref:
 Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note] Execution authority reset (2026-04-10)
-> Live authority: [[workflow_state-execution]] `current_phase: 2`, `current_subphase_index: "2.1.3"`. Phase **2 execution primary** minted (`followup-deepen-exec-phase2-primary-godot-20260412T031500Z`); **secondary 2.1** minted (`followup-deepen-exec-phase2-21-godot-20260412T151600Z`); **tertiary 2.1.1** minted (`followup-deepen-exec-phase2-211-godot-20260412T161600Z`, **2026-04-12 18:30**); **tertiary 2.1.2** minted (`followup-deepen-exec-phase2-212-godot-20260412T183100Z`, **2026-04-12 18:31**); next structural target: **Phase 2 tertiary 2.1.3** on parallel spine. Prior execution mint narratives under archived trees are historical only.
+> Live authority: [[workflow_state-execution]] `current_phase: 2`, `current_subphase_index: "2.2.2"`. Phase **2 execution primary** minted (`followup-deepen-exec-phase2-primary-godot-20260412T031500Z`); **secondary 2.1** minted (`followup-deepen-exec-phase2-21-godot-20260412T151600Z`); **tertiary 2.1.1**–**2.1.5** on parallel spine; **secondary 2.2** minted (`followup-deepen-exec-phase2-22-godot-20260412T211000Z`); **tertiary 2.2.1** minted (`followup-deepen-exec-phase2-221-godot-20260412T211500Z`, **2026-04-12 21:15**). Next structural target: **Phase 2 tertiary 2.2.2** (validate/classify schema per conceptual tree). Prior execution mint narratives under archived trees are historical only.
 
 ## Phase summaries
 
 - Phase 1: **complete (execution track)** — primary **1** (glue deepen **2026-04-12**) + secondaries **1.1**–**1.2** + tertiaries **1.1.1**–**1.1.5** + **1.2.1**–**1.2.5** on parallel spine: [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-11-2105]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-04-11-2130]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-11-2230]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-11-2245]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-2345]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-12-0015]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-12-0205]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-12-0215]]; primary glue adds SI-P1 / DH-P1 hooks bound to **1.2.5**; rollup/CI IDs remain deferred (**D-Exec-rollup-deferral**).
-- Phase 2: **in progress (execution track)** — primary **2** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-12-1515]]; secondary **2.1** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-12-1616]]; tertiary **2.1.1** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-1-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-12-1830]] (`handoff_readiness` **86**); tertiary **2.1.2** minted — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-2-Validation-Labels-Typed-Deltas-Boundary-Hooks-Roadmap-2026-04-12-1831]] (`handoff_readiness` **86**; validation labels ↔ typed deltas; rollup/CI **deferred**). **Next:** tertiary **2.1.3** (`current_subphase_index: "2.1.3"`).
+- Phase 2: **in progress (execution track)** — primary **2** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-12-1515]]; secondary **2.1** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-12-1616]]; tertiary **2.1.1**–**2.1.5** complete on spine; secondary **2.2** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-Intent-Resolver-and-Hook-Mapping-Roadmap-2026-04-12-2110]]; tertiary **2.2.1** minted — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-2-Intent-Resolver-and-Hook-Mapping/Phase-2-2-1-Intent-Envelope-Normalization-and-Identity-Binding-Roadmap-2026-04-12-2115]] (`handoff_readiness` **86**; normalize-stage envelope + policy; rollup/CI **deferred**). **Next:** tertiary **2.2.2** (`current_subphase_index: "2.2.2"`).
 - Phases 3–6: pending.
 
 ## Notes
