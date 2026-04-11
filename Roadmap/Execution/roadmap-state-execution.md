@@ -13,8 +13,8 @@ status: in-progress
 current_phase: 2
 completed_phases:
   - 1
-version: 22
-last_run: "2026-04-12-0230"
+version: 29
+last_run: "2026-04-12-1831"
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 ledger_ref:
@@ -49,6 +49,16 @@ ledger_ref:
   - "exec-p1-tertiary-125-mint-20260412T0215Z"
   - "queue:followup-deepen-exec-phase1-primary-glue-godot-20260412T023000Z"
   - "exec-p1-primary-glue-20260412T0230Z"
+  - "queue:followup-deepen-exec-phase2-primary-godot-20260412T031500Z"
+  - "exec-p2-primary-mint-20260412T1515Z"
+  - "queue:layer1-a5b-repair-handoff-audit-phase2-primary-godot-20260412T151500Z"
+  - "exec-p2-secondary-21-mint-20260412T1616Z"
+  - "queue:followup-deepen-exec-phase2-21-godot-20260412T151600Z"
+  - "queue:repair-l1-parent-run-correlation-godot-20260411T211500Z"
+  - "exec-p2-tertiary-211-mint-20260412T1830Z"
+  - "queue:followup-deepen-exec-phase2-211-godot-20260412T161600Z"
+  - "exec-p2-tertiary-212-mint-20260412T1831Z"
+  - "queue:followup-deepen-exec-phase2-212-godot-20260412T183100Z"
 ---
 
 # Roadmap state (execution) — godot-genesis-mythos-master
@@ -56,12 +66,13 @@ ledger_ref:
 Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note] Execution authority reset (2026-04-10)
-> Live authority: [[workflow_state-execution]] `current_phase: 2`, `current_subphase_index: "2"`. Phase **1** closed on execution track after **primary glue** deepen (`followup-deepen-exec-phase1-primary-glue-godot-20260412T023000Z`); next structural target: **Phase 2 execution primary** parallel-spine mint. Prior execution mint narratives under archived trees are historical only.
+> Live authority: [[workflow_state-execution]] `current_phase: 2`, `current_subphase_index: "2.1.3"`. Phase **2 execution primary** minted (`followup-deepen-exec-phase2-primary-godot-20260412T031500Z`); **secondary 2.1** minted (`followup-deepen-exec-phase2-21-godot-20260412T151600Z`); **tertiary 2.1.1** minted (`followup-deepen-exec-phase2-211-godot-20260412T161600Z`, **2026-04-12 18:30**); **tertiary 2.1.2** minted (`followup-deepen-exec-phase2-212-godot-20260412T183100Z`, **2026-04-12 18:31**); next structural target: **Phase 2 tertiary 2.1.3** on parallel spine. Prior execution mint narratives under archived trees are historical only.
 
 ## Phase summaries
 
 - Phase 1: **complete (execution track)** — primary **1** (glue deepen **2026-04-12**) + secondaries **1.1**–**1.2** + tertiaries **1.1.1**–**1.1.5** + **1.2.1**–**1.2.5** on parallel spine: [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-11-2105]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-04-11-2130]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-11-2230]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-11-2245]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-2345]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-12-0015]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-12-0205]], [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-12-0215]]; primary glue adds SI-P1 / DH-P1 hooks bound to **1.2.5**; rollup/CI IDs remain deferred (**D-Exec-rollup-deferral**).
-- Phases 2–6: pending — **next:** Phase **2** execution primary mint (`current_subphase_index: "2"`).
+- Phase 2: **in progress (execution track)** — primary **2** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-12-1515]]; secondary **2.1** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-12-1616]]; tertiary **2.1.1** — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-1-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-12-1830]] (`handoff_readiness` **86**); tertiary **2.1.2** minted — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-2-Validation-Labels-Typed-Deltas-Boundary-Hooks-Roadmap-2026-04-12-1831]] (`handoff_readiness` **86**; validation labels ↔ typed deltas; rollup/CI **deferred**). **Next:** tertiary **2.1.3** (`current_subphase_index: "2.1.3"`).
+- Phases 3–6: pending.
 
 ## Notes
 
@@ -75,6 +86,14 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note]
 > RECAL-ROAD outputs for the **execution** track can be appended here.
+
+- 2026-04-11 (handoff-audit — **`parent_run_id` / telemetry join-key repair, Pass 3**): Queue `repair-l1-parent-run-correlation-godot-20260411T211500Z` — durable **`parent_run_id`** for deepen `followup-deepen-exec-phase2-21-godot-20260412T151600Z` is **`layer1-eatq-godot-20260412T120000Z`** (Layer 1 `eat_queue_run_id` for that dispatch; matches [[workflow_state-execution]] ## Log **2026-04-12 16:16** + parallel Run-Telemetry). Supersedes mistaken **`layer1-eatq-godot-20260411T210000Z`** on conceptual [[../roadmap-state]], IRA, and L1 b1 echoes. **`missing_roll_up_gates`** unchanged (**D-Exec-rollup-deferral**). This repair row’s Layer 1 session: `layer1-eatq-godot-20260411T210000Z`.
+
+- 2026-04-12 (handoff-audit — **conceptual vs execution cursor**): Queue `layer1-a5b-repair-handoff-audit-phase2-primary-godot-20260412T151500Z` — reconciled **conceptual** [[../roadmap-state]] “Live execution cursor authority” bullet (stale **1 / 1.1.4**) with live **execution** **`2` / `2.1`** per L1 post-LV hygiene; dual-authority: conceptual [[../workflow_state]] Phase **6** session vs Godot execution lane. **`missing_roll_up_gates`** unchanged. `parent_run_id: layer1-eatq-godot-20260412T120000Z`.
+
+- 2026-04-12 (deepen — Phase 2 **execution secondary 2.1**): Queue `followup-deepen-exec-phase2-21-godot-20260412T151600Z` minted [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-12-1616]] — canonical **stage spine 0–5** + execution binding to Phase 2 primary interfaces; **Godot stable citations** (`Callable`, `Object`, `RefCounted`, `MainLoop`, `SceneTree`); **`missing_roll_up_gates`** / rollup / CI IDs remain **open** (**D-Exec-rollup-deferral**). Cursor **`2.1` → `2.1.1`**. `parent_run_id: layer1-eatq-godot-20260412T120000Z`.
+
+- 2026-04-12 (deepen — Phase 2 **execution primary**): Queue `followup-deepen-exec-phase2-primary-godot-20260412T031500Z` minted [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-12-1515]] — **Intent mapping** table + execution seams + Godot doc anchors (`MainLoop`, `SceneTree`, `RandomNumberGenerator`, `ResourceLoader`); **`missing_roll_up_gates`** / rollup HR / CI IDs remain **open** (**D-Exec-rollup-deferral**). Cursor **`2` → `2.1`**. `parent_run_id: layer1-eatq-godot-20260412T151500Z`.
 
 - 2026-04-12 (deepen — Phase 1 **primary glue**): Queue `followup-deepen-exec-phase1-primary-glue-godot-20260412T023000Z` deepened [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]] — safety invariants **SI-P1-01–04** + dry-run hooks **DH-P1-01–03** bound to [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-12-0215|1.2.5]]; Godot stable doc links only (`class_json`, `class_resourceloader`); **`missing_roll_up_gates`** / rollup HR / CI IDs remain **open** (**D-Exec-rollup-deferral**). Execution track advances **Phase 1 → 2**; next mint **Phase 2 primary**. `parent_run_id: eatq-godot-20260411T230000Z`.
 
