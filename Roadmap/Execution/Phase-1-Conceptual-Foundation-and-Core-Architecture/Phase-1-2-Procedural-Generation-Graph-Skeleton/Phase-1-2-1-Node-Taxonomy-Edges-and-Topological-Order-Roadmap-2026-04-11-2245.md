@@ -114,9 +114,10 @@ Open **`GMM-2.4.5-*`**, graph **`missing_roll_up_gates`**, and **acyclicity proo
 
 ## Next structural intent
 
-Tertiary **1.2.2** — graph execution semantics and subgraph runs (conceptual mirror: `Phase-1-2-2-*`). Queue follow-up should target **`next_subphase_index: "1.2.2"`** unless operator overrides.
+Tertiary **1.2.2** minted — [[Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-2345]]. Next sibling: **1.2.3** stage families (conceptual mirror: `Phase-1-2-3-*`). Queue follow-up should target **`next_subphase_index: "1.2.3"`** unless operator overrides.
 
 ## Related
 
 - Conceptual authority: [[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-03-30-1705]]
 - Secondary **1.2**: [[Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-11-2230]]
+- Sibling **1.2.2**: [[Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-2345]]

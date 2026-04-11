@@ -12,8 +12,8 @@ roadmap_track: execution
 status: in-progress
 current_phase: 1
 completed_phases: []
-version: 16
-last_run: "2026-04-11-2245"
+version: 19
+last_run: "2026-04-12-0015"
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 ledger_ref:
@@ -37,6 +37,11 @@ ledger_ref:
   - "queue:followup-deepen-exec-phase1-12-godot-20260411T214500Z"
   - "exec-p1-tertiary-121-mint-20260411T2245Z"
   - "queue:followup-deepen-exec-phase1-121-godot-20260411T224500Z"
+  - "exec-p1-tertiary-122-mint-20260411T2345Z"
+  - "queue:followup-deepen-exec-phase1-122-godot-20260411T234500Z"
+  - "queue:a5b-handoff-audit-hygiene-godot-20260411T235959Z"
+  - "queue:followup-deepen-exec-phase1-123-godot-20260412T000100Z"
+  - "exec-p1-tertiary-123-mint-20260412T0015Z"
 ---
 
 # Roadmap state (execution) — godot-genesis-mythos-master
@@ -44,11 +49,11 @@ ledger_ref:
 Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note] Execution authority reset (2026-04-10)
-> Live authority: [[workflow_state-execution]] `current_phase: 1`, `current_subphase_index: "1.2.2"`. Tertiary **1.2.1** (node taxonomy / edges / topological order) minted on parallel spine; next deepen targets **tertiary 1.2.2** (graph execution semantics / subgraph runs). Prior execution mint narratives under archived trees are historical only.
+> Live authority: [[workflow_state-execution]] `current_phase: 1`, `current_subphase_index: "1.2.4"`. Tertiary **1.2.3** (stage families specialization) minted on parallel spine; next deepen targets **tertiary 1.2.4** (determinism / seed bundles / replay). Prior execution mint narratives under archived trees are historical only.
 
 ## Phase summaries
 
-- Phase 1: execution remint — primary **1** + secondaries **1.1**–**1.2** + tertiaries **1.1.1**–**1.1.5** + **1.2.1** on parallel spine: [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-11-2105]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-04-11-2130]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-11-2230]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-11-2245]]; `workflow_state-execution` cursor **`1.2.2`** (next: tertiary **1.2.2** deepen).
+- Phase 1: execution remint — primary **1** + secondaries **1.1**–**1.2** + tertiaries **1.1.1**–**1.1.5** + **1.2.1**–**1.2.3** on parallel spine: [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-11-2105]], [[Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-04-11-2130]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-11-2230]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-11-2245]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-2345]], [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-12-0015]]; `workflow_state-execution` cursor **`1.2.4`** (next: tertiary **1.2.4** deepen).
 - Phases 2–6: pending
 
 ## Notes
@@ -63,6 +68,12 @@ Execution-track progress. Conceptual source of truth: [[../roadmap-state]].
 
 > [!note]
 > RECAL-ROAD outputs for the **execution** track can be appended here.
+
+- 2026-04-12 (deepen — tertiary **1.2.3**): Queue `followup-deepen-exec-phase1-123-godot-20260412T000100Z` minted [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-12-0015]] — stage families + specialization + pipeline roles + Godot `add_to_group` / `SceneTree.get_nodes_in_group` citations (grouping metaphor); **`missing_roll_up_gates`** / family-registry CI / rollup verdicts remain **open** (**D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Next structural target: tertiary **1.2.4**. `parent_run_id: layer1-eatq-godot-20260411T235959Z`.
+
+- 2026-04-11 (handoff-audit — **parent_run_id join-key hygiene**): Queue `a5b-handoff-audit-hygiene-godot-20260411T235959Z` — reconciled **dual-truth** on `parent_run_id` for the **1.2.2** deepen (`followup-deepen-exec-phase1-122-godot-20260411T234500Z`): authoritative join key is now **`eat-queue-godot-20260411-layer1`** (Layer 1 hand-off / Run-Telemetry) per [[.technical/parallel/godot/Run-Telemetry/validator-layer1-postlv-followup-deepen-exec-phase1-122-godot-20260411T234500Z|L1 post-LV validator]]; prior vault token `eatq-layer1-godot-20260411T234500Z` removed from **2026-04-11 23:45** log trailer + this bullet. **`missing_roll_up_gates`** unchanged. Next structural target: tertiary **1.2.3**. `parent_run_id: eat-queue-godot-20260411-layer1`.
+
+- 2026-04-11 (deepen — tertiary **1.2.2**): Queue `followup-deepen-exec-phase1-122-godot-20260411T234500Z` minted [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-2345]] — serial / wave / subgraph-closure / prefix semantics + Godot `process_mode` / `process_priority` verbatim citations (hosting metaphor); **`missing_roll_up_gates`** / CI / rollup verdicts remain **open** (**D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Next structural target: tertiary **1.2.3**. `parent_run_id: eat-queue-godot-20260411-layer1` (corrected 2026-04-11 23:59 to match Layer 1 join key).
 
 - 2026-04-11 (deepen — tertiary **1.2.1**): Queue `followup-deepen-exec-phase1-121-godot-20260411T224500Z` minted [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-11-2245]] — node taxonomy + edge kinds + Kahn topo sketch + Godot `Node` / `GraphEdit` verbatim citations; **`missing_roll_up_gates`** / acyclicity CI / rollup verdicts remain **open** (**D-Exec-rollup-deferral-missing-roll-up-gates-20260411**). Next structural target: tertiary **1.2.2**. `parent_run_id: eatq-layer1-godot-20260411T230530Z`.
 
