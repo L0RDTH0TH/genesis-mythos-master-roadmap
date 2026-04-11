@@ -12,10 +12,10 @@ phase: 1
 subphase: "1"
 roadmap-level: primary
 status: in-progress
-handoff_readiness: 85
+handoff_readiness: 86
 handoff_gaps:
-  - "GMM-2.4.5-replay-diff / lineage-closure / CI-seam-expansion packets remain open until verdict rows + CI run IDs land"
-handoff_audit_last: "2026-04-10T21:07:00Z"
+  - "Rollup verdicts for GMM-2.4.5-* / CI-seam-expansion remain open until PENDING cells in Execution-Gates packets are filled with attested IDs (packets are structurally complete per handoff-audit-repair-godot-exec-rollup-20260410T105245Z)"
+handoff_audit_last: "2026-04-11T13:05:00Z"
 conceptual_counterpart: "[[../../Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-03-30-0430]]"
 ---
 
@@ -88,9 +88,9 @@ function run_tick_window(seed_bundle, tick_budget):
 
 | Gate ID | Owner | Artifact target | Completion check | Current state |
 | --- | --- | --- | --- | --- |
-| `GMM-2.4.5-replay-diff` | Runtime + state | `3-Resources/Second-Brain/Validator-Reports/Execution-Gates/godot-phase1-gmm-245-replay-diff.md` | Two-run final hash equivalence with seed lineage annotation | Open (stub packet on disk; verdict rows TBD) |
-| `GMM-2.4.5-lineage-closure` | Architecture | `3-Resources/Second-Brain/Validator-Reports/Execution-Gates/godot-phase1-gmm-245-lineage-closure.md` | Comparator rows resolved with explicit pass/fail marks | Open (stub packet on disk; verdict rows TBD) |
-| `CI-seam-expansion` | CI + runtime | `3-Resources/Second-Brain/Validator-Reports/Execution-Gates/godot-phase1-ci-seam-expansion.md` | Cross-lane stress, long-run replay, and report automation run IDs recorded | Open (stub packet on disk; CI run IDs TBD) |
+| `GMM-2.4.5-replay-diff` | Runtime + state | `3-Resources/Second-Brain/Validator-Reports/Execution-Gates/godot-phase1-gmm-245-replay-diff.md` | Two-run final hash equivalence with seed lineage annotation | Open — **structured packet** (`evidence_packet_status: structured_open`); verdict rows `PENDING` until CI hashes |
+| `GMM-2.4.5-lineage-closure` | Architecture | `3-Resources/Second-Brain/Validator-Reports/Execution-Gates/godot-phase1-gmm-245-lineage-closure.md` | Comparator rows resolved with explicit pass/fail marks | Open — **structured packet**; statuses `PENDING` until registry milestones |
+| `CI-seam-expansion` | CI + runtime | `3-Resources/Second-Brain/Validator-Reports/Execution-Gates/godot-phase1-ci-seam-expansion.md` | Cross-lane stress, long-run replay, and report automation run IDs recorded | Open — **structured packet**; `ci_run_id` cells `PENDING` (no fabrication) |
 
 Execution gate deferment remains active until the listed completion checks are met and linked.
 
@@ -98,13 +98,15 @@ Execution gate deferment remains active until the listed completion checks are m
 
 Repair queue `repair-handoff-audit-godot-exec-phase1-rollup-20260410T210700Z` **does not close** L1 `missing_roll_up_gates`; it binds the closure map to **on-disk stub packets** (see `3-Resources/Second-Brain/Validator-Reports/Execution-Gates/`) plus owner accountability until real verdict rows exist.
 
-| Gate ID | Evidence packet status | Blocking condition before deepen `1.1` | Owner note |
-| --- | --- | --- | --- |
-| `GMM-2.4.5-replay-diff` | Determinism seed/hash pair logged (`AC-1.1-A`) but full replay-diff matrix still open | Attach replay-diff matrix artifact with comparator verdict rows | Runtime + state |
-| `GMM-2.4.5-lineage-closure` | Schema path reserved, no closure verdict rows yet | Add lineage closure matrix with pass/fail and unresolved-item notes | Architecture |
-| `CI-seam-expansion` | Scope documented, CI run IDs not yet attached | Record CI run IDs and cross-lane stress artifacts | CI + runtime |
+**2026-04-11 — `handoff-audit-repair-godot-exec-rollup-20260410T105245Z`:** Upgraded **replay-diff**, **lineage-closure**, and **CI-seam-expansion** packets from bare stubs to **structured_open** evidence (protocol, matrices, hostile-validation checklists; `PENDING` where IDs are not yet attested). **`missing_roll_up_gates`** remains an advisory open code until real CI/registry rows populate — this pass closes **packet-shape** gaps for hostile replay, not rollup verdict.
 
-This note remains eligible for execution follow-up with `handoff_readiness` below hard-close threshold until the three gate packets are linked and verified.
+| Gate ID | Evidence packet status | Blocking condition before rollup verdict closure | Owner note |
+| --- | --- | --- | --- |
+| `GMM-2.4.5-replay-diff` | Structured packet (`structured_open`); matrix cells `PENDING` until CI hashes | Populate Run A/B `final_state_hash` + `ci_run_id` per packet protocol | Runtime + state |
+| `GMM-2.4.5-lineage-closure` | Structured packet; verdict rows `PENDING` | Fill `engine_build_id` / `parent_commit` when attested | Architecture |
+| `CI-seam-expansion` | Structured stress matrix; all `ci_run_id` cells `PENDING` | Attach real stress / long-run / report-automation run IDs | CI + runtime |
+
+Execution deepen along [[../../workflow_state-execution]] continues at **`1.1.4`**; rollup **`missing_roll_up_gates`** remains advisory until the three packets show non-`PENDING` closure signals (no markdown-only rollup claim).
 
 ### AC-1.1-A evidence
 
@@ -112,4 +114,4 @@ Canonical record (including placeholder digests pending CI attestation): [[3-Res
 
 ## Next structural intent
 
-Mint **tertiary 1.1.1** execution slice after secondary **1.1** — see [[../Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]] (completed 2026-04-10).
+Authoritative cursor: [[../../workflow_state-execution]] **`current_subphase_index: "1.1.4"`**. Next execution deepen is **tertiary 1.1.4** on the parallel spine (secondary **1.1** and tertiaries **1.1.1**–**1.1.3** are minted). Context: [[../Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2110]], [[../Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]].

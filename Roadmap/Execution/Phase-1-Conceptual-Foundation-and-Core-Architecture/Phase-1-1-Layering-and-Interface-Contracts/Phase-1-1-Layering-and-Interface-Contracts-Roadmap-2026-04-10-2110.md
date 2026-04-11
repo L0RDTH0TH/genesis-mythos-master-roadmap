@@ -76,7 +76,7 @@ function tick_once(kernel, bus, store, clock):
 
 ## Roll-up closure map (progressive evidence, queue `followup-deepen-exec-phase1-1-godot-20260410T210701Z`)
 
-Open rows for **`GMM-2.4.5-*`** and **`CI-seam-expansion`** are **execution-deferred** pending CI/verdict evidence; they do **not** block the next tertiary execution deepen (**1.1.2**) unless a separate hard gate applies.
+Open rows for **`GMM-2.4.5-*`** and **`CI-seam-expansion`** are **execution-deferred** pending CI/verdict evidence; they do **not** block the next tertiary execution deepen (**1.1.4**) unless a separate hard gate applies.
 
 | Gate ID | Evidence packet | This-run progress | Next evidence |
 | --- | --- | --- | --- |
@@ -95,4 +95,4 @@ Statuses remain **open** until packets carry verdict rows; this slice advances *
 
 ## Next structural intent
 
-Tertiary **1.1.1** minted: [[Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]]. Next: **tertiary 1.1.2** — observation cache / invalidation (conceptual mirror `Phase-1-1-2-*`).
+Tertiary **1.1.1** minted: [[Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2359]]. Tertiary **1.1.2** minted: [[Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-11-0012]]. Tertiary **1.1.3** minted: [[Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-11-0015]]. Next: **tertiary 1.1.4** — error boundaries / failure propagation (conceptual mirror `Phase-1-1-4-*`).
