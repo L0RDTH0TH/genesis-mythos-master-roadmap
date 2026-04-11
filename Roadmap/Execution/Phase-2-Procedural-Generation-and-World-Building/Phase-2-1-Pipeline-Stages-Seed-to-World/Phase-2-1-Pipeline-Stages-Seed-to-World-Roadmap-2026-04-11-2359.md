@@ -88,4 +88,6 @@ seam run_seed_to_world_pipeline(seed_bundle, intent_hooks, stage_plan, mode):
 
 - Phase 2 execution primary: [[../Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]]
 - Upstream graph skeleton: [[../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-10-2355]]
-- Next structural target: tertiary **2.1.1** (conceptual peers under conceptual `Phase-2-1-Pipeline-Stages-Seed-to-World/`).
+- Tertiary **2.1.1** minted — [[Phase-2-1-1-Stage-Family-Bodies-and-Boundary-Hooks-Roadmap-2026-04-12-1825]] (stage-family bodies + boundary hooks; text-only seams).
+- Tertiary **2.1.2** minted — [[Phase-2-1-2-Boundary-Hook-Labels-and-Staged-Delta-Merge-Seams-Roadmap-2026-04-11-2100]] (validation labels + staged delta merge seams; text-only seams).
+- Next structural target: tertiary **2.1.3** (conceptual peer [[../../../Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-3-Staged-Delta-Bundles-Merge-Seams-and-Apply-Ordering-Roadmap-2026-03-30-1041]]).
