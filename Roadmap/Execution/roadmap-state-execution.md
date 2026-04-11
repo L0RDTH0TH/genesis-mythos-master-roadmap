@@ -13,8 +13,8 @@ status: in-progress
 current_phase: 2
 completed_phases:
   - 1
-version: 8
-last_run: 2026-04-12-1800
+version: 9
+last_run: 2026-04-11-2359
 drift_score_last_recal: 0.02
 handoff_drift_last_recal: 0.03
 gate_catalog_overlay_last: execution_sandbox_v1
@@ -36,6 +36,7 @@ ledger_ref:
   - followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z
   - a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z
   - layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z
+  - followup-deepen-exec-phase2-bootstrap-sandbox-20260411T234500Z
 ---
 
 # Roadmap state (execution) — sandbox-genesis-mythos-master
@@ -49,11 +50,12 @@ Execution authority: for execution-track runs, cursor and sequencing authority a
 ## Phase summaries
 
 - Phase 1: structurally complete on execution spine (Phase **1.2** tertiary chain **1.2.1–1.2.5**) — execution primary [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]]; secondary **1.1** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2205]]; secondary **1.2** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-10-2355]]; tertiaries **1.1.1**–**1.1.5** and **1.2.1**–**1.2.5** on parallel spine (see prior rows + **1.2.5** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-11-2315]]).
-- Phase 2: in-progress — execution **primary** minted [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]] (text-only seams; conceptual alignment [[../Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-03-30-0430]]); next structural target **secondary 2.1** (*Pipeline Stages Seed-to-World*) per [[workflow_state-execution]] **`current_subphase_index: "2.1"`**. Stale re-dispatch `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` absorbed — **no remint** of **1.2.4**.
+- Phase 2: in-progress — execution **primary** [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]] + **secondary 2.1** [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-11-2359]] (parallel spine folder `Phase-2-1-Pipeline-Stages-Seed-to-World/`); conceptual alignment [[../Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-03-30-0430]]. Next structural target **tertiary 2.1.1** per [[workflow_state-execution]] **`current_subphase_index: "2.1.1"`**. Queue `followup-deepen-exec-phase2-bootstrap-sandbox-20260411T234500Z` (**secondary 2.1** mint). Stale re-dispatch `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` absorbed historically — **no remint** of **1.2.4**.
 - Phases 3–6: pending
 
 ## Notes
 
+- 2026-04-11 — **Deepen (Execution Phase 2 secondary 2.1):** Minted [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-11-2359]] on parallel spine (mirrors conceptual **2.1**); cursor **`2.1.1`**; queue `followup-deepen-exec-phase2-bootstrap-sandbox-20260411T234500Z` \| `parent_run_id: eatq-sandbox-20260411T235959Z` \| `pipeline_task_correlation_id: 5341670b-96c2-4999-8973-184d5dc6c4ea`. Nested **`Task(validator)`** not invoked — host capability; see Task return `nested_subagent_ledger`.
 - 2026-04-12 — **Reconcile (EAT-QUEUE absorb — Layer 2):** queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` processed idempotently — execution tertiary **1.2.4** already minted (**no remint**); authoritative cursor remains **`current_phase: 2`**, **`current_subphase_index: "2.1"`**. See [[workflow_state-execution]] log row **2026-04-12 18:00** \| `parent_run_id: eatq-sandbox-20260412T180000Z-l1` \| `pipeline_mode_used: balance`.
 - 2026-04-12 — **Reconcile (EAT-QUEUE absorb):** queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` processed idempotently — execution tertiary **1.2.4** already minted (**no remint**); authoritative cursor remains **`current_phase: 2`**, **`current_subphase_index: "2.1"`**. See [[workflow_state-execution]] log row **2026-04-12 15:10** \| `parent_run_id: eatq-sandbox-20260411T150000Z-layer1`.
 - 2026-04-11 — **Handoff-audit (repair — root YAML vs execution):** Aligned [[../roadmap-state]] frontmatter **`current_phase` / `completed_phases` / `status`** with this file per Layer 1 **`state_hygiene_failure`** (report: `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-phase2-primary-20260411T143600Z.md`). Queue: `layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z`. See [[../roadmap-state]] consistency row **2026-04-11** and [[workflow_state-execution]] **2026-04-11 14:37**.

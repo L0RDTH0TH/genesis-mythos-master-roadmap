@@ -12,12 +12,12 @@ roadmap_track: execution
 status: in-progress
 automation_level: semi
 current_phase: 2
-current_subphase_index: "2.1"
+current_subphase_index: "2.1.1"
 cursor_transition: "vault_recovery_execution_reset_2026-04-09"
-last_auto_iteration: "absorb-stale-tertiary124-sandbox-20260412T180000Z-l1"
+last_auto_iteration: "followup-deepen-exec-phase2-bootstrap-sandbox-20260411T234500Z"
 iterations_per_phase:
   "1": 14
-  "2": 3
+  "2": 4
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -25,7 +25,7 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 43
+last_ctx_util_pct: 44
 last_conf: 89
 ---
 
@@ -39,6 +39,7 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-04-12 18:00 | reconcile | Stale RESUME_ROADMAP — execution tertiary 1.2.4 (`followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z`) | 20 | 2 | 43 | 57 | 80 | 50500 / 128000 | 1 | 89 | **Absorb (Layer 2):** execution tertiary **1.2.4** already on parallel spine — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]; **no remint**; authoritative cursor **`current_phase: 2`**, **`current_subphase_index: "2.1"`**. **Same queue id as 2026-04-12 15:10 row** — this pass is **Layer 2 Task(roadmap)** + `parent_run_id: eatq-sandbox-20260412T180000Z-l1` (prior row: Layer 1 / `eatq-sandbox-20260411T150000Z-layer1`). **Absorb-only:** `iterations_per_phase["2"]` **not** incremented (remains **3**). `queue_entry_id: followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `pipeline_mode_used: balance`. **Next:** **`deepen` Phase 2 secondary 2.1** when dispatched. |
 | 2026-04-12 15:10 | reconcile | Stale RESUME_ROADMAP — execution tertiary 1.2.4 (`followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z`) | 19 | 2 | 42 | 58 | 80 | 50200 / 128000 | 1 | 89 | **Absorb:** execution tertiary **1.2.4** already on parallel spine — [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]; vault cursor **`current_phase: 2`**, **`current_subphase_index: "2.1"`** (next **secondary 2.1**). **No remint.** `parent_run_id: eatq-sandbox-20260411T150000Z-layer1` \| `queue_lane: sandbox` \| `parallel_track: sandbox`. **Next:** **`deepen` Phase 2 secondary 2.1** when dispatched. |
+| 2026-04-11 23:59 | deepen | Phase 2.1 execution secondary — Pipeline stages seed-to-world | 21 | 2 | 44 | 56 | 80 | 50800 / 128000 | 1 | 89 | Minted execution secondary **2.1** on parallel spine — [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-1-Pipeline-Stages-Seed-to-World/Phase-2-1-Pipeline-Stages-Seed-to-World-Roadmap-2026-04-11-2359]] (text-only seams; **conceptual_counterpart** → conceptual **2.1**; binds Phase **2** primary + **1.2** graph vocabulary). Cursor advanced **`current_subphase_index: "2.1.1"`** (next: tertiary **2.1.1**). `queue_entry_id: followup-deepen-exec-phase2-bootstrap-sandbox-20260411T234500Z` \| `parent_run_id: eatq-sandbox-20260411T235959Z` \| `pipeline_task_correlation_id: 5341670b-96c2-4999-8973-184d5dc6c4ea` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `pipeline_mode_used: balance` \| `gate_signature: structural-execution-phase2-secondary-21`. **Nested `Task(validator)`:** host did not expose nested Task tool in this Layer 2 session — see roadmap return `nested_subagent_ledger` (**task_error**); Layer 1 post–little-val remains compensating control. |
 | 2026-04-11 14:37 | handoff-audit | Root `roadmap-state.md` YAML vs execution cursor (L1 `state_hygiene_failure`) | 18 | 2 | 41 | 59 | 80 | 50000 / 128000 | 0 | 89 | Aligned [[../roadmap-state]] frontmatter **`current_phase: 2`**, **`completed_phases: [1]`**, **`status: in-progress`**, **`phase_cursor_authority: execution_coordination`** with [[roadmap-state-execution]] per `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-phase2-primary-20260411T143600Z.md`. Narrative phase summaries unchanged. Completed queue `layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z`. `parent_run_id: eatq-sandbox-20260411T180000Z`. **Next:** execution **`deepen`** secondary **2.1** when dispatched (`current_subphase_index: "2.1"`). |
 | 2026-04-12 00:30 | handoff-audit | Phase 1.2.4 dual-truth repair (L1 `contradictions_detected`) | 16 | 2 | 40 | 60 | 80 | 49500 / 128000 | 1 | 89 | Repaired stale “automation next → **1.2.5**” prose on [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]; aligned slice to live cursor **`current_phase: 2`**, **`current_subphase_index: "2"`** per Layer 1 report `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-tertiary124-reconcile-20260411T120500Z.md`. **Next:** execution **`deepen`** Phase **2** parallel spine when dispatched. Completed queue `a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z`. `parent_run_id: eat-queue-sandbox-20260411T120000Z`. |
 | 2026-04-11 14:35 | deepen | Phase 2 execution primary (forge spine — procedural generation / world-building) | 17 | 2 | 41 | 59 | 80 | 50000 / 128000 | 1 | 88 | Stale queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` **reconciled** → authoritative cursor **`current_phase: 2`**, **`current_subphase_index: "2"`** (Phase **1.2.4** already minted — **no remint**). Minted execution Phase **2** primary [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]]: text-only interface seams + Intent Mapping vs conceptual Phase 2 primary; binds Phase **1.2** graph skeleton; **GMM-2.4.5**/CI closure deferred. Cursor advanced **`current_subphase_index: "2.1"`** (next: secondary **2.1** — *Pipeline Stages Seed-to-World* mirror). `telemetry_utc: 2026-04-11T14:32:00.000Z` \| `parent_run_id: eat-queue-sandbox-20260411T143200Z-layer1` \| `pipeline_task_correlation_id: 7f2c9a1e-4d8b-4e6f-9c0a-1b2c3d4e5f60` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `gate_signature: structural-execution-phase2-bootstrap`. |
