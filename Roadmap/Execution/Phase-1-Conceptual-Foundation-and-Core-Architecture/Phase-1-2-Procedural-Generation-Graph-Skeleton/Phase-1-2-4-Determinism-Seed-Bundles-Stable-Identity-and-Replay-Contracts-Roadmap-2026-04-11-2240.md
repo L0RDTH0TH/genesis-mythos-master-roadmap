@@ -28,7 +28,14 @@ Upstream **1.2.3** execution: [[Phase-1-2-3-Stage-Families-Specialization-and-Pi
 
 ## Handoff readiness vs evidence
 
-**Handoff readiness** on this slice is **design- and traceability-first**: seed/identity/replay seams and intent mapping. **AC** rows begin **Planned** until repo artifacts attach. **`status: in-progress`**. Automation **next** structural target after this mint is **`1.2.5`** (graph versioning / interchange) — see [[../../workflow_state-execution]].
+**Handoff readiness** on this slice is **design- and traceability-first**: seed/identity/replay seams and intent mapping. **AC** rows begin **Planned** until repo artifacts attach. **`status: in-progress`** remains accurate while evidence rows are **Planned**.
+
+> [!warning] Superseded — automation cursor (repair `a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z`)
+> At **mint time**, the next sibling on the Phase **1.2** chain was **`1.2.5`** (graph versioning / interchange). That deepen **completed** afterward; Phase **1.2** execution chain is **complete** through **1.2.5** per [[../../roadmap-state-execution]] and [[../../workflow_state-execution]] (**Log** row **2026-04-11 23:18**).
+>
+> **Current vault authority:** execution automation cursor is **`current_phase: 2`**, **`current_subphase_index: "2"`** — the **next** `RESUME_ROADMAP` execution **`deepen`** targets the **Phase 2** parallel spine (not **1.2.5**). Do **not** treat older “next = 1.2.5” wording as live routing unless clearly marked **historical** (this callout).
+>
+> Layer 1 post–little-val reconcile: `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-tertiary124-reconcile-20260411T120500Z.md` (**`contradictions_detected`** on stale inline “next”).
 
 ## Alignment to conceptual Phase-1-2-4
 
@@ -74,7 +81,7 @@ replay_equivalence(mode, recorded, candidate):
 | Upstream **1.2.1** | Only **EdgeKind**-declared deps + node kind participate in `derive_node_seed` inputs. |
 | Upstream **1.2.2** | `wave_partition` order changes **schedule**, not `logical_key`; subgraph closure defines bundle visibility. |
 | Upstream **1.2.3** | **Commit**-family stages may record validation digests that **committed** replay must match. |
-| Downstream **1.2.5** | Versioning / interchange manifests bind deterministic outputs to exchange tooling — see conceptual Phase-1-2-5. |
+| Downstream **1.2.5** | Versioning / interchange manifests bind deterministic outputs to exchange tooling — **minted** on the execution spine ([[Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-11-2315]]); automation has since advanced to **Phase 2** (see banner above). |
 
 ## Tasks (tertiary execution breakdown)
 
@@ -111,7 +118,7 @@ replay_equivalence(mode, recorded, candidate):
 ## Related (execution spine)
 
 - Prior **1.2.3**: [[Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-11-1415]]
-- Next tertiary **1.2.5** (versioning / interchange): conceptual [[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-03-30-2015]]
+- Tertiary **1.2.5** (versioning / interchange), **minted** after this slice: execution [[Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-11-2315]] · conceptual [[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-03-30-2015]]. **Live automation “next”** after Phase **1.2** completion: **Phase 2** execution mirror — [[../../workflow_state-execution]].
 
 ## Research integration
 

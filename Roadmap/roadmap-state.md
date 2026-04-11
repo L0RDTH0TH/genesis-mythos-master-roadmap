@@ -7,16 +7,13 @@ tags:
   - sandbox-genesis-mythos-master
 para-type: Project
 project-id: sandbox-genesis-mythos-master
-status: generating
-current_phase: 6
+status: in-progress
+current_phase: 2
 completed_phases:
   - 1
-  - 2
-  - 3
-  - 4
-  - 5
-version: 81
-last_run: "2026-04-10-1300"
+phase_cursor_authority: execution_coordination
+version: 82
+last_run: "2026-04-11-1437"
 drift_score_last_recal: 0.0
 handoff_drift_last_recal: 0.0
 roadmap_track: execution
@@ -25,6 +22,9 @@ roadmap_track: execution
 # Roadmap state — sandbox-genesis-mythos-master
 
 Execution authority: for execution-track runs, cursor and sequencing authority are `Execution/workflow_state-execution.md` + `Execution/roadmap-state-execution.md`.
+
+> [!note] Machine-readable phase cursor (2026-04-11)
+> With `roadmap_track: execution` and `phase_cursor_authority: execution_coordination`, **YAML** `current_phase` / `completed_phases` / `status` on **this** file are aligned to [[Execution/roadmap-state-execution]] so automation does not read a stale conceptual-scale phase (**6**) while execution is at **Phase 2**. Narrative **Phase summaries** below remain the historical design record through Phase **6** conceptual work; they are not duplicated into frontmatter.
 
 > [!warning] Execution track remint (vault recovery, 2026-04-09)
 > The live `Roadmap/Execution/**` tree was moved to [[../../../4-Archives/execution-tracks-vault-recovery-remint-2026-04-09/sandbox-genesis-mythos-master/Roadmap/Execution]]. Coordination restarts at [[Execution/roadmap-state-execution]] and [[Execution/workflow_state-execution]]. Sentences below that describe a **prior** live execution cursor may be **stale** until remint progresses.
@@ -96,6 +96,8 @@ Execution authority: for execution-track runs, cursor and sequencing authority a
 
 > [!note]
 > RECAL-ROAD outputs (drift, handoff drift, recommendations) can be appended here.
+
+- **2026-04-11 (handoff-audit — repair queue; L1 post–little-val `state_hygiene_failure` root vs execution cursor):** Aligned **this** file frontmatter **`current_phase` / `completed_phases` / `status`** with [[Execution/roadmap-state-execution]] (**Phase 2**, **`completed_phases: [1]`**, **`in-progress`**) and set **`phase_cursor_authority: execution_coordination`** per report `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-phase2-primary-20260411T143600Z.md`. Queue: `layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z` \| `parent_run_id: eatq-sandbox-20260411T180000Z` \| **Drift n/a** (YAML routing hygiene only; body phase summaries unchanged).
 
 - **2026-04-07 (handoff-audit — repair queue; L1 post-LV `state_hygiene_failure` — [[decisions-log]] Conceptual autopilot **18:35Z** vs **21:05**):** Supersession stamp on **Conceptual autopilot** row **18:35Z** — explicit **post-2026-04-07 21:05** live routing (**`advance-phase`** / **`bootstrap-execution-track`** / **`RECAL`**) so **“next Phase 6 primary rollup”** is not read as current after **`phase6_primary_rollup_nl_gwt: complete`**. Validator cite: `.technical/Validator/roadmap-handoff-auto-sandbox-gmm-20260407T220800Z-l1postlv-followup-secondary61-rollup.md`. Queue: `repair-l1-hygiene-decisions-log-supersession-sandbox-20260407T221000Z` \| `parent_run_id: eatq-sandbox-20260408-layer1` \| `queue_lane: sandbox` \| **Drift 0.00** / **handoff drift 0.00** (decisions-log hygiene only).
 

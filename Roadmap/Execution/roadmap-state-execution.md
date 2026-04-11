@@ -10,10 +10,11 @@ para-type: Project
 project-id: sandbox-genesis-mythos-master
 roadmap_track: execution
 status: in-progress
-current_phase: 1
-completed_phases: []
-version: 3
-last_run: 2026-04-11-2240
+current_phase: 2
+completed_phases:
+  - 1
+version: 6
+last_run: 2026-04-11-1437
 drift_score_last_recal: 0.02
 handoff_drift_last_recal: 0.03
 gate_catalog_overlay_last: execution_sandbox_v1
@@ -31,6 +32,10 @@ ledger_ref:
   - followup-deepen-exec-phase1-tertiary123-sandbox-20260411T140000Z
   - layer1-a5b-repair-recal-tertiary123-sandbox-20260411T151500Z
   - empty-bootstrap-sandbox-rehydrate-20260411T224000Z
+  - followup-deepen-exec-phase1-tertiary125-sandbox-20260411T224500Z
+  - followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z
+  - a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z
+  - layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z
 ---
 
 # Roadmap state (execution) — sandbox-genesis-mythos-master
@@ -43,11 +48,18 @@ Execution authority: for execution-track runs, cursor and sequencing authority a
 
 ## Phase summaries
 
-- Phase 1: in-progress — execution primary [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]]; secondary **1.1** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2205]]; secondary **1.2** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-10-2355]]; tertiaries **1.1.1** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-1-Layer-Boundary-and-Commit-Pipeline-Roadmap-2026-04-10-2306]], **1.1.2** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-2-Observation-Cache-and-Invalidation-Roadmap-2026-04-10-2315]], **1.1.3** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-3-Dependency-Direction-and-Lifecycle-Roadmap-2026-04-10-2325]], **1.1.4** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-4-Error-Boundaries-and-Failure-Propagation-Roadmap-2026-04-10-2340]], **1.1.5** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-5-Cross-Layer-Observability-Test-Seams-and-Slice-Handoff-Roadmap-2026-04-10-2345]], **1.2.1** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-11-0005]], **1.2.2** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-0005]], **1.2.3** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-11-1415]], **1.2.4** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]] minted on parallel spine. Next target from [[workflow_state-execution]] is **tertiary `1.2.5`** (graph versioning / interchange — conceptual tree order).
-- Phases 2–6: pending
+- Phase 1: structurally complete on execution spine (Phase **1.2** tertiary chain **1.2.1–1.2.5**) — execution primary [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-Conceptual-Foundation-and-Core-Architecture-Roadmap-2026-04-10-2100]]; secondary **1.1** [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-1-Layering-and-Interface-Contracts/Phase-1-1-Layering-and-Interface-Contracts-Roadmap-2026-04-10-2205]]; secondary **1.2** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-Procedural-Generation-Graph-Skeleton-Roadmap-2026-04-10-2355]]; tertiaries **1.1.1**–**1.1.5** and **1.2.1**–**1.2.5** on parallel spine (see prior rows + **1.2.5** [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-11-2315]]).
+- Phase 2: in-progress — execution **primary** minted [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]] (text-only seams; conceptual alignment [[../Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-03-30-0430]]); next structural target **secondary 2.1** (*Pipeline Stages Seed-to-World*) per [[workflow_state-execution]] **`current_subphase_index: "2.1"`**. Stale re-dispatch `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` absorbed — **no remint** of **1.2.4**.
+- Phases 3–6: pending
 
 ## Notes
 
+- 2026-04-11 — **Handoff-audit (repair — root YAML vs execution):** Aligned [[../roadmap-state]] frontmatter **`current_phase` / `completed_phases` / `status`** with this file per Layer 1 **`state_hygiene_failure`** (report: `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-phase2-primary-20260411T143600Z.md`). Queue: `layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z`. See [[../roadmap-state]] consistency row **2026-04-11** and [[workflow_state-execution]] **2026-04-11 14:37**.
+- 2026-04-11 — **Deepen (Execution Phase 2 primary):** Minted [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]] after stale queue reconcile (`followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` → Phase **2** spine; **1.2.4** unchanged). Next: secondary **2.1** on parallel spine. `gate_catalog_overlay_last: execution_sandbox_v1` (narrative-only this run).
+- 2026-04-12 — **Handoff-audit (repair):** Layer 1 post–little-val **`contradictions_detected`** on stale “next = **1.2.5**” inline prose in execution tertiary **1.2.4** — repaired with supersession banner + Phase **2** cursor authority; queue `a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z`. Report: `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-tertiary124-reconcile-20260411T120500Z.md`. See [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]], [[workflow_state-execution]] **2026-04-12 00:30**.
+- 2026-04-11 — **Reconcile (duplicate dispatch):** queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` reprocessed after prior absorb (**23:10** row); **1.2.4** unchanged; cursor **Phase 2**. See [[workflow_state-execution]] **2026-04-11 23:59**.
+- 2026-04-11 — Mint **1.2.5** execution tertiary: [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-11-2315]]; queue `followup-deepen-exec-phase1-tertiary125-sandbox-20260411T224500Z`. Graph versioning, interchange manifest seams, static pre-run validation predicates; **GMM-2.4.5** / CI closure **deferred**. Phase **1.2** execution chain **complete**; cursor **`current_phase: 2`**, **`current_subphase_index: "2"`**. **Next:** Phase **2** execution `deepen` (mirror conceptual `Phase-2-Procedural-Generation-and-World-Building/` tree).
+- 2026-04-11 — **Reconcile** stale deepen queue vs vault: queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` targeted **1.2.4** after **1.2.4** was already minted; [[workflow_state-execution]] row **2026-04-11 23:10**; cursor **`1.2.5`** unchanged.
 - 2026-04-11 — Mint **1.2.4** execution tertiary: [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]; queue `empty-bootstrap-sandbox-rehydrate-20260411T224000Z`. Seed bundles, stable logical identity, determinism vs nondeterministic tagging, dry-run vs committed replay; **text-only** seams (verbatim C++/Research deferred). **GMM-2.4.5** / CI closure **deferred**. Next deepen: **1.2.5**.
 - 2026-04-11 — Mint **1.2.3** execution tertiary: [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-11-1415]]; queue `followup-deepen-exec-phase1-tertiary123-sandbox-20260411T140000Z`. Stage families, pipeline roles, cross-family rules; **GMM-2.4.5** / CI closure **deferred**. Next deepen: **1.2.4**.
 - 2026-04-11 — Mint **1.2.2** execution tertiary: [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-04-11-0005]]; queue `followup-deepen-exec-phase1-tertiary122-sandbox-20260411T000500Z`. Graph execution semantics, subgraph closure, waves/prefix; **GMM-2.4.5** / CI closure **deferred**. Next deepen: **1.2.3**.

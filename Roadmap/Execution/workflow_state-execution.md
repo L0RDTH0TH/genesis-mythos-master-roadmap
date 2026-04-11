@@ -11,12 +11,13 @@ project-id: sandbox-genesis-mythos-master
 roadmap_track: execution
 status: in-progress
 automation_level: semi
-current_phase: 1
-current_subphase_index: "1.2.5"
+current_phase: 2
+current_subphase_index: "2.1"
 cursor_transition: "vault_recovery_execution_reset_2026-04-09"
-last_auto_iteration: "empty-bootstrap-sandbox-rehydrate-20260411T224000Z"
+last_auto_iteration: "exec-phase2-primary-mint-stale124-reconcile-sandbox-20260411T143200Z"
 iterations_per_phase:
-  "1": 12
+  "1": 14
+  "2": 2
 max_iterations_per_phase: 80
 iteration_guidance_ranges:
   depth_1: [10, 15]
@@ -24,8 +25,8 @@ iteration_guidance_ranges:
   depth_3: [5, 10]
   depth_4_plus: [3, 6]
 chained_branch_count: 0
-last_ctx_util_pct: 36
-last_conf: 87
+last_ctx_util_pct: 41
+last_conf: 88
 ---
 
 # Workflow state (execution) — sandbox-genesis-mythos-master
@@ -36,6 +37,12 @@ Execution-track automation log. Conceptual state: [[../workflow_state]].
 
 | Timestamp | Action | Target | Iter Obj | Iter Phase | Ctx Util % | Leftover % | Threshold | Est. Tokens / Window | Util Delta % | Confidence | Status / Next |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-04-11 14:37 | handoff-audit | Root `roadmap-state.md` YAML vs execution cursor (L1 `state_hygiene_failure`) | 18 | 2 | 41 | 59 | 80 | 50000 / 128000 | 0 | 89 | Aligned [[../roadmap-state]] frontmatter **`current_phase: 2`**, **`completed_phases: [1]`**, **`status: in-progress`**, **`phase_cursor_authority: execution_coordination`** with [[roadmap-state-execution]] per `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-phase2-primary-20260411T143600Z.md`. Narrative phase summaries unchanged. Completed queue `layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z`. `parent_run_id: eatq-sandbox-20260411T180000Z`. **Next:** execution **`deepen`** secondary **2.1** when dispatched (`current_subphase_index: "2.1"`). |
+| 2026-04-12 00:30 | handoff-audit | Phase 1.2.4 dual-truth repair (L1 `contradictions_detected`) | 16 | 2 | 40 | 60 | 80 | 49500 / 128000 | 1 | 89 | Repaired stale “automation next → **1.2.5**” prose on [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]; aligned slice to live cursor **`current_phase: 2`**, **`current_subphase_index: "2"`** per Layer 1 report `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-tertiary124-reconcile-20260411T120500Z.md`. **Next:** execution **`deepen`** Phase **2** parallel spine when dispatched. Completed queue `a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z`. `parent_run_id: eat-queue-sandbox-20260411T120000Z`. |
+| 2026-04-11 14:35 | deepen | Phase 2 execution primary (forge spine — procedural generation / world-building) | 17 | 2 | 41 | 59 | 80 | 50000 / 128000 | 1 | 88 | Stale queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` **reconciled** → authoritative cursor **`current_phase: 2`**, **`current_subphase_index: "2"`** (Phase **1.2.4** already minted — **no remint**). Minted execution Phase **2** primary [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]]: text-only interface seams + Intent Mapping vs conceptual Phase 2 primary; binds Phase **1.2** graph skeleton; **GMM-2.4.5**/CI closure deferred. Cursor advanced **`current_subphase_index: "2.1"`** (next: secondary **2.1** — *Pipeline Stages Seed-to-World* mirror). `telemetry_utc: 2026-04-11T14:32:00.000Z` \| `parent_run_id: eat-queue-sandbox-20260411T143200Z-layer1` \| `pipeline_task_correlation_id: 7f2c9a1e-4d8b-4e6f-9c0a-1b2c3d4e5f60` \| `queue_lane: sandbox` \| `parallel_track: sandbox` \| `gate_signature: structural-execution-phase2-bootstrap`. |
+| 2026-04-11 23:59 | reconcile | Stale RESUME_ROADMAP re-dispatch — tertiary 1.2.4 (duplicate queue line) | 15 | 2 | 39 | 61 | 80 | 49000 / 128000 | 1 | 88 | Re-absorbed queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z`: execution tertiary **1.2.4** already on parallel spine ([[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]); Phase **1.2** completed through **1.2.5**; vault cursor **`current_phase: 2`**, **`current_subphase_index: "2"`**. **No remint; no regression.** **Next:** execution **`deepen`** for **Phase 2** parallel spine (first Phase 2 slice under conceptual tree). `parent_run_id: eat-queue-sandbox-20260411T120000Z`. |
+| 2026-04-11 23:18 | deepen | Phase 1.2.5 execution tertiary (versioning / interchange / pre-run validation) | 14 | 1 | 38 | 62 | 80 | 48500 / 128000 | 1 | 88 | Minted execution tertiary 1.2.5 [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-5-Graph-Versioning-Interchange-Manifests-and-Pre-Run-Validation-Roadmap-2026-04-11-2315]]: schema generation, interchange manifest seams, `validate_graph_static` predicates; text-only (no verbatim C++). **Phase 1.2** execution chain **complete** (1.2.1–1.2.5). Cursor advanced **`current_phase: 2`**, **`current_subphase_index: "2"`** (Phase 2 execution mirror next). Completed queue `followup-deepen-exec-phase1-tertiary125-sandbox-20260411T224500Z`. `parent_run_id: eat-queue-sandbox-20260411T230500Z`. |
+| 2026-04-11 23:10 | reconcile | Stale queue vs vault — tertiary 1.2.4 | 13 | 1 | 37 | 63 | 80 | 47500 / 128000 | 1 | 88 | Absorbed queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z`: execution tertiary **1.2.4** already on parallel spine ([[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]; prior completion `empty-bootstrap-sandbox-rehydrate-20260411T224000Z`). **No remint.** Cursor remains **`1.2.5`** (next structural deepen). **Next:** deepen tertiary **`1.2.5`** (graph versioning / interchange). `parent_run_id: eat-queue-sandbox-20260411T230500Z`. |
 | 2026-04-11 22:40 | deepen | Phase 1.2.4 execution tertiary (determinism / seeds / replay) | 12 | 1 | 36 | 64 | 80 | 46200 / 128000 | 2 | 87 | Minted execution tertiary 1.2.4 [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]]: seed bundles, stable logical identity, determinism tags vs nondeterministic stages, dry-run vs committed replay; text-only seams (no verbatim C++ this pass). GMM-2.4.5/CI deferred. **Next:** deepen tertiary **`1.2.5`** on parallel spine. Completed queue `empty-bootstrap-sandbox-rehydrate-20260411T224000Z`. |
 | 2026-04-11 15:20 | recal | Phase 1.2.3 design-intent remediation | 11 | 1 | 34 | 66 | 80 | 45000 / 128000 | 0 | 88 | RECAL (repair): Intent Mapping → catalog bullet block + studied inspiration anchors; AC-1.2.3.E1 scaffolded (inline TSV). Gate overlay **execution_sandbox_v1** logged on [[roadmap-state-execution]]. Completed queue `layer1-a5b-repair-recal-tertiary123-sandbox-20260411T151500Z`. **Next:** resume execution deepen **`1.2.4`** when dispatched. |
 | 2026-04-11 14:15 | deepen | Phase 1.2.3 execution tertiary | 11 | 1 | 34 | 66 | 80 | 45000 / 128000 | 1 | 87 | Minted execution tertiary 1.2.3 [[Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-11-1415]]: stage families, pipeline roles, cross-family rules vs 1.2.1–1.2.2; aligned to conceptual Phase-1-2 tree; GMM-2.4.5/CI deferred. Next: deepen tertiary **`1.2.4`** on parallel spine. Completed queue `followup-deepen-exec-phase1-tertiary123-sandbox-20260411T140000Z`. |

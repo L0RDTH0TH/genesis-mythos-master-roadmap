@@ -16,6 +16,7 @@ status: in-progress
 handoff_readiness: 86
 handoff_readiness_basis: design_traceability_pre_evidence
 handoff_readiness_note: "Score reflects NL alignment to conceptual 1.2.2, waves/subgraph seams, and intent mapping; AC rows remain Planned until evidence attaches."
+state_hygiene_reconcile_2026_04_11: "Repaired stale automation-next prose vs execution cursor: authoritative next-target is [[../../workflow_state-execution]] `current_subphase_index` (repair run `handoff-audit-repair-sandbox-dual-truth-20260411T143000Z`)."
 conceptual_counterpart: "[[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-2-Graph-Execution-Semantics-and-Subgraph-Runs-Roadmap-2026-03-30-1805]]"
 ---
 
@@ -27,7 +28,9 @@ Upstream **1.2.1** execution: [[Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-
 
 ## Handoff readiness vs evidence
 
-**Handoff readiness** on this slice is **design- and traceability-first**: conceptual alignment, execution-schedule seams, and intent mapping. It does **not** claim execution evidence until at least one AC row advances beyond **Planned**. **`status: in-progress`** means this tertiary’s spec and hooks are not closed in-repo; automation **next** target is **`1.2.3`** — see [[../../workflow_state-execution]].
+**Handoff readiness** on this slice is **design- and traceability-first**: conceptual alignment, execution-schedule seams, and intent mapping. It does **not** claim execution evidence until at least one AC row advances beyond **Planned**. **`status: in-progress`** means this tertiary’s spec and hooks are not closed in-repo.
+
+**Automation cursor (authoritative):** Execution sequencing and “what deepen runs next” are **only** stated in [[../../workflow_state-execution]] (`current_subphase_index`, latest ## Log row). This note’s historical “next tertiary after **1.2.2**” chain was **1.2.3 → 1.2.4 → 1.2.5**; do **not** treat the sentence that used to say “next target **`1.2.3`**” as current routing — after **2026-04-11** repair, live cursor is **`1.2.5`** (see workflow state frontmatter + last log row).
 
 ## Alignment to conceptual Phase-1-2-2
 
@@ -114,7 +117,7 @@ wave_partition(nodes_in_order, graph):
 ## Related (execution spine)
 
 - Prior **1.2.1**: [[Phase-1-2-1-Node-Taxonomy-Edges-and-Topological-Order-Roadmap-2026-04-11-0005]]
-- Next tertiary **1.2.3** (stage families): execution [[Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-11-1415]] · conceptual [[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-03-30-1905]]
+- **Structural sibling “next” on the tertiary chain (not automation routing):** tertiary **1.2.3** (stage families) — execution [[Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-04-11-1415]] · conceptual [[../../../Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-3-Stage-Families-Specialization-and-Pipeline-Roles-Roadmap-2026-03-30-1905]]. **Automation “what runs next”** remains **only** in [[../../workflow_state-execution]] (may be past **1.2.3** when this slice was authored).
 
 ## Research integration
 
