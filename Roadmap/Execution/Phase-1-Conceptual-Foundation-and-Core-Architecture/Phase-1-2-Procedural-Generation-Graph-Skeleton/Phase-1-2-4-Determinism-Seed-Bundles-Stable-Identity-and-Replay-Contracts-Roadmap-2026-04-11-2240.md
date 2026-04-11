@@ -33,7 +33,7 @@ Upstream **1.2.3** execution: [[Phase-1-2-3-Stage-Families-Specialization-and-Pi
 > [!warning] Superseded — automation cursor (repair `a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z`)
 > At **mint time**, the next sibling on the Phase **1.2** chain was **`1.2.5`** (graph versioning / interchange). That deepen **completed** afterward; Phase **1.2** execution chain is **complete** through **1.2.5** per [[../../roadmap-state-execution]] and [[../../workflow_state-execution]] (**Log** row **2026-04-11 23:18**).
 >
-> **Current vault authority:** execution automation cursor is **`current_phase: 2`**, **`current_subphase_index: "2"`** — the **next** `RESUME_ROADMAP` execution **`deepen`** targets the **Phase 2** parallel spine (not **1.2.5**). Do **not** treat older “next = 1.2.5” wording as live routing unless clearly marked **historical** (this callout).
+> **Current vault authority:** execution automation cursor is **`current_phase: 2`**, **`current_subphase_index: "2.1"`** — the **next** `RESUME_ROADMAP` execution **`deepen`** targets **Phase 2 secondary 2.1** on the parallel spine (not **1.2.5**). Latest stale-queue absorb for `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z`: [[../../workflow_state-execution]] row **2026-04-12 18:00** (Layer 2 / `parent_run_id: eatq-sandbox-20260412T180000Z-l1`); earlier same-day absorb **2026-04-12 15:10** (Layer 1) remains audit-comparable. Do **not** treat older “next = 1.2.5” wording as live routing unless clearly marked **historical** (this callout).
 >
 > Layer 1 post–little-val reconcile: `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-tertiary124-reconcile-20260411T120500Z.md` (**`contradictions_detected`** on stale inline “next”).
 

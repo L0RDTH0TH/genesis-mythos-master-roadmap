@@ -13,8 +13,8 @@ status: in-progress
 current_phase: 2
 completed_phases:
   - 1
-version: 6
-last_run: 2026-04-11-1437
+version: 8
+last_run: 2026-04-12-1800
 drift_score_last_recal: 0.02
 handoff_drift_last_recal: 0.03
 gate_catalog_overlay_last: execution_sandbox_v1
@@ -54,6 +54,8 @@ Execution authority: for execution-track runs, cursor and sequencing authority a
 
 ## Notes
 
+- 2026-04-12 — **Reconcile (EAT-QUEUE absorb — Layer 2):** queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` processed idempotently — execution tertiary **1.2.4** already minted (**no remint**); authoritative cursor remains **`current_phase: 2`**, **`current_subphase_index: "2.1"`**. See [[workflow_state-execution]] log row **2026-04-12 18:00** \| `parent_run_id: eatq-sandbox-20260412T180000Z-l1` \| `pipeline_mode_used: balance`.
+- 2026-04-12 — **Reconcile (EAT-QUEUE absorb):** queue `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` processed idempotently — execution tertiary **1.2.4** already minted (**no remint**); authoritative cursor remains **`current_phase: 2`**, **`current_subphase_index: "2.1"`**. See [[workflow_state-execution]] log row **2026-04-12 15:10** \| `parent_run_id: eatq-sandbox-20260411T150000Z-layer1`.
 - 2026-04-11 — **Handoff-audit (repair — root YAML vs execution):** Aligned [[../roadmap-state]] frontmatter **`current_phase` / `completed_phases` / `status`** with this file per Layer 1 **`state_hygiene_failure`** (report: `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-phase2-primary-20260411T143600Z.md`). Queue: `layer1-a5b-repair-handoff-audit-phase2-primary-sandbox-20260411T143700Z`. See [[../roadmap-state]] consistency row **2026-04-11** and [[workflow_state-execution]] **2026-04-11 14:37**.
 - 2026-04-11 — **Deepen (Execution Phase 2 primary):** Minted [[Phase-2-Procedural-Generation-and-World-Building/Phase-2-Procedural-Generation-and-World-Building-Roadmap-2026-04-11-1432]] after stale queue reconcile (`followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z` → Phase **2** spine; **1.2.4** unchanged). Next: secondary **2.1** on parallel spine. `gate_catalog_overlay_last: execution_sandbox_v1` (narrative-only this run).
 - 2026-04-12 — **Handoff-audit (repair):** Layer 1 post–little-val **`contradictions_detected`** on stale “next = **1.2.5**” inline prose in execution tertiary **1.2.4** — repaired with supersession banner + Phase **2** cursor authority; queue `a5b-repair-handoff-audit-contradictions-tertiary124-sandbox-20260412T002800Z`. Report: `.technical/Validator/layer1-postlv-roadmap-handoff-auto-sandbox-tertiary124-reconcile-20260411T120500Z.md`. See [[Phase-1-Conceptual-Foundation-and-Core-Architecture/Phase-1-2-Procedural-Generation-Graph-Skeleton/Phase-1-2-4-Determinism-Seed-Bundles-Stable-Identity-and-Replay-Contracts-Roadmap-2026-04-11-2240]], [[workflow_state-execution]] **2026-04-12 00:30**.
