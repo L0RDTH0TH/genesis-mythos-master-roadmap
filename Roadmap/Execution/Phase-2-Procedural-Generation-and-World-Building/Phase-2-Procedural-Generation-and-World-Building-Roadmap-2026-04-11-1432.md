@@ -54,7 +54,8 @@ function run_generation_pass(seed_bundle, intent_hooks, stage_plan):
 | Secondary slice | Gate (must be true for Phase 2 exit) | Primary AC / hook |
 | --- | --- | --- |
 | **2.1** Pipeline stages | Stage spine + validation hooks minted; empty-output semantics explicit | AC-2.1-A–D hooks |
-| *TBD* | Additional secondaries **2.2–2.7** as execution parallel spine progresses | Populate as secondaries land |
+| **2.2** Intent resolver + hook mapping | Resolver spine + hook emit seams minted; replay/diff alignment to **2.1.5** explicit | AC-2.2.E1–E4 hooks |
+| *TBD* | Remaining secondaries **2.3–2.7** as execution parallel spine progresses | Populate as secondaries land |
 
 ## Acceptance criteria (execution-first)
 

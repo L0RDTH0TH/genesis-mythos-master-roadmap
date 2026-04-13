@@ -75,7 +75,7 @@ Upstream:
 
 Downstream:
 
-- **2.1.5** (conceptual) — replay ledger / canonical diff surface / restore cursor; execution mirror follows in next deepen.
+- **2.1.5** — replay ledger / canonical diff surface / restore cursor: [[Phase-2-1-5-Replay-Ledger-Canonical-Diff-Surface-and-Restore-Cursor-Roadmap-2026-04-11-0625]] (execution mirror of conceptual **2.1.5**).
 
 ## Edge cases (execution)
 
