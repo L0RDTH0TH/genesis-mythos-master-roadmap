@@ -120,6 +120,49 @@ class FullCycleGoldenTest(unittest.TestCase):
             final = load_queue_file(qpath) if qpath.is_file() else []
             self.assertEqual(len(final), 0)
 
+    def test_full_cycle_bootstraps_empty_lane_with_project(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            tech = root / ".technical"
+            tech.mkdir(parents=True)
+            qpath = tech / "prompt-queue.jsonl"
+            qpath.write_text("", encoding="utf-8")
+            # Create execution workflow cursor so bootstrap chooses execution track.
+            wf = (
+                root
+                / "1-Projects"
+                / PROJECT
+                / "Roadmap"
+                / "Execution"
+                / "workflow_state-execution.md"
+            )
+            wf.parent.mkdir(parents=True, exist_ok=True)
+            wf.write_text("---\ncurrent_subphase_index: 2.2.3\n---\n", encoding="utf-8")
+
+            res = run_full_eat_queue_cycle(
+                initial_action="deepen",
+                initial_profile="balance",
+                max_passes=1,
+                strict_mode=True,
+                vault_root=root,
+                queue_path=qpath,
+                plan_path=tech / "eat_queue_run_plan.json",
+                decisions_path=tech / "eat-queue-decisions.jsonl",
+                parent_run_id="golden-bootstrap-empty",
+                apply_cleanup=False,
+                lane_filter="godot",
+                lane_project_id=PROJECT,
+            )
+            self.assertEqual(res.passes_run, 1)
+            queue_text = qpath.read_text(encoding="utf-8")
+            self.assertIn("empty-bootstrap-", queue_text)
+            self.assertIn('"mode": "RESUME_ROADMAP"', queue_text)
+            self.assertIn('"queue_lane": "godot"', queue_text)
+            plan_text = (tech / "eat_queue_run_plan.json").read_text(encoding="utf-8")
+            self.assertIn('"queue_entry_id"', plan_text)
+
     def test_option_evaluation_missing_under_enforcement(self) -> None:
         import tempfile
 

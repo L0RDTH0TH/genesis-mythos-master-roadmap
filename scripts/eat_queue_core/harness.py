@@ -364,12 +364,16 @@ def cmd_full_cycle(vault_root: Path, args: argparse.Namespace) -> int:
         dlog = vault_root / dlog
 
     lane_filter: str | None = None
+    lane_project_id: str | None = None
     if args.lane is not None:
         token = args.lane.strip().lower()
         if not validate_lane_filter_token(token, FALLBACK_ALLOWED_LANES):
             print(f"harness full_cycle: invalid lane {token!r}", file=sys.stderr)
             return 1
         lane_filter = token
+    raw_lane_project_id = parallel.get("lane_project_id")
+    if isinstance(raw_lane_project_id, str) and raw_lane_project_id.strip():
+        lane_project_id = raw_lane_project_id.strip()
 
     cpf: bool | None = None
     if args.no_central_pool_fanout:
@@ -391,6 +395,7 @@ def cmd_full_cycle(vault_root: Path, args: argparse.Namespace) -> int:
             lane_filter=lane_filter,
             apply_cleanup=args.apply_cleanup,
             central_pool_fanout=cpf,
+            lane_project_id=lane_project_id,
         )
     except (OSError, ValueError) as e:
         print(f"harness full_cycle error: {e}", file=sys.stderr)

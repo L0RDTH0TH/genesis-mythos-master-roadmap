@@ -423,6 +423,60 @@ def _count_repair_roadmap(entries: list[QueueEntry]) -> int:
     return sum(1 for e in entries if is_roadmap(e) and _is_repair_entry(e))
 
 
+def _workflow_track_for_project(vault_root: Path, project_id: str) -> tuple[str, Path]:
+    """Resolve preferred workflow cursor path and roadmap_track for bootstrap."""
+    exec_path = (
+        vault_root
+        / "1-Projects"
+        / project_id
+        / "Roadmap"
+        / "Execution"
+        / "workflow_state-execution.md"
+    )
+    if exec_path.is_file():
+        return "execution", exec_path
+    conceptual = vault_root / "1-Projects" / project_id / "Roadmap" / "workflow_state.md"
+    return "conceptual", conceptual
+
+
+def _append_empty_queue_bootstrap(
+    *,
+    vault_root: Path,
+    queue_path: Path,
+    project_id: str,
+    lane_filter: str | None,
+) -> dict[str, Any]:
+    """Append one deterministic RESUME_ROADMAP line when queue is empty for this lane."""
+    roadmap_track, workflow_path = _workflow_track_for_project(vault_root, project_id)
+    now = datetime.now(timezone.utc)
+    stamp = now.strftime("%Y%m%dT%H%M%SZ")
+    eid = f"empty-bootstrap-{project_id}-{stamp}"
+    rel_source = str(workflow_path.relative_to(vault_root)) if workflow_path.exists() else ""
+    entry: dict[str, Any] = {
+        "id": eid,
+        "mode": "RESUME_ROADMAP",
+        "project_id": project_id,
+        "timestamp": now.isoformat().replace("+00:00", "Z"),
+        "idempotency_key": eid,
+        "source_file": rel_source,
+        "params": {
+            "action": "deepen",
+            "roadmap_track": roadmap_track,
+            "queue_next": True,
+            "user_guidance": (
+                f"Automatic empty-queue bootstrap for {project_id} "
+                f"({roadmap_track} track). Continue from last successful cursor."
+            ),
+        },
+    }
+    if lane_filter:
+        entry["queue_lane"] = lane_filter
+    queue_path.parent.mkdir(parents=True, exist_ok=True)
+    with queue_path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    return entry
+
+
 def apply_queue_cleanup(queue_path: Path, ids_to_remove: set[str]) -> bool:
     """Remove lines whose ``id`` is in ``ids_to_remove`` (read–filter–write). Returns True if file changed."""
     if not queue_path.is_file():
@@ -475,6 +529,7 @@ def run_full_eat_queue_cycle(
     apply_cleanup: bool = False,
     lane_filter: str | None = None,
     central_pool_fanout: bool | None = None,
+    lane_project_id: str | None = None,
 ) -> FullCycleResult:
     """
     Build up to ``max_passes`` plans, re-reading the queue between passes.
@@ -535,8 +590,27 @@ def run_full_eat_queue_cycle(
     summaries: list[dict[str, Any]] = []
     passes = 0
 
+    bootstrap_appended = False
     for pass_idx in range(max(1, max_passes)):
         entries = load_queue_file(qpath) if qpath.is_file() else []
+        if (
+            pass_idx == 0
+            and not bootstrap_appended
+            and lane_project_id
+            and len(filter_entries_by_lane(entries, lane_filter)) == 0
+        ):
+            b = _append_empty_queue_bootstrap(
+                vault_root=root,
+                queue_path=qpath,
+                project_id=lane_project_id,
+                lane_filter=lane_filter,
+            )
+            bootstrap_appended = True
+            messages.append(
+                "empty_queue_bootstrap_appended: "
+                f"{b.get('id')} project_id={lane_project_id} lane={lane_filter or 'default'}"
+            )
+            entries = load_queue_file(qpath) if qpath.is_file() else []
         plan, decisions = build_plan(entries, prid, lane_filter=lane_filter)
         append_decisions(dpath, decisions)
 
