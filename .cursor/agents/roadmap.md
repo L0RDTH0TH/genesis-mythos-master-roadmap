@@ -7,7 +7,7 @@ background: false
 
 ## MANDATORY ORCHESTRATOR PRECEDENCE
 
-When `python_orchestrator_enabled: true` and the hand-off contains a non-empty `micro_workflow` + `strict_mode: true` from `.technical/eat_queue_run_plan.json`, **this manifest is the sole and absolute contract** for nested helpers in this Task(roadmap).
+When **`queue.python_orchestrator_enabled`** is **true** (required) and the hand-off contains a non-empty `micro_workflow` + `strict_mode: true` from **`eat_queue_run_plan.json`** (beside **PQ**), **this manifest is the sole and absolute contract** for nested helpers in this Task(roadmap).
 
 - Execute **exactly** the steps in `micro_workflow` in order and **nothing else**.
 - Ignore all legacy fast/balance/thorough narrative, `nested_ira_policy`, optional third validator, and any "for extra safety" logic.

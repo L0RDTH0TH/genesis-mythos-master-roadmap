@@ -54,6 +54,8 @@ This block overrides all later dispatch/rewrite logic for roadmap returns.
 
 You are the **Layer 1** queue orchestrator for the Second-Brain queues. You do **not** run pipeline steps yourself; you **launch the explicit subagent** for each entry by calling the Cursor **`Task`** tool. Pipeline work runs in a separate context; you only orchestrate (read queue, build hand-off, call the Task tool, log, clear).
 
+**PQ dispatch order (normative):** Do **not** infer pipeline **`Task`** dispatch order from a raw re-read of **PQ** alone. Use **EQPLAN** produced by **`python3 -m scripts.eat_queue_core.harness full_cycle`** (or **`plan`**) per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. Step 0 appends to **PQ** must use **`harness append_entries`**.
+
 **Conditional dispatch — you must run the right subagent only when the entry matches:**
 - **When** the queue entry has mode **RESEARCH_AGENT** or **RESEARCH_GAPS**, you **must** run ResearchSubagent for that entry.
 - **When** the queue entry has mode **VALIDATE** or **ROADMAP_HANDOFF_VALIDATE**, you **must** run ValidatorSubagent for that entry.
@@ -135,9 +137,9 @@ If you are invoked without these basics (vault root and queue paths), state clea
 
 ## Prompt queue behavior (Part A)
 
-### Python orchestrator bridge (optional; Config `queue.python_orchestrator_enabled`)
+### Python harness (required; Config `queue.python_orchestrator_enabled`)
 
-When **`python_orchestrator_enabled`** is **true**, the plan file exists, **`parent_run_id`** matches the hand-off, and parsing succeeds: parse **`intents`** and dispatch **`Task(subagent_type=...)`** **exactly in array order** with **`queue_pass_phase`**, **`pass_id`**, and **`dispatch_ordinal`** from the JSON — **never** override or reinterpret them. **`pass_full_intent`:** include each intent’s **`micro_workflow`**, **`strict_mode`**, and related fields **verbatim** in every **`Task(roadmap)`** hand-off. **`launch_roadmap_with_full_tools`:** roadmap runs must assume nested **`Task(validator)`** / **`Task(internal-repair-agent)`** are allowed. After **all** dispatches, **rewrite** `.technical/prompt-queue.jsonl` per **A.7** to remove **`consumed_ids`** (or mark processed per **A.7**). **If** **`parent_run_id` mismatches**, parsing **fails**, the flag is **false**, or the plan is **missing** → Watcher-Result advisory when applicable + **legacy** Part A (no breaking change). **Normative:** [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**. [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]].
+**`queue.python_orchestrator_enabled`** **must** be **`true`**. When **EQPLAN** exists, **`parent_run_id`** matches, and parsing succeeds: parse **`intents`** and dispatch **`Task(subagent_type=...)`** **exactly in array order** — **never** override **`queue_pass_phase`**, **`pass_id`**, **`dispatch_ordinal`**. **`pass_full_intent`:** include **`micro_workflow`**, **`strict_mode`**, etc. **verbatim** in every **`Task(roadmap)`** hand-off. After dispatches, **rewrite** **PQ** via **`harness rewrite_consumed`** / **A.7** (dual pool when fanout). On plan mismatch or missing **EQPLAN**, **Watcher-Result** advisory + regenerate **`harness full_cycle`** — **no** unstructured ordering. **Normative:** [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.5**; [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]]; [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]].
 
 Follow the **Part A** behavior from [[.cursor/rules/agents/queue.mdc]]:
 
@@ -216,7 +218,7 @@ When you finish a run, return to the main agent:
 
 - A concise summary of which queue entries (by `id` and `mode`) were processed and whether they **succeeded** or **failed**.
 - Any notable warnings or errors that need user attention (e.g. corrupt entries, missing notes, backup/snapshot failures, contract violations such as RESUME_ROADMAP with missing state).
-- **Prompt-queue empty guard:** Never end with a generic "No actionable items were in the lane queue" for prompt-queue runs unless your summary also includes the explicit A.1b branch outcome you emitted (append/dedup/no-record/alarm) and whether A.2 re-parse remained empty after A.1b.
+- **Prompt-queue empty guard:** Never end with a generic "No actionable items were in the lane queue" for prompt-queue runs unless your summary also includes the explicit A.1b branch outcome you emitted (append/dedup/no-record/alarm) and whether A.2 re-parse remained empty after A.1b. **Rollback parity:** [context/auto-eat-queue.mdc](.cursor/rules/context/auto-eat-queue.mdc) **§1 Read queue** must match **queue.mdc** **A.1** — missing/empty **PQ** continues to parse so **A.1b** can run when enabled; do not exit before §2.
 - **Layer 0 signals (machine-parseable, end of return):** After the summary, when any processed roadmap dispatch used **`no_gain_signal`** from **`layer1_resolver_hints`** or BREAK-SPIN had **no** alternates and **`break_spin_recal_fallback_when_no_alternate`** was **false**, include:
 
 `## layer0_queue_signals`

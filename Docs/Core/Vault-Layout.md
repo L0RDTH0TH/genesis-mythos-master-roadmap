@@ -22,6 +22,7 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 | **Ingest** | All new files; Decision Wrappers under Ingest/Decisions/** |
 | **Backups/Per-Change**, **Backups/Batch** | Snapshots; append-only; never pipeline input |
 | **.technical** | prompt-queue.jsonl, machine-only; excluded from Obsidian |
+| **3-Resources/Second-Brain/Backup-Mirrors-Curator/** | Backup-only duplicates of `.technical` queues + `.cursorignore` | Obsidian-visible mirrors for Curator recovery — [[3-Resources/Second-Brain/Backup-Mirrors-Curator/README|README]] |
 
 ---
 
@@ -69,6 +70,12 @@ These **belong conceptually to the technical setup** but **must stay at vault ro
 | **.cursorignore** | Excludes paths from Cursor indexing and AI context (e.g. `.technical/`, `*.jsonl`, `Watcher-*.md`) | Cursor reads it from project root only |
 | **.stignore** | Syncthing ignore patterns (like .gitignore for sync) | Syncthing reads it from the shared folder root only |
 | **.obsidianignore** | Optional; some plugins use it for exclusion (Obsidian has no built-in support) | If present, plugins may expect it at vault root |
+
+### Syncthing and `.git/` (backup strategy)
+
+- If the vault is also a **git** working tree (e.g. private **Curator** backup), consider listing **`.git/`** in **`.stignore`** so Syncthing does **not** replicate git objects to mobile or other peers. **Tradeoff:** those devices are not git peers; note content still syncs as files. On conflict between **git** and Syncthing, prefer reconciling to **git** (Curator) per [[3-Resources/Second-Brain/Docs/Backup-and-Recovery-Strategy|Backup-and-Recovery-Strategy]].
+- **`.trash/`** (shell move-to-trash buckets per [[3-Resources/Second-Brain/Docs/Backup-and-Recovery-Strategy|Backup-and-Recovery-Strategy]]) may be large; you may add **`.trash/`** to **`.stignore`** if mobile peers should not sync trashed trees — **tradeoff:** trash exists only on machines that received those moves.
+- Noisy editor state such as **`.obsidian/workspace*`** may also be ignored to reduce sync churn.
 
 **Hub notes** (e.g. Resources Hub.md, Projects Hub.md, Areas Hub.md) stay in the vault root or 3-Resources — they are content and are linked from many notes; moving them would break links. They are excluded from pipeline processing via the `* Hub.md` rule but are not “technical” in the same sense as the ignore/config files above.
 

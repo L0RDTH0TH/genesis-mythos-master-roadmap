@@ -59,6 +59,10 @@ If either fails: skip the destructive action; log #review-needed; continue with 
 
 When **`queue.central_pool_fanout_enabled`** is true and **`queue.pool_sync_strict_central_only`** is **false** (default), **`pool_sync`** (**A.0.4**) **must not** drop valid per-track **PQ** lines solely because they are missing from the **central pool** — those **lane-only** rows are **merged** back after applying the pool subset (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Lane-only preservation). Strict central-only mode is **opt-in** for debugging or forced resync.
 
+### Queue file bytes (single writer)
+
+Concrete read/write of **`.technical/prompt-queue.jsonl`** (per-track or pool), checksum boundaries, and **A.7** rewrites are implemented in **`scripts/eat_queue_core`** (**`python3 -m scripts.eat_queue_core.harness`**) invoked from the Queue rule — not ad-hoc parallel editors. This aligns **Nested subagent policy** (only Layer 1 orchestrates queue files) with **single-writer** bytes on disk. See [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]].
+
 ---
 
 ## Nested subagent policy (orchestration safety)

@@ -1,3 +1,188 @@
+### 2026-04-13 14:01 — Watcher mirror append denied (godot)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T14:01:48Z | watcher_result_write_denied |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- operation: append watcher-result lines for consumed/validated queue dispositions
+- error: `Read permission denied: /home/darth/Documents/Second-Brain/3-Resources/Watcher-Result-godot.md`
+
+#### Summary
+**Root cause:** filesystem permission denied on track mirror file.
+**Impact:** canonical watcher log appended successfully; track mirror did not receive this run's lines.
+**Suggested fixes:** restore write permission on `3-Resources/Watcher-Result-godot.md` and optionally backfill the missed lines.
+**Recovery:** rerun EAT-QUEUE after permission repair, or manually paste canonical lines into the mirror.
+### 2026-04-13 12:41 — Watcher-Result mirror fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | n/a | 2026-04-13T12:41:57Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- Failed to append run lines to `3-Resources/Watcher-Result-godot.md` due to read permission denied.
+
+#### Summary
+**Root cause:** Mirror file permissions blocked write access in this run context.  
+**Impact:** Canonical `3-Resources/Watcher-Result.md` was updated, but per-track mirror file was not updated.  
+**Suggested fixes:** Restore write permissions on `3-Resources/Watcher-Result-godot.md` and rerun EAT-QUEUE or replay watcher lines manually.  
+**Recovery:** Canonical watcher lines for this run are present and can be copied to the mirror file when permissions are corrected.
+### 2026-04-13 10:34 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T10:34:11Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-deepen-exec-phase2-223-godot-20260412T214500Z`, `followup-handoff-audit-repair-godot-phase23-20260413T084308Z-layer1-gatekeeper`, `followup-deepen-exec-phase2-233-godot-20260413T201500Z`, `followup-deepen-exec-phase2-24-godot-20260413T204500Z`, `followup-deepen-exec-phase2-241-godot-20260413T211700Z`, `handoff-audit-repair-godot-phase223-20260413T093827Z-layer1`, `followup-deepen-exec-phase2-242-godot-20260413T093827Z`, `layer1-eatq-godot-20260414T103411Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 09:46 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T09:46:53Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read/write blocked in run context)
+- request_ids: `followup-handoff-audit-repair-sandbox-phase234-20260414T000000Z-layer1-gatekeeper`, `followup-deepen-exec-phase241-tertiary-sandbox-20260413T230500Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+### 2026-04-12 19:50 — EAT-QUEUE lane godot — L1 post-LV state_hygiene_failure (Phase 2.1.3 deepen provisional)
+
+### 2026-04-13 09:32 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T09:32:49Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read/write blocked in run context)
+- request_ids: `handoff-audit-repair-sandbox-phase234-20260413T210000Z`, `followup-deepen-exec-phase241-tertiary-sandbox-20260413T230500Z`, `layer1-eatq-sandbox-20260414T000000Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 23:13 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T23:13:35Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `handoff-audit-repair-sandbox-phase234-20260413T210000Z`, `followup-deepen-exec-phase234-tertiary-sandbox-20260413T082000Z`, `followup-deepen-exec-phase235-tertiary-sandbox-20260413T202000Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | high | pending | 2026-04-12T19:50:00Z | validator |
+
+#### Trace
+- PQ: `.technical/parallel/godot/prompt-queue.jsonl`
+- Queue entry: `followup-deepen-exec-phase2-213-godot-20260412T183200Z` — **not** consumed as clean success; line tagged `queue_failed` after L1 hostile pass; nested roadmap `Task(validator)`/`Task(IRA)` unavailable in roadmap subagent session (`task_error` on ledger steps).
+- L1 `Task(validator)` report: `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/godot-genesis-mythos-master-l1postlv-followup-deepen-exec-phase2-213-godot-20260412T183200Z.md` — **severity high**, **primary_code** `state_hygiene_failure`, **contradictions_detected** (conceptual `roadmap-state.md` vs execution `workflow_state-execution.md` cursor).
+- Appended repair: `layer1-repair-handoff-audit-conceptual-rollup-godot-20260412T194500Z` (`handoff-audit`, conceptual track).
+- **Watcher-Result-godot.md:** mirror append failed (permission denied); canonical `Watcher-Result.md` updated.
+
+#### Summary
+**Root cause:** Layer 1 `roadmap_handoff_auto` found cross-tree execution pointer contradiction after deepen minted 2.1.3; balance-mode nested helpers did not run in roadmap host.
+**Impact:** `suppress_clean_drain=true`; next EAT-QUEUE should process **handoff-audit** repair line before another blind deepen.
+**Recovery:** Repair id on PQ head (line 3); validator report path above.
+
+### 2026-04-11 16:25 — EAT-QUEUE lane sandbox — L1 post-LV state_hygiene_failure (Phase 2 bootstrap provisional)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | high | pending | 2026-04-11T16:25:00Z | validator |
+
+#### Trace
+- PQ: `.technical/parallel/sandbox/prompt-queue.jsonl`
+- Consumed: `followup-deepen-exec-phase2-bootstrap-sandbox-20260411T234500Z` after **A.5b** repair append (not nested_attestation_failure; `strict_nested_return_gates: false`).
+- L1 `Task(validator)` report: `.technical/Validator/roadmap-handoff-auto-l1-b1-sandbox-20260411T160500Z.md` — **severity high**, **primary_code** `state_hygiene_failure` (workflow log vs frontmatter contradiction).
+- Appended repair: `repair-l1-handoff-audit-exec-hygiene-sandbox-20260411T161200Z` + Layer 2 follow-up `followup-deepen-exec-phase2-tertiary211-sandbox-20260412T000100Z`; retained `followup-deepen-exec-phase2-secondary21-sandbox-20260412T151500Z`.
+- Layer 2 nested `Task(validator)` unavailable (`task_error` on `nested_validator_first`); **A.5d** provisional — rely on L1 hostile pass.
+
+#### Summary
+**Root cause:** L1 authoritative `roadmap_handoff_auto` found execution workflow_state hygiene failure after deepen minted secondary 2.1.
+**Impact:** `suppress_clean_drain=true`; next operator pass should run **handoff-audit** repair (PQ head) or reconcile state manually per report.
+**Recovery:** Repair id + validator report in trace; Run-Telemetry `.technical/Run-Telemetry/sandbox/eatq-layer1-sandbox-20260411T162500Z.md`.
+
+### 2026-04-11 23:05 — EAT-QUEUE lane godot — L1 post-LV state_hygiene_failure (Phase 2 primary provisional)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-11T23:05:00Z | validator |
+
+#### Trace
+- PQ: `.technical/parallel/godot/prompt-queue.jsonl`
+- Queue entry: `followup-deepen-exec-phase2-primary-godot-20260412T031500Z` — **not** added to `processed_success_ids`; line tagged `queue_failed` after L1 hostile pass.
+- L1 `Task(validator)` report: `.technical/Validator/l1-postlv-roadmap-handoff-auto-godot-phase2-primary-20260412T151500Z.md` — **severity high**, **primary_code** `state_hygiene_failure` (conceptual `roadmap-state.md` cursor vs execution phase **2**/**2.1**).
+- Appended repair: `layer1-a5b-repair-handoff-audit-phase2-primary-godot-20260412T151500Z` (`handoff-audit`) + follow-up deepen `followup-deepen-exec-phase2-21-godot-20260412T151600Z`.
+
+#### Summary
+**Root cause:** Independent Layer 1 validation found cross-surface cursor contradiction after roadmap deepen minted Phase 2 execution primary.
+**Impact:** Provisional success only; operator should run next EAT-QUEUE to process **handoff-audit** repair before treating execution state as clean.
+**Recovery:** Repair line + validator report paths in trace; Run-Telemetry `.technical/parallel/godot/Run-Telemetry/layer1-eatq-godot-20260412T151500Z.md`.
+
+### 2026-04-12 05:30 — EAT-QUEUE lane sandbox — Task(roadmap) unavailable (Proof-on-failure)
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-12T05:30:00Z | plugin-unavailable |
+
+#### Trace
+- vault: `/home/darth/Documents/Second-Brain`
+- PQ: `.technical/parallel/sandbox/prompt-queue.jsonl`
+- queue_lane_filter: `sandbox`, parallel_track: `sandbox`, lane_project_id: `sandbox-genesis-mythos-master`
+- **A.0.4** `pool_sync`: skipped (`queue.central_pool_fanout_enabled` not true in Config)
+- **Step 0:** scanned `Ingest/Decisions/**`; all sampled wrappers `approved: false` — no apply-mode runs
+- **A.2:** 2 valid lines × `RESUME_ROADMAP` (`tertiary124` deepen, `phase2-bootstrap` deepen); `project_id` matches lane
+- **A.4c / A.5.0 pass 1:** targeted first forward slot → `followup-deepen-exec-phase1-tertiary124-sandbox-20260411T141500Z`
+- Cursor **`Task`** tool not available in this Layer 1 host → cannot invoke `Task(subagent_type: roadmap)`. Per Subagent-Safety-Contract **Proof-on-failure**; **A.7** did not consume any ids
+
+#### Summary
+**Root cause:** Queue orchestrator runtime in this session lacks the Cursor `Task` primitive required to launch the Roadmap subagent.
+**Impact:** Both sandbox **PQ** lines unchanged; no pipeline mutations, no L1 `Task(validator)` **(b1)**.
+**Suggested fixes:** Re-run **EAT-QUEUE lane sandbox** from a Cursor chat/host where `Task(queue)` and nested `Task(roadmap)` are available.
+**Recovery:** Watcher-Result canonical lines appended; Run-Telemetry `.technical/Run-Telemetry/sandbox/layer1-eatq-sandbox-20260412T053000Z.md`.
+
+### 2026-04-11 13:10 — EAT-QUEUE lane godot — L1 post-lv hard block after HANDOFF_AUDIT_REPAIR dispatch
+
+| pipeline | severity | approval | timestamp | error_type |
+| --- | --- | --- | --- | --- |
+| queue-layer1 | medium | pending | 2026-04-11T13:05:00Z | validator |
+
+#### Trace
+- Nested roadmap **handoff-audit** repair run reported Success; independent **Task(validator)** L1 pass3 (`roadmap_handoff_auto`): **severity high**, **primary_code `state_hygiene_failure`** — `workflow_state-execution.md` **## Log** row at `2026-04-11 12:00` inconsistent with frontmatter / earlier row (dual truth).
+- Report: `3-Resources/Second-Brain/Validator-Reports/roadmap_handoff_auto/godot-genesis-mythos-master-handoff-audit-repair-exec-rollup-pass3-20260411T130000Z.md`
+- **Recovery:** Appended queue line `repair-workflow-log-dual-truth-godot-20260411T130500Z` (RESUME_ROADMAP `handoff-audit`) to central pool + godot track PQ; consumed original `handoff-audit-repair-godot-exec-rollup-20260410T105245Z` at A.7 with repair tail.
+
+#### Summary
+Layer 1 hostile validation reopened hygiene on the canonical workflow log surface after the repair dispatch; operator or next EAT-QUEUE should reconcile the log table before treating execution state as clean.
+
 ### 2026-04-08 21:23 — EAT-QUEUE sandbox Task unavailable (Proof-on-failure)
 
 | pipeline | severity | approval | timestamp | error_type |
@@ -36,7 +221,7 @@
 - entries: `followup-deepen-exec-p21-mint-godot-20260410T180500Z`, `followup-deepen-exec-p214-tertiary-godot-20260410T181500Z`, `followup-deepen-exec-p222-tertiary-godot-20260408T232000Z`
 - A.0.4 `pool_sync`: ok, `copied_count=3` from central pool
 - Cursor **`Task`** tool not available in this Layer 1 host; cannot invoke `Task(subagent_type: roadmap)` for RESUME_ROADMAP. Per Subagent-Safety-Contract Proof-on-failure; queue lines **not** consumed at A.7
-- A.0.5: `eat_queue_run_plan.json` exists with `parent_run_id=eatq-fullcycle-ccd8110c0e5d` — no matching `parent_run_id` in hand-off → advisory fallback to legacy A.1 ordering (no Python-orchestrator dispatch)
+- A.0.5: `eat_queue_run_plan.json` exists with `parent_run_id=eatq-fullcycle-ccd8110c0e5d` — no matching `parent_run_id` in hand-off → advisory until **`harness full_cycle`** regenerates **EQPLAN** aligned to the hand-off (no harness-ordered dispatch)
 
 #### Summary
 **Root cause**: Queue orchestrator runtime lacks the Cursor `Task` primitive required to launch the Roadmap subagent.
@@ -515,7 +700,7 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **PQ:** `.technical/parallel/godot/prompt-queue.jsonl`; **central pool:** `.technical/prompt-queue.jsonl`; **queue_lane_filter:** `godot`; **parallel_track:** `godot`.
 - **Step 0:** No `Ingest/Decisions/**` wrapper had frontmatter `approved: true` (no apply-from-wrapper work).
 - **A.0.4:** `pool_sync` **ok** (`copied_count: 2`; ids `repair-l1postlv-distilled-core-contradiction-godot-20260405T233500Z`, `followup-deepen-phase61-rollup-post-611-godot-gmm-20260406T000000Z`).
-- **EQPLAN:** `.technical/parallel/godot/eat_queue_run_plan.json` **missing** → legacy LLM/dispatch path (Config `python_orchestrator_enabled: true` but no plan file).
+- **EQPLAN:** `.technical/parallel/godot/eat_queue_run_plan.json` **missing** → cannot use harness-ordered dispatch; **A.1** / advisory only until **`harness full_cycle`** regenerates **EQPLAN** (Config expects `python_orchestrator_enabled: true`).
 - **Dispatch:** Cursor Queue subagent session has **no** callable `Task` tool → **no** `Task(subagent_type: roadmap)` per entry; **A.7** **not** applied (`processed_success_ids` empty).
 - **Watcher-Result:** canonical + `Watcher-Result-godot.md` failure lines for both queue `id`s; **eat_queue_run_id** `eatq-20260405T102630Z-godot-l1`.
 
@@ -940,7 +1125,7 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Recovery:** Restored godot **PQ** from **`git checkout HEAD -- .technical/parallel/godot/prompt-queue.jsonl`**.
 - **Hygiene:** Appended the same JSONL line to **central pool** `.technical/prompt-queue.jsonl` so the next **`pool_sync`** can hydrate without dropping track-only appends.
 - **Step 0:** No `approved: true` wrappers in `Ingest/Decisions/**` required apply.
-- **EQPLAN:** `intents: []` → legacy **A.1** dispatch path.
+- **EQPLAN:** `intents: []` → **A.1** visibility / **A.1b** path (empty manifest), not a second ordering model.
 - **Dispatch:** Cursor **`Task`** tool **not exposed** to this Layer 1 session → **no** `Task(roadmap)` (Proof-on-failure).
 - **A.7:** **No** consume; entry remains on godot **PQ**.
 
@@ -1156,3 +1341,501 @@ Each new error is appended as follows (no fenced YAML per entry):
 - **Impact:** Repair-class line retained on **PQ**; two forward-class `RESUME_ROADMAP` deepen lines not dispatched (`repair_first` single initial slot used by repair attempt).
 - **Suggested fixes:** Re-run **EAT-QUEUE lane godot** from a host with full nested Task capability, or execute validators/IRA manually per validator report paths.
 - **Recovery:** All three lines remain in `.technical/parallel/godot/prompt-queue.jsonl` and central pool fanout subset.
+
+### 2026-04-10 09:51 — Godot bootstrap execution state hygiene provisional
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | high | pending | 2026-04-10T09:52:17.000Z | state_hygiene_failure_provisional |
+
+#### Trace
+- queue_lane_filter: godot
+- requestId: `operator-bootstrap-exec-godot-vault-remint-20260409T210000Z`
+- nested validator: `severity=high`, `primary_code=state_hygiene_failure`, `reason_codes=[state_hygiene_failure, contradictions_detected, safety_unknown_gap]`
+- little_val_ok: false
+- action: appended `HANDOFF_AUDIT_REPAIR` (`handoff-audit-repair-godot-state-hygiene-20260410T095100Z`), retained original queue entry
+
+#### Summary
+- **Root cause:** Execution-track state authority is contradictory across roadmap state files and decisions chronology.
+- **Impact:** Clean success/drain blocked for this run; follow-up deepen entry remains deferred behind repair-first flow.
+- **Suggested fixes:** Run the appended `HANDOFF_AUDIT_REPAIR` entry to reconcile state hygiene, then resume deepen.
+
+### 2026-04-10 10:52 — Godot execution hygiene provisional after deepen
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-10T10:52:45Z | state_hygiene_failure_provisional |
+
+#### Trace
+- queue_lane_filter: godot
+- requestIds: `repair-handoff-audit-godot-exec-phase1-rollup-20260410T210700Z`, `followup-deepen-exec-phase1-1-godot-20260410T210701Z`
+- final validator primary_code: `missing_roll_up_gates`
+- action: appended `HANDOFF_AUDIT_REPAIR` `handoff-audit-repair-godot-exec-rollup-20260410T105245Z`
+
+#### Summary
+- **Root cause:** Execution roll-up evidence packets remain open after repair+deepen.
+- **Impact:** Queue was not allowed to clean-drain; continuation lines were appended.
+- **Suggested fixes:** Run the queued repair entry to close or waive replay/lineage/ci-seam gates, then continue 1.1.1 deepen.
+
+### 2026-04-13 06:36 — Godot balance deepen attestation contradiction
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | high | pending | 2026-04-13T06:36:40Z | nested_attestation_failure |
+
+#### Trace
+- queue_lane_filter: godot
+- requestId: `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- roadmap return: `status=Success`, `little_val_ok=true`, `pipeline_mode_used=balance`, `params_action=deepen`
+- nested_subagent_ledger violations: `nested_validator_first.task_tool_invoked=false`, `ira_post_first_validator.task_tool_invoked=false`, `nested_validator_second.task_tool_invoked=false`
+- L1 hostile validator verdict: `severity=high`, `primary_code=contradictions_detected`, `recommended_action=block_destructive`
+- action: retained original queue line; appended follow-up `followup-deepen-exec-phase2-225-godot-20260413T124500Z`; appended repair line `handoff-audit-repair-godot-phase223-20260413T063640Z`
+
+#### Summary
+- **Root cause:** Balance/deepen mandatory helper chain was not invoked, but the roadmap return still asserted success.
+- **Impact:** Clean success drain was blocked for this request; queue now carries explicit repair + continuation while preserving existing deepen lines.
+- **Suggested fixes:** Run `HANDOFF_AUDIT_REPAIR` first, then re-run EAT-QUEUE lane godot so deepen continues after hygiene repair.
+- **Recovery:** No queue consumption was performed for request `...phase2-223...`; entry remains in `.technical/parallel/godot/prompt-queue.jsonl`.
+
+### 2026-04-13 06:36 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T06:36:40Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied
+- fallback: canonical watcher line appended to `3-Resources/Watcher-Result.md`; mirror line logged here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror was not appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and re-run queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for the same request are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 06:42 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T06:42:08Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines logged here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror was not appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and re-run queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for the same request are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 07:18 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T07:18:20.220Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines logged here per fallback contract
+- request_id: `followup-deepen-exec-phase225-tertiary-sandbox-20260413T130000Z`
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror was not appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and re-run queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for the same request are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 07:05 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T07:05:33Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines logged here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror was not appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and re-run queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for the same request are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 07:41 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T07:41:19Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied
+- request_ids: `followup-deepen-exec-phase23-secondary-sandbox-20260413T131000Z`, `handoff-audit-repair-sandbox-phase225-20260413T160000Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines logged here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be created/updated in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and re-run queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for the same request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 17:17 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T17:17:00Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied (ReadFile blocked)
+- request_ids: `handoff-audit-repair-godot-phase23-20260413T141700Z`, `followup-handoff-audit-repair-godot-phase23-20260413T141700Z-rollup-evidence`, `repair-followup-deepen-exec-phase2-224-godot-20260413T130500Z`, `followup-deepen-exec-phase2-224-godot-20260413T130500Z`, `followup-deepen-exec-phase2-225-godot-20260413T124500Z`, `followup-deepen-exec-phase2-23-godot-20260413T141700Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines logged here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and re-run queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for the same request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 07:58 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T07:58:31Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `handoff-audit-repair-sandbox-phase225-20260413T160000Z`, `followup-deepen-exec-phase231-tertiary-sandbox-20260413T132000Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines logged here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for the same request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 08:09 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T08:09:45Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-handoff-audit-repair-sandbox-phase225-20260413T160000Z-final-clearance`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror line recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher line for this request ID is present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 08:27 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T08:27:30Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-deepen-exec-phase233-tertiary-sandbox-20260413T081242Z`, `layer1-eatq-sandbox-20260413T082000Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 08:42 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T08:42:00Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `handoff-audit-repair-sandbox-phase233-20260413T082000Z`, `layer1-eatq-sandbox-20260413T082000Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 08:37 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T08:37:54Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `handoff-audit-repair-godot-phase23-20260413T081719Z-final-clearance`, `followup-handoff-audit-repair-godot-phase23-20260413T141700Z-rollup-evidence`, `handoff-audit-repair-godot-phase23-20260413T171600Z`, `followup-deepen-exec-phase2-224-godot-20260413T130500Z`, `followup-deepen-exec-phase2-225-godot-20260413T124500Z`, `followup-deepen-exec-phase2-23-godot-20260413T141700Z`, `layer1-eatq-godot-20260413T083754Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 21:00 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T21:00:00Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-deepen-exec-phase234-tertiary-sandbox-20260413T082000Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but sandbox mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 08:48 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T08:48:20Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-handoff-audit-repair-godot-phase23-20260413T084308Z-layer1-gatekeeper`, `followup-deepen-exec-phase2-224-godot-20260413T130500Z`, `followup-deepen-exec-phase2-225-godot-20260413T124500Z`, `followup-deepen-exec-phase2-23-godot-20260413T141700Z`, `layer1-eatq-godot-20260413T084820Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 09:19 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T09:19:01Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-deepen-exec-phase2-224-godot-20260413T130500Z`, `followup-deepen-exec-phase2-225-godot-20260413T124500Z`, `followup-deepen-exec-phase2-23-godot-20260413T141700Z`, `followup-handoff-audit-repair-godot-phase23-20260413T084308Z-layer1-gatekeeper`, `layer1-eatq-godot-20260413T091901Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 09:25 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T09:25:17Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-handoff-audit-repair-godot-phase23-20260413T084308Z-layer1-gatekeeper`, `followup-deepen-exec-phase2-233-godot-20260413T201500Z`, `followup-deepen-exec-phase2-24-godot-20260413T204500Z`, `followup-deepen-exec-phase2-241-godot-20260413T211700Z`, `layer1-eatq-godot-20260413T092517Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 11:06 — Layer1 Post-LV Hygiene Failure (godot phase223)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | high | pending | 2026-04-13T11:06:19Z | state_hygiene_failure |
+
+#### Trace
+- queue_entry_id: `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- hostile validator (Layer1 post-LV): severity=high, primary_code=state_hygiene_failure
+- reason_codes: state_hygiene_failure, contradictions_detected, missing_roll_up_gates
+- action: kept original entry out of success set; appended HANDOFF_AUDIT_REPAIR + RESUME_ROADMAP continuation
+
+#### Summary
+**Root cause**: execution artifacts still contain contradictory cursor/retirement state.
+**Impact**: roadmap dispatch cannot be treated as clean success; queue remains active for remediation.
+**Suggested fixes**: run appended HANDOFF_AUDIT_REPAIR, then re-validate and resume deepen.
+**Recovery**: queued high-priority repair and continuation; review validator report before drain.
+
+### 2026-04-14 01:35 — Watcher mirror append fallback (godot)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-14T01:35:30Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-godot.md`
+- write_status: permission denied (read blocked in run context)
+- request_id: `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines recorded here per fallback contract
+
+#### Summary
+- **Root cause:** Insufficient permissions for per-track watcher mirror path.
+- **Impact:** Canonical watcher output exists, but godot mirror file could not be appended in this run.
+- **Suggested fixes:** Restore write permission on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for this request ID are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 11:42 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T11:42:45Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_scope: `layer1-eatq-sandbox-20260413T114245Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines not written
+
+#### Summary
+- **Root cause:** Insufficient permissions for the sandbox per-track watcher mirror file.
+- **Impact:** Canonical watcher output is complete; sandbox mirror parity is missing for this run.
+- **Suggested fixes:** Restore write access on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 12:43 — Watcher mirror append fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T12:43:34Z | watcher_result_mirror_write_failed |
+
+#### Trace
+- target_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_status: permission denied (read blocked in run context)
+- request_ids: `followup-handoff-audit-repair-sandbox-phase253-20260413T114245Z-layer1-gatekeeper`, `followup-deepen-exec-phase253-tertiary-sandbox-20260414T130500Z`
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines not written
+
+#### Summary
+- **Root cause:** Insufficient permissions for the sandbox per-track watcher mirror file.
+- **Impact:** Canonical watcher output is complete; sandbox mirror parity is missing for this run.
+- **Suggested fixes:** Restore write access on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+
+### 2026-04-13 12:56:34 — queue layer1 provisional hygiene hold
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | high | pending | 2026-04-13T12:56:34Z | state_hygiene_failure |
+
+#### Trace
+- requestId: followup-handoff-audit-repair-godot-phase23-20260414T103411Z-layer1-gatekeeper
+- requestId: followup-deepen-exec-phase2-223-godot-20260412T214500Z
+- validator pass found high state_hygiene_failure and medium contradictions_detected; clean drain blocked.
+
+#### Summary
+**Root cause:** Execution authority/state prose remains contradictory and hygiene retirement is pending.
+
+**Impact:** Entries held as provisional; queue not drained.
+
+**Suggested fixes:** Run HANDOFF_AUDIT_REPAIR and reconcile roadmap-state-execution authority prose with workflow cursor.
+
+**Recovery:** Continue from appended repair+followup entries in godot lane queue.
+
+### 2026-04-13 13:10 — watcher-result godot mirror fallback
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T13:10:51Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- requestId: `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- write_status: read permission denied (mirror append blocked in run context)
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; mirror lines not written
+
+#### Summary
+- **Root cause:** Insufficient permissions for the godot per-track watcher mirror file.
+- **Impact:** Canonical watcher output is complete; godot mirror parity is missing for this run.
+- **Suggested fixes:** Restore read/write access on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for this request ID are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 14:14:02 — watcher-result godot mirror fallback
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T14:14:02Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- requestId: `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- write_status: read permission denied (mirror append blocked in run context)
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; godot mirror lines not written
+
+#### Summary
+- **Root cause:** Insufficient permissions for the godot per-track watcher mirror file.
+- **Impact:** Canonical watcher output is complete; godot mirror parity is missing for this run.
+- **Suggested fixes:** Restore read/write access on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for this request ID are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 13:19:14 — watcher-result sandbox mirror fallback
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T13:19:14Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- requestId: `followup-handoff-audit-repair-sandbox-phase253-20260413T114245Z-layer1-gatekeeper`
+- requestId: `followup-handoff-audit-repair-sandbox-phase26-20260414T224200Z-layer1-gatekeeper`
+- requestId: `followup-deepen-exec-phase253-tertiary-sandbox-20260414T130500Z`
+- requestId: `followup-deepen-exec-phase26-secondary-sandbox-20260414T130500Z`
+- write_status: read permission denied (mirror append blocked in run context)
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; sandbox mirror lines not written
+
+#### Summary
+- **Root cause:** Insufficient permissions for the sandbox per-track watcher mirror file.
+- **Impact:** Canonical watcher output is complete; sandbox mirror parity is missing for this run.
+- **Suggested fixes:** Restore read/write access on `3-Resources/Watcher-Result-sandbox.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for these request IDs are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 13:45:44 — watcher-result godot mirror fallback
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | pending | 2026-04-13T13:45:44Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- requestId: `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- write_status: read permission denied (mirror append blocked in run context)
+- fallback: canonical watcher lines appended to `3-Resources/Watcher-Result.md`; godot mirror lines not written
+
+#### Summary
+- **Root cause:** Insufficient permissions for the godot per-track watcher mirror file.
+- **Impact:** Canonical watcher output is complete; godot mirror parity is missing for this run.
+- **Suggested fixes:** Restore read/write access on `3-Resources/Watcher-Result-godot.md` and rerun queue pass if mirror parity is required.
+- **Recovery:** Canonical watcher lines for this request ID are present in `3-Resources/Watcher-Result.md`.
+
+### 2026-04-13 14:16 — Queue lane filter invalid
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer0-dispatcher | medium | n/a | 2026-04-13T14:16:47.549Z | queue_lane_filter_invalid |
+
+#### Trace
+- user_request: `EAT-QUEUE lane godotv`
+- validation: lane token `godotv` is not in allowed list (`default`, `shared`, `sandbox`, `godot`, `core`)
+- action: did not call `Task(queue)`
+
+#### Summary
+**Root cause**: Invalid lane token in command.
+**Impact**: Queue dispatch skipped; no prompt queue processed.
+**Suggested fixes**: Re-run with a valid lane token (for this track: `godot`).
+**Recovery**: No state change required; retry command with valid lane.
+
+### 2026-04-14 16:00 — Watcher mirror append fallback (sandbox)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T16:00:00Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- operation: append disposition lines for queue ids `followup-deepen-exec-phase27-secondary-sandbox-20260414T130500Z`, `followup-deepen-exec-phase271-tertiary-sandbox-20260414T130500Z`, `followup-deepen-exec-phase272-tertiary-sandbox-20260414T130500Z`, `handoff-audit-repair-sandbox-phase27-20260414T130500Z-layer1-gatekeeper`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked writes to sandbox mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore write/read permissions on `3-Resources/Watcher-Result-sandbox.md` and re-run lane processing.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+

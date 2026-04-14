@@ -1,0 +1,17 @@
+name: Run Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run tests
+        run: python -m unittest discover -s 3-Resources/Second-Brain/tests -p "test_*.py" -v
+      - name: Run eat_queue_core tests
+        env:
+          PYTHONPATH: .
+        run: python -m unittest discover -s scripts/eat_queue_core/tests -p "test_*.py" -v

@@ -1,7 +1,7 @@
 ---
 title: Backup and Recovery Strategy
 created: 2026-04-09
-updated: 2026-04-09
+updated: 2026-04-12
 tags: [ops, backup, git, syncthing, curator, recovery, trash]
 para-type: Resource
 status: active
@@ -118,6 +118,12 @@ git status --porcelain   # lists changed paths
 
 ---
 
+## In-vault mirrors (Obsidian-visible, backup-only)
+
+**`.technical/`** is often excluded from Obsidian; **JSONL** queues and root **`.cursorignore`** are still mirrored to **Curator** on disk but easy to miss after a bad session. Small **duplicate** copies for recovery visibility (not authoritative) live under [[3-Resources/Second-Brain/Backup-Mirrors-Curator/README|Backup-Mirrors-Curator]]. Refresh those files when canonical paths change, then run **`./scripts/curator_snapshot.sh`**.
+
+---
+
 ## Cross-links
 
 - [[3-Resources/Second-Brain/Docs/Safety-Invariants|Safety Invariants]] — move-to-trash; MCP gates
@@ -127,3 +133,4 @@ git status --porcelain   # lists changed paths
 - `scripts/curator_snapshot.sh` — agent-mandatory commit + push (operators may run manually too)
 - [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] — `vault_backup`
 - [[3-Resources/Second-Brain/Vault-Layout|Vault-Layout]] — `.stignore`, Syncthing
+- [[3-Resources/Second-Brain/Backup-Mirrors-Curator/README|Backup-Mirrors-Curator]] — in-vault duplicates of `.technical` queues + `.cursorignore`

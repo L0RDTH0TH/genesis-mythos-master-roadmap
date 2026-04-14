@@ -127,7 +127,9 @@ vault_backup:
 - **queue_nudge_enabled**: true | false — when true, nudge is allowed when queue has pending entries.
 - **auto_cleanup_after_process**: true | false — when true, run queue-cleanup skill after each EAT-QUEUE run (auto-mark failed entries, append to Errors.md). When false, cleanup only when user runs "Clear queue" or "Queue cleanup".
 - **re_try_max_loops**: 3 — cap on re-try spins per thread (e.g. same section/phase_path). When exceeded, abort re-try and create cap-hit wrapper (A: Force approve, B: Prune branch, 0: Re-wrap full phase). Document in Parameters.md.
-- **python_orchestrator_enabled**: true — Layer 1 EAT-QUEUE may read **EQPLAN** (`eat_queue_run_plan.json` colocated with **PQ** — legacy `.technical/eat_queue_run_plan.json` or per-track under `.technical/parallel/<track>/`; see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**) produced by `python3 -m scripts.eat_queue_core.full_cycle` / plan and execute **`intents`** in order (see [[3-Resources/Second-Brain/Docs/Python-Queue-Orchestrator|Python-Queue-Orchestrator]]). Set **false** for legacy LLM-driven ordering (default when absent).
+- **python_orchestrator_enabled**: **must** be **true** — Layer 1 reads **EQPLAN** from **`python3 -m scripts.eat_queue_core.harness full_cycle`** / **`plan`** (see [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]]). There is **no** LLM-only dispatch ordering path.
+- **mutation_recovery_mode** (`hard_stop` \| `restart_plan` \| `continue_best_effort`, default **`restart_plan`**): when **`harness verify`** detects **PQ** byte drift vs an earlier **`harness snapshot`**, Layer 1 follows **`recovery_hint`** — **`hard_stop`** refuses rewrite; **`restart_plan`** re-runs **`harness full_cycle`** from current disk once; **`continue_best_effort`** may mask same-lane races (see Queue-Harness-Architecture). Orthogonal to **`harness_validation_mode`** (Task return attestation).
+- **max_midrun_jsonl_appends_per_eat_queue_run** (optional int, default **5**): cap enforced by **`harness append_entries`** for Step 0 / mid-run **PQ** appends in one EAT-QUEUE run.
 - **central_pool_fanout_enabled**: when **true**, Layer 1 **A.0.4** runs **`pool_sync`** before wrappers so **`.technical/prompt-queue.jsonl`** (pool) is merged into per-track **PQ** (see **`pool_sync_strict_central_only`**); **A.7** removes consumed ids from **pool** and **PQ** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0.4**, **A.7**).
 - **pool_sync_strict_central_only**: when **true**, **`scripts.eat_queue_core.pool_sync`** overwrites the track **PQ** with **only** lane-filtered central-pool lines (**legacy**; drops lane-only rows that exist only in the track file). Default **false**: **merge** central lines with lane-only rows already in the track **PQ** that match the lane and are absent from the pool (see [[3-Resources/Second-Brain/Docs/Dual-track-EAT-QUEUE-Operator|Dual-track-EAT-QUEUE-Operator]] § Lane-only preservation).
 - **rationale_enforcement_enabled** (`true` \| `false`, default **`false`**): when **`true`**, Layer 1 ([[.cursor/rules/agents/queue.mdc|queue.mdc]]) **must** require **`params.option_evaluation`** on gated **`RESUME_ROADMAP`** lines (execution track — see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Parallel execution tracking). The Python harness validates shape when emitting plans.
@@ -142,6 +144,8 @@ The following **`queue:`** block is machine-readable for `scripts/queue-gate-com
 
 queue:
   python_orchestrator_enabled: true
+  mutation_recovery_mode: restart_plan
+  max_midrun_jsonl_appends_per_eat_queue_run: 5
   central_pool_fanout_enabled: true
   pool_sync_strict_central_only: false
   rationale_enforcement_enabled: false

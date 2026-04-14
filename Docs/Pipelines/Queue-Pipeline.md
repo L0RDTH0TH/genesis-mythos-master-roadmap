@@ -30,6 +30,10 @@ The **Dispatcher** (`.cursor/rules/always/dispatcher.mdc`) routes these phrases 
 | **Prompt queue** | `.technical/prompt-queue.jsonl` | INGEST MODE, ROADMAP MODE, RESUME-ROADMAP, DISTILL MODE, EXPRESS MODE, ARCHIVE MODE, ORGANIZE MODE, RESEARCH-AGENT, SEEDED-ENHANCE, NORMALIZE-MASTER-GOAL, etc. (canonical order in Queue-Sources). |
 | **Task queue** | `3-Resources/Task-Queue.md` | TASK-ROADMAP, TASK-COMPLETE, ADD-ROADMAP-ITEM, EXPAND-ROAD, REORDER-ROADMAP, DUPLICATE-ROADMAP, MERGE-ROADMAPS, EXPORT-ROADMAP, PROGRESS-REPORT. |
 
+## Harness (single writer; Part A)
+
+Normative **PQ** reads, **EQPLAN** emission, optional **snapshot** / **verify**, **append_entries** (Step 0 / mid-run), and **rewrite_consumed** (**A.7**) go through **`python3 -m scripts.eat_queue_core.harness`**. Layer 1 does **not** define dispatch order independently of **EQPLAN** except where **queue.mdc** explicitly allows (e.g. empty **`intents`** → **A.1b**). See [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]] and **queue.mdc** **A.0.5**.
+
 ---
 
 ## Prompt-queue flow (Part A) — steps
