@@ -235,6 +235,7 @@ Machine-readable block (keep aligned with bullets):
 ```yaml
 gitforge:
   enabled: true
+  harness_enabled: true
   export_repo_root: "/home/darth/Documents/gmm-roadmap-export"
   vault_repo_remote: "origin"
   integration_branch: "iteration-2-roadmap-rules"
