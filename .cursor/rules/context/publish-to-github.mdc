@@ -21,7 +21,7 @@ When the user clearly wants to **back up the vault to Curator** and/or **publish
 
 ## Hard invariant — do not invent GitForge from chat
 
-**GitForge** (`Task(subagent_type: "gitforge")`) runs **only** after **EAT-QUEUE** completes **A.7** successfully, with a **Layer 1 hand-off**, per [[.cursor/agents/gitforge|agents/gitforge.md]] and [[.cursor/rules/agents/queue|queue.mdc]] **A.7a**.
+**GitForge** (**`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`**, default) runs **only** after **EAT-QUEUE** completes **A.7** successfully, with a JSON hand-off, per [[.cursor/agents/gitforge|agents/gitforge.md]] and [[.cursor/rules/agents/queue|queue.mdc]] **A.7a**. Legacy **`Task(gitforge)`** only when **`gitforge.harness_enabled`** is **false**.
 
 A **standalone chat** (“update the githubs” **without** a queue run in this session) **must not** claim to invoke GitForge as if it were a generic button. There is **no** valid hand-off without the queue processor.
 
@@ -37,7 +37,7 @@ A **standalone chat** (“update the githubs” **without** a queue run in this 
 
 If the user says **`Back up dir now`** (or obvious casing/spacing variants), treat it as a **manual bypass**:
 
-- **Do not invoke GitForge** (no `Task(subagent_type: "gitforge")` in this path).
+- **Do not invoke GitForge** (no **`post_queue_gitforge`** harness / no `Task(gitforge)` in this path).
 - Run **`./scripts/backup_all_githubs.sh "<summary>"`** from vault root.
 - This path is intended to push **all branches/tags** for both export remotes after Curator snapshot succeeds.
 - On any push failure: stop and report failure; do not claim success.

@@ -6,7 +6,7 @@ alwaysApply: false
 
 # GitForge (context rule)
 
-- **Subagent**: **GitForge** — single-purpose git and export-repo orchestration after a **successful** **EAT-QUEUE** prompt-queue run (**Part A** through **A.7**). Invoked only by the **Queue/Dispatcher** subagent per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.7a**.
+- **GitForge** — post–**A.7** git and export-repo orchestration. **Default:** deterministic **`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`** (see [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]]). **Legacy `Task(gitforge)`** only when **`gitforge.harness_enabled`** is **false** in [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]].
 - **Vault index**: **Layer 1 post-run specialist** (not RESUME_ROADMAP-style Layer 2).
 - **Reference**: [[.cursor/agents/gitforge.md|agents/gitforge.md]]; [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]; [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**; [[3-Resources/Second-Brain/Docs/git-audit-log|git-audit-log]].
 
@@ -23,7 +23,7 @@ GitForge runs in contexts that must still respect **core-guardrails** (no shell 
 
 ## How to activate
 
-- **Only** from Layer 1 **Queue** after **A.7a** conditions hold (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**), and **not** when **`effective_pipeline_mode`** is **`speed`** (GitForge skipped for fast pipeline runs).
+- **Only** from Layer 1 **Queue** after **A.7a** conditions hold (**[[.cursor/rules/agents/queue.mdc|queue.mdc]]**), and **not** when **`effective_pipeline_mode`** is **`speed`** (GitForge skipped for fast pipeline runs). **Harness** path does not use **`Task`**.
 - **Never** from Layer 0 chat directly, never from Layer 2 pipelines.
 
 ## GitHub parity invariant (Grok visibility)

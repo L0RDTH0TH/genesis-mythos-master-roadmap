@@ -11,7 +11,7 @@ This skill is **maintained in the vault**. The public integration branch updates
 
 ## Authority
 
-If anything here disagrees with [[.cursor/agents/gitforge|agents/gitforge.md]], **the subagent wins**. This file is for **orientation, manual runs, and debugging** only.
+If anything here disagrees with [[.cursor/agents/gitforge|agents/gitforge.md]] or the **`post_queue_gitforge`** harness implementation, **the harness + gitforge.md contract wins**. This file is for **orientation, manual runs, and debugging** only.
 
 ## Core references (do not duplicate tables here)
 

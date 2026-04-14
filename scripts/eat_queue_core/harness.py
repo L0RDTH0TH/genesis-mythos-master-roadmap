@@ -28,6 +28,7 @@ from .full_cycle import apply_queue_cleanup, apply_queue_cleanup_dual_track, run
 from .lanes import FALLBACK_ALLOWED_LANES, validate_lane_filter_token
 from .plan import append_decisions, build_plan, emit_plan_json, load_queue_file, print_plan_success_summary
 from .pool_sync import hydrate_track_pq_from_pool
+from .post_queue_gitforge import load_handoff_json, run_post_queue_gitforge
 
 
 def _read_json_or_yaml_file(path: Path) -> dict[str, Any]:
@@ -398,6 +399,21 @@ def cmd_full_cycle(vault_root: Path, args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_post_queue_gitforge(vault_root: Path, args: argparse.Namespace) -> int:
+    """Layer 1 post–A.7 deterministic GitForge (lock, vault git, optional export, audit)."""
+    try:
+        if getattr(args, "handoff_file", None) is not None:
+            handoff = load_handoff_json(args.handoff_file, None)
+        else:
+            handoff = load_handoff_json(None, sys.stdin.read())
+    except (OSError, ValueError, json.JSONDecodeError) as e:
+        print(json.dumps({"ok": False, "error": f"handoff: {e}"}), file=sys.stderr)
+        return 1
+    result = run_post_queue_gitforge(vault_root, handoff, args.resolved_config)
+    print(result.to_json())
+    return result.exit_code
+
+
 def build_parser() -> argparse.ArgumentParser:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--vault-root", type=Path, default=None, help="Vault root (default: cwd)")
@@ -510,6 +526,20 @@ def build_parser() -> argparse.ArgumentParser:
     fc.add_argument("--central-pool-fanout", action="store_true")
     fc.add_argument("--no-central-pool-fanout", action="store_true")
     fc.set_defaults(func=cmd_full_cycle)
+
+    pg = sub.add_parser(
+        "post_queue_gitforge",
+        help="Post–A.7 GitForge: lock, vault git, optional export sync, audit log",
+        parents=[common],
+    )
+    add_parallel(pg)
+    pg.add_argument(
+        "--handoff-file",
+        type=Path,
+        default=None,
+        help="JSON hand-off (A.7a). If omitted, read JSON object from stdin.",
+    )
+    pg.set_defaults(func=cmd_post_queue_gitforge)
 
     return p
 

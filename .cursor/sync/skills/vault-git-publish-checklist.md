@@ -1,6 +1,6 @@
 ---
 name: vault-git-publish-checklist
-description: Human operator checklist for safe vault-to-GitHub publish — Curator full backup first, then export checkout and branch-aware mirror. Companion to automation; does not replace the GitForge subagent.
+description: Human operator checklist for safe vault-to-GitHub publish — Curator full backup first, then export checkout and branch-aware mirror. Companion to automation; does not replace the post_queue_gitforge harness.
 ---
 
 # vault-git-publish-checklist
@@ -13,7 +13,7 @@ This checklist is **authored in the vault**. The **integration** branch on GitHu
 
 ## Authority
 
-- **Automated post–EAT-QUEUE publish:** [[.cursor/agents/gitforge|GitForge subagent]] owns behavior after **A.7a** (branch guards, lock, engine-only rules). This skill is a **checklist + links**, not a second spec.
+- **Automated post–EAT-QUEUE publish:** **`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`** owns behavior after **A.7a** (branch guards, lock, engine-only rules). This skill is a **checklist + links**, not a second spec.
 - **Normative procedures:** [[.cursor/agents/gitforge|agents/gitforge.md]] and [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]].
 
 ## GitHub MCP
@@ -39,7 +39,7 @@ Use **local git** in both export checkouts: **`vault_backup.private_export_repo_
 
 ### 2. Automation path
 
-If you use EAT-QUEUE with **[[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]]** **`gitforge.enabled: true`**: after a clean **A.7**, Layer 1 invokes **`Task(subagent_type: "gitforge")`**. Do not duplicate GitForge steps here; follow [[.cursor/agents/gitforge|agents/gitforge.md]].
+If you use EAT-QUEUE with **[[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]]** **`gitforge.enabled: true`** and **`gitforge.harness_enabled: true`** (default): after a clean **A.7**, Layer 1 runs **`post_queue_gitforge`**. Do not duplicate GitForge steps here; follow [[.cursor/agents/gitforge|agents/gitforge.md]].
 
 ### 3. Manual path — export checkout
 

@@ -25,8 +25,28 @@ Normative **prompt queue (PQ)** and **central pool** file mutations for EAT-QUEU
 | **`full_cycle`** | Reactive multi-pass plan + optional cleanup (**`run_full_eat_queue_cycle`**) |
 | **`rewrite_consumed`** | Remove consumed ids (**A.7**); dual-pool when fanout + per-track **PQ** |
 | **`append_entries`** | Validated JSONL append with **`max_midrun_jsonl_appends_per_eat_queue_run`** cap |
+| **`post_queue_gitforge`** | Post–**A.7** lock, vault git, optional export sync, **git-audit-log** ([[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.7a**); hand-off JSON via **`--handoff-file`** or **stdin** |
 
 Common flags: **`--vault-root`**, **`--config`** (defaults to [[3-Resources/Second-Brain/Docs/Core/Second-Brain-Config|Second-Brain-Config]] path when present), **`--parallel-context-file`** / **`--parallel-context-yaml`** when **A.0x** resolves a per-track bundle.
+
+## GitForge harness (`post_queue_gitforge`)
+
+Deterministic post–**A.7** step (when **`gitforge.enabled`**, **`gitforge.harness_enabled`** (default **true**), and **`effective_pipeline_mode`** is **`balance`** or **`quality`**). **Not** an LLM **`Task`** — Layer 1 runs **`PYTHONPATH=. python3 -m scripts.eat_queue_core.harness post_queue_gitforge`** with **`--vault-root`**, **`--handoff-file`** (JSON matching [[.cursor/agents/gitforge.md|agents/gitforge.md]] hand-off), optional **`--parallel-context-file`**. **Stdout:** single JSON object; **exit 0** = success or policy skip (including lock held); **non-zero** = hard failure (**Proof-on-failure**, **`error_type: gitforge-harness-failure`**). Implementation: [[`scripts/eat_queue_core/post_queue_gitforge.py`](scripts/eat_queue_core/post_queue_gitforge.py)].
+
+```mermaid
+flowchart LR
+  A7[A.7 rewrite PQ]
+  P[post_queue_gitforge]
+  L[gitforge_lock.py]
+  V[vault git push]
+  E[optional export sync]
+  A[git-audit-log]
+  A7 --> P
+  P --> L
+  P --> V
+  P --> E
+  P --> A
+```
 
 ## Sequence (typical EAT-QUEUE)
 

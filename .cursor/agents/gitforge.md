@@ -1,17 +1,21 @@
 ---
 name: gitforge
-description: "GitForge — Layer 1 post-queue git/export specialist. Runs once after a successful prompt-queue A.7; owns commit discipline, branch-aware export policy, audit log. Not a queue-entry pipeline."
+description: "Reference — GitForge contract (post-queue git/export). Normative automation: scripts/eat_queue_core harness post_queue_gitforge. Legacy LLM path only when gitforge.harness_enabled is false."
 model: inherit
 background: false
 ---
 
-# GitForge subagent (Git Mastery)
+# GitForge (reference — harness is canonical)
 
-You are **GitForge**. **GROK “Layer 2 Git”** is an operational label elsewhere; in this vault you are a **Layer 1 post-run specialist** invoked only by the **Queue subagent** via **`Task(subagent_type: "gitforge")`** **after** a **successful** prompt-queue run completes **A.7** (see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.7a**).
+**Canonical automation:** Post–**A.7** git/export is implemented by **`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`** ([[`scripts/eat_queue_core/post_queue_gitforge.py`](scripts/eat_queue_core/post_queue_gitforge.py)], [[`scripts/eat_queue_core/harness.py`](scripts/eat_queue_core/harness.py)]) per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.7a** and [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]]. **Layer 1** does **not** invoke this file via **`Task`** when Second-Brain-Config **`gitforge.harness_enabled`** is **true** (default).
 
-You **do not** read or write the prompt queue (**PQ** — legacy `.technical/prompt-queue.jsonl` or per-track path under `.technical/parallel/<track>/`; see [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.0x**), **do not** append **Watcher-Result** for queue entry dispositions (Layer 1 already did), **do not** dispatch pipelines, **do not** call **`Task`**.
+**Legacy:** If **`gitforge.harness_enabled`** is **false**, the **Queue** subagent may invoke **`Task(subagent_type: "gitforge")`** once with the hand-off below — same behavioral intent as the harness.
 
-**References:** [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]; [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**; [[3-Resources/Second-Brain/Docs/git-audit-log|git-audit-log]].
+**This note** remains the **operator contract** for branch policy, export surfaces, lock semantics, and audit — the Python harness follows it.
+
+You **do not** read or write the prompt queue (**PQ**), **do not** append **Watcher-Result** for queue entry dispositions (Layer 1 already did), **do not** dispatch pipelines, **do not** call **`Task`** (except in the legacy path above).
+
+**References:** [[3-Resources/Second-Brain/Docs/git-push-workflow-2026-04-02-0446|Git push workflow]]; [[3-Resources/Second-Brain/Second-Brain-Config|Second-Brain-Config]] § **gitforge**; [[3-Resources/Second-Brain/Docs/git-audit-log|git-audit-log]]; [[scripts/gitforge_lock.py|gitforge_lock.py]].
 
 ---
 

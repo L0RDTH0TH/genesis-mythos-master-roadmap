@@ -31,7 +31,7 @@ Log **every** orchestration-relevant **`Task`** invocation:
 | Layer 1 (Queue) | Pipeline subagents (`roadmap`, `ingest`, …) | Same `task_correlation_id` as **`pipeline_task_correlation_id`** in the hand-off |
 | Layer 1 | Post–little-val `Task(validator)` | New `task_correlation_id` per invocation |
 | Layer 1 | `Task(prompt_craft)` | New `task_correlation_id` per invocation |
-| Layer 1 | `Task(gitforge)` (post **queue.mdc A.7a**) | Same comms pair as other L1 `Task` launches; on failure, **Proof-on-failure** per [[3-Resources/Second-Brain/Subagent-Safety-Contract|Subagent-Safety-Contract]] § Proof-on-failure |
+| Layer 1 | **`post_queue_gitforge` harness** (post **queue.mdc A.7a**; default) | **N/A** — subprocess (`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`), not a `Task`; no `handoff_out`/`return_in` pair. On non-zero exit, **Proof-on-failure** with **`error_type: gitforge-harness-failure`**. Legacy **`Task(gitforge)`** only when **`gitforge.harness_enabled`** is **false** (then same comms pair as other L1 `Task` launches). |
 | Layer 2 (pipeline) | `Task(validator)`, `Task(internal-repair-agent)`, `Task(research)` | **Required**; set **`parent_task_correlation_id`** = **`pipeline_task_correlation_id`** from the pipeline hand-off |
 
 **No opt-out** for whitelisted nested helpers when the pipeline invokes them.

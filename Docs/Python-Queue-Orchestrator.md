@@ -53,6 +53,10 @@ Requires: `pip install -r scripts/eat_queue_core/requirements.txt` and **`PYTHON
 
 Plans emitted by **`full_cycle`** / enriched manifests should include **`queue_rewrite_ids`** = **`consumed_ids`** ∪ Pass 3 repair **`queue_entry_id`** values so repair lines do not leak to the next run. **`harness rewrite_consumed --plan <EQPLAN>`** applies the same id set as **A.7**.
 
+## Post–A.7 GitForge (`post_queue_gitforge`)
+
+After **A.7** (and optional telemetry summary per **queue.mdc**), balance/quality runs invoke **`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`** — not part of **EQPLAN** — with JSON hand-off and optional **`--parallel-context-file`**. See [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]] § GitForge harness.
+
 ## Safety
 
 - **EQPLAN missing / unreadable** → Layer 1 **Watcher-Result** advisory + regenerate via **`harness full_cycle`** — **do not** invent ordering from **PQ** alone.

@@ -61,7 +61,7 @@ When **`queue.central_pool_fanout_enabled`** is true and **`queue.pool_sync_stri
 
 ### Queue file bytes (single writer)
 
-Concrete read/write of **`.technical/prompt-queue.jsonl`** (per-track or pool), checksum boundaries, and **A.7** rewrites are implemented in **`scripts/eat_queue_core`** (**`python3 -m scripts.eat_queue_core.harness`**) invoked from the Queue rule — not ad-hoc parallel editors. This aligns **Nested subagent policy** (only Layer 1 orchestrates queue files) with **single-writer** bytes on disk. See [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]].
+Concrete read/write of **`.technical/prompt-queue.jsonl`** (per-track or pool), checksum boundaries, and **A.7** rewrites are implemented in **`scripts/eat_queue_core`** (**`python3 -m scripts.eat_queue_core.harness`**) invoked from the Queue rule — not ad-hoc parallel editors. This aligns **Nested subagent policy** (only Layer 1 orchestrates queue files) with **single-writer** bytes on disk. See [[3-Resources/Second-Brain/Docs/Queue-Harness-Architecture|Queue-Harness-Architecture]]. Post–**A.7** **GitForge** automation (**A.7a**) uses the same package (**`harness post_queue_gitforge`**) — not an LLM subagent — for vault git, optional export sync, lock, and audit.
 
 ---
 

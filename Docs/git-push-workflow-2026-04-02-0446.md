@@ -24,7 +24,7 @@ The export repo carries **three collaboration roles** (branch names are the curr
 
 **Execution track (2026-04):** GMM engine projects use **`roadmap_track: execution`** in `roadmap-state.md` with forward work under **`Roadmap/Execution/`** (parallel folder spine to conceptual `Roadmap/` — see [Dual-Roadmap-Track](Dual-Roadmap-Track.md)). Published **`Roadmap/`** on an engine branch therefore includes **both** the conceptual tree (often frozen) **and** the **Execution** subtree when mirrored — do not assume “engine branch = conceptual-only.”
 
-**GitForge:** When **`gitforge.enabled`** and export sync run, use **`gitforge.integration_branch`** vs engine branch name (and Config **`parallel_execution.tracks[]`** `lane_project_id` / `export_path`) to decide whether to run the **integration** mirror steps or the **engine-only** delta. See [[.cursor/agents/gitforge.md|agents/gitforge.md]] § **Export surfaces by branch type**.
+**GitForge harness:** When **`gitforge.enabled`** and export sync run, use **`gitforge.integration_branch`** vs engine branch name (and Config **`parallel_execution.tracks[]`** `lane_project_id` / `export_path`) to decide whether to run the **integration** mirror steps or the **engine-only** delta. See [[.cursor/agents/gitforge.md|agents/gitforge.md]] § **Export surfaces by branch type**; automation runs via **`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`**.
 
 ### Integration branch — full manifest (build + run)
 
@@ -73,7 +73,7 @@ Use the same two-lane pattern for every new project to keep behavior predictable
 
 ## GitForge contract (v1)
 
-When Second-Brain-Config **`gitforge.enabled`** is **true**, post–**EAT-QUEUE** git and export-repo orchestration for the success path **must** run through **GitForge** (**`Task(subagent_type: "gitforge")`**, Layer 1 **queue.mdc A.7a**) **when** **`effective_pipeline_mode`** is **`balance`** or **`quality`**. **`speed`** runs **skip** GitForge (no automatic vault git tail). Do **not** use ad-hoc **`git commit` / `git push`** from other agents for that path when GitForge applies — GitForge owns commit discipline, audit (**[[git-audit-log|git-audit-log]]**), and alignment with this workflow. With **`gitforge.enabled: false`**, operators remain responsible for manual git and export steps.
+When Second-Brain-Config **`gitforge.enabled`** is **true** and **`gitforge.harness_enabled`** is **true** (default), post–**EAT-QUEUE** git and export-repo orchestration for the success path **must** run through **`python3 -m scripts.eat_queue_core.harness post_queue_gitforge`** (Layer 1 **queue.mdc A.7a**) **when** **`effective_pipeline_mode`** is **`balance`** or **`quality`**. **`speed`** runs **skip** GitForge (no automatic vault git tail). Do **not** use ad-hoc **`git commit` / `git push`** from other agents for that path when GitForge applies — the harness owns commit discipline, audit (**[[git-audit-log|git-audit-log]]**), and alignment with this workflow. With **`gitforge.enabled: false`**, operators remain responsible for manual git and export steps. **Legacy:** **`gitforge.harness_enabled: false`** may route **A.7a** through **`Task(gitforge)`** once.
 
 **References:** [[Subagent-Safety-Contract]], `.cursor/agents/gitforge.md`, `.cursor/rules/agents/gitforge.mdc`, [[Second-Brain-Config]] § **gitforge**.
 
