@@ -1,3 +1,18 @@
+### 2026-04-14 10:01 — Watcher-Result mirror fallback (sandbox)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | n/a | 2026-04-14T10:01:53Z | watcher-result-write-fallback |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- write_error: read permission denied
+- intended_lines: requestId `followup-deepen-exec-phase315-tertiary-sandbox-20260415T093000Z` segments `VALIDATE` and `RESUME_ROADMAP`
+
+#### Summary
+**Root cause:** Mirror file is not readable/writable in this environment.  
+**Impact:** Canonical watcher receipt was written; per-track mirror receipt was not written.  
+**Suggested fixes:** Restore read/write permissions for `3-Resources/Watcher-Result-sandbox.md` and re-run lane dispatch if mirror parity is required.  
+**Recovery:** Use canonical `3-Resources/Watcher-Result.md` as the authoritative run receipt for this dispatch.
 ### 2026-04-13 14:01 — Watcher mirror append denied (godot)
 
 | pipeline | severity | approval | timestamp | error_type |
@@ -1839,3 +1854,234 @@ Each new error is appended as follows (no fenced YAML per entry):
 **Suggested fixes**: Restore write/read permissions on `3-Resources/Watcher-Result-sandbox.md` and re-run lane processing.
 **Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
 
+### 2026-04-14 09:20 — Watcher mirror append fallback (godot)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T09:20:15Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase2-243-godot-20260414T103411Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to godot mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-godot.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 09:33 — Watcher mirror append fallback (sandbox)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T09:33:36Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase314-tertiary-sandbox-20260414T085546Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to sandbox mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-sandbox.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 09:01 — Watcher mirror append fallback (sandbox)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T09:01:30.171Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- operation: append primary disposition line for queue id `handoff-audit-repair-sandbox-phase311-20260414T081419Z-layer1-gatekeeper`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to sandbox mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-sandbox.md`.
+**Recovery**: Canonical watcher line was appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 06:28 — Watcher mirror append fallback (sandbox empty queue)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T06:28:45Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- operation: append empty-queue bootstrap outcome for lane `sandbox`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to sandbox mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-sandbox.md`.
+**Recovery**: Canonical watcher line was appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 06:53 — Watcher mirror append fallback (godot)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T06:53:01Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to godot mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-godot.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 08:42 — Watcher mirror append fallback (sandbox)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T08:42:04Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase312-tertiary-sandbox-20260415T080300Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to sandbox mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-sandbox.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 08:16 — Watcher mirror append fallback (godot)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T08:16:30Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to godot mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-godot.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 08:13 — Watcher mirror append fallback (godot)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T08:13:20Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked writes to godot mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-godot.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 08:01 — Watcher mirror append fallback (sandbox)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T08:01:41Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- operation: append validate + primary disposition lines for queue id `followup-handoff-audit-repair-sandbox-empty-bootstrap-20260414T071757Z-layer1-gatekeeper`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to sandbox mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-sandbox.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 07:30 — Watcher mirror append fallback (sandbox)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T07:30:19Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-sandbox.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase3-1-sandbox-20260414T065130Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to sandbox mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-sandbox.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 07:37 — Watcher mirror append fallback (godot)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T07:37:47Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase2-223-godot-20260412T214500Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to godot mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-godot.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+### 2026-04-14 09:39 — Watcher mirror append fallback (godot)
+
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| layer1-queue | medium | n/a | 2026-04-14T09:39:27Z | watcher_result_mirror_write_denied |
+
+#### Trace
+- mirror_path: `3-Resources/Watcher-Result-godot.md`
+- operation: append validate + primary disposition lines for queue id `followup-deepen-exec-phase2-243-godot-20260414T103411Z`
+- error: read permission denied while opening mirror file
+
+#### Summary
+**Root cause**: Filesystem permission blocked reads/writes to godot mirror watcher file.
+**Impact**: Mirror file was not updated for this run.
+**Suggested fixes**: Restore read/write permissions on `3-Resources/Watcher-Result-godot.md`.
+**Recovery**: Canonical watcher lines were appended to `3-Resources/Watcher-Result.md`.
+
+
+### 2026-04-14 09:46 — Watcher-Result fallback (sandbox mirror read denied)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | none | 2026-04-14T09:46:03.090285Z | watcher-result-io-fallback |
+#### Trace
+- Could not read `3-Resources/Watcher-Result-sandbox.md` (permission denied) after append attempt.
+- Intended lines were still appended to canonical `3-Resources/Watcher-Result.md`.
+#### Summary
+- **Root cause:** Mirror file permissions prevent verification readback in this host.
+- **Impact:** Mirror verification unavailable; canonical watcher receipt recorded.
+- **Suggested fixes:** Adjust file permissions for sandbox watcher mirror and re-run verification if needed.
+- **Recovery:** No queue rollback required.
+
+### 2026-04-14 10:12 — Watcher-Result fallback (sandbox mirror write denied)
+| pipeline | severity | approval | timestamp | error_type |
+|---|---|---|---|---|
+| queue-layer1 | medium | none | 2026-04-14T10:12:47Z | watcher-result-io-fallback |
+#### Trace
+- Could not append to `3-Resources/Watcher-Result-sandbox.md` (permission denied).
+- Intended VALIDATE and RESUME_ROADMAP lines for `followup-deepen-exec-phase315-tertiary-sandbox-20260415T093000Z`.
+- Canonical lines appended to `3-Resources/Watcher-Result.md`.
+#### Summary
+- **Root cause:** Mirror watcher file permissions blocked write access in this host.
+- **Impact:** Sandbox mirror file was not updated for this requestId.
+- **Suggested fixes:** Restore read/write permissions on `3-Resources/Watcher-Result-sandbox.md`.
+- **Recovery:** Canonical watcher receipt is present; queue processing continued.

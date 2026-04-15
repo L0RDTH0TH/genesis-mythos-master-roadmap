@@ -57,7 +57,7 @@ Preferred **familial** bundle for reliable **repair-first** + **Pass 3** inline 
 | `queue.inline_a5b_repair_drain_enabled` | `true` |
 | `queue.inline_forward_followup_drain_enabled` | `true` |
 | `queue.roadmap_pass_order` | `repair_first` |
-| `queue.max_inline_a5b_repair_generations_per_run` | `8` |
+| `queue.max_inline_a5b_repair_generations_per_run` | `4` (global default; **godot** lane may match via `parallel_execution.tracks[].queue_overrides`) |
 | `validator.tiered_blocks_enabled` | `true` |
 
 ### queue_continuation (empty-queue bootstrap after lane drain)
@@ -135,10 +135,15 @@ vault_backup:
 - **rationale_enforcement_enabled** (`true` \| `false`, default **`false`**): when **`true`**, Layer 1 ([[.cursor/rules/agents/queue.mdc|queue.mdc]]) **must** require **`params.option_evaluation`** on gated **`RESUME_ROADMAP`** lines (execution track — see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Parallel execution tracking). The Python harness validates shape when emitting plans.
 - **allowed_lanes** (under **`queue:`** YAML): list of strings allowed for **`queue_lane`** on prompt-queue JSONL lines and for Layer 0 **`EAT-QUEUE lane <name>`**. Default in YAML below: `default`, `shared`, `sandbox`, `godot`, `core`. Unknown lane on append or filter → reject / error (see [[3-Resources/Second-Brain/Queue-Sources|Queue-Sources]] § Queue lanes).
 - **harness_validation_mode** (`advisory` \| `strict`, default **`advisory`**): Layer 1 **A.5i** after pipeline **Task** returns — parse **`nested_subagent_ledger`**, **`blocked_scope`** on hard-block paths; **`strict`** upgrades refusals per [[3-Resources/Second-Brain/Docs/Harness-Patterns-and-Guidelines|Harness-Patterns-and-Guidelines]] §4.
-- **roadmap_pass_order** (`repair_first` \| `forward_first`): Layer 1 **A.4c** roadmap multi-dispatch; default **`repair_first`** aligns with familial **`repair_strategy: repair_first`** (overridable flat key).
+- **strict_nested_return_gates** (`true` \| `false`, default **`true`**): When **`true`**, Layer 1 **A.5 (b0)** refuses consumption on missing/invalid **`validator_context`**, hollow ledger, or skip-without-attempt rows per [[.cursor/rules/agents/queue.mdc|queue.mdc]].
+- **strict_nested_ledger_all_pipelines** (`true` \| `false`, default **`true`**): When **`true`**, missing/unparseable **`nested_subagent_ledger`** on gated pipeline modes triggers **`nested_attestation_failure`** (hard).
+- **assert_a5b_repair_after_hard_block** (`true` \| `false`, default **`true`**): After **A.5b** repair append, **A.5b.4** verifies the repair line exists on disk; explicit for **balance** / **quality** runs — see [[3-Resources/Second-Brain/Docs/Core/Parameters|Parameters]] § Queue shield hardening.
+- **origin_dedupe_window_hours** (int, default **`24`**): Before appending duplicate **`HANDOFF_AUDIT_REPAIR`** / **`handoff-audit`** repair lines with the same **`origin_request_id`** and near-identical **`user_guidance`**, Layer 1 **A.5b.0z** suppresses append — see [[.cursor/rules/agents/queue.mdc|queue.mdc]].
+- **roadmap_pass_order** (`repair_first` \| `forward_first`): Layer 1 **A.4c** roadmap multi-dispatch; default **`repair_first`** aligns with familial **`repair_strategy: repair_first`** (overridable flat key; **godot** track may set **`queue_overrides`**).
 - **inline_a5b_repair_drain_enabled**: default **`true`** when omitted in older configs; explicit **`true`** here — Pass 3 repair drain (see [[3-Resources/Second-Brain/Docs/User-Flows/EAT-QUEUE-Pass-3-Operator-Guide|EAT-QUEUE Pass 3 Operator Guide]]).
 - **inline_forward_followup_drain_enabled**: Pass 3 forward follow-up wave — **`true`** in **Repair-Heavy / Hygiene-Focused Mode** (see § **profiles**) so forward-class appends can set **`inline_forward_followup_pending`** and drain in Pass 3 per **A.5.0** (when gate and caps allow).
-- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: Pass 3 generation caps (**A.5.0**). **Repair-Heavy** sets **`max_inline_a5b_repair_generations_per_run: 8`**; forward cap remains **3** unless changed.
+- **max_inline_a5b_repair_generations_per_run** / **max_inline_forward_followup_generations_per_run**: Pass 3 generation caps (**A.5.0**). **Repair-Heavy / queue shield** uses **`max_inline_a5b_repair_generations_per_run: 4`** globally; **godot** lane reinforces **`repair_first`** + caps via **`parallel_execution.tracks[].queue_overrides`** when present. Forward cap remains **3** unless changed.
+- **auto_cleanup_after_process** (`true` \| `false`): When **`true`**, run **queue-cleanup** after EAT-QUEUE — **mark** stale/duplicate entries (`queue_failed`, tags) only; **never** delete JSONL lines by automation (see [[.cursor/rules/agents/execution-safety-blacklist|execution-safety-blacklist]]).
 
 The following **`queue:`** block is machine-readable for `scripts/queue-gate-compute.py` and related tools (must stay aligned with the bullet above). Keys **`roadmap_pass_order`**, **`inline_*`**, and **`max_inline_*`** implement **Repair-Heavy / Hygiene-Focused Mode** defaults (§ **profiles**); they remain **explicit flat overrides** — change them here to diverge without editing queue JSONL.
 
@@ -150,10 +155,15 @@ queue:
   pool_sync_strict_central_only: false
   rationale_enforcement_enabled: false
   harness_validation_mode: advisory
+  strict_nested_return_gates: true
+  strict_nested_ledger_all_pipelines: true
+  assert_a5b_repair_after_hard_block: true
+  origin_dedupe_window_hours: 24
+  auto_cleanup_after_process: true
   roadmap_pass_order: repair_first
   inline_a5b_repair_drain_enabled: true
   inline_forward_followup_drain_enabled: true
-  max_inline_a5b_repair_generations_per_run: 8
+  max_inline_a5b_repair_generations_per_run: 4
   max_inline_forward_followup_generations_per_run: 3
   allowed_lanes:
     - default
@@ -179,6 +189,8 @@ tracking:
 - **lane_project_id** (per **`tracks[]`** row): slug under **`1-Projects/`** for **A.0z** / **A.2a.1** — dual-track roadmap state must stay under **`1-Projects/<lane_project_id>/`** for that lane.
 - **research_whitelist_enforced** (per **`tracks[]`** row, optional boolean, default **true** when omitted): when **true**, Layer 1 / resolver **should** emit **`research_url_intent_audit: allowlist_active`** (or equivalent parse-safe **`layer1_resolver_hints`** / **`queue_continuation`** fragment) so EAT-QUEUE runs log that [[.cursor/rules/agents/execution-research-whitelist|execution-research-whitelist]] §0 applies before **`Task(research)`** on execution-track code-precision. Operators may set **false** only for emergency debugging (not normative).
 - **Watcher**: keep canonical **`watcher.canonical_path`** for the Obsidian plugin; optional **per-track mirrors** when **`watcher.enable_mirrors`** is true (see [[.cursor/rules/always/watcher-result-append.mdc|watcher-result-append]]).
+- **watcher.mirror_strict** (`true` \| `false`, default **`false`**): When **`false`**, failure to append to a per-track mirror **does not** fail the run — canonical **`Watcher-Result.md`** still receives the line; Layer 1 logs an audit tag in **`trace`** / **`intent_actual_receipt`** (`mirror_append_fallback`) per [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.6**.
+- **queue_overrides** (optional per **`tracks[]`** row): YAML object merged **after** global **`queue:`** for dispatches whose **`queue_lane`** / **`parallel_track`** matches that track (see [[3-Resources/Second-Brain/Docs/Core/Parameters|Parameters]] § Resolver merge order).
 
 Machine-readable block (keep aligned with bullets):
 
@@ -201,12 +213,17 @@ parallel_execution:
       branch_prefix: godot-
       export_path: "/home/darth/Documents/gmm-roadmap-export"
       research_whitelist_enforced: true
+      queue_overrides:
+        roadmap_pass_order: repair_first
+        max_inline_a5b_repair_generations_per_run: 4
+        hygiene_strictness: strict
   gitforge:
     lock_timeout_seconds: 30
     policy: lock_last_wins
   watcher:
     canonical_path: "3-Resources/Watcher-Result.md"
     enable_mirrors: true
+    mirror_strict: false
 ```
 
 ## gitforge (Layer 1 post-queue git/export)

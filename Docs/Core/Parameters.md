@@ -25,6 +25,40 @@ links: ["[[Resources Hub]]", "[[3-Resources/Second-Brain/README]]"]
 
 ---
 
+## Queue shield hardening (Layer 1 — prevention-first)
+
+**Canonical keys:** [[3-Resources/Second-Brain-Config|Second-Brain-Config]] § **`queue`** and § **`parallel_execution`** (`strict_nested_return_gates`, `strict_nested_ledger_all_pipelines`, `assert_a5b_repair_after_hard_block`, `origin_dedupe_window_hours`, `auto_cleanup_after_process`, `parallel_execution.watcher.mirror_strict`, **`parallel_execution.tracks[].queue_overrides`**). Normative behavior: [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.5b.0z**, **A.5b** stall / provisional rules, **A.6** mirror fallback.
+
+### Resolver merge order (queue overrides)
+
+When **`parallel_execution.tracks[].queue_overrides`** is present for the active lane, Layer 1 merges **effective queue knobs** in this order: **explicit queue entry `params` > lane `queue_overrides` > global `queue:` YAML in Second-Brain-Config > Config-Profiles familial expansion > implicit defaults**. If **`queue_overrides`** is not yet wired in a given harness build, operators may pass the same keys via **`layer1_resolver_hints`** on the queue line (document-only fallback; no Python change in the shield slice).
+
+### `assert_a5b_repair_after_hard_block` (balance / quality)
+
+When **`effective_pipeline_mode`** is **`balance`** or **`quality`**, **`queue.assert_a5b_repair_after_hard_block`** (default **`true`**) requires **A.5b.4** on-disk verification after a hard-block repair append. **`speed`** runs are unchanged (GitForge skipped per Config). See [[.cursor/rules/agents/queue.mdc|queue.mdc]] **A.5b.4**.
+
+### Sandbox lane — `design_intent_alignment` before generic contradiction churn
+
+On **`parallel_track: sandbox`** / **`queue_lane: sandbox`**, Layer 1 and nested compare paths **should** treat **`design_intent_alignment_violation`** (and related design-intent primary codes) as **higher precedence** than recycling **`contradictions_detected`** / generic hygiene when both appear — surface design-intent remediation **before** broad contradiction repair waves. Aligns with [[3-Resources/Second-Brain/Docs/Roadmap-Gate-Catalog-Design-Intent-Alignment|Roadmap-Gate-Catalog-Design-Intent-Alignment]] and [[3-Resources/Second-Brain/Docs/Pipeline-Validator-Profile-Sandbox-Lane|Pipeline-Validator-Profile-Sandbox-Lane]].
+
+### `hygiene_strictness` resolution (godot, execution phase ≥ 4)
+
+When **`roadmap_track: execution`** and **`current_phase ≥ 4`** on **`roadmap-state-execution.md`**, **`parallel_execution.tracks[]`** (godot) may set **`queue_overrides.hygiene_strictness: strict`** — Layer 1 / resolver applies stricter hygiene gate expectations for that lane. **Precedence:** queue entry `params` > lane **`queue_overrides`** > global `queue:` > hints. No automatic edits to phase notes.
+
+### Auto-cleanup
+
+**`queue.auto_cleanup_after_process: true`** runs **queue-cleanup** after EAT-QUEUE: **mark** stale or duplicate repair rows (`queue_failed`, tags) per [[.cursor/skills/queue-cleanup/SKILL.md|queue-cleanup]] — **never** automated JSONL line deletion (see [[.cursor/rules/agents/execution-safety-blacklist|execution-safety-blacklist]]).
+
+### Dry-run procedure (operators)
+
+Before relying on new defaults in production: run **EAT-QUEUE** in a **non-consuming** or vault-copy sandbox when available; or set **`queue.auto_cleanup_after_process: false`** temporarily and inspect **Watcher-Result** + **prompt-queue-audit** only. Snapshot **Second-Brain-Config** / **Parameters** / **queue.mdc** before edits per [[.cursor/rules/always/core-guardrails.mdc|core-guardrails]].
+
+### Falsifiable impact targets (post-merge check)
+
+After the first **balance**/**quality** EAT-QUEUE pass under shield defaults, compare to pre-merge telemetry: **repair:deepen ratio** toward **&lt; 0.5**; **`nested_attestation_failure`** mentions down **≥ ~70%**; fewer **`provisional_hygiene_retained_no_queue_rewrite`** patterns; vault health score toward **78–85** (operator-defined audit). Not a CI gate — observability goals only.
+
+---
+
 ## Safety
 
 > [!warning] **Destructive actions only at ≥85%** and only after per-change snapshot. Mid-band: at most one refinement loop; if post_loop_conf ≤ pre_loop_conf, fall back to user decision (no destructive step). RESUME-ROADMAP: **queue_next** absent/undefined = true (pipeline may append follow-up); **enable_context_tracking** default-on (only explicit false disables).
