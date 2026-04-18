@@ -101,6 +101,36 @@ class HarnessVerifyTest(unittest.TestCase):
                 if p.is_file():
                     p.unlink()
 
+    def test_append_entries_rejects_inline_grep_paste(self) -> None:
+        """Copy-paste mistake: grep flags merged into append_entries."""
+        rc, out = _run_harness(
+            [
+                "append_entries",
+                "--vault-root",
+                str(_VAULT),
+                "--lane",
+                "godot",
+                "--inline-grep",
+            ]
+        )
+        self.assertEqual(rc, 2, out)
+        self.assertIn("merged_grep_with_append_entries", out)
+
+    def test_resolve_parallel_context_lane_synthetic(self) -> None:
+        from eat_queue_core.harness import resolve_parallel_context, synthetic_parallel_context_for_lane
+
+        self.assertEqual(
+            synthetic_parallel_context_for_lane("godot")["resolved_prompt_queue_path"],
+            ".technical/parallel/godot/prompt-queue.jsonl",
+        )
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            d = resolve_parallel_context(root, None, None, lane="sandbox")
+            self.assertEqual(d.get("parallel_track"), "sandbox")
+            self.assertIn("sandbox/prompt-queue.jsonl", d.get("resolved_prompt_queue_path", ""))
+
 
 if __name__ == "__main__":
     unittest.main()

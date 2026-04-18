@@ -18,6 +18,8 @@ from .gitforge_config import (
     merge_yaml_blocks_from_config,
 )
 from .config_loader import resolve_config_path
+from ._lock import acquire_gitforge_lock as _acquire_lock_impl
+from ._lock import release_gitforge_lock as _release_lock_impl
 
 
 @dataclass
@@ -69,27 +71,12 @@ def _git_executable() -> str:
     return os.environ.get("GIT_PYTHON_GIT_EXECUTABLE", "git")
 
 
-def _lock_script_path(vault_root: Path) -> Path:
-    return vault_root / "scripts" / "gitforge_lock.py"
-
-
 def _acquire_lock(vault_root: Path, track: str, timeout_s: float) -> bool:
-    script = _lock_script_path(vault_root)
-    if not script.is_file():
-        return False
-    r = _run(
-        [sys.executable, str(script), "acquire", "--vault-root", str(vault_root), "--track", track, "--timeout", str(int(timeout_s))],
-        cwd=vault_root,
-        timeout=int(timeout_s) + 5,
-    )
-    return r.returncode == 0
+    return _acquire_lock_impl(vault_root, track, timeout_s)
 
 
 def _release_lock(vault_root: Path) -> None:
-    script = _lock_script_path(vault_root)
-    if not script.is_file():
-        return
-    _run([sys.executable, str(script), "release", "--vault-root", str(vault_root)], cwd=vault_root, timeout=30)
+    _release_lock_impl(vault_root)
 
 
 def _rsync_delete(src: Path, dst: Path) -> None:

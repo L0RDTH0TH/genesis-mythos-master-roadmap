@@ -10,6 +10,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from .a5b_dedupe import dedupe_entries, repair_enqueue_eligible
+from .config_loader import origin_dedupe_window_hours, parse_queue_config, resolve_config_path
 from .lanes import entry_in_lane_dispatch_subset, filter_entries_by_lane
 from .models import QueueEntry
 
@@ -34,6 +36,7 @@ class PoolSyncResult(BaseModel):
     strict_central_only: bool = False
     skipped_malformed_lines: int = 0
     dry_run: bool = False
+    dedupe_suppressed_count: int = 0
     messages: list[str] = Field(default_factory=list)
 
 
@@ -243,6 +246,46 @@ def _merge_preserving_lane_only(
     return merged, preserved_ids, cross_lane, track_bad, msgs
 
 
+def _append_jsonl_audit(audit_path: Path, record: dict[str, Any]) -> None:
+    audit_path.parent.mkdir(parents=True, exist_ok=True)
+    line = json.dumps(record, ensure_ascii=False) + "\n"
+    prev = audit_path.read_text(encoding="utf-8") if audit_path.is_file() else ""
+    audit_path.write_text(prev + line, encoding="utf-8")
+
+
+def _dedupe_merged_queue_lines(
+    merged_lines: list[str],
+    *,
+    origin_window_hours: float,
+) -> tuple[list[str], list[dict[str, Any]]]:
+    """Drop later duplicate-equivalent A.5b repair lines; keep order for non-suppressed."""
+    parsed: list[tuple[str, QueueEntry | None]] = []
+    for raw in merged_lines:
+        line = raw.strip()
+        if not line:
+            continue
+        try:
+            qe = QueueEntry.model_validate(json.loads(line))
+            parsed.append((line, qe))
+        except Exception:
+            parsed.append((line, None))
+
+    entries_order = [e for _, e in parsed if e is not None]
+    kept, supp = dedupe_entries(entries_order, origin_window_hours=origin_window_hours)
+    kept_ids = {e.id for e in kept}
+    out_lines: list[str] = []
+    for raw, e in parsed:
+        if e is None:
+            out_lines.append(raw)
+            continue
+        if not repair_enqueue_eligible(e):
+            out_lines.append(raw)
+            continue
+        if e.id in kept_ids:
+            out_lines.append(raw)
+    return out_lines, supp
+
+
 def hydrate_track_pq_from_pool(
     *,
     vault_root: Path,
@@ -286,6 +329,27 @@ def hydrate_track_pq_from_pool(
     )
     msgs.extend(merge_msgs)
 
+    cfg_path = resolve_config_path(root, None)
+    oh = origin_dedupe_window_hours(parse_queue_config(cfg_path))
+    merged, dedupe_supp = _dedupe_merged_queue_lines(merged, origin_window_hours=oh)
+    if dedupe_supp:
+        msgs.append(f"pool_sync_dedupe: suppressed {len(dedupe_supp)} duplicate-equivalent line(s)")
+    if not dry_run:
+        from datetime import datetime, timezone
+
+        audit_path = target.parent / "prompt-queue-audit.jsonl"
+        now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+        for row in dedupe_supp:
+            _append_jsonl_audit(
+                audit_path,
+                {
+                    "record_type": "pool_sync_dedupe",
+                    "iso_timestamp": now_iso,
+                    "lane_filter": lane_filter,
+                    **row,
+                },
+            )
+
     if not dry_run:
         target.parent.mkdir(parents=True, exist_ok=True)
         body = "\n".join(merged) + ("\n" if merged else "")
@@ -314,6 +378,7 @@ def hydrate_track_pq_from_pool(
         strict_central_only=strict,
         skipped_malformed_lines=bad + track_bad,
         dry_run=dry_run,
+        dedupe_suppressed_count=len(dedupe_supp),
         messages=msgs,
     )
 

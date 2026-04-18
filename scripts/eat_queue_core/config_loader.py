@@ -30,6 +30,9 @@ HARNESS_QUEUE_KEYS = frozenset(
         "deterministic_gate_script_path",
         "gate_block_same_track_cooldown_runs",
         "gate_key_includes_track",
+        "max_inline_a5b_repair_generations_per_run",
+        "max_inline_forward_followup_generations_per_run",
+        "origin_dedupe_window_hours",
     }
 )
 
@@ -97,3 +100,18 @@ def max_midrun_appends(cfg: dict[str, Any]) -> int:
     if isinstance(v, int) and v >= 0:
         return v
     return 5
+
+
+def max_inline_a5b_repair_generations(cfg: dict[str, Any]) -> int:
+    v = cfg.get("max_inline_a5b_repair_generations_per_run")
+    if isinstance(v, int) and v >= 0:
+        return v
+    return 4
+
+
+def origin_dedupe_window_hours(cfg: dict[str, Any]) -> float:
+    """Default 24h per queue-churn-guard / Queue-Sources."""
+    v = cfg.get("origin_dedupe_window_hours")
+    if isinstance(v, (int, float)) and v > 0:
+        return float(v)
+    return 24.0

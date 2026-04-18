@@ -32,6 +32,10 @@ from .models import (
     OptionEvaluationValidationResult,
     QueueEntry,
 )
+from .a5b_dedupe import DedupeDecision
+from .config_loader import max_inline_a5b_repair_generations, parse_queue_config, resolve_config_path
+from .lane_queue_config import effective_max_inline_a5b
+from .watcher_append import append_watcher_telemetry_line
 from .pool_sync import (
     hydrate_track_pq_from_pool,
     read_central_pool_fanout_enabled,
@@ -182,6 +186,10 @@ def build_intent_receipt_row(
     parallel_track: str,
     oe_res: OptionEvaluationValidationResult,
     intent_snapshot_task_correlation_id: str | None,
+    inline_drain_budget_remaining: int | None = None,
+    dedupe_attempted: bool = False,
+    dedupe_suppressed: bool = False,
+    suppressed_by: str = "none",
 ) -> dict[str, Any]:
     rid = str(uuid.uuid4())
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
@@ -190,14 +198,21 @@ def build_intent_receipt_row(
     div = list(dict.fromkeys(oe_res.divergence_codes))
     planned = (entry.params or {}).get("action") if isinstance(entry.params, dict) else None
     planned_action = str(planned) if planned is not None else "dispatch"
-    body_obj = {
+    body_obj: dict[str, Any] = {
         "status_class": status_class,
         "divergence_codes": div,
         "planned_action": planned_action,
         "actual_action": "eat_queue_plan_emitted",
         "ledger_ref": [rid],
+        "dedupe_attempted": dedupe_attempted,
+        "dedupe_suppressed": dedupe_suppressed,
+        "suppressed_by": suppressed_by,
     }
-    return {
+    if inline_drain_budget_remaining is not None:
+        body_obj["inline_drain_budget_remaining"] = inline_drain_budget_remaining
+    if not oe_res.ok and div:
+        body_obj["provisional_reason"] = div[0]
+    out: dict[str, Any] = {
         "schema_version": 1,
         "task_correlation_id": rid,
         "parent_task_correlation_id": None,
@@ -222,9 +237,81 @@ def build_intent_receipt_row(
         "ledger_ref": body_obj["ledger_ref"],
         "retryable": not oe_res.ok,
         "intent_snapshot_id": intent_snapshot_task_correlation_id,
+        "dedupe_attempted": dedupe_attempted,
+        "dedupe_suppressed": dedupe_suppressed,
+        "suppressed_by": suppressed_by,
         "body": json.dumps(body_obj, ensure_ascii=False),
         "sanitization_rules_applied": [],
     }
+    if inline_drain_budget_remaining is not None:
+        out["inline_drain_budget_remaining"] = inline_drain_budget_remaining
+    return out
+
+
+def build_a5b_append_intent_receipt_row(
+    *,
+    vault_root: Path,
+    parent_run_id: str,
+    entry: QueueEntry,
+    decision: DedupeDecision,
+    parallel_track: str,
+    inline_drain_budget_remaining: int | None = None,
+    provisional_reason: str | None = None,
+) -> dict[str, Any]:
+    """Receipt for harness ``append_entries`` A.5b.0z dedupe (merge into Watcher trace by Layer 1)."""
+    rid = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    lane = effective_queue_lane(entry)
+    p = entry.params if isinstance(entry.params, dict) else {}
+    oid = p.get("origin_request_id")
+    oid_s = oid.strip() if isinstance(oid, str) else None
+    body_obj: dict[str, Any] = {
+        "status_class": "success",
+        "actual_action": "harness_append_entries",
+        "dedupe_attempted": decision.dedupe_attempted,
+        "dedupe_suppressed": decision.dedupe_suppressed,
+        "suppressed_by": decision.suppressed_by,
+        "normalized_guidance_prefix": decision.normalized_guidance_prefix,
+        "ledger_ref": [rid],
+    }
+    if decision.audit_suppressed_by:
+        body_obj["audit_suppressed_by"] = decision.audit_suppressed_by
+    if inline_drain_budget_remaining is not None:
+        body_obj["inline_drain_budget_remaining"] = inline_drain_budget_remaining
+    if provisional_reason:
+        body_obj["provisional_reason"] = provisional_reason
+    if oid_s:
+        body_obj["origin_request_id"] = oid_s
+    if decision.dedupe_suppressed:
+        body_obj["dedupe_suppressed_handoff_repair"] = True
+    if decision.suppressing_entry_id:
+        body_obj["suppressing_queue_entry_id"] = decision.suppressing_entry_id
+    rec: dict[str, Any] = {
+        "schema_version": 1,
+        "task_correlation_id": rid,
+        "parent_task_correlation_id": None,
+        "record_type": "intent_actual_receipt",
+        "iso_timestamp": now,
+        "timestamp": now,
+        "from_actor": "eat_queue_core",
+        "to_actor": "intent_tracking",
+        "subagent_type": "intent_tracking",
+        "queue_entry_id": entry.id,
+        "parent_run_id": parent_run_id,
+        "project_id": entry.project_id or "-",
+        "vault_root": str(vault_root),
+        "parallel_track": parallel_track,
+        "queue_lane": lane,
+        "mode": entry.mode,
+        "dedupe_attempted": decision.dedupe_attempted,
+        "dedupe_suppressed": decision.dedupe_suppressed,
+        "suppressed_by": decision.suppressed_by,
+        "body": json.dumps(body_obj, ensure_ascii=False),
+        "sanitization_rules_applied": [],
+    }
+    if inline_drain_budget_remaining is not None:
+        rec["inline_drain_budget_remaining"] = inline_drain_budget_remaining
+    return rec
 
 
 def emit_intent_tracking_for_plan_pass(
@@ -234,6 +321,7 @@ def emit_intent_tracking_for_plan_pass(
     enriched: dict[str, Any],
     entries_lane: list[QueueEntry],
     lane_filter: str | None,
+    emit_watcher_result: bool = True,
 ) -> list[str]:
     if not read_tracking_intent_receipts_enabled(vault_root):
         return []
@@ -242,6 +330,8 @@ def emit_intent_tracking_for_plan_pass(
     rationale_enf = read_queue_rationale_enforcement_enabled(vault_root)
     parallel_track = parallel_track_for_lane(lane_filter)
     pr = str(enriched.get("parent_run_id", "-"))
+    inline_rem = enriched.get("inline_drain_budget_remaining")
+    inline_arg = inline_rem if isinstance(inline_rem, int) else None
     msgs: list[str] = []
     for intent in enriched.get("intents") or []:
         qeid = intent.get("queue_entry_id")
@@ -270,9 +360,39 @@ def emit_intent_tracking_for_plan_pass(
             parallel_track=parallel_track,
             oe_res=oe_res,
             intent_snapshot_task_correlation_id=snap["task_correlation_id"],
+            inline_drain_budget_remaining=inline_arg,
         )
         append_task_handoff_jsonl(comms_path, rec)
         msgs.append(f"intent_actual_receipt {qeid} {rec['status_class']}")
+        if emit_watcher_result:
+            try:
+                body_p = json.loads(rec.get("body", "{}"))
+            except json.JSONDecodeError:
+                body_p = {}
+            trace_payload: dict[str, Any] = {
+                "source": "eat_queue_core_full_cycle",
+                "record_type": "intent_actual_receipt",
+                "queue_entry_id": qeid,
+                "parent_run_id": pr,
+                "status_class": rec.get("status_class"),
+                "parallel_track": parallel_track,
+                "dedupe_attempted": body_p.get("dedupe_attempted", False),
+                "dedupe_suppressed": body_p.get("dedupe_suppressed", False),
+            }
+            idr = rec.get("inline_drain_budget_remaining")
+            if idr is None:
+                idr = body_p.get("inline_drain_budget_remaining")
+            if idr is not None:
+                trace_payload["inline_drain_budget_remaining"] = idr
+            if "provisional_reason" in body_p:
+                trace_payload["provisional_reason"] = body_p["provisional_reason"]
+            append_watcher_telemetry_line(
+                vault_root,
+                request_id=f"harness-plan-{qeid}",
+                message="eat_queue_plan telemetry",
+                trace_payload=trace_payload,
+            )
+            msgs.append(f"watcher_result {qeid}")
     return msgs
 
 
@@ -352,6 +472,8 @@ def enrich_plan_dict(
     strict_mode: bool,
     full_cycle_pass_index: int,
     full_cycle_passes_total: int,
+    vault_root: Path | None = None,
+    lane_filter: str | None = None,
 ) -> dict[str, Any]:
     by_id = _entries_by_id(entries)
     base = plan.model_dump()
@@ -364,6 +486,19 @@ def enrich_plan_dict(
     base["has_anticipatory_repair_slot"] = any(
         i.queue_entry_id.startswith("anticipatory-repair-drain::") for i in plan.intents
     )
+    max_gen = 4
+    if vault_root is not None:
+        if lane_filter:
+            max_gen = effective_max_inline_a5b(vault_root, lane_filter)
+        else:
+            cfg = parse_queue_config(resolve_config_path(vault_root, None))
+            max_gen = max_inline_a5b_repair_generations(cfg)
+    used_pass3_repair = sum(
+        1
+        for i in plan.intents
+        if i.pass_id == "pass3" and i.queue_pass_phase == "repair"
+    )
+    base["inline_drain_budget_remaining"] = max(0, max_gen - used_pass3_repair)
 
     intents_out: list[dict[str, Any]] = []
     for intent in plan.intents:
@@ -530,6 +665,7 @@ def run_full_eat_queue_cycle(
     lane_filter: str | None = None,
     central_pool_fanout: bool | None = None,
     lane_project_id: str | None = None,
+    emit_watcher_result: bool = True,
 ) -> FullCycleResult:
     """
     Build up to ``max_passes`` plans, re-reading the queue between passes.
@@ -623,6 +759,8 @@ def run_full_eat_queue_cycle(
             strict_mode=strict_mode,
             full_cycle_pass_index=pass_idx + 1,
             full_cycle_passes_total=max_passes,
+            vault_root=root,
+            lane_filter=lane_filter,
         )
         lv = run_ledger_validation(enriched, strict_mode=strict_mode)
         if not lv.ok:
@@ -647,6 +785,7 @@ def run_full_eat_queue_cycle(
             enriched=enriched,
             entries_lane=entries_lane,
             lane_filter=lane_filter,
+            emit_watcher_result=emit_watcher_result,
         )
         if it_msgs:
             messages.extend(it_msgs)
